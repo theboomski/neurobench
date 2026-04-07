@@ -6,7 +6,7 @@ import GameLayout from "@/components/GameLayout";
 import ReactionGame from "@/components/games/ReactionGame";
 import BossSlapper from "@/components/games/BossSlapper";
 import NumberMemory from "@/components/games/NumberMemory";
-import NumberMemory from "@/components/games/NumberMemory";
+import SequenceMemory from "@/components/games/SequenceMemory";
 
 const games = gamesData as GameData[];
 type Props = { params: Promise<{ id: string }> };
@@ -31,7 +31,8 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
   switch (id) {
     case "reaction-time": return <ReactionGame game={game} />;
     case "boss-slapper":  return <BossSlapper game={game} />;
-    case "number-memory": return <NumberMemory game={game} />;
+    case "number-memory":   return <NumberMemory game={game} />;
+    case "sequence-memory": return <SequenceMemory game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
