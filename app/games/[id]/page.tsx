@@ -6,6 +6,7 @@ import GameLayout from "@/components/GameLayout";
 import ReactionGame from "@/components/games/ReactionGame";
 import BossSlapper from "@/components/games/BossSlapper";
 import NumberMemory from "@/components/games/NumberMemory";
+import NumberMemory from "@/components/games/NumberMemory";
 
 const games = gamesData as GameData[];
 type Props = { params: Promise<{ id: string }> };

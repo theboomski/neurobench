@@ -8,18 +8,22 @@ import InterstitialAd from "@/components/InterstitialAd";
 
 const t = dict.en;
 
-// For number memory, "score" = digits remembered (higher = better)
-// We reuse the percentile table but treat ms field as digit count
+// Number memory: HIGHER digits = BETTER (opposite of reaction time)
+// ranks are ordered S→D with minDigits threshold (>= this to qualify)
 function getMemoryRank(digits: number, game: GameData) {
-  return game.stats.ranks.find(r => digits <= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
+  // ranks in games.json: maxMs field repurposed as "minDigits to achieve this rank"
+  // S=13+, A=10+, B=8+, C=6+, D=<6
+  // We reverse-search: find the best rank the user qualifies for
+  const ranks = [...game.stats.ranks].reverse(); // D→C→B→A→S
+  return ranks.find(r => digits >= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
 }
 function getMemoryPercentile(digits: number, game: GameData): number {
-  const pts = game.stats.percentiles;
-  if (digits <= pts[0].ms) return pts[0].percentile;
-  if (digits >= pts[pts.length - 1].ms) return pts[pts.length - 1].percentile;
+  const pts = game.stats.percentiles; // ms field = digit count, percentile = % who score this or lower
+  if (digits >= pts[0].ms) return pts[0].percentile;       // best
+  if (digits <= pts[pts.length - 1].ms) return pts[pts.length - 1].percentile; // worst
   for (let i = 0; i < pts.length - 1; i++) {
-    if (digits >= pts[i].ms && digits <= pts[i + 1].ms) {
-      const t = (digits - pts[i].ms) / (pts[i + 1].ms - pts[i].ms);
+    if (digits <= pts[i].ms && digits >= pts[i + 1].ms) {
+      const t = (pts[i].ms - digits) / (pts[i].ms - pts[i + 1].ms);
       return Math.round(pts[i].percentile - t * (pts[i].percentile - pts[i + 1].percentile));
     }
   }

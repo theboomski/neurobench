@@ -10,11 +10,21 @@
     "accentDim": "rgba(0,255,148,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["reaction time test", "reflex test", "neural latency", "cognitive benchmark"],
+    "tags": [
+      "reaction time test",
+      "reflex test",
+      "neural latency",
+      "cognitive benchmark"
+    ],
     "seo": {
       "metaTitle": "Neural Latency Test – Free Online Reaction Time Benchmark",
       "metaDescription": "Measure your reaction time with clinical precision. Click when green appears and benchmark your neural response speed against thousands of high-performers worldwide. Free, instant, no signup.",
-      "keywords": ["reaction time test", "neural latency test", "reflex speed test", "cognitive benchmark online"]
+      "keywords": [
+        "reaction time test",
+        "neural latency test",
+        "reflex speed test",
+        "cognitive benchmark online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -35,23 +45,88 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 150, "percentile": 99 },
-        { "ms": 175, "percentile": 97 },
-        { "ms": 200, "percentile": 90 },
-        { "ms": 225, "percentile": 80 },
-        { "ms": 250, "percentile": 65 },
-        { "ms": 275, "percentile": 50 },
-        { "ms": 300, "percentile": 35 },
-        { "ms": 350, "percentile": 18 },
-        { "ms": 400, "percentile": 8 },
-        { "ms": 500, "percentile": 2 }
+        {
+          "ms": 150,
+          "percentile": 99
+        },
+        {
+          "ms": 175,
+          "percentile": 97
+        },
+        {
+          "ms": 200,
+          "percentile": 90
+        },
+        {
+          "ms": 225,
+          "percentile": 80
+        },
+        {
+          "ms": 250,
+          "percentile": 65
+        },
+        {
+          "ms": 275,
+          "percentile": 50
+        },
+        {
+          "ms": 300,
+          "percentile": 35
+        },
+        {
+          "ms": 350,
+          "percentile": 18
+        },
+        {
+          "ms": 400,
+          "percentile": 8
+        },
+        {
+          "ms": 500,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 180, "color": "#FFD700", "title": "Neural God", "subtitle": "Immune to 3-Hour Meetings", "percentileLabel": "Top 1%" },
-        { "label": "A", "maxMs": 220, "color": "#00FF94", "title": "High Performer", "subtitle": "Responds to Slack before it's sent", "percentileLabel": "Top 10%" },
-        { "label": "B", "maxMs": 265, "color": "#58A6FF", "title": "Above Average", "subtitle": "Actually reads the meeting agenda", "percentileLabel": "Top 30%" },
-        { "label": "C", "maxMs": 320, "color": "#94A3B8", "title": "The Average Joe", "subtitle": "Shows up 3 mins late to every call", "percentileLabel": "Top 50%" },
-        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Offline", "subtitle": "Suffering from Extreme Burnout", "percentileLabel": "Bottom 10%" }
+        {
+          "label": "S",
+          "maxMs": 180,
+          "color": "#FFD700",
+          "title": "Neural God",
+          "subtitle": "Immune to 3-Hour Meetings",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 220,
+          "color": "#00FF94",
+          "title": "High Performer",
+          "subtitle": "Responds to Slack before it's sent",
+          "percentileLabel": "Top 10%"
+        },
+        {
+          "label": "B",
+          "maxMs": 265,
+          "color": "#58A6FF",
+          "title": "Above Average",
+          "subtitle": "Actually reads the meeting agenda",
+          "percentileLabel": "Top 30%"
+        },
+        {
+          "label": "C",
+          "maxMs": 320,
+          "color": "#94A3B8",
+          "title": "The Average Joe",
+          "subtitle": "Shows up 3 mins late to every call",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Offline",
+          "subtitle": "Suffering from Extreme Burnout",
+          "percentileLabel": "Bottom 10%"
+        }
       ]
     }
   },
@@ -66,11 +141,22 @@
     "accentDim": "rgba(255,107,107,0.10)",
     "category": "office",
     "categoryLabel": "Office Survival Test",
-    "tags": ["stress relief game", "office game", "boss slapper", "tap speed test"],
+    "tags": [
+      "stress relief game",
+      "office game",
+      "boss slapper",
+      "tap speed test"
+    ],
     "seo": {
       "metaTitle": "Office Avenger – Stress Relief Speed Test | NeuroBench",
       "metaDescription": "How fast can you neutralize a workplace stressor? Tap the boss 10 times as fast as possible. Measure your stress-relief velocity and share your catharsis score. Free instant test.",
-      "keywords": ["stress relief game", "office stress test", "tap speed test", "boss slapper game", "workplace humor game"]
+      "keywords": [
+        "stress relief game",
+        "office stress test",
+        "tap speed test",
+        "boss slapper game",
+        "workplace humor game"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -91,21 +177,80 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 1200, "percentile": 99 },
-        { "ms": 1500, "percentile": 95 },
-        { "ms": 1800, "percentile": 85 },
-        { "ms": 2200, "percentile": 65 },
-        { "ms": 2700, "percentile": 45 },
-        { "ms": 3200, "percentile": 25 },
-        { "ms": 4000, "percentile": 10 },
-        { "ms": 5000, "percentile": 3 }
+        {
+          "ms": 1200,
+          "percentile": 99
+        },
+        {
+          "ms": 1500,
+          "percentile": 95
+        },
+        {
+          "ms": 1800,
+          "percentile": 85
+        },
+        {
+          "ms": 2200,
+          "percentile": 65
+        },
+        {
+          "ms": 2700,
+          "percentile": 45
+        },
+        {
+          "ms": 3200,
+          "percentile": 25
+        },
+        {
+          "ms": 4000,
+          "percentile": 10
+        },
+        {
+          "ms": 5000,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 1400, "color": "#FFD700", "title": "Workplace Deity", "subtitle": "HR has a restraining order against you", "percentileLabel": "Top 1%" },
-        { "label": "A", "maxMs": 1900, "color": "#FF6B6B", "title": "Senior Avenger", "subtitle": "Your manager avoids eye contact", "percentileLabel": "Top 10%" },
-        { "label": "B", "maxMs": 2500, "color": "#58A6FF", "title": "Passive Aggressor", "subtitle": "Exclusively communicates via 'per my last email'", "percentileLabel": "Top 30%" },
-        { "label": "C", "maxMs": 3500, "color": "#94A3B8", "title": "The Suppressor", "subtitle": "Smiles through every pointless standup", "percentileLabel": "Top 50%" },
-        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Fully Institutionalized", "subtitle": "Has not taken PTO since 2019", "percentileLabel": "Bottom 10%" }
+        {
+          "label": "S",
+          "maxMs": 1400,
+          "color": "#FFD700",
+          "title": "Workplace Deity",
+          "subtitle": "HR has a restraining order against you",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 1900,
+          "color": "#FF6B6B",
+          "title": "Senior Avenger",
+          "subtitle": "Your manager avoids eye contact",
+          "percentileLabel": "Top 10%"
+        },
+        {
+          "label": "B",
+          "maxMs": 2500,
+          "color": "#58A6FF",
+          "title": "Passive Aggressor",
+          "subtitle": "Exclusively communicates via 'per my last email'",
+          "percentileLabel": "Top 30%"
+        },
+        {
+          "label": "C",
+          "maxMs": 3500,
+          "color": "#94A3B8",
+          "title": "The Suppressor",
+          "subtitle": "Smiles through every pointless standup",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Fully Institutionalized",
+          "subtitle": "Has not taken PTO since 2019",
+          "percentileLabel": "Bottom 10%"
+        }
       ]
     }
   },
@@ -120,11 +265,23 @@
     "accentDim": "rgba(129,140,248,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["number memory test", "working memory test", "digit span test", "cognitive benchmark", "memory test online"],
+    "tags": [
+      "number memory test",
+      "working memory test",
+      "digit span test",
+      "cognitive benchmark",
+      "memory test online"
+    ],
     "seo": {
       "metaTitle": "Number Memory Test – Working Memory Capacity Benchmark | NeuroBench",
       "metaDescription": "How many digits can you memorize? Test your working memory span online for free. The average person remembers 7 digits — can you beat it? Instant results, no signup.",
-      "keywords": ["number memory test", "working memory test", "digit span test", "memory capacity test", "cognitive benchmark online"]
+      "keywords": [
+        "number memory test",
+        "working memory test",
+        "digit span test",
+        "memory capacity test",
+        "cognitive benchmark online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -145,20 +302,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 5,  "percentile": 99 },
-        { "ms": 6,  "percentile": 95 },
-        { "ms": 7,  "percentile": 75 },
-        { "ms": 8,  "percentile": 50 },
-        { "ms": 9,  "percentile": 25 },
-        { "ms": 10, "percentile": 10 },
-        { "ms": 12, "percentile": 3  }
+        {
+          "ms": 5,
+          "percentile": 99
+        },
+        {
+          "ms": 6,
+          "percentile": 95
+        },
+        {
+          "ms": 7,
+          "percentile": 75
+        },
+        {
+          "ms": 8,
+          "percentile": 50
+        },
+        {
+          "ms": 9,
+          "percentile": 25
+        },
+        {
+          "ms": 10,
+          "percentile": 10
+        },
+        {
+          "ms": 12,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 5,  "color": "#FFD700", "title": "Photographic Memory",   "subtitle": "Your brain has more RAM than the server",          "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 7,  "color": "#818CF8", "title": "High Bandwidth",         "subtitle": "Remembers everyone's coffee order. Always.",       "percentileLabel": "Top 25%"   },
-        { "label": "B", "maxMs": 9,  "color": "#58A6FF", "title": "Within Normal Range",    "subtitle": "Miller's Law says you're fine. Miller was nice.",  "percentileLabel": "Top 50%"   },
-        { "label": "C", "maxMs": 11, "color": "#94A3B8", "title": "Slight Buffering",       "subtitle": "Forgets why they opened the fridge. Daily.",       "percentileLabel": "Top 75%"   },
-        { "label": "D", "maxMs": 999,"color": "#EF4444", "title": "404: Memory Not Found",  "subtitle": "Has 47 browser tabs open and counting",           "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 13,
+          "color": "#FFD700",
+          "title": "Photographic Memory",
+          "subtitle": "Your brain has more RAM than the server",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 10,
+          "color": "#818CF8",
+          "title": "High Bandwidth",
+          "subtitle": "Remembers everyone's coffee order. Always.",
+          "percentileLabel": "Top 25%"
+        },
+        {
+          "label": "B",
+          "maxMs": 8,
+          "color": "#58A6FF",
+          "title": "Within Normal Range",
+          "subtitle": "Miller's Law says you're fine. Miller was nice.",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "C",
+          "maxMs": 6,
+          "color": "#94A3B8",
+          "title": "Slight Buffering",
+          "subtitle": "Forgets why they opened the fridge. Daily.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "404: Memory Not Found",
+          "subtitle": "Has 47 browser tabs open and counting",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   }
