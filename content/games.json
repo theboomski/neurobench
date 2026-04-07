@@ -108,5 +108,58 @@
         { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Fully Institutionalized", "subtitle": "Has not taken PTO since 2019", "percentileLabel": "Bottom 10%" }
       ]
     }
+  },
+  {
+    "id": "number-memory",
+    "title": "Memory Matrix",
+    "clinicalTitle": "Working Memory Capacity Assessment",
+    "shortDescription": "How many digits can your brain hold? Beat the 7-digit average.",
+    "description": "A clinical measure of your working memory span. Numbers flash briefly — memorize them, then type them back. Each correct answer adds one more digit. How far can you go?",
+    "emoji": "🧠",
+    "accent": "#818CF8",
+    "accentDim": "rgba(129,140,248,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["number memory test", "working memory test", "digit span test", "cognitive benchmark", "memory test online"],
+    "seo": {
+      "metaTitle": "Number Memory Test – Working Memory Capacity Benchmark | NeuroBench",
+      "metaDescription": "How many digits can you memorize? Test your working memory span online for free. The average person remembers 7 digits — can you beat it? Instant results, no signup.",
+      "keywords": ["number memory test", "working memory test", "digit span test", "memory capacity test", "cognitive benchmark online"]
+    },
+    "content": {
+      "howToPlay": [
+        "Click 'Begin Protocol' to start the assessment.",
+        "A number sequence will flash on screen — memorize it before it disappears.",
+        "Type the number exactly as shown using the on-screen keypad or your keyboard.",
+        "Each correct answer adds one more digit to the next sequence.",
+        "One mistake ends the test — your score is the longest sequence you recalled correctly."
+      ],
+      "science": "Working memory — the brain's mental scratchpad — is one of the most studied constructs in cognitive neuroscience. The digit span task, first formalized by psychologist George Miller in 1956, revealed that humans can hold approximately 7 ± 2 items in short-term memory at once, a finding now known as 'Miller's Law.' The prefrontal cortex and parietal lobes coordinate to maintain and manipulate these temporary representations. Working memory capacity strongly predicts academic performance, fluid intelligence, and professional decision-making speed. Unlike long-term memory, working memory degrades rapidly without active rehearsal — typically within 15–30 seconds. Elite performers in high-stakes professions (surgeons, air traffic controllers, chess grandmasters) consistently score above 9 digits, suggesting working memory is a trainable cognitive resource.",
+      "tips": [
+        "Chunk the digits into groups of 2–3 (e.g. '8 3 7 1 4' → '83' '71' '4') to dramatically extend your span.",
+        "Subvocalize the sequence — silently repeating numbers engages the phonological loop, a dedicated working memory subsystem.",
+        "Avoid distractions during the flash window — divided attention is the primary cause of encoding failure.",
+        "The display time scales with digit count, so longer sequences give you proportionally more time — don't rush.",
+        "Practice consistently: working memory span is one of the few cognitive metrics proven to improve with targeted training."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 5,  "percentile": 99 },
+        { "ms": 6,  "percentile": 95 },
+        { "ms": 7,  "percentile": 75 },
+        { "ms": 8,  "percentile": 50 },
+        { "ms": 9,  "percentile": 25 },
+        { "ms": 10, "percentile": 10 },
+        { "ms": 12, "percentile": 3  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 5,  "color": "#FFD700", "title": "Photographic Memory",   "subtitle": "Your brain has more RAM than the server",          "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 7,  "color": "#818CF8", "title": "High Bandwidth",         "subtitle": "Remembers everyone's coffee order. Always.",       "percentileLabel": "Top 25%"   },
+        { "label": "B", "maxMs": 9,  "color": "#58A6FF", "title": "Within Normal Range",    "subtitle": "Miller's Law says you're fine. Miller was nice.",  "percentileLabel": "Top 50%"   },
+        { "label": "C", "maxMs": 11, "color": "#94A3B8", "title": "Slight Buffering",       "subtitle": "Forgets why they opened the fridge. Daily.",       "percentileLabel": "Top 75%"   },
+        { "label": "D", "maxMs": 999,"color": "#EF4444", "title": "404: Memory Not Found",  "subtitle": "Has 47 browser tabs open and counting",           "percentileLabel": "Bottom 25%"}
+      ]
+    }
   }
 ]
