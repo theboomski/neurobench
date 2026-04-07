@@ -1,56 +1,111 @@
 [
   {
     "id": "reaction-time",
-    "title": "Reaction Time Test",
-    "shortDescription": "How fast are your reflexes?",
-    "description": "Measure your visual reaction speed in milliseconds. Click the moment you see green — benchmark yourself against the world.",
+    "title": "Neural Latency Test",
+    "clinicalTitle": "Visual Stimulus Response Measurement",
+    "shortDescription": "Measure your synaptic transmission speed in milliseconds.",
+    "description": "A clinical-grade assessment of your visual cortex processing speed and motor neuron response time. Used by elite athletes and neuroscience researchers worldwide.",
     "emoji": "⚡",
-    "iconName": "Zap",
-    "accent": "#1DB954",
-    "accentDim": "rgba(29,185,84,0.12)",
-    "category": "Reflexes",
+    "accent": "#00FF94",
+    "accentDim": "rgba(0,255,148,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["reaction time test", "reflex test", "neural latency", "cognitive benchmark"],
     "seo": {
-      "metaTitle": "Reaction Time Test – Free Online Reflex Speed Test",
-      "metaDescription": "Measure your reaction time online for free. Click when the screen turns green and find out how you rank globally. No signup needed.",
-      "keywords": ["reaction time test", "reflex test", "reaction speed test", "online reaction test"]
+      "metaTitle": "Neural Latency Test – Free Online Reaction Time Benchmark",
+      "metaDescription": "Measure your reaction time with clinical precision. Click when green appears and benchmark your neural response speed against thousands of high-performers worldwide. Free, instant, no signup.",
+      "keywords": ["reaction time test", "neural latency test", "reflex speed test", "cognitive benchmark online"]
     },
     "content": {
       "howToPlay": [
-        "Click or tap anywhere to begin the test.",
-        "Wait for the screen to turn green — don't click early!",
-        "Click as fast as you can the moment you see green.",
-        "Complete 5 rounds for your averaged final score.",
-        "Share your result and challenge friends."
+        "Click or tap anywhere on the stimulus panel to initiate the protocol.",
+        "The panel will display a red standby indicator — remain focused and do not interact.",
+        "The moment the panel switches to green, click or tap as fast as possible.",
+        "Your Neural Latency score is displayed in milliseconds (ms).",
+        "Share your Neuro-Bench Report Card and challenge your colleagues."
       ],
-      "science": "Reaction time is the interval between a stimulus and the initiation of a motor response. The average human visual reaction time sits around 250ms. Your brain processes the green signal through the optic nerve to the visual cortex, then fires a motor command down the spinal cord to your finger — all in milliseconds. Age, fatigue, caffeine, and practice all meaningfully affect this number. Elite gamers and athletes typically score below 200ms through deliberate training.",
+      "science": "Neural latency — commonly called reaction time — measures the total elapsed time from sensory stimulus to motor response initiation. The signal travels from your retina through the optic nerve to the primary visual cortex (V1), is processed by the dorsal visual stream, then a motor command is dispatched through the corticospinal tract to your finger flexor muscles. The entire cascade takes approximately 150–300ms in healthy adults. Elite athletes, fighter pilots, and professional gamers consistently score below 200ms through deliberate neuromuscular training. Fatigue, dehydration, alcohol, and age all measurably degrade performance. A single well-rested morning session after caffeine intake typically produces a subject's personal best scores, as adrenergic stimulation accelerates cortical processing speed.",
       "tips": [
-        "Use your index finger — it has the fastest motor pathway of any finger.",
-        "Don't try to anticipate the green — clicking early invalidates the round.",
-        "Take 1–2 practice rounds first to prime your neuromuscular response.",
-        "Wired mouse on desktop gives the most accurate latency.",
-        "Consistent sleep measurably improves reaction time by 10–20ms."
+        "Use your dominant index finger — it has the most direct motor pathway to the primary motor cortex.",
+        "Do not attempt to anticipate the green signal — pre-motor activation invalidates the measurement.",
+        "Perform 1–2 warm-up taps before beginning to prime your neuromuscular junction.",
+        "A wired input device eliminates Bluetooth polling latency (~8ms) for the most accurate score.",
+        "Controlled diaphragmatic breathing before the test measurably lowers sympathetic arousal and improves baseline latency."
       ]
     },
     "stats": {
       "percentiles": [
         { "ms": 150, "percentile": 99 },
         { "ms": 175, "percentile": 97 },
-        { "ms": 200, "percentile": 92 },
-        { "ms": 225, "percentile": 84 },
-        { "ms": 250, "percentile": 72 },
-        { "ms": 275, "percentile": 58 },
-        { "ms": 300, "percentile": 43 },
-        { "ms": 325, "percentile": 30 },
-        { "ms": 350, "percentile": 19 },
-        { "ms": 400, "percentile": 9 },
+        { "ms": 200, "percentile": 90 },
+        { "ms": 225, "percentile": 80 },
+        { "ms": 250, "percentile": 65 },
+        { "ms": 275, "percentile": 50 },
+        { "ms": 300, "percentile": 35 },
+        { "ms": 350, "percentile": 18 },
+        { "ms": 400, "percentile": 8 },
         { "ms": 500, "percentile": 2 }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 180, "color": "#FFD700", "title": "Superhuman" },
-        { "label": "A", "maxMs": 220, "color": "#1DB954", "title": "Elite" },
-        { "label": "B", "maxMs": 260, "color": "#3B82F6", "title": "Above Average" },
-        { "label": "C", "maxMs": 310, "color": "#94A3B8", "title": "Average" },
-        { "label": "D", "maxMs": 9999, "color": "#64748B", "title": "Keep Training" }
+        { "label": "S", "maxMs": 180, "color": "#FFD700", "title": "Neural God", "subtitle": "Immune to 3-Hour Meetings", "percentileLabel": "Top 1%" },
+        { "label": "A", "maxMs": 220, "color": "#00FF94", "title": "High Performer", "subtitle": "Responds to Slack before it's sent", "percentileLabel": "Top 10%" },
+        { "label": "B", "maxMs": 265, "color": "#58A6FF", "title": "Above Average", "subtitle": "Actually reads the meeting agenda", "percentileLabel": "Top 30%" },
+        { "label": "C", "maxMs": 320, "color": "#94A3B8", "title": "The Average Joe", "subtitle": "Shows up 3 mins late to every call", "percentileLabel": "Top 50%" },
+        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Offline", "subtitle": "Suffering from Extreme Burnout", "percentileLabel": "Bottom 10%" }
+      ]
+    }
+  },
+  {
+    "id": "boss-slapper",
+    "title": "Office Avenger",
+    "clinicalTitle": "Neural Impulse Response Test",
+    "shortDescription": "Rapidly neutralize workplace stressors. 10 taps. Maximum catharsis.",
+    "description": "A proprietary stress-relief velocity assessment disguised as a clinical impulse response test. Tap the workplace aggressor 10 times as fast as neurologically possible.",
+    "emoji": "👹",
+    "accent": "#FF6B6B",
+    "accentDim": "rgba(255,107,107,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival Test",
+    "tags": ["stress relief game", "office game", "boss slapper", "tap speed test"],
+    "seo": {
+      "metaTitle": "Office Avenger – Stress Relief Speed Test | NeuroBench",
+      "metaDescription": "How fast can you neutralize a workplace stressor? Tap the boss 10 times as fast as possible. Measure your stress-relief velocity and share your catharsis score. Free instant test.",
+      "keywords": ["stress relief game", "office stress test", "tap speed test", "boss slapper game", "workplace humor game"]
+    },
+    "content": {
+      "howToPlay": [
+        "Click or tap the 'Begin Protocol' button to initiate the stress-relief assessment.",
+        "A workplace stressor stimulus (👹) will appear on screen.",
+        "Rapidly tap the stimulus exactly 10 times with maximum neurological urgency.",
+        "Your Stress-Relief Velocity is measured in total elapsed milliseconds.",
+        "Lower score = faster catharsis = higher workplace survival probability."
+      ],
+      "science": "Repetitive motor tapping tasks have been studied extensively in neuroscience as a measure of corticospinal tract efficiency and basal ganglia timing circuits. The speed at which a subject can execute rapid sequential taps reflects the integrity of the supplementary motor area (SMA) and pre-motor cortex, which coordinate timing and sequencing of voluntary movements. Interestingly, research in occupational psychology has found that humor-based stress displacement activities — including symbolic aggression against authority figures — measurably reduce cortisol levels and self-reported workplace stress. This test combines both domains: a genuine measure of motor tapping speed, wrapped in the cathartic framework of office-stress relief.",
+      "tips": [
+        "Use alternating index and middle fingers for maximum tap frequency — a technique called 'trill tapping.'",
+        "Keep your wrist elevated and tap from the fingertip only, not the full finger, to reduce travel time.",
+        "On mobile, multi-touch with two fingers alternating is significantly faster than single-finger tapping.",
+        "Controlled aggression — channeling genuine frustration — has been shown to improve motor output speed by up to 12% in lab conditions.",
+        "Visualize your most stressful Monday morning meeting for optimal performance."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 1200, "percentile": 99 },
+        { "ms": 1500, "percentile": 95 },
+        { "ms": 1800, "percentile": 85 },
+        { "ms": 2200, "percentile": 65 },
+        { "ms": 2700, "percentile": 45 },
+        { "ms": 3200, "percentile": 25 },
+        { "ms": 4000, "percentile": 10 },
+        { "ms": 5000, "percentile": 3 }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 1400, "color": "#FFD700", "title": "Workplace Deity", "subtitle": "HR has a restraining order against you", "percentileLabel": "Top 1%" },
+        { "label": "A", "maxMs": 1900, "color": "#FF6B6B", "title": "Senior Avenger", "subtitle": "Your manager avoids eye contact", "percentileLabel": "Top 10%" },
+        { "label": "B", "maxMs": 2500, "color": "#58A6FF", "title": "Passive Aggressor", "subtitle": "Exclusively communicates via 'per my last email'", "percentileLabel": "Top 30%" },
+        { "label": "C", "maxMs": 3500, "color": "#94A3B8", "title": "The Suppressor", "subtitle": "Smiles through every pointless standup", "percentileLabel": "Top 50%" },
+        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Fully Institutionalized", "subtitle": "Has not taken PTO since 2019", "percentileLabel": "Bottom 10%" }
       ]
     }
   }

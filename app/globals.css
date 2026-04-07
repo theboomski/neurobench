@@ -3,18 +3,19 @@
 :root {
   --bg:          #121212;
   --bg-card:     #181818;
-  --bg-elevated: #222222;
+  --bg-elevated: #202020;
   --bg-overlay:  #282828;
-  --border:      rgba(255,255,255,0.08);
-  --border-md:   rgba(255,255,255,0.14);
-  --text-1:      #FFFFFF;
-  --text-2:      #B3B3B3;
-  --text-3:      #6B6B6B;
-  --accent:      #1DB954;
-  --radius-sm:   8px;
+  --border:      rgba(255,255,255,0.07);
+  --border-md:   rgba(255,255,255,0.13);
+  --text-1:      #F0F0F0;
+  --text-2:      #A0A0A0;
+  --text-3:      #505050;
+  --accent:      #00FF94;
+  --radius-sm:   6px;
   --radius-md:   12px;
   --radius-lg:   18px;
   --radius-xl:   24px;
+  --font-mono:   'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,55 +24,86 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text-1);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   min-height: 100dvh;
 }
 
-/* ── Ad Banners ─────────────────────── */
+/* Scanline overlay for lab aesthetic */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.mono { font-family: var(--font-mono); }
+
+/* Ad slots */
 .ad-slot {
   width: 100%;
   background: var(--bg-card);
-  border: 1px dashed rgba(255,255,255,0.1);
+  border: 1px dashed rgba(255,255,255,0.08);
   border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   color: var(--text-3);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-family: monospace;
+  font-family: var(--font-mono);
 }
-.ad-slot-banner { height: 90px; }
-.ad-slot-interstitial { height: 260px; width: 100%; max-width: 480px; border-radius: var(--radius-lg); }
+.ad-banner { height: 90px; }
+.ad-interstitial { height: 260px; max-width: 480px; border-radius: var(--radius-lg); }
 
-/* ── Keyframes ──────────────────────── */
+/* Active scale - mobile tactile */
+.pressable { transition: transform 0.1s ease, opacity 0.1s ease; cursor: pointer; }
+.pressable:active { transform: scale(0.95); opacity: 0.85; }
+
+/* Animations */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.88); }
+  from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
-@keyframes pulseGlow {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0.7; }
+@keyframes pulseRing {
+  0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+  50%      { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+}
+@keyframes bossShake {
+  0%,100% { transform: scale(1) rotate(0deg); }
+  25%      { transform: scale(1.1) rotate(-3deg); }
+  75%      { transform: scale(1.1) rotate(3deg); }
 }
 @keyframes shake {
   0%,100% { transform: translateX(0); }
   25%     { transform: translateX(-10px); }
   75%     { transform: translateX(10px); }
 }
+@keyframes ticker {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
 
 .anim-fade-up  { animation: fadeUp  0.35s ease both; }
-.anim-scale-in { animation: scaleIn 0.3s  ease both; }
-.anim-pulse    { animation: pulseGlow 1s ease infinite; }
-.anim-shake    { animation: shake 0.35s ease; }
+.anim-scale-in { animation: scaleIn 0.28s ease both; }
+.anim-shake    { animation: shake   0.35s ease; }
+.anim-boss     { animation: bossShake 0.2s ease infinite; }
 
-/* ── Scrollbar ──────────────────────── */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg-overlay); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--bg-overlay); border-radius: 2px; }
+
+@media (max-width: 640px) {
+  .ad-banner { height: 60px; }
+}

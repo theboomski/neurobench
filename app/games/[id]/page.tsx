@@ -4,9 +4,9 @@ import gamesData from "@/content/games.json";
 import type { GameData } from "@/lib/types";
 import GameLayout from "@/components/GameLayout";
 import ReactionGame from "@/components/games/ReactionGame";
+import BossSlapper from "@/components/games/BossSlapper";
 
 const games = gamesData as GameData[];
-
 type Props = { params: Promise<{ id: string }> };
 
 export function generateStaticParams() {
@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function GameComponent({ id, game }: { id: string; game: GameData }) {
   switch (id) {
     case "reaction-time": return <ReactionGame game={game} />;
-    default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center" }}>Coming soon.</p>;
+    case "boss-slapper":  return <BossSlapper game={game} />;
+    default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
 
@@ -45,6 +46,7 @@ export default async function GamePage({ params }: Props) {
     applicationCategory: "Game",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    keywords: game.tags.join(", "),
   };
 
   return (

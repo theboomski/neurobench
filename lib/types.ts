@@ -3,18 +3,22 @@ export interface GameRank {
   maxMs: number;
   color: string;
   title: string;
+  subtitle: string;
+  percentileLabel: string;
 }
 
 export interface GameData {
   id: string;
   title: string;
+  clinicalTitle: string;
   shortDescription: string;
   description: string;
   emoji: string;
-  iconName: string;
   accent: string;
   accentDim: string;
-  category: string;
+  category: "clinical" | "office";
+  categoryLabel: string;
+  tags: string[];
   seo: {
     metaTitle: string;
     metaDescription: string;

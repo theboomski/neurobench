@@ -1,60 +1,53 @@
 "use client";
 
-// AdSense/AdMob 정책 기준:
-// - 강제 카운트다운 금지
-// - 유저가 언제든 닫기(Skip) 가능해야 함
-// - 광고 영역은 실제 AdSense 코드로 교체
-
 export default function InterstitialAd({ onDone }: { onDone: () => void }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(0,0,0,0.88)", backdropFilter: "blur(12px)",
+      background: "rgba(0,0,0,0.92)", backdropFilter: "blur(16px)",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: 24,
     }}>
       <div style={{
         background: "var(--bg-card)", border: "1px solid var(--border-md)",
-        borderRadius: "var(--radius-xl)", padding: "28px 24px", width: "100%",
-        maxWidth: 480, textAlign: "center",
+        borderTop: "2px solid #00FF94", borderRadius: "var(--radius-xl)",
+        padding: "28px 24px", width: "100%", maxWidth: 480, textAlign: "center",
       }}>
-        <p style={{ fontSize: 11, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "monospace", marginBottom: 16 }}>
-          Advertisement
-        </p>
+        <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
+          Initiating Next Protocol...
+        </div>
 
-        {/* ── 실제 AdSense 교체 영역 ──────────────────────────────────
-            <ins className="adsbygoogle"
-              style={{ display: "block" }}
-              data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-              data-ad-slot="XXXXXXXXXX"
-              data-ad-format="auto"
-              data-full-width-responsive="true"
-            />
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        ─────────────────────────────────────────────────────────── */}
-        <div className="ad-slot ad-slot-interstitial" style={{ margin: "0 auto 20px" }}>
+        {/* ── Replace with real AdSense unit ──────────────────────────────
+          <ins className="adsbygoogle"
+            style={{ display: "block" }}
+            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-slot="XXXXXXXXXX"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        ─────────────────────────────────────────────────────────────── */}
+        <div className="ad-slot ad-interstitial" style={{ margin: "0 auto 20px", width: "100%" }}>
           <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 32, marginBottom: 8 }}>📺</div>
-            <div style={{ fontSize: 13, color: "var(--text-3)" }}>Ad Placeholder</div>
-            <div style={{ fontSize: 11, color: "var(--text-3)", marginTop: 4, opacity: 0.6 }}>Replace with Google AdSense</div>
+            <div style={{ fontSize: 28, marginBottom: 6 }}>📺</div>
+            <div style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Ad Placeholder</div>
+            <div style={{ fontSize: 10, color: "var(--text-3)", marginTop: 4, opacity: 0.5 }}>→ Replace with Google AdSense</div>
           </div>
         </div>
 
-        {/* Skip 버튼 — AdSense 정책상 즉시 닫기 가능해야 함 */}
+        {/* AdSense policy: user must be able to skip immediately */}
         <button
           onClick={onDone}
+          className="pressable"
           style={{
             width: "100%", padding: "14px 0", borderRadius: "var(--radius-md)",
-            border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer",
-            background: "#1DB954", color: "#000",
+            border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
+            background: "#00FF94", color: "#000", fontFamily: "var(--font-mono)",
+            letterSpacing: "0.04em",
           }}
         >
-          ▶ Play Again
+          ▶ RUN AGAIN
         </button>
-
-        <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 12 }}>
-          Tap to continue
-        </p>
       </div>
     </div>
   );
