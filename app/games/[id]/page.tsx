@@ -7,6 +7,11 @@ import ReactionGame from "@/components/games/ReactionGame";
 import BossSlapper from "@/components/games/BossSlapper";
 import NumberMemory from "@/components/games/NumberMemory";
 import SequenceMemory from "@/components/games/SequenceMemory";
+import VerbalMemory from "@/components/games/VerbalMemory";
+import VisualMemory from "@/components/games/VisualMemory";
+import ChimpTest from "@/components/games/ChimpTest";
+import AimTrainer from "@/components/games/AimTrainer";
+import TypingSpeed from "@/components/games/TypingSpeed";
 
 const games = gamesData as GameData[];
 type Props = { params: Promise<{ id: string }> };
@@ -33,6 +38,11 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "boss-slapper":  return <BossSlapper game={game} />;
     case "number-memory":   return <NumberMemory game={game} />;
     case "sequence-memory": return <SequenceMemory game={game} />;
+    case "verbal-memory":   return <VerbalMemory game={game} />;
+    case "visual-memory":   return <VisualMemory game={game} />;
+    case "chimp-test":      return <ChimpTest game={game} />;
+    case "aim-trainer":     return <AimTrainer game={game} />;
+    case "typing-speed":    return <TypingSpeed game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
