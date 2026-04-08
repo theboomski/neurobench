@@ -51,11 +51,25 @@ export function getClicks(gameId: string): number {
   return parseInt(localStorage.getItem(`nb_clicks_${gameId}`) ?? "0", 10);
 }
 
-// ── Canvas Viral Report Card (9:16 stories format) ───────────────────────────
+// ── Brain Age & Rank Mappings ─────────────────────────────────────────────────
 
 const RANK_EMOJI: Record<string, string> = {
   S: "🧠", A: "⚡", B: "☕", C: "🤯", D: "🥔",
 };
+
+const BRAIN_AGE: Record<string, { age: number; label: string }> = {
+  S: { age: 18, label: "Peak Performance" },
+  A: { age: 25, label: "Sharp & Fast" },
+  B: { age: 35, label: "Above Average" },
+  C: { age: 50, label: "Room to Improve" },
+  D: { age: 72, label: "Time to Train 🥔" },
+};
+
+export function getBrainAge(rankLabel: string): { age: number; label: string } {
+  return BRAIN_AGE[rankLabel] ?? BRAIN_AGE["C"];
+}
+
+// ── Canvas Viral Report Card (9:16 stories format) ───────────────────────────
 
 export function generateReportCard(opts: {
   gameTitle: string;
@@ -91,21 +105,27 @@ export function generateReportCard(opts: {
 
   // Logo
   ctx.fillStyle = opts.accent;
-  ctx.font = "700 13px monospace";
+  ctx.font = "900 18px monospace";
   ctx.textAlign = "center";
-  ctx.fillText("NEUROBENCH", W / 2, 52);
+  ctx.fillText("ZAZAZA", W / 2, 52);
   ctx.fillStyle = "rgba(255,255,255,0.25)";
-  ctx.font = "400 11px monospace";
-  ctx.fillText(opts.clinicalTitle.toUpperCase(), W / 2, 72);
+  ctx.font = "400 10px monospace";
+  ctx.fillText(opts.clinicalTitle.toUpperCase(), W / 2, 70);
 
-  // Score
-  ctx.fillStyle = "#FFFFFF";
-  ctx.font = "900 96px -apple-system, Arial, sans-serif";
+  // Brain Age — BIG headline
+  const brainAgeMap: Record<string, number> = { S: 18, A: 25, B: 35, C: 50, D: 72 };
+  const brainAge = brainAgeMap[opts.rankLabel] ?? 50;
+  ctx.fillStyle = "rgba(255,255,255,0.35)";
+  ctx.font = "500 13px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(`${opts.score}`, W / 2, 210);
-  ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.font = "500 18px monospace";
-  ctx.fillText(opts.unit, W / 2, 242);
+  ctx.fillText("MY BRAIN AGE IS", W / 2, 138);
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "900 120px -apple-system, Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`${brainAge}`, W / 2, 256);
+  ctx.fillStyle = opts.accent;
+  ctx.font = "700 16px monospace";
+  ctx.fillText("CAN YOU BEAT ME?", W / 2, 284);
 
   // Percentile bar
   const bx = 60, by = 268, bw = W - 120, bh = 4;
@@ -173,7 +193,7 @@ export function generateReportCard(opts: {
   ctx.fillStyle = "#000000";
   ctx.font = "700 13px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(`CAN YOU BEAT THIS ${emoji}?  →  ${opts.siteUrl}`, W / 2, btnY + 32);
+  ctx.fillText(`WHAT'S YOUR BRAIN AGE? → ${opts.siteUrl}`, W / 2, btnY + 32);
 
   // Footer
   ctx.fillStyle = "rgba(255,255,255,0.1)";
