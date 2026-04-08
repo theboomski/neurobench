@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
 import InterstitialAd from "@/components/InterstitialAd";
 
 const t = dict.en;
+const TIME_LIMIT = 2500; // ms per round
 
 function getRank(score: number, game: GameData) {
   const ranks = [...game.stats.ranks].reverse();
@@ -35,57 +36,102 @@ const COLORS = [
 ];
 
 function randomPair() {
-  const word  = COLORS[Math.floor(Math.random() * COLORS.length)];
+  const word = COLORS[Math.floor(Math.random() * COLORS.length)];
   let ink = COLORS[Math.floor(Math.random() * COLORS.length)];
   while (ink.name === word.name) ink = COLORS[Math.floor(Math.random() * COLORS.length)];
-  // Shuffle button order
-  const buttons = [...COLORS].sort(() => Math.random() - 0.5).slice(0, 4);
-  if (!buttons.find(b => b.name === ink.name)) buttons[0] = ink;
-  return { word, ink, buttons: buttons.sort(() => Math.random() - 0.5) };
+  // 4 buttons including correct answer
+  const others = COLORS.filter(c => c.name !== ink.name).sort(() => Math.random() - 0.5).slice(0, 3);
+  const buttons = [...others, ink].sort(() => Math.random() - 0.5);
+  return { word, ink, buttons };
 }
 
 type Phase = "idle" | "playing" | "done";
 
 export default function ColorConflict({ game }: { game: GameData }) {
-  const [phase, setPhase]       = useState<Phase>("idle");
-  const [score, setScore]       = useState(0);
-  const [pair, setPair]         = useState(randomPair());
-  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
-  const [showAd, setShowAd]     = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
-  const [highScore, setHS]      = useState<number | null>(null);
+  const [phase, setPhase]         = useState<Phase>("idle");
+  const [score, setScore]         = useState(0);
+  const [pair, setPair]           = useState(randomPair());
+  const [feedback, setFeedback]   = useState<"correct" | "wrong" | "timeout" | null>(null);
+  const [timeLeft, setTimeLeft]   = useState(TIME_LIMIT);
+  const [showAd, setShowAd]       = useState(false);
+  const [shareImg, setShareImg]   = useState<string | null>(null);
+  const [highScore, setHS]        = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
+  const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
+  const roundRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scoreRef  = useRef(0);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
 
-  const startGame = () => { setPair(randomPair()); setScore(0); setFeedback(null); setPhase("playing"); };
+  const clearTimers = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (roundRef.current) clearTimeout(roundRef.current);
+  };
+
+  const endGame = useCallback((s: number) => {
+    clearTimers();
+    const isNew = saveHighScore(game.id, s);
+    setIsNewBest(isNew);
+    if (isNew) setHS(s);
+    setFinalScore(s);
+    setPhase("done");
+  }, [game.id]);
+
+  const startRound = useCallback((currentScore: number) => {
+    setPair(randomPair());
+    setFeedback(null);
+    setTimeLeft(TIME_LIMIT);
+
+    // Countdown bar
+    const startMs = performance.now();
+    timerRef.current = setInterval(() => {
+      const elapsed = performance.now() - startMs;
+      const remaining = Math.max(0, TIME_LIMIT - elapsed);
+      setTimeLeft(remaining);
+    }, 50);
+
+    // Timeout
+    roundRef.current = setTimeout(() => {
+      clearTimers();
+      playBeep("fail");
+      setFeedback("timeout");
+      setTimeout(() => endGame(currentScore), 800);
+    }, TIME_LIMIT);
+  }, [endGame]);
+
+  const startGame = () => {
+    scoreRef.current = 0;
+    setScore(0);
+    setFeedback(null);
+    setPhase("playing");
+    startRound(0);
+  };
 
   const handleAnswer = useCallback((colorName: string) => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || feedback !== null) return;
+    clearTimers();
     const correct = colorName === pair.ink.name;
     if (correct) {
       playBeep("success");
       setFeedback("correct");
-      const newScore = score + 1;
-      setScore(newScore);
-      setTimeout(() => { setPair(randomPair()); setFeedback(null); }, 250);
+      scoreRef.current++;
+      setScore(scoreRef.current);
+      setTimeout(() => startRound(scoreRef.current), 300);
     } else {
       playBeep("fail");
       setFeedback("wrong");
-      const isNew = saveHighScore(game.id, score);
-      setIsNewBest(isNew);
-      if (isNew) setHS(score);
-      setFinalScore(score);
-      setTimeout(() => setPhase("done"), 600);
+      setTimeout(() => endGame(scoreRef.current), 800);
     }
-  }, [phase, pair, score, game.id]);
+  }, [phase, feedback, pair, startRound, endGame]);
+
+  useEffect(() => () => clearTimers(), []);
 
   const handleRetry = () => setShowAd(true);
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
 
-  const rank = finalScore > 0 ? getRank(finalScore, game) : getRank(0, game);
-  const pct  = finalScore > 0 ? getPercentile(finalScore, game) : 0;
+  const rank = getRank(finalScore, game);
+  const pct  = getPercentile(finalScore, game);
 
   const handleShare = async () => {
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "CORRECT", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
@@ -110,7 +156,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
           <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
           <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
-          {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)", letterSpacing: "0.06em", textTransform: "uppercase" }}>◆ New Personal Record</div>}
+          {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)", textTransform: "uppercase" }}>◆ New Personal Record</div>}
           {highScore !== null && !isNewBest && <div style={{ fontSize: 12, color: "var(--text-3)", marginBottom: 16, fontFamily: "var(--font-mono)" }}>Personal best: <span style={{ color: game.accent }}>{highScore}</span></div>}
           <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap", margin: "16px 0 24px" }}>
             {game.stats.ranks.map(r => (<div key={r.label} style={{ padding: "4px 11px", borderRadius: 6, fontSize: 12, fontWeight: 800, fontFamily: "var(--font-mono)", background: r.label === rank.label ? `${r.color}18` : "var(--bg-elevated)", color: r.label === rank.label ? r.color : "var(--text-3)", border: `1px solid ${r.label === rank.label ? r.color + "40" : "transparent"}` }}>{r.label}</div>))}
@@ -125,6 +171,9 @@ export default function ColorConflict({ game }: { game: GameData }) {
     );
   }
 
+  const timerPct = (timeLeft / TIME_LIMIT) * 100;
+  const timerColor = timerPct > 60 ? game.accent : timerPct > 30 ? "#F59E0B" : "#EF4444";
+
   return (
     <>
       {showAd && <InterstitialAd onDone={afterAd} />}
@@ -132,63 +181,41 @@ export default function ColorConflict({ game }: { game: GameData }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🎨</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Inhibitory Control Assessment</p>
-          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Click the INK COLOR — not the word</p>
-          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>One wrong answer ends the test</p>
+          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Click the INK COLOR — not the word meaning</p>
+          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>2.5 seconds per round · wrong answer or timeout = game over</p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
       ) : (
         <div>
+          {/* Timer bar */}
+          <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${timerPct}%`, background: timerColor, borderRadius: 2, transition: "width 0.05s linear, background 0.3s" }} />
+          </div>
+
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>SCORE: <span style={{ color: game.accent, fontWeight: 700 }}>{score}</span></div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>CLICK THE INK COLOR</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: timerColor, fontWeight: 700 }}>{(timeLeft / 1000).toFixed(1)}s</div>
           </div>
 
           {/* Word display */}
-          <div style={{
-            background: "var(--bg-card)",
-            border: `1.5px solid ${feedback === "correct" ? "#22c55e60" : feedback === "wrong" ? "#ef444460" : "var(--border)"}`,
-            borderRadius: "var(--radius-xl)",
-            minHeight: "clamp(140px,28vw,200px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            marginBottom: 20, transition: "border-color 0.15s",
-          }}>
-            <span style={{
-              fontSize: "clamp(40px,10vw,72px)",
-              fontWeight: 900,
-              color: pair.ink.hex,
-              letterSpacing: "-0.02em",
-              fontFamily: "var(--font-mono)",
-              transition: "color 0.1s",
-            }}>
+          <div style={{ background: "var(--bg-card)", border: `1.5px solid ${feedback === "correct" ? "#22c55e60" : feedback === "wrong" || feedback === "timeout" ? "#ef444460" : "var(--border)"}`, borderRadius: "var(--radius-xl)", minHeight: "clamp(120px,22vw,160px)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, transition: "border-color 0.1s" }}>
+            <span style={{ fontSize: "clamp(36px,9vw,64px)", fontWeight: 900, color: pair.ink.hex, letterSpacing: "-0.02em", fontFamily: "var(--font-mono)" }}>
               {pair.word.name}
             </span>
           </div>
 
-          {/* Color buttons */}
+          {/* Buttons */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
             {pair.buttons.map(btn => (
-              <button
-                key={btn.name}
-                onClick={() => handleAnswer(btn.name)}
-                className="pressable"
-                style={{
-                  background: `${btn.hex}18`,
-                  color: btn.hex,
-                  border: `2px solid ${btn.hex}50`,
-                  borderRadius: "var(--radius-md)",
-                  padding: "16px 0",
-                  fontSize: 16,
-                  fontWeight: 800,
-                  fontFamily: "var(--font-mono)",
-                  cursor: "pointer",
-                  letterSpacing: "0.06em",
-                  WebkitTapHighlightColor: "transparent",
-                }}
-              >
+              <button key={btn.name} onClick={() => handleAnswer(btn.name)} className="pressable" style={{ background: `${btn.hex}18`, color: btn.hex, border: `2px solid ${btn.hex}50`, borderRadius: "var(--radius-md)", padding: "16px 0", fontSize: 16, fontWeight: 800, fontFamily: "var(--font-mono)", cursor: "pointer", letterSpacing: "0.06em", WebkitTapHighlightColor: "transparent" }}>
                 {btn.name}
               </button>
             ))}
           </div>
+
+          {feedback === "timeout" && (
+            <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#EF4444", fontFamily: "var(--font-mono)" }}>TIME&apos;S UP!</div>
+          )}
         </div>
       )}
     </>

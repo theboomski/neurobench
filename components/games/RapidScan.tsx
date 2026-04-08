@@ -7,6 +7,7 @@ import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib
 import InterstitialAd from "@/components/InterstitialAd";
 
 const t = dict.en;
+const TIME_LIMIT = 60000; // 60 second total session
 
 function getRank(score: number, game: GameData) {
   const ranks = [...game.stats.ranks].reverse();
@@ -26,10 +27,20 @@ function getPercentile(score: number, game: GameData): number {
 }
 
 function getGridCount(level: number) {
-  return Math.min(80 + level * 30, 400);
+  // Grows meaningfully each level
+  return Math.min(60 + level * 25, 500);
 }
 
-type Phase = "idle" | "playing" | "wrong" | "done";
+// Always regenerate entire grid — no Q position continuity
+function makeGrid(level: number): { grid: string[]; targetIdx: number } {
+  const count = getGridCount(level);
+  const grid = Array(count).fill("O");
+  const qi = Math.floor(Math.random() * count);
+  grid[qi] = "Q";
+  return { grid, targetIdx: qi };
+}
+
+type Phase = "idle" | "playing" | "done";
 
 export default function RapidScan({ game }: { game: GameData }) {
   const [phase, setPhase]       = useState<Phase>("idle");
@@ -38,65 +49,75 @@ export default function RapidScan({ game }: { game: GameData }) {
   const [targetIdx, setTargetIdx] = useState(0);
   const [wrongIdx, setWrongIdx] = useState<number | null>(null);
   const [score, setScore]       = useState(0);
-  const [startTime, setStartTime] = useState(0);
-  const [times, setTimes]       = useState<number[]>([]);
+  const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
   const [showAd, setShowAd]     = useState(false);
   const [shareImg, setShareImg] = useState<string | null>(null);
   const [highScore, setHS]      = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
+  const scoreRef  = useRef(0);
+  const levelRef  = useRef(1);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
 
-  const makeGrid = useCallback((lvl: number) => {
-    const count = getGridCount(lvl);
-    const arr = Array(count).fill("O");
-    const qi = Math.floor(Math.random() * count);
-    arr[qi] = "Q";
-    setGrid(arr);
-    setTargetIdx(qi);
-    setWrongIdx(null);
-    setStartTime(performance.now());
-  }, []);
+  const endGame = useCallback((s: number) => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    const isNew = saveHighScore(game.id, s);
+    setIsNewBest(isNew);
+    if (isNew) setHS(s);
+    setFinalScore(s);
+    setPhase("done");
+  }, [game.id]);
 
   const startGame = () => {
-    setLevel(1); setScore(0); setTimes([]);
-    makeGrid(1);
+    scoreRef.current = 0;
+    levelRef.current = 1;
+    setScore(0);
+    setLevel(1);
+    setWrongIdx(null);
+    setTimeLeft(TIME_LIMIT);
+
+    const { grid: g, targetIdx: qi } = makeGrid(1);
+    setGrid(g);
+    setTargetIdx(qi);
     setPhase("playing");
+
+    const startMs = performance.now();
+    timerRef.current = setInterval(() => {
+      const remaining = Math.max(0, TIME_LIMIT - (performance.now() - startMs));
+      setTimeLeft(remaining);
+      if (remaining <= 0) endGame(scoreRef.current);
+    }, 100);
   };
 
   const handleClick = useCallback((idx: number) => {
     if (phase !== "playing") return;
     if (idx === targetIdx) {
-      const elapsed = Math.round(performance.now() - startTime);
       playBeep("success");
-      const newScore = score + 1;
-      const newTimes = [...times, elapsed];
-      setScore(newScore);
-      setTimes(newTimes);
-      const nextLevel = level + 1;
-      setLevel(nextLevel);
-      makeGrid(nextLevel);
+      scoreRef.current++;
+      levelRef.current++;
+      setScore(scoreRef.current);
+      setLevel(levelRef.current);
+      setWrongIdx(null);
+      // Generate completely new grid
+      const { grid: g, targetIdx: qi } = makeGrid(levelRef.current);
+      setGrid(g);
+      setTargetIdx(qi);
     } else {
       playBeep("fail");
       setWrongIdx(idx);
-      const isNew = saveHighScore(game.id, score);
-      setIsNewBest(isNew);
-      if (isNew) setHS(score);
-      setFinalScore(score);
-      timerRef.current = setTimeout(() => setPhase("done"), 1200);
+      endGame(scoreRef.current);
     }
-  }, [phase, targetIdx, startTime, score, times, level, game.id, makeGrid]);
+  }, [phase, targetIdx, endGame]);
 
-  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
+  useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
 
   const handleRetry = () => setShowAd(true);
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
 
   const rank = getRank(finalScore, game);
   const pct  = getPercentile(finalScore, game);
-  const avgTime = times.length > 0 ? Math.round(times.reduce((s,v) => s+v, 0) / times.length) : 0;
 
   const handleShare = async () => {
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "ROUNDS", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
@@ -118,7 +139,6 @@ export default function RapidScan({ game }: { game: GameData }) {
           <div style={{ fontSize: "clamp(52px,13vw,80px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, marginBottom: 4 }}>
             {finalScore}<span style={{ fontSize: "clamp(16px,3vw,22px)", fontWeight: 400, color: "var(--text-3)", marginLeft: 6, fontFamily: "var(--font-mono)" }}>rounds</span>
           </div>
-          {avgTime > 0 && <div style={{ fontSize: 13, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Avg scan time: <span style={{ color: game.accent }}>{avgTime}ms</span></div>}
           <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
           <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
@@ -137,8 +157,10 @@ export default function RapidScan({ game }: { game: GameData }) {
     );
   }
 
-  const cols = Math.ceil(Math.sqrt(grid.length * 1.6));
-  const fontSize = Math.max(10, Math.min(18, 300 / cols));
+  const cols = Math.ceil(Math.sqrt(grid.length * 1.5));
+  const fontSize = Math.max(9, Math.min(16, 280 / cols));
+  const timerPct = (timeLeft / TIME_LIMIT) * 100;
+  const timerColor = timerPct > 40 ? game.accent : timerPct > 20 ? "#F59E0B" : "#EF4444";
 
   return (
     <>
@@ -147,51 +169,54 @@ export default function RapidScan({ game }: { game: GameData }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🔍</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Visual Search Efficiency</p>
-          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Find the Q among the O&apos;s — click it</p>
-          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Grid gets denser each round · wrong click ends it</p>
+          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Find the Q among the O&apos;s · 60 seconds total</p>
+          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Grid grows each round · wrong click = game over</p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
       ) : (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}>
+          {/* Timer bar */}
+          <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 2, marginBottom: 12, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${timerPct}%`, background: timerColor, borderRadius: 2, transition: "width 0.1s linear, background 0.3s" }} />
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>LEVEL <span style={{ color: game.accent, fontWeight: 700 }}>{level}</span></div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>SCORE: <span style={{ color: game.accent, fontWeight: 700 }}>{score}</span></div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>{grid.length} chars</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, fontWeight: 700, color: timerColor }}>{(timeLeft / 1000).toFixed(0)}s</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>SCORE <span style={{ color: game.accent, fontWeight: 700 }}>{score}</span></div>
           </div>
 
           <div style={{
             background: "var(--bg-card)",
             border: `1.5px solid ${wrongIdx !== null ? "#ef444460" : "var(--border)"}`,
             borderRadius: "var(--radius-xl)",
-            padding: "16px",
+            padding: "12px",
             display: "grid",
             gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: 2,
+            gap: 1,
             userSelect: "none",
             transition: "border-color 0.15s",
-            maxHeight: "60vh",
+            maxHeight: "58vh",
             overflow: "hidden",
           }}>
             {grid.map((char, idx) => (
-              <span
-                key={idx}
-                onClick={() => handleClick(idx)}
-                style={{
-                  fontSize,
-                  fontFamily: "monospace",
-                  fontWeight: char === "Q" ? 900 : 400,
-                  color: idx === wrongIdx ? "#ef4444" : char === "Q" && wrongIdx !== null ? game.accent : "var(--text-2)",
-                  cursor: "pointer",
-                  textAlign: "center",
-                  lineHeight: 1.4,
-                  WebkitTapHighlightColor: "transparent",
-                }}
-              >
+              <span key={`${level}-${idx}`} onClick={() => handleClick(idx)} style={{
+                fontSize,
+                fontFamily: "monospace",
+                fontWeight: char === "Q" ? 900 : 400,
+                color: idx === wrongIdx ? "#ef4444" : char === "Q" && wrongIdx !== null ? game.accent : "var(--text-2)",
+                cursor: "pointer",
+                textAlign: "center",
+                lineHeight: 1.35,
+                WebkitTapHighlightColor: "transparent",
+              }}>
                 {char}
               </span>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>FIND AND CLICK THE Q</div>
+          <div style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
+            FIND AND CLICK THE Q · {grid.length} CHARACTERS
+          </div>
         </div>
       )}
     </>

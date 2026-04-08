@@ -11,7 +11,6 @@ const INTERVAL_MS = 1000;
 const ROUNDS = 5;
 const FLASH_BEATS = 3;
 
-// Lower error = better
 function getRank(error: number, game: GameData) {
   return game.stats.ranks.find(r => error <= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
 }
@@ -31,29 +30,34 @@ function getPercentile(error: number, game: GameData): number {
 type Phase = "idle" | "flashing" | "waiting" | "result" | "done";
 
 export default function TemporalPulse({ game }: { game: GameData }) {
-  const [phase, setPhase]         = useState<Phase>("idle");
-  const [beat, setBeat]           = useState(0);          // 1-3 flashed, 0 = dark
-  const [round, setRound]         = useState(1);
-  const [errors, setErrors]       = useState<number[]>([]);
-  const [lastError, setLastError] = useState<number | null>(null);
-  const [flash, setFlash]         = useState(false);
-  const [showAd, setShowAd]       = useState(false);
-  const [shareImg, setShareImg]   = useState<string | null>(null);
-  const [highScore, setHS]        = useState<number | null>(null);
-  const [isNewBest, setIsNewBest] = useState(false);
+  const [phase, setPhase]           = useState<Phase>("idle");
+  const [beat, setBeat]             = useState(0);
+  const [round, setRound]           = useState(1);
+  const [errors, setErrors]         = useState<number[]>([]);
+  const [lastError, setLastError]   = useState<number | null>(null);
+  const [lastDirection, setLastDir] = useState<"EARLY" | "LATE" | null>(null);
+  const [flash, setFlash]           = useState(false);
+  const [showAd, setShowAd]         = useState(false);
+  const [shareImg, setShareImg]     = useState<string | null>(null);
+  const [highScore, setHS]          = useState<number | null>(null);
+  const [isNewBest, setIsNewBest]   = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const expectedTapRef = useRef<number>(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef       = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const errorsRef      = useRef<number[]>([]);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
   const clearT = () => { if (timerRef.current) clearTimeout(timerRef.current); };
   useEffect(() => () => clearT(), []);
 
-  const startRound = useCallback(() => {
+  const startRound = useCallback((r: number, currentErrors: number[]) => {
     setFlash(false);
     setBeat(0);
     setPhase("flashing");
+    setLastError(null);
+    setLastDir(null);
     let b = 0;
+
     const tick = () => {
       b++;
       setBeat(b);
@@ -64,7 +68,6 @@ export default function TemporalPulse({ game }: { game: GameData }) {
         if (b < FLASH_BEATS) {
           timerRef.current = setTimeout(tick, INTERVAL_MS - 80);
         } else {
-          // After last flash, wait for 4th beat
           expectedTapRef.current = performance.now() + INTERVAL_MS;
           timerRef.current = setTimeout(() => setPhase("waiting"), 80);
         }
@@ -74,20 +77,27 @@ export default function TemporalPulse({ game }: { game: GameData }) {
   }, []);
 
   const startGame = () => {
+    errorsRef.current = [];
     setErrors([]);
     setRound(1);
     setLastError(null);
-    startRound();
+    setLastDir(null);
+    startRound(1, []);
   };
 
   const handleTap = useCallback(() => {
     if (phase !== "waiting") return;
     const now = performance.now();
-    const error = Math.abs(Math.round(now - expectedTapRef.current));
+    const delta = now - expectedTapRef.current; // negative = early, positive = late
+    const error = Math.abs(Math.round(delta));
+    const direction: "EARLY" | "LATE" = delta < 0 ? "EARLY" : "LATE";
+
     setLastError(error);
+    setLastDir(direction);
     playBeep(error < 30 ? "success" : "go");
 
-    const newErrors = [...errors, error];
+    const newErrors = [...errorsRef.current, error];
+    errorsRef.current = newErrors;
     setErrors(newErrors);
     setPhase("result");
 
@@ -99,12 +109,11 @@ export default function TemporalPulse({ game }: { game: GameData }) {
       if (isNew) setHS(avg);
       timerRef.current = setTimeout(() => setPhase("done"), 1500);
     } else {
-      timerRef.current = setTimeout(() => {
-        setRound(r => r + 1);
-        startRound();
-      }, 1200);
+      const nextRound = newErrors.length + 1;
+      setRound(nextRound);
+      timerRef.current = setTimeout(() => startRound(nextRound, newErrors), 1200);
     }
-  }, [phase, errors, game.id, startRound]);
+  }, [phase, game.id, startRound]);
 
   const handleRetry = () => setShowAd(true);
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
@@ -135,11 +144,12 @@ export default function TemporalPulse({ game }: { game: GameData }) {
           <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
           <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 16 }}>&quot;{rank.subtitle}&quot;</div>
+          {/* Round breakdown with direction */}
           <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 20 }}>
             {errors.map((e, i) => (
-              <div key={i} style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", textAlign: "center" }}>
+              <div key={i} style={{ background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 12px", textAlign: "center", minWidth: 64 }}>
                 <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>R{i+1}</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: e < 30 ? game.accent : e < 80 ? "#F59E0B" : "#ef4444", fontFamily: "var(--font-mono)" }}>{e}ms</div>
+                <div style={{ fontSize: 15, fontWeight: 700, color: e < 30 ? game.accent : e < 80 ? "#F59E0B" : "#ef4444", fontFamily: "var(--font-mono)" }}>{e}ms</div>
               </div>
             ))}
           </div>
@@ -182,14 +192,13 @@ export default function TemporalPulse({ game }: { game: GameData }) {
             </div>
           </div>
 
-          {/* Main tap area */}
           <div
             onClick={handleTap}
             style={{
               background: flash ? `${game.accent}20` : "var(--bg-card)",
               border: `2px solid ${flash ? game.accent : phase === "waiting" ? `${game.accent}60` : "var(--border)"}`,
               borderRadius: "var(--radius-xl)",
-              minHeight: "clamp(260px,45vw,340px)",
+              minHeight: "clamp(240px,42vw,320px)",
               display: "flex", flexDirection: "column",
               alignItems: "center", justifyContent: "center",
               cursor: phase === "waiting" ? "pointer" : "default",
@@ -200,41 +209,32 @@ export default function TemporalPulse({ game }: { game: GameData }) {
             }}
           >
             {/* Beat dots */}
-            <div style={{ display: "flex", gap: 16, marginBottom: 28 }}>
+            <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
               {[1,2,3].map(b => (
-                <div key={b} style={{
-                  width: 16, height: 16, borderRadius: "50%",
-                  background: beat >= b ? game.accent : "var(--bg-elevated)",
-                  border: `2px solid ${beat >= b ? game.accent : "var(--border)"}`,
-                  boxShadow: beat === b && flash ? `0 0 20px ${game.accent}` : "none",
-                  transition: "all 0.05s",
-                }} />
+                <div key={b} style={{ width: 14, height: 14, borderRadius: "50%", background: beat >= b ? game.accent : "var(--bg-elevated)", border: `2px solid ${beat >= b ? game.accent : "var(--border)"}`, boxShadow: beat === b && flash ? `0 0 16px ${game.accent}` : "none", transition: "all 0.05s" }} />
               ))}
-              <div style={{ width: 16, height: 16, borderRadius: "50%", background: "transparent", border: `2px dashed ${phase === "waiting" ? game.accent : "var(--text-3)"}`, opacity: 0.6 }} />
+              <div style={{ width: 14, height: 14, borderRadius: "50%", background: "transparent", border: `2px dashed ${phase === "waiting" ? game.accent : "var(--text-3)"}`, opacity: 0.5 }} />
             </div>
 
-            {/* Pulse indicator */}
-            <div style={{
-              width: "clamp(80px,20vw,120px)", height: "clamp(80px,20vw,120px)",
-              borderRadius: "50%",
-              background: flash ? game.accent : phase === "waiting" ? `${game.accent}15` : "var(--bg-elevated)",
-              border: `3px solid ${flash ? game.accent : phase === "waiting" ? `${game.accent}50` : "var(--border)"}`,
-              boxShadow: flash ? `0 0 60px ${game.accent}` : "none",
-              transition: "all 0.05s",
-              marginBottom: 20,
-            }} />
+            {/* Pulse circle */}
+            <div style={{ width: "clamp(72px,18vw,110px)", height: "clamp(72px,18vw,110px)", borderRadius: "50%", background: flash ? game.accent : phase === "waiting" ? `${game.accent}15` : "var(--bg-elevated)", border: `3px solid ${flash ? game.accent : phase === "waiting" ? `${game.accent}50` : "var(--border)"}`, boxShadow: flash ? `0 0 60px ${game.accent}` : "none", transition: "all 0.05s", marginBottom: 20 }} />
 
-            <p style={{ fontSize: "clamp(13px,3vw,16px)", fontWeight: 600, color: phase === "waiting" ? game.accent : "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
+            {/* Status text */}
+            <p style={{ fontSize: "clamp(13px,3vw,15px)", fontWeight: 600, color: phase === "waiting" ? game.accent : "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
               {phase === "flashing" && beat > 0 ? `BEAT ${beat}` : ""}
-              {phase === "waiting" ? "TAP NOW" : ""}
-              {phase === "result" ? (lastError !== null ? `${lastError}ms off` : "") : ""}
+              {phase === "waiting" ? "TAP THE 4TH BEAT" : ""}
+              {phase === "result" && lastError !== null && lastDirection ? (
+                <span style={{ color: lastError < 30 ? game.accent : lastError < 80 ? "#F59E0B" : "#EF4444" }}>
+                  {lastError}ms {lastDirection}
+                </span>
+              ) : ""}
             </p>
           </div>
 
           <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
             {phase === "flashing" && "INTERNALIZE THE RHYTHM"}
-            {phase === "waiting" && "TAP THE 4TH BEAT — NOW!"}
-            {phase === "result" && lastError !== null && (lastError < 30 ? "🎯 EXCELLENT TIMING" : lastError < 80 ? "GOOD — NEXT ROUND" : "KEEP PRACTICING")}
+            {phase === "waiting" && "TAP NOW — 4TH BEAT!"}
+            {phase === "result" && lastError !== null && (lastError < 30 ? "🎯 PERFECT TIMING" : lastError < 80 ? "GOOD — NEXT ROUND" : "KEEP PRACTICING")}
           </div>
         </div>
       )}

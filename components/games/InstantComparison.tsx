@@ -7,6 +7,7 @@ import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib
 import InterstitialAd from "@/components/InterstitialAd";
 
 const t = dict.en;
+const TIME_LIMIT = 3000;
 
 function getRank(score: number, game: GameData) {
   const ranks = [...game.stats.ranks].reverse();
@@ -25,73 +26,136 @@ function getPercentile(score: number, game: GameData): number {
   return 50;
 }
 
-type Op = "+" | "-" | "×";
-interface Expr { a: number; b: number; op: Op; value: number; display: string; }
+type Op = "+" | "-" | "×" | "÷";
+interface Expr { value: number; display: string; }
 
 function makeExpr(difficulty: number): Expr {
-  const maxN = Math.min(5 + difficulty * 3, 50);
-  const ops: Op[] = difficulty < 3 ? ["+", "-"] : ["+", "-", "×"];
+  // Difficulty 1-3: +/-, small numbers
+  // Difficulty 4-6: ×, bigger numbers  
+  // Difficulty 7+: mixed, close values
+  const maxN = Math.min(10 + difficulty * 5, 50);
+  
+  const ops: Op[] = difficulty < 3 ? ["+", "-"] : difficulty < 6 ? ["+", "-", "×"] : ["+", "-", "×", "÷"];
   const op = ops[Math.floor(Math.random() * ops.length)];
-  let a = Math.floor(Math.random() * maxN) + 1;
-  let b = Math.floor(Math.random() * maxN) + 1;
-  if (op === "-" && b > a) [a, b] = [b, a];
-  const value = op === "+" ? a + b : op === "-" ? a - b : a * b;
-  return { a, b, op, value, display: `${a} ${op} ${b}` };
+  
+  let a: number, b: number, value: number;
+  
+  if (op === "+") {
+    a = Math.floor(Math.random() * maxN) + 2;
+    b = Math.floor(Math.random() * maxN) + 2;
+    value = a + b;
+  } else if (op === "-") {
+    a = Math.floor(Math.random() * maxN) + 10;
+    b = Math.floor(Math.random() * (a - 1)) + 1;
+    value = a - b;
+  } else if (op === "×") {
+    a = Math.floor(Math.random() * Math.min(difficulty + 4, 12)) + 2;
+    b = Math.floor(Math.random() * Math.min(difficulty + 4, 12)) + 2;
+    value = a * b;
+  } else {
+    b = Math.floor(Math.random() * 9) + 2;
+    value = Math.floor(Math.random() * 10) + 2;
+    a = b * value;
+  }
+  
+  return { value, display: `${a} ${op} ${b}` };
 }
 
 function makePair(difficulty: number) {
-  let left: Expr, right: Expr;
+  let left: Expr, right: Expr, attempts = 0;
   do {
     left = makeExpr(difficulty);
     right = makeExpr(difficulty);
-  } while (left.value === right.value);
-  return { left, right, correct: left.value > right.value ? "left" : "right" };
+    attempts++;
+    // At higher difficulties, force close values
+    if (difficulty >= 5 && attempts < 20) {
+      const diff = Math.abs(left.value - right.value);
+      if (diff > Math.max(5, left.value * 0.2)) continue;
+    }
+  } while (left.value === right.value && attempts < 30);
+  
+  return { left, right, correct: left.value > right.value ? "left" : "right" as "left" | "right" };
 }
 
 type Phase = "idle" | "playing" | "done";
 
 export default function InstantComparison({ game }: { game: GameData }) {
-  const [phase, setPhase]       = useState<Phase>("idle");
-  const [score, setScore]       = useState(0);
-  const [pair, setPair]         = useState(makePair(1));
-  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
-  const [showAd, setShowAd]     = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
-  const [highScore, setHS]      = useState<number | null>(null);
+  const [phase, setPhase]         = useState<Phase>("idle");
+  const [score, setScore]         = useState(0);
+  const [pair, setPair]           = useState(makePair(1));
+  const [feedback, setFeedback]   = useState<"correct" | "wrong" | "timeout" | null>(null);
+  const [timeLeft, setTimeLeft]   = useState(TIME_LIMIT);
+  const [showAd, setShowAd]       = useState(false);
+  const [shareImg, setShareImg]   = useState<string | null>(null);
+  const [highScore, setHS]        = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
-  const scoreRef = useRef(0);
+  const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
+  const roundRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scoreRef  = useRef(0);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
 
+  const clearTimers = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (roundRef.current) clearTimeout(roundRef.current);
+  };
+
+  const endGame = useCallback((s: number) => {
+    clearTimers();
+    const isNew = saveHighScore(game.id, s);
+    setIsNewBest(isNew);
+    if (isNew) setHS(s);
+    setFinalScore(s);
+    setPhase("done");
+  }, [game.id]);
+
+  const startRound = useCallback((currentScore: number) => {
+    const difficulty = Math.floor(currentScore / 4) + 1;
+    setPair(makePair(difficulty));
+    setFeedback(null);
+    setTimeLeft(TIME_LIMIT);
+
+    const startMs = performance.now();
+    timerRef.current = setInterval(() => {
+      const remaining = Math.max(0, TIME_LIMIT - (performance.now() - startMs));
+      setTimeLeft(remaining);
+    }, 50);
+
+    roundRef.current = setTimeout(() => {
+      clearTimers();
+      playBeep("fail");
+      setFeedback("timeout");
+      setTimeout(() => endGame(currentScore), 800);
+    }, TIME_LIMIT);
+  }, [endGame]);
+
   const startGame = () => {
     scoreRef.current = 0;
-    setPair(makePair(1));
     setScore(0);
     setFeedback(null);
     setPhase("playing");
+    startRound(0);
   };
 
   const handleAnswer = useCallback((side: "left" | "right") => {
-    if (phase !== "playing") return;
+    if (phase !== "playing" || feedback !== null) return;
+    clearTimers();
     const correct = side === pair.correct;
     if (correct) {
       playBeep("success");
       setFeedback("correct");
       scoreRef.current++;
       setScore(scoreRef.current);
-      const difficulty = Math.floor(scoreRef.current / 5) + 1;
-      setTimeout(() => { setPair(makePair(difficulty)); setFeedback(null); }, 200);
+      setTimeout(() => startRound(scoreRef.current), 280);
     } else {
       playBeep("fail");
       setFeedback("wrong");
-      const isNew = saveHighScore(game.id, scoreRef.current);
-      setIsNewBest(isNew);
-      if (isNew) setHS(scoreRef.current);
-      setFinalScore(scoreRef.current);
-      setTimeout(() => setPhase("done"), 600);
+      setTimeout(() => endGame(scoreRef.current), 800);
     }
-  }, [phase, pair, game.id]);
+  }, [phase, feedback, pair, startRound, endGame]);
+
+  useEffect(() => () => clearTimers(), []);
 
   const handleRetry = () => setShowAd(true);
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
@@ -137,6 +201,9 @@ export default function InstantComparison({ game }: { game: GameData }) {
     );
   }
 
+  const timerPct = (timeLeft / TIME_LIMIT) * 100;
+  const timerColor = timerPct > 60 ? game.accent : timerPct > 30 ? "#F59E0B" : "#EF4444";
+
   return (
     <>
       {showAd && <InterstitialAd onDone={afterAd} />}
@@ -144,45 +211,34 @@ export default function InstantComparison({ game }: { game: GameData }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>⚖️</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Numerical Magnitude Processing</p>
-          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Click the LARGER value as fast as possible</p>
-          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>One wrong answer ends the test · Gets harder as you score</p>
+          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Click the LARGER value · 3 seconds per round</p>
+          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Gets harder as you score · wrong or timeout = game over</p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
       ) : (
         <div>
+          <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>
+            <div style={{ height: "100%", width: `${timerPct}%`, background: timerColor, borderRadius: 2, transition: "width 0.05s linear, background 0.3s" }} />
+          </div>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>SCORE: <span style={{ color: game.accent, fontWeight: 700 }}>{score}</span></div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-3)" }}>CLICK THE LARGER VALUE</div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: timerColor, fontWeight: 700 }}>{(timeLeft / 1000).toFixed(1)}s</div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            {(["left", "right"] as const).map(side => {
-              const expr = pair[side];
-              const isCorrect = side === pair.correct;
-              const borderCol = feedback === "correct" && isCorrect ? "#22c55e" : feedback === "wrong" && !isCorrect ? "#22c55e" : feedback === "wrong" && isCorrect ? "#ef4444" : "var(--border-md)";
-              return (
-                <button
-                  key={side}
-                  onClick={() => handleAnswer(side)}
-                  className="pressable"
-                  style={{
-                    background: "var(--bg-card)",
-                    border: `2px solid ${borderCol}`,
-                    borderRadius: "var(--radius-xl)",
-                    padding: "clamp(24px,5vw,40px) 16px",
-                    cursor: "pointer",
-                    textAlign: "center",
-                    transition: "border-color 0.15s",
-                    WebkitTapHighlightColor: "transparent",
-                  }}
-                >
-                  <div style={{ fontSize: "clamp(22px,5vw,36px)", fontWeight: 900, fontFamily: "var(--font-mono)", color: "var(--text-1)", letterSpacing: "-0.02em" }}>
-                    {expr.display}
-                  </div>
-                </button>
-              );
-            })}
+            {(["left", "right"] as const).map(side => (
+              <button key={side} onClick={() => handleAnswer(side)} className="pressable" style={{
+                background: feedback === "correct" && side === pair.correct ? "#22c55e18" : feedback === "wrong" && side === pair.correct ? "#22c55e18" : feedback === "wrong" && side !== pair.correct ? "#ef444418" : "var(--bg-card)",
+                border: `2px solid ${feedback === "correct" && side === pair.correct ? "#22c55e" : feedback !== null && side === pair.correct ? "#22c55e" : feedback === "wrong" && side !== pair.correct ? "#ef4444" : "var(--border-md)"}`,
+                borderRadius: "var(--radius-xl)", padding: "clamp(24px,5vw,40px) 16px", cursor: "pointer", textAlign: "center", transition: "all 0.12s", WebkitTapHighlightColor: "transparent",
+              }}>
+                <div style={{ fontSize: "clamp(20px,4.5vw,32px)", fontWeight: 900, fontFamily: "var(--font-mono)", color: "var(--text-1)", letterSpacing: "-0.02em" }}>
+                  {pair[side].display}
+                </div>
+              </button>
+            ))}
           </div>
+          {feedback === "timeout" && <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#EF4444", fontFamily: "var(--font-mono)" }}>TIME&apos;S UP!</div>}
         </div>
       )}
     </>
