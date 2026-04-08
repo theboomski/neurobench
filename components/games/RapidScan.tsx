@@ -10,8 +10,10 @@ const t = dict.en;
 const TIME_LIMIT = 60000; // 60 second total session
 
 function getRank(score: number, game: GameData) {
-  const ranks = [...game.stats.ranks].reverse();
-  return ranks.find(r => score >= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
+  // Higher score = better: S has highest threshold
+  // Find the highest rank where score >= maxMs
+  const sorted = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);
+  return sorted.find(r => score >= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
 }
 function getPercentile(score: number, game: GameData): number {
   const pts = game.stats.percentiles;
