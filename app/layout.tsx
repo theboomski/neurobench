@@ -33,6 +33,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid var(--border)",
         }}>
+          {/* Ticker */}
+          <div style={{ background: "#00FF9410", borderBottom: "1px solid #00FF9418", height: 24, overflow: "hidden", position: "relative" }}>
+            <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 30s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
+              {["FREE BRAIN AGE TEST", "NO SIGNUP REQUIRED", "INSTANT RESULTS", "GLOBALLY RANKED", "OFFICE IQ TEST", "FREE FOREVER", "SHARE YOUR SCORE"].map(s => (
+                <span key={s} style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.15em" }}>{s}</span>
+              ))}
+            </div>
+          </div>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", height: 52, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text-1)" }}>
