@@ -10,7 +10,6 @@ import SequenceMemory from "@/components/games/SequenceMemory";
 import VerbalMemory from "@/components/games/VerbalMemory";
 import VisualMemory from "@/components/games/VisualMemory";
 import ChimpTest from "@/components/games/ChimpTest";
-import AimTrainer from "@/components/games/AimTrainer";
 import TypingSpeed from "@/components/games/TypingSpeed";
 import ColorConflict from "@/components/games/ColorConflict";
 import InstantComparison from "@/components/games/InstantComparison";
@@ -52,7 +51,6 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "verbal-memory":   return <VerbalMemory game={game} />;
     case "visual-memory":   return <VisualMemory game={game} />;
     case "chimp-test":      return <ChimpTest game={game} />;
-    case "aim-trainer":     return <AimTrainer game={game} />;
     case "typing-speed":        return <TypingSpeed game={game} />;
     case "color-conflict":      return <ColorConflict game={game} />;
     case "instant-comparison":  return <InstantComparison game={game} />;
