@@ -9,10 +9,7 @@ import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 const t = dict.en;
 const DURATION = 30;
 
-// Higher score = better
 function getRank(score: number, game: GameData) {
-  // Higher score = better: S has highest threshold
-  // Find the highest rank where score >= maxMs
   const sorted = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);
   return sorted.find(r => score >= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
 }
@@ -21,7 +18,7 @@ function getPercentile(score: number, game: GameData): number {
   if (score >= pts[0].ms) return pts[0].percentile;
   if (score <= pts[pts.length - 1].ms) return pts[pts.length - 1].percentile;
   for (let i = 0; i < pts.length - 1; i++) {
-    if (score <= pts[i].ms && score >= pts[i + 1].ms) {
+    if (score >= pts[i + 1].ms && score <= pts[i].ms) {
       const t2 = (pts[i].ms - score) / (pts[i].ms - pts[i + 1].ms);
       return Math.round(pts[i].percentile - t2 * (pts[i].percentile - pts[i + 1].percentile));
     }
@@ -38,8 +35,8 @@ function getTargetSize(hits: number) {
 function newTarget(prevX: number, prevY: number, size: number): Target {
   let x: number, y: number;
   do {
-    x = size/2 + Math.random() * (100 - size);
-    y = size/2 + Math.random() * (100 - size);
+    x = size / 2 + Math.random() * (100 - size);
+    y = size / 2 + Math.random() * (100 - size);
   } while (Math.abs(x - prevX) < 15 && Math.abs(y - prevY) < 15);
   return { x, y, size };
 }
@@ -59,101 +56,81 @@ export default function AimTrainer({ game }: { game: GameData }) {
   const [finalHits, setFinalHits] = useState(0);
   const [finalMisses, setFinalMisses] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hitsRef     = useRef(0);
+  const missesRef   = useRef(0);
+  const phaseRef    = useRef<Phase>("idle");
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
 
-  const endGame = useCallback((h: number, m: number) => {
+  const endGame = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
+    const h = hitsRef.current;
+    const m = missesRef.current;
     setFinalHits(h);
     setFinalMisses(m);
     const isNew = saveHighScore(game.id, h);
     setIsNewBest(isNew);
     if (isNew) setHS(h);
+    phaseRef.current = "done";
     setPhase("done");
   }, [game.id]);
-
-  const startGame = () => {
-    setHits(0); setMisses(0); setTimeLeft(DURATION);
-    setTarget(newTarget(50, 50, 72));
-    setPhase("playing");
-    let h = 0, m = 0, tl = DURATION;
-    intervalRef.current = setInterval(() => {
-      tl--;
-      setTimeLeft(tl);
-      if (tl <= 0) endGame(h, m);
-    }, 1000);
-    // Store refs for closure
-    (startGame as { _h?: number })._h = 0;
-    return { getH: () => h, getM: () => m, setH: (v: number) => { h = v; }, setM: (v: number) => { m = v; } };
-  };
-
-  // Use refs for hit/miss counts to avoid stale closure
-  const hitsRef = useRef(0);
-  const missesRef = useRef(0);
 
   const handleStart = () => {
     hitsRef.current = 0;
     missesRef.current = 0;
-    setHits(0); setMisses(0); setTimeLeft(DURATION);
+    phaseRef.current = "playing";
+    setHits(0);
+    setMisses(0);
+    setTimeLeft(DURATION);
     setTarget(newTarget(50, 50, 72));
     setPhase("playing");
+
     let tl = DURATION;
     intervalRef.current = setInterval(() => {
       tl--;
       setTimeLeft(tl);
-      if (tl <= 0) {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-        setFinalHits(hitsRef.current);
-        setFinalMisses(missesRef.current);
-        const isNew = saveHighScore(game.id, hitsRef.current);
-        setIsNewBest(isNew);
-        if (isNew) setHS(hitsRef.current);
-        setPhase("done");
-      }
+      if (tl <= 0) endGame();
     }, 1000);
   };
 
   const handleTargetHit = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
-    if (phase !== "playing") return;
+    if (phaseRef.current !== "playing") return;
     playBeep("tap");
     hitsRef.current++;
     setHits(hitsRef.current);
     const newSize = getTargetSize(hitsRef.current);
     setTarget(t => newTarget(t.x, t.y, newSize));
-  }, [phase]);
+  }, []);
 
   const handleMiss = useCallback(() => {
-    if (phase !== "playing") return;
+    if (phaseRef.current !== "playing") return;
     missesRef.current++;
     setMisses(missesRef.current);
-  }, [phase]);
+  }, []);
 
   useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
 
-  const rank = finalHits > 0 ? getRank(finalHits, game) : null;
-  const pct  = finalHits > 0 ? getPercentile(finalHits, game) : 0;
+  const rank = getRank(finalHits, game);
+  const pct  = getPercentile(finalHits, game);
   const accuracy = finalHits + finalMisses > 0 ? Math.round((finalHits / (finalHits + finalMisses)) * 100) : 0;
 
   const handleShare = async () => {
-    if (!rank) return;
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalHits, unit: "HITS", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
     setShareImg(url);
-    if (navigator.share) {
-      try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "My NeuroBench Report", text: t.share.text(game.title, rank.label, rank.subtitle, t.site.url), files: [new File([blob], "neurobench-report.png", { type: "image/png" })] }); return; } catch { /* fallback */ }
-    }
+    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My Brain Age is on ZAZAZA! ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
     window.open(url, "_blank");
   };
 
-  if (phase === "done" && rank) {
+  if (phase === "done") {
     return (
       <>
         {showAd && <InterstitialAd onDone={afterAd} />}
         <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(28px,5vw,48px) clamp(20px,4vw,40px)", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 28 }}>NeuroBench Assessment Complete · {game.clinicalTitle}</div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 28 }}>Assessment Complete · {game.clinicalTitle}</div>
           <div style={{ width: 110, height: 110, borderRadius: "50%", background: `${rank.color}12`, border: `2px solid ${rank.color}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: `0 0 48px ${rank.color}25` }}>
             <span style={{ fontSize: 48, fontWeight: 900, color: rank.color, lineHeight: 1 }}>{rank.label}</span>
             <span style={{ fontSize: 9, color: rank.color, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2, fontFamily: "var(--font-mono)" }}>{rank.percentileLabel}</span>
@@ -167,16 +144,16 @@ export default function AimTrainer({ game }: { game: GameData }) {
           <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
           <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
-          {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)", letterSpacing: "0.06em", textTransform: "uppercase" }}>◆ New Personal Record</div>}
+          {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)", textTransform: "uppercase" }}>◆ New Personal Record</div>}
           {highScore !== null && !isNewBest && <div style={{ fontSize: 12, color: "var(--text-3)", marginBottom: 16, fontFamily: "var(--font-mono)" }}>Personal best: <span style={{ color: game.accent }}>{highScore} hits</span></div>}
           <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap", margin: "16px 0 24px" }}>
             {game.stats.ranks.map(r => (<div key={r.label} style={{ padding: "4px 11px", borderRadius: 6, fontSize: 12, fontWeight: 800, fontFamily: "var(--font-mono)", background: r.label === rank.label ? `${r.color}18` : "var(--bg-elevated)", color: r.label === rank.label ? r.color : "var(--text-3)", border: `1px solid ${r.label === rank.label ? r.color + "40" : "transparent"}` }}>{r.label}</div>))}
           </div>
           <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>▶ PLAY AGAIN</button>
-            <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>↗ SHARE</button>
+            <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>▶ PLAY AGAIN</button>
+            <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>↗ SHARE</button>
           </div>
-          {shareImg && <div style={{ marginTop: 28 }}><img src={shareImg} alt="Report" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /><p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, fontFamily: "var(--font-mono)" }}>Long-press (mobile) · Right-click (desktop) to save</p></div>}
+          {shareImg && <div style={{ marginTop: 28 }}><img src={shareImg} alt="Report" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /></div>}
         </div>
       </>
     );
@@ -185,7 +162,6 @@ export default function AimTrainer({ game }: { game: GameData }) {
   return (
     <>
       {showAd && <InterstitialAd onDone={afterAd} />}
-
       {phase === "playing" && (
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>HITS: <span style={{ color: game.accent, fontWeight: 700 }}>{hits}</span></div>
@@ -203,7 +179,7 @@ export default function AimTrainer({ game }: { game: GameData }) {
             <div style={{ fontSize: "clamp(36px,8vw,52px)", marginBottom: 16 }}>🎯</div>
             <p style={{ fontSize: "clamp(15px,3vw,18px)", fontWeight: 800, marginBottom: 8 }}>Visuomotor Precision Assessment</p>
             <p style={{ fontSize: 12, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 24 }}>30 seconds · Click every target · Targets shrink as you improve</p>
-            <button onClick={(e) => { e.stopPropagation(); handleStart(); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "12px 32px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>▶ BEGIN</button>
+            <button onClick={(e) => { e.stopPropagation(); handleStart(); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "12px 32px", fontSize: 13, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN</button>
           </div>
         )}
 
@@ -223,7 +199,6 @@ export default function AimTrainer({ game }: { game: GameData }) {
               border: `3px solid ${game.accent}`,
               boxShadow: `0 0 20px ${game.accent}60`,
               cursor: "pointer",
-              transition: "width 0.1s, height 0.1s",
               WebkitTapHighlightColor: "transparent",
               touchAction: "manipulation",
             }}
@@ -231,7 +206,7 @@ export default function AimTrainer({ game }: { game: GameData }) {
         )}
       </div>
 
-      <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
+      <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
         {phase === "idle" && "30 SECONDS · TARGETS SHRINK WITH EACH HIT"}
         {phase === "playing" && "CLICK THE TARGET · DON'T MISS"}
       </div>

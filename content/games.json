@@ -1,136 +1,5 @@
 [
   {
-    "id": "reaction-time",
-    "title": "Neural Latency Test",
-    "clinicalTitle": "Visual Stimulus Response Measurement",
-    "shortDescription": "Measure your synaptic transmission speed in milliseconds.",
-    "description": "A clinical-grade assessment of your visual cortex processing speed and motor neuron response time. Used by elite athletes and neuroscience researchers worldwide.",
-    "emoji": "⚡",
-    "accent": "#00FF94",
-    "accentDim": "rgba(0,255,148,0.10)",
-    "category": "clinical",
-    "categoryLabel": "Brain Age Test",
-    "tags": [
-      "reaction time test",
-      "reflex test",
-      "neural latency",
-      "cognitive benchmark"
-    ],
-    "seo": {
-      "metaTitle": "Neural Latency Test – Free Online Reaction Time Benchmark",
-      "metaDescription": "Measure your reaction time with clinical precision. Click when green appears and benchmark your neural response speed against thousands of high-performers worldwide. Free, instant, no signup.",
-      "keywords": [
-        "reaction time test",
-        "neural latency test",
-        "reflex speed test",
-        "cognitive benchmark online"
-      ]
-    },
-    "content": {
-      "howToPlay": [
-        "Click or tap anywhere on the stimulus panel to initiate the protocol.",
-        "The panel will display a red standby indicator — remain focused and do not interact.",
-        "The moment the panel switches to green, click or tap as fast as possible.",
-        "Your Neural Latency score is displayed in milliseconds (ms).",
-        "Share your Neuro-Bench Report Card and challenge your colleagues."
-      ],
-      "science": "Neural latency — commonly called reaction time — measures the total elapsed time from sensory stimulus to motor response initiation. The signal travels from your retina through the optic nerve to the primary visual cortex (V1), is processed by the dorsal visual stream, then a motor command is dispatched through the corticospinal tract to your finger flexor muscles. The entire cascade takes approximately 150–300ms in healthy adults. Elite athletes, fighter pilots, and professional gamers consistently score below 200ms through deliberate neuromuscular training. Fatigue, dehydration, alcohol, and age all measurably degrade performance. A single well-rested morning session after caffeine intake typically produces a subject's personal best scores, as adrenergic stimulation accelerates cortical processing speed.",
-      "tips": [
-        "Use your dominant index finger — it has the most direct motor pathway to the primary motor cortex.",
-        "Do not attempt to anticipate the green signal — pre-motor activation invalidates the measurement.",
-        "Perform 1–2 warm-up taps before beginning to prime your neuromuscular junction.",
-        "A wired input device eliminates Bluetooth polling latency (~8ms) for the most accurate score.",
-        "Controlled diaphragmatic breathing before the test measurably lowers sympathetic arousal and improves baseline latency."
-      ]
-    },
-    "stats": {
-      "percentiles": [
-        {
-          "ms": 150,
-          "percentile": 99
-        },
-        {
-          "ms": 175,
-          "percentile": 97
-        },
-        {
-          "ms": 200,
-          "percentile": 91
-        },
-        {
-          "ms": 220,
-          "percentile": 82
-        },
-        {
-          "ms": 250,
-          "percentile": 60
-        },
-        {
-          "ms": 275,
-          "percentile": 45
-        },
-        {
-          "ms": 300,
-          "percentile": 30
-        },
-        {
-          "ms": 350,
-          "percentile": 15
-        },
-        {
-          "ms": 400,
-          "percentile": 6
-        },
-        {
-          "ms": 500,
-          "percentile": 1
-        }
-      ],
-      "ranks": [
-        {
-          "label": "S",
-          "maxMs": 183,
-          "color": "#FFD700",
-          "title": "Neural God",
-          "subtitle": "Immune to 3-Hour Meetings",
-          "percentileLabel": "Top 5%"
-        },
-        {
-          "label": "A",
-          "maxMs": 223,
-          "color": "#00FF94",
-          "title": "High Performer",
-          "subtitle": "Responds to Slack before it's sent",
-          "percentileLabel": "Top 20%"
-        },
-        {
-          "label": "B",
-          "maxMs": 258,
-          "color": "#58A6FF",
-          "title": "Above Average",
-          "subtitle": "Actually reads the meeting agenda",
-          "percentileLabel": "Top 45%"
-        },
-        {
-          "label": "C",
-          "maxMs": 317,
-          "color": "#94A3B8",
-          "title": "Average Joe",
-          "subtitle": "Shows up 3 mins late to every call",
-          "percentileLabel": "Top 75%"
-        },
-        {
-          "label": "D",
-          "maxMs": 9999,
-          "color": "#EF4444",
-          "title": "Offline",
-          "subtitle": "Suffering from Extreme Burnout",
-          "percentileLabel": "Bottom 25%"
-        }
-      ]
-    }
-  },
-  {
     "id": "boss-slapper",
     "title": "Office Avenger",
     "clinicalTitle": "Neural Impulse Response Test",
@@ -1940,6 +1809,137 @@
           "color": "#EF4444",
           "title": "Quantity Blind",
           "subtitle": "Orders food for 4, feeds 11",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "reaction-time",
+    "title": "Neural Latency Test",
+    "clinicalTitle": "Visual Stimulus Response Measurement",
+    "shortDescription": "Measure your synaptic transmission speed in milliseconds.",
+    "description": "A clinical-grade assessment of your visual cortex processing speed and motor neuron response time. Used by elite athletes and neuroscience researchers worldwide.",
+    "emoji": "⚡",
+    "accent": "#00FF94",
+    "accentDim": "rgba(0,255,148,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Brain Age Test",
+    "tags": [
+      "reaction time test",
+      "reflex test",
+      "neural latency",
+      "cognitive benchmark"
+    ],
+    "seo": {
+      "metaTitle": "Neural Latency Test – Free Online Reaction Time Benchmark",
+      "metaDescription": "Measure your reaction time with clinical precision. Click when green appears and benchmark your neural response speed against thousands of high-performers worldwide. Free, instant, no signup.",
+      "keywords": [
+        "reaction time test",
+        "neural latency test",
+        "reflex speed test",
+        "cognitive benchmark online"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Click or tap anywhere on the stimulus panel to initiate the protocol.",
+        "The panel will display a red standby indicator — remain focused and do not interact.",
+        "The moment the panel switches to green, click or tap as fast as possible.",
+        "Your Neural Latency score is displayed in milliseconds (ms).",
+        "Share your Neuro-Bench Report Card and challenge your colleagues."
+      ],
+      "science": "Neural latency — commonly called reaction time — measures the total elapsed time from sensory stimulus to motor response initiation. The signal travels from your retina through the optic nerve to the primary visual cortex (V1), is processed by the dorsal visual stream, then a motor command is dispatched through the corticospinal tract to your finger flexor muscles. The entire cascade takes approximately 150–300ms in healthy adults. Elite athletes, fighter pilots, and professional gamers consistently score below 200ms through deliberate neuromuscular training. Fatigue, dehydration, alcohol, and age all measurably degrade performance. A single well-rested morning session after caffeine intake typically produces a subject's personal best scores, as adrenergic stimulation accelerates cortical processing speed.",
+      "tips": [
+        "Use your dominant index finger — it has the most direct motor pathway to the primary motor cortex.",
+        "Do not attempt to anticipate the green signal — pre-motor activation invalidates the measurement.",
+        "Perform 1–2 warm-up taps before beginning to prime your neuromuscular junction.",
+        "A wired input device eliminates Bluetooth polling latency (~8ms) for the most accurate score.",
+        "Controlled diaphragmatic breathing before the test measurably lowers sympathetic arousal and improves baseline latency."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 150,
+          "percentile": 99
+        },
+        {
+          "ms": 175,
+          "percentile": 97
+        },
+        {
+          "ms": 200,
+          "percentile": 91
+        },
+        {
+          "ms": 220,
+          "percentile": 82
+        },
+        {
+          "ms": 250,
+          "percentile": 60
+        },
+        {
+          "ms": 275,
+          "percentile": 45
+        },
+        {
+          "ms": 300,
+          "percentile": 30
+        },
+        {
+          "ms": 350,
+          "percentile": 15
+        },
+        {
+          "ms": 400,
+          "percentile": 6
+        },
+        {
+          "ms": 500,
+          "percentile": 1
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 183,
+          "color": "#FFD700",
+          "title": "Neural God",
+          "subtitle": "Immune to 3-Hour Meetings",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 223,
+          "color": "#00FF94",
+          "title": "High Performer",
+          "subtitle": "Responds to Slack before it's sent",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 258,
+          "color": "#58A6FF",
+          "title": "Above Average",
+          "subtitle": "Actually reads the meeting agenda",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 317,
+          "color": "#94A3B8",
+          "title": "Average Joe",
+          "subtitle": "Shows up 3 mins late to every call",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Offline",
+          "subtitle": "Suffering from Extreme Burnout",
           "percentileLabel": "Bottom 25%"
         }
       ]
