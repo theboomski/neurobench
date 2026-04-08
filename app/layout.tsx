@@ -8,6 +8,9 @@ const t = dict.en;
 export const metadata: Metadata = {
   title: { default: `ZAZAZA – Free Brain Tests. No Signup. Instant Results.`, template: `%s | ZAZAZA` },
   description: t.site.description,
+  verification: {
+    google: "r0k7rf80dAHrGhKKwocnpCajshQfOvssDm2RdWRh2O4",
+  },
   metadataBase: new URL("https://zazaza.app"),
   openGraph: {
     siteName: "ZAZAZA",
