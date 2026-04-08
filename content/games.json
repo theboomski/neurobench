@@ -477,5 +477,270 @@
         { "label": "D", "maxMs": 0,    "color": "#EF4444", "title": "One-Finger Protocol", "subtitle": "Uses autocorrect as a crutch. It fails them.",   "percentileLabel": "Bottom 25%"}
       ]
     }
+  },
+  {
+    "id": "color-conflict",
+    "title": "Color Conflict",
+    "clinicalTitle": "Inhibitory Control & Cognitive Interference Assessment",
+    "shortDescription": "The word says RED. The color says GREEN. Which do you click?",
+    "description": "A clinical measure of inhibitory control based on the Stroop Effect. Color names appear in conflicting ink colors — identify the ink color, not the word. Speed and accuracy both count.",
+    "emoji": "🎨",
+    "accent": "#EC4899",
+    "accentDim": "rgba(236,72,153,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["stroop test online", "inhibitory control test", "color word test", "cognitive interference test", "stroop effect"],
+    "seo": {
+      "metaTitle": "Color Conflict – Stroop Inhibitory Control Test | NeuroBench",
+      "metaDescription": "Can your brain override what it reads? The Stroop Effect tests your inhibitory control. Click the ink color, not the word. Free online Stroop test with instant results.",
+      "keywords": ["stroop test online", "color word test", "inhibitory control test", "cognitive interference", "stroop effect test"]
+    },
+    "content": {
+      "howToPlay": [
+        "A color word will appear in a conflicting ink color (e.g., the word 'RED' printed in green).",
+        "Click the button matching the INK COLOR — not the word's meaning.",
+        "Respond as fast as possible — both speed and accuracy are measured.",
+        "Each correct answer scores a point. One wrong answer ends the test.",
+        "Your score is the number of correct answers before your first mistake."
+      ],
+      "science": "The Stroop Effect, first documented by John Ridley Stroop in 1935, is one of the most replicated findings in cognitive psychology. When color words are printed in conflicting ink colors, reaction times increase by 100–200ms because reading is a highly automatized process that competes with intentional color identification. The anterior cingulate cortex and prefrontal cortex must actively suppress the prepotent reading response to produce the correct answer. This task is a gold-standard measure of inhibitory control — the executive function responsible for overriding automatic responses — and is used clinically to assess ADHD, frontal lobe integrity, and age-related cognitive decline.",
+      "tips": [
+        "Defocus your eyes slightly to perceive color over meaning — a technique called gestalt processing.",
+        "Name the ink color silently before clicking — this engages a parallel verbal pathway that bypasses reading.",
+        "Practice improves performance measurably — the prefrontal cortex becomes more efficient at suppressing automatic responses.",
+        "Fatigue dramatically worsens Stroop performance — take the test when alert.",
+        "Don't rush — accuracy matters more than raw speed in this assessment."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 50, "percentile": 99 },
+        { "ms": 35, "percentile": 90 },
+        { "ms": 25, "percentile": 75 },
+        { "ms": 15, "percentile": 55 },
+        { "ms": 8,  "percentile": 30 },
+        { "ms": 4,  "percentile": 10 },
+        { "ms": 1,  "percentile": 2  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 40, "color": "#FFD700", "title": "Inhibition Master",  "subtitle": "Never accidentally sends the wrong Slack reaction",   "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 25, "color": "#EC4899", "title": "Focused Executive",  "subtitle": "Reads the fine print. Actually.",                    "percentileLabel": "Top 15%"   },
+        { "label": "B", "maxMs": 15, "color": "#58A6FF", "title": "Controlled Thinker", "subtitle": "Occasionally gets tricked. Like a normal person.",    "percentileLabel": "Top 40%"   },
+        { "label": "C", "maxMs": 7,  "color": "#94A3B8", "title": "Easily Distracted",  "subtitle": "Has sent sounds good! to an email they didn't read",  "percentileLabel": "Top 65%"   },
+        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Fully Conflicted",   "subtitle": "Brain.exe has stopped working",                       "percentileLabel": "Bottom 25%"}
+      ]
+    }
+  },
+  {
+    "id": "instant-comparison",
+    "title": "Instant Comparison",
+    "clinicalTitle": "Numerical Magnitude Processing Speed Assessment",
+    "shortDescription": "Two equations. One is bigger. Click the larger side as fast as possible.",
+    "description": "A clinical measure of numerical magnitude processing speed. Two math expressions appear side by side — identify the larger value as fast as your brain allows.",
+    "emoji": "⚖️",
+    "accent": "#10B981",
+    "accentDim": "rgba(16,185,129,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["math speed test", "numerical comparison test", "mental math speed", "cognitive benchmark", "number sense test"],
+    "seo": {
+      "metaTitle": "Instant Comparison – Numerical Processing Speed Test | NeuroBench",
+      "metaDescription": "How fast can your brain compare numbers? Two equations appear — click the larger side as fast as possible. Free numerical magnitude processing benchmark.",
+      "keywords": ["math speed test", "numerical comparison test", "mental math benchmark", "number sense test online"]
+    },
+    "content": {
+      "howToPlay": [
+        "Two math expressions will appear side-by-side (e.g., 7 + 3 vs 12 - 4).",
+        "Click the side with the HIGHER numerical value as fast as possible.",
+        "Both speed and accuracy are measured — wrong answers end the test.",
+        "Expressions get progressively harder as your streak grows.",
+        "Your score is the number of correct comparisons before your first mistake."
+      ],
+      "science": "Numerical magnitude comparison activates the intraparietal sulcus (IPS), a region specialized for representing numerical quantity on a mental number line. This approximate number system (ANS) is present in infants and non-human primates, suggesting it is a core evolutionary cognitive capacity. Response time follows Weber's Law: close numerical values take longer to discriminate than distant ones. Individual differences in ANS acuity are significant predictors of formal mathematical achievement across the lifespan.",
+      "tips": [
+        "Estimate, don't calculate — your ANS is faster than deliberate arithmetic for obvious contrasts.",
+        "For close values, prioritize scanning the dominant operands quickly.",
+        "Subtraction slows most people — practice spotting negative contributions at a glance.",
+        "If both sides look similar, trust your gut — ANS intuition is often faster than conscious calculation.",
+        "Fixate center to catch both expressions in peripheral vision simultaneously."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 60, "percentile": 99 },
+        { "ms": 40, "percentile": 90 },
+        { "ms": 25, "percentile": 72 },
+        { "ms": 15, "percentile": 50 },
+        { "ms": 8,  "percentile": 28 },
+        { "ms": 4,  "percentile": 8  },
+        { "ms": 1,  "percentile": 2  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 45, "color": "#FFD700", "title": "Quantitative Oracle", "subtitle": "Does ROI calculations in their head mid-meeting",      "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 28, "color": "#10B981", "title": "Sharp Analyst",       "subtitle": "Catches spreadsheet errors before they're sent",       "percentileLabel": "Top 20%"   },
+        { "label": "B", "maxMs": 16, "color": "#58A6FF", "title": "Reliable Estimator",  "subtitle": "Splits bills without a calculator. Mostly.",           "percentileLabel": "Top 45%"   },
+        { "label": "C", "maxMs": 7,  "color": "#94A3B8", "title": "Approximate Thinker", "subtitle": "Always says let me circle back on the numbers",        "percentileLabel": "Top 65%"   },
+        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Innumerate",          "subtitle": "Leaves a 10% tip on a $200 bill. Accidentally.",        "percentileLabel": "Bottom 25%"}
+      ]
+    }
+  },
+  {
+    "id": "angle-precision",
+    "title": "Angle Precision",
+    "clinicalTitle": "Visuospatial Orientation Accuracy Assessment",
+    "shortDescription": "Rotate the line to match the reference. Accuracy in degrees is your score.",
+    "description": "A clinical measure of visuospatial precision and fine motor control. Drag to rotate a line to be exactly parallel to a reference line. Your error in degrees determines your rank.",
+    "emoji": "📐",
+    "accent": "#6366F1",
+    "accentDim": "rgba(99,102,241,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["angle estimation test", "spatial precision test", "visuospatial accuracy", "cognitive benchmark online"],
+    "seo": {
+      "metaTitle": "Angle Precision – Visuospatial Accuracy Benchmark | NeuroBench",
+      "metaDescription": "How precise is your spatial perception? Rotate a line to match the reference angle. Your error in degrees determines your rank. Free visuospatial benchmark.",
+      "keywords": ["angle estimation test", "spatial precision test", "visuospatial accuracy benchmark", "cognitive spatial test"]
+    },
+    "content": {
+      "howToPlay": [
+        "A reference line will appear at a fixed angle on screen.",
+        "A second line starts at a random angle — drag or use the slider to rotate it.",
+        "Try to make both lines exactly parallel.",
+        "Click Submit when you are satisfied with your alignment.",
+        "Complete 5 rounds — your average error in degrees across all rounds is your final score."
+      ],
+      "science": "Visuospatial orientation judgment relies on the right parietal cortex, particularly the superior parietal lobule, which maintains an internal model of spatial relationships. The precision of angle discrimination follows Weber's Law at small angles. Architects, surgeons, pilots, and artists consistently outperform average populations on spatial orientation tasks. Fine motor control for precise rotational adjustment recruits the cerebellum's error-correction circuits, making this task a combined measure of perceptual acuity and motor precision.",
+      "tips": [
+        "Step back from the screen — peripheral vision integrates angles more holistically than foveal vision.",
+        "Use small increments near your target — overshoot and correct rather than stopping short.",
+        "Anchor your estimate to the nearest horizontal or vertical — cardinal directions are easiest.",
+        "Close one eye to eliminate binocular depth cues that can distort angular perception.",
+        "Relax your wrist before adjusting — muscle tension creates micro-tremors."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 1,  "percentile": 99 },
+        { "ms": 2,  "percentile": 90 },
+        { "ms": 4,  "percentile": 72 },
+        { "ms": 7,  "percentile": 50 },
+        { "ms": 12, "percentile": 28 },
+        { "ms": 20, "percentile": 8  },
+        { "ms": 35, "percentile": 2  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 2,   "color": "#FFD700", "title": "Spatial Surgeon",     "subtitle": "Hangs pictures perfectly on the first try. Always.",   "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 5,   "color": "#6366F1", "title": "Precision Engineer",  "subtitle": "Their PowerPoint arrows actually align",              "percentileLabel": "Top 20%"   },
+        { "label": "B", "maxMs": 9,   "color": "#58A6FF", "title": "Decent Navigator",    "subtitle": "Owns a level. Uses a level.",                          "percentileLabel": "Top 45%"   },
+        { "label": "C", "maxMs": 18,  "color": "#94A3B8", "title": "Approximate Artisan", "subtitle": "Their IKEA furniture is mostly straight",              "percentileLabel": "Top 65%"   },
+        { "label": "D", "maxMs": 999, "color": "#EF4444", "title": "Spatially Chaotic",   "subtitle": "Hangs pictures, immediately regrets it",               "percentileLabel": "Bottom 25%"}
+      ]
+    }
+  },
+  {
+    "id": "rapid-scan",
+    "title": "Rapid Scan",
+    "clinicalTitle": "Visual Search Efficiency Assessment",
+    "shortDescription": "Find the Q hiding among hundreds of O's. As fast as possible.",
+    "description": "A clinical measure of visual search efficiency and pre-attentive processing. A single target character hides among hundreds of distractors — find it as fast as possible. Density increases each round.",
+    "emoji": "🔍",
+    "accent": "#F97316",
+    "accentDim": "rgba(249,115,22,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["visual search test", "rapid scan test", "attention test online", "find the letter test", "visual processing speed"],
+    "seo": {
+      "metaTitle": "Rapid Scan – Visual Search Speed Test | NeuroBench",
+      "metaDescription": "Find the Q among hundreds of O's as fast as possible. Test your visual search speed and pre-attentive processing. Free online visual attention benchmark.",
+      "keywords": ["visual search test online", "find the letter test", "attention speed test", "visual processing benchmark"]
+    },
+    "content": {
+      "howToPlay": [
+        "The screen fills with a grid of identical O characters.",
+        "One Q is hidden somewhere in the grid — find it and click it as fast as possible.",
+        "Each successful round increases the grid density.",
+        "Your score is the number of rounds completed.",
+        "Clicking the wrong character ends the test immediately."
+      ],
+      "science": "Visual search tasks distinguish between pre-attentive and attentive processing. When targets share features with distractors (as in Q-among-O), search requires serial attentive scanning — reaction time scales linearly with distractor count. The Q-in-O task engages feature conjunction search, requiring the visual system to combine information about curvature and the presence of a tail. This recruits the frontal eye fields and parietal cortex in a coordinated top-down attention sweep.",
+      "tips": [
+        "Don't scan systematically — let your eyes roam freely. Pre-attentive processing works best with distributed attention.",
+        "Slightly blur your focus — the Q tail becomes more salient in peripheral vision.",
+        "Scan in a loose Z-pattern to maximize grid coverage efficiently.",
+        "Increase screen brightness — higher contrast makes the subtle Q-tail more detectable.",
+        "Avoid fixating on individual characters — move your gaze in large jumps."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 10, "percentile": 99 },
+        { "ms": 8,  "percentile": 90 },
+        { "ms": 6,  "percentile": 72 },
+        { "ms": 4,  "percentile": 50 },
+        { "ms": 3,  "percentile": 28 },
+        { "ms": 2,  "percentile": 8  },
+        { "ms": 1,  "percentile": 2  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 8, "color": "#FFD700", "title": "Eagle Eye",          "subtitle": "Spots typos in slide decks from across the room",     "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 6, "color": "#F97316", "title": "Sharp Scanner",      "subtitle": "Finds Waldo without looking like they're trying",      "percentileLabel": "Top 20%"   },
+        { "label": "B", "maxMs": 4, "color": "#58A6FF", "title": "Reliable Observer",  "subtitle": "Usually spots the different one",                     "percentileLabel": "Top 45%"   },
+        { "label": "C", "maxMs": 2, "color": "#94A3B8", "title": "Casual Scanner",     "subtitle": "Misses Reply All warnings every time",                "percentileLabel": "Top 65%"   },
+        { "label": "D", "maxMs": 0, "color": "#EF4444", "title": "Attention Deficit",  "subtitle": "Has walked past their own name on a sign",            "percentileLabel": "Bottom 25%"}
+      ]
+    }
+  },
+  {
+    "id": "temporal-pulse",
+    "title": "Temporal Pulse",
+    "clinicalTitle": "Internal Timing Precision Assessment",
+    "shortDescription": "The beat stops. You continue it. How precise is your internal clock?",
+    "description": "A clinical measure of internal timing precision. Three pulses flash at 1000ms intervals — then you must tap the hidden 4th beat. Your delta from perfect timing determines your rank.",
+    "emoji": "⏱️",
+    "accent": "#A855F7",
+    "accentDim": "rgba(168,85,247,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": ["rhythm test online", "internal clock test", "timing precision test", "beat synchronization test", "temporal processing"],
+    "seo": {
+      "metaTitle": "Temporal Pulse – Internal Clock Precision Test | NeuroBench",
+      "metaDescription": "How precise is your internal sense of time? Watch 3 flashes at 1000ms intervals, then tap the hidden 4th beat. Free timing precision benchmark.",
+      "keywords": ["rhythm test online", "internal clock test", "timing precision benchmark", "beat synchronization test"]
+    },
+    "content": {
+      "howToPlay": [
+        "Watch three flashes appear at exactly 1000ms intervals — internalize the rhythm.",
+        "After the third flash, the screen goes dark — tap when you think the 4th beat occurs.",
+        "Your error is the difference in milliseconds between your tap and the perfect 1000ms mark.",
+        "Complete 5 rounds — your average error is your final score.",
+        "Lower error = higher rank. S tier requires less than 15ms average deviation."
+      ],
+      "science": "Internal timing precision relies on the basal ganglia and supplementary motor area (SMA), which form a dedicated neural clock for interval timing. Beat induction additionally engages the cerebellum's error-prediction circuits. Individual differences in temporal precision correlate strongly with musical ability, athletic timing, and reading fluency. Expert musicians and drummers achieve sub-10ms timing precision — approaching the limits of the nervous system's temporal resolution.",
+      "tips": [
+        "Count internally with the flashes then continue on the beat — verbal encoding helps.",
+        "Tap slightly early rather than late — humans naturally anticipate beats slightly late.",
+        "Tap with your index finger, hold your hand still — body movement introduces variability.",
+        "Try tapping along with all three flashes before the hidden beat — motor entrainment improves accuracy.",
+        "Breathe steadily — breath-holding distorts time perception."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        { "ms": 10,  "percentile": 99 },
+        { "ms": 20,  "percentile": 90 },
+        { "ms": 40,  "percentile": 72 },
+        { "ms": 70,  "percentile": 50 },
+        { "ms": 110, "percentile": 28 },
+        { "ms": 160, "percentile": 8  },
+        { "ms": 250, "percentile": 2  }
+      ],
+      "ranks": [
+        { "label": "S", "maxMs": 15,  "color": "#FFD700", "title": "Human Metronome",     "subtitle": "Arrives at meetings exactly on time. To the second.",  "percentileLabel": "Top 1%"    },
+        { "label": "A", "maxMs": 35,  "color": "#A855F7", "title": "Precision Timer",     "subtitle": "Their Pomodoros actually last 25 minutes",            "percentileLabel": "Top 20%"   },
+        { "label": "B", "maxMs": 65,  "color": "#58A6FF", "title": "Rhythmic Thinker",    "subtitle": "Gives accurate ETAs. Occasionally.",                  "percentileLabel": "Top 45%"   },
+        { "label": "C", "maxMs": 120, "color": "#94A3B8", "title": "Approximate Clocker", "subtitle": "Says 5 minutes and means 20",                         "percentileLabel": "Top 65%"   },
+        { "label": "D", "maxMs": 999, "color": "#EF4444", "title": "Temporally Unmoored", "subtitle": "Has no idea what time it is. Ever.",                  "percentileLabel": "Bottom 25%"}
+      ]
+    }
   }
 ]

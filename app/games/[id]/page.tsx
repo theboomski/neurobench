@@ -12,6 +12,11 @@ import VisualMemory from "@/components/games/VisualMemory";
 import ChimpTest from "@/components/games/ChimpTest";
 import AimTrainer from "@/components/games/AimTrainer";
 import TypingSpeed from "@/components/games/TypingSpeed";
+import ColorConflict from "@/components/games/ColorConflict";
+import InstantComparison from "@/components/games/InstantComparison";
+import AnglePrecision from "@/components/games/AnglePrecision";
+import RapidScan from "@/components/games/RapidScan";
+import TemporalPulse from "@/components/games/TemporalPulse";
 
 const games = gamesData as GameData[];
 type Props = { params: Promise<{ id: string }> };
@@ -42,7 +47,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "visual-memory":   return <VisualMemory game={game} />;
     case "chimp-test":      return <ChimpTest game={game} />;
     case "aim-trainer":     return <AimTrainer game={game} />;
-    case "typing-speed":    return <TypingSpeed game={game} />;
+    case "typing-speed":        return <TypingSpeed game={game} />;
+    case "color-conflict":      return <ColorConflict game={game} />;
+    case "instant-comparison":  return <InstantComparison game={game} />;
+    case "angle-precision":     return <AnglePrecision game={game} />;
+    case "rapid-scan":          return <RapidScan game={game} />;
+    case "temporal-pulse":      return <TemporalPulse game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
