@@ -55,35 +55,35 @@
         },
         {
           "ms": 200,
-          "percentile": 90
+          "percentile": 91
         },
         {
-          "ms": 225,
-          "percentile": 80
+          "ms": 220,
+          "percentile": 82
         },
         {
           "ms": 250,
-          "percentile": 65
+          "percentile": 60
         },
         {
           "ms": 275,
-          "percentile": 50
+          "percentile": 45
         },
         {
           "ms": 300,
-          "percentile": 35
+          "percentile": 30
         },
         {
           "ms": 350,
-          "percentile": 18
+          "percentile": 15
         },
         {
           "ms": 400,
-          "percentile": 8
+          "percentile": 6
         },
         {
           "ms": 500,
-          "percentile": 2
+          "percentile": 1
         }
       ],
       "ranks": [
@@ -93,7 +93,7 @@
           "color": "#FFD700",
           "title": "Neural God",
           "subtitle": "Immune to 3-Hour Meetings",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
@@ -101,23 +101,23 @@
           "color": "#00FF94",
           "title": "High Performer",
           "subtitle": "Responds to Slack before it's sent",
-          "percentileLabel": "Top 10%"
+          "percentileLabel": "Top 18%"
         },
         {
           "label": "B",
-          "maxMs": 265,
+          "maxMs": 270,
           "color": "#58A6FF",
           "title": "Above Average",
           "subtitle": "Actually reads the meeting agenda",
-          "percentileLabel": "Top 30%"
+          "percentileLabel": "Top 45%"
         },
         {
           "label": "C",
-          "maxMs": 320,
+          "maxMs": 340,
           "color": "#94A3B8",
-          "title": "The Average Joe",
+          "title": "Average Joe",
           "subtitle": "Shows up 3 mins late to every call",
-          "percentileLabel": "Top 50%"
+          "percentileLabel": "Top 75%"
         },
         {
           "label": "D",
@@ -125,7 +125,7 @@
           "color": "#EF4444",
           "title": "Offline",
           "subtitle": "Suffering from Extreme Burnout",
-          "percentileLabel": "Bottom 10%"
+          "percentileLabel": "Bottom 25%"
         }
       ]
     }
@@ -303,66 +303,74 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 5,
+          "ms": 13,
           "percentile": 99
         },
         {
-          "ms": 6,
-          "percentile": 95
+          "ms": 11,
+          "percentile": 96
         },
         {
-          "ms": 7,
+          "ms": 10,
+          "percentile": 88
+        },
+        {
+          "ms": 9,
           "percentile": 75
         },
         {
           "ms": 8,
-          "percentile": 50
+          "percentile": 58
         },
         {
-          "ms": 9,
-          "percentile": 25
+          "ms": 7,
+          "percentile": 38
         },
         {
-          "ms": 10,
-          "percentile": 10
+          "ms": 6,
+          "percentile": 20
         },
         {
-          "ms": 12,
-          "percentile": 3
+          "ms": 5,
+          "percentile": 8
+        },
+        {
+          "ms": 4,
+          "percentile": 2
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 13,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Photographic Memory",
           "subtitle": "Your brain has more RAM than the server",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 10,
+          "maxMs": 9999,
           "color": "#818CF8",
           "title": "High Bandwidth",
           "subtitle": "Remembers everyone's coffee order. Always.",
-          "percentileLabel": "Top 25%"
+          "percentileLabel": "Top 12%"
         },
         {
           "label": "B",
-          "maxMs": 8,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Within Normal Range",
-          "subtitle": "Miller's Law says you're fine. Miller was nice.",
-          "percentileLabel": "Top 50%"
+          "subtitle": "Miller's Law says you're fine",
+          "percentileLabel": "Top 42%"
         },
         {
           "label": "C",
-          "maxMs": 6,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Slight Buffering",
           "subtitle": "Forgets why they opened the fridge. Daily.",
-          "percentileLabel": "Top 75%"
+          "percentileLabel": "Top 72%"
         },
         {
           "label": "D",
@@ -370,7 +378,7 @@
           "color": "#EF4444",
           "title": "404: Memory Not Found",
           "subtitle": "Has 47 browser tabs open and counting",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 28%"
         }
       ]
     }
@@ -424,28 +432,28 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 15,
+          "ms": 14,
           "percentile": 99
         },
         {
           "ms": 12,
-          "percentile": 95
+          "percentile": 96
         },
         {
           "ms": 10,
-          "percentile": 85
+          "percentile": 87
         },
         {
           "ms": 8,
-          "percentile": 65
+          "percentile": 68
         },
         {
           "ms": 6,
-          "percentile": 40
+          "percentile": 42
         },
         {
           "ms": 4,
-          "percentile": 15
+          "percentile": 16
         },
         {
           "ms": 2,
@@ -455,35 +463,35 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 12,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Pattern Deity",
           "subtitle": "Recites meeting minutes verbatim. Unprompted.",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 9,
+          "maxMs": 9999,
           "color": "#F59E0B",
           "title": "Sequence Savant",
           "subtitle": "Never forgets a face. Or a grudge.",
-          "percentileLabel": "Top 15%"
+          "percentileLabel": "Top 13%"
         },
         {
           "label": "B",
-          "maxMs": 7,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Reliable Recall",
           "subtitle": "Actually remembers action items from standups",
-          "percentileLabel": "Top 35%"
+          "percentileLabel": "Top 42%"
         },
         {
           "label": "C",
-          "maxMs": 5,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Average Retention",
           "subtitle": "Needs to be CC'd on everything. Twice.",
-          "percentileLabel": "Top 60%"
+          "percentileLabel": "Top 72%"
         },
         {
           "label": "D",
@@ -491,7 +499,7 @@
           "color": "#EF4444",
           "title": "Goldfish Protocol",
           "subtitle": "Forgot they were taking this test",
-          "percentileLabel": "Bottom 20%"
+          "percentileLabel": "Bottom 28%"
         }
       ]
     }
@@ -543,66 +551,66 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 150,
+          "ms": 120,
           "percentile": 99
         },
         {
-          "ms": 100,
+          "ms": 90,
           "percentile": 95
         },
         {
-          "ms": 75,
-          "percentile": 85
+          "ms": 70,
+          "percentile": 84
         },
         {
           "ms": 50,
-          "percentile": 65
+          "percentile": 62
         },
         {
-          "ms": 30,
+          "ms": 35,
           "percentile": 40
         },
         {
-          "ms": 15,
-          "percentile": 15
+          "ms": 20,
+          "percentile": 18
         },
         {
-          "ms": 5,
-          "percentile": 3
+          "ms": 10,
+          "percentile": 5
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 100,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Lexical Legend",
           "subtitle": "Remembers every email thread since 2018",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 60,
+          "maxMs": 9999,
           "color": "#34D399",
           "title": "Sharp Recall",
           "subtitle": "Quotes meeting notes from last quarter",
-          "percentileLabel": "Top 15%"
+          "percentileLabel": "Top 16%"
         },
         {
           "label": "B",
-          "maxMs": 35,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Reliable Memory",
           "subtitle": "Usually remembers names. Sometimes.",
-          "percentileLabel": "Top 35%"
+          "percentileLabel": "Top 40%"
         },
         {
           "label": "C",
-          "maxMs": 18,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Average Retention",
           "subtitle": "Definitely read that email. Probably.",
-          "percentileLabel": "Top 60%"
+          "percentileLabel": "Top 70%"
         },
         {
           "label": "D",
@@ -610,7 +618,7 @@
           "color": "#EF4444",
           "title": "Clean Slate",
           "subtitle": "Introduces themselves to the same colleague weekly",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 30%"
         }
       ]
     }
@@ -667,11 +675,11 @@
         },
         {
           "ms": 10,
-          "percentile": 90
+          "percentile": 93
         },
         {
           "ms": 8,
-          "percentile": 70
+          "percentile": 75
         },
         {
           "ms": 6,
@@ -679,45 +687,45 @@
         },
         {
           "ms": 4,
-          "percentile": 20
+          "percentile": 18
         },
         {
           "ms": 2,
-          "percentile": 5
+          "percentile": 4
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 10,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Spatial Oracle",
           "subtitle": "Mentally renders 4K environments in real time",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 7,
+          "maxMs": 9999,
           "color": "#A78BFA",
           "title": "Sharp Vision",
           "subtitle": "Never loses their car in a parking lot",
-          "percentileLabel": "Top 20%"
+          "percentileLabel": "Top 7%"
         },
         {
           "label": "B",
-          "maxMs": 5,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Reliable Spatialist",
-          "subtitle": "Can assemble IKEA furniture without instructions",
-          "percentileLabel": "Top 45%"
+          "subtitle": "Assembles IKEA without instructions",
+          "percentileLabel": "Top 35%"
         },
         {
           "label": "C",
-          "maxMs": 3,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Average Navigator",
           "subtitle": "Uses Google Maps inside buildings",
-          "percentileLabel": "Top 70%"
+          "percentileLabel": "Top 68%"
         },
         {
           "label": "D",
@@ -725,7 +733,7 @@
           "color": "#EF4444",
           "title": "Spatially Challenged",
           "subtitle": "Gets lost in their own office",
-          "percentileLabel": "Bottom 20%"
+          "percentileLabel": "Bottom 32%"
         }
       ]
     }
@@ -782,57 +790,61 @@
         },
         {
           "ms": 8,
-          "percentile": 90
+          "percentile": 93
         },
         {
           "ms": 7,
-          "percentile": 70
+          "percentile": 78
         },
         {
           "ms": 6,
-          "percentile": 45
+          "percentile": 55
         },
         {
           "ms": 5,
-          "percentile": 20
+          "percentile": 30
         },
         {
           "ms": 4,
-          "percentile": 5
+          "percentile": 10
+        },
+        {
+          "ms": 3,
+          "percentile": 2
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 8,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Honorary Chimp",
           "subtitle": "The primates are filing a formal complaint",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 6,
+          "maxMs": 9999,
           "color": "#FB923C",
           "title": "Primate Tier",
           "subtitle": "Evolution is having second thoughts about you",
-          "percentileLabel": "Top 20%"
+          "percentileLabel": "Top 7%"
         },
         {
           "label": "B",
-          "maxMs": 5,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Respectable Human",
           "subtitle": "Beats the office plant. Barely.",
-          "percentileLabel": "Top 45%"
+          "percentileLabel": "Top 32%"
         },
         {
           "label": "C",
-          "maxMs": 4,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Average Primate",
           "subtitle": "Lost to a bonobo in a blind test",
-          "percentileLabel": "Top 70%"
+          "percentileLabel": "Top 62%"
         },
         {
           "label": "D",
@@ -840,7 +852,7 @@
           "color": "#EF4444",
           "title": "Below Chimp Level",
           "subtitle": "The chimps are embarrassed for you",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 38%"
         }
       ]
     }
@@ -894,32 +906,32 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 500,
+          "ms": 80,
           "percentile": 99
         },
         {
-          "ms": 400,
+          "ms": 70,
           "percentile": 95
         },
         {
-          "ms": 300,
-          "percentile": 80
+          "ms": 60,
+          "percentile": 84
         },
         {
-          "ms": 220,
-          "percentile": 60
-        },
-        {
-          "ms": 150,
-          "percentile": 35
-        },
-        {
-          "ms": 80,
-          "percentile": 10
+          "ms": 50,
+          "percentile": 62
         },
         {
           "ms": 40,
-          "percentile": 2
+          "percentile": 38
+        },
+        {
+          "ms": 30,
+          "percentile": 16
+        },
+        {
+          "ms": 20,
+          "percentile": 5
         }
       ],
       "ranks": [
@@ -929,15 +941,15 @@
           "color": "#FFD700",
           "title": "Surgical Precision",
           "subtitle": "HR is monitoring your mouse movements",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
           "maxMs": 9999,
           "color": "#F43F5E",
           "title": "Sharpshooter",
-          "subtitle": "Clicks 'Reply All' only when intended",
-          "percentileLabel": "Top 15%"
+          "subtitle": "Clicks Reply All only when intended",
+          "percentileLabel": "Top 16%"
         },
         {
           "label": "B",
@@ -945,7 +957,7 @@
           "color": "#58A6FF",
           "title": "Reliable Aim",
           "subtitle": "Closes the right browser tab most of the time",
-          "percentileLabel": "Top 40%"
+          "percentileLabel": "Top 45%"
         },
         {
           "label": "C",
@@ -953,7 +965,7 @@
           "color": "#94A3B8",
           "title": "Spray and Pray",
           "subtitle": "Accidentally likes posts from 3 years ago",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 72%"
         },
         {
           "label": "D",
@@ -961,7 +973,7 @@
           "color": "#EF4444",
           "title": "Needs a Trackpad",
           "subtitle": "Double-clicks single-click buttons. Always.",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 28%"
         }
       ]
     }
@@ -1015,31 +1027,39 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 120,
+          "ms": 90,
           "percentile": 99
         },
         {
-          "ms": 100,
-          "percentile": 95
+          "ms": 75,
+          "percentile": 96
         },
         {
-          "ms": 80,
-          "percentile": 80
+          "ms": 65,
+          "percentile": 90
         },
         {
-          "ms": 60,
-          "percentile": 55
+          "ms": 55,
+          "percentile": 78
         },
         {
           "ms": 45,
-          "percentile": 30
+          "percentile": 62
+        },
+        {
+          "ms": 40,
+          "percentile": 50
         },
         {
           "ms": 30,
-          "percentile": 10
+          "percentile": 30
         },
         {
           "ms": 20,
+          "percentile": 12
+        },
+        {
+          "ms": 10,
           "percentile": 2
         }
       ],
@@ -1050,7 +1070,7 @@
           "color": "#FFD700",
           "title": "Keyboard Deity",
           "subtitle": "Types faster than you think",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
@@ -1058,15 +1078,15 @@
           "color": "#06B6D4",
           "title": "Professional Typist",
           "subtitle": "Slack messages arrive before you finish reading",
-          "percentileLabel": "Top 15%"
+          "percentileLabel": "Top 10%"
         },
         {
           "label": "B",
           "maxMs": 9999,
           "color": "#58A6FF",
-          "title": "Competent Keyboarder",
+          "title": "Solid Typist",
           "subtitle": "Touch types. Mostly.",
-          "percentileLabel": "Top 40%"
+          "percentileLabel": "Top 38%"
         },
         {
           "label": "C",
@@ -1074,7 +1094,7 @@
           "color": "#94A3B8",
           "title": "Two-Finger Typist",
           "subtitle": "Looks at keyboard more than screen",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 68%"
         },
         {
           "label": "D",
@@ -1082,7 +1102,7 @@
           "color": "#EF4444",
           "title": "One-Finger Protocol",
           "subtitle": "Uses autocorrect as a crutch. It fails them.",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 32%"
         }
       ]
     }
@@ -1136,66 +1156,66 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 50,
+          "ms": 45,
           "percentile": 99
         },
         {
           "ms": 35,
-          "percentile": 90
+          "percentile": 93
         },
         {
-          "ms": 25,
-          "percentile": 75
+          "ms": 28,
+          "percentile": 82
         },
         {
-          "ms": 15,
-          "percentile": 55
+          "ms": 20,
+          "percentile": 60
         },
         {
-          "ms": 8,
-          "percentile": 30
+          "ms": 13,
+          "percentile": 38
         },
         {
-          "ms": 4,
-          "percentile": 10
+          "ms": 7,
+          "percentile": 15
         },
         {
-          "ms": 1,
-          "percentile": 2
+          "ms": 3,
+          "percentile": 3
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 40,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Inhibition Master",
           "subtitle": "Never accidentally sends the wrong Slack reaction",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 25,
+          "maxMs": 9999,
           "color": "#EC4899",
           "title": "Focused Executive",
           "subtitle": "Reads the fine print. Actually.",
-          "percentileLabel": "Top 15%"
+          "percentileLabel": "Top 18%"
         },
         {
           "label": "B",
-          "maxMs": 15,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Controlled Thinker",
           "subtitle": "Occasionally gets tricked. Like a normal person.",
-          "percentileLabel": "Top 40%"
+          "percentileLabel": "Top 45%"
         },
         {
           "label": "C",
-          "maxMs": 7,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Easily Distracted",
-          "subtitle": "Has sent sounds good! to an email they didn't read",
-          "percentileLabel": "Top 65%"
+          "subtitle": "Has sent sounds good to an email they didn't read",
+          "percentileLabel": "Top 75%"
         },
         {
           "label": "D",
@@ -1256,46 +1276,46 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 60,
+          "ms": 50,
           "percentile": 99
         },
         {
-          "ms": 40,
-          "percentile": 90
+          "ms": 35,
+          "percentile": 93
         },
         {
           "ms": 25,
-          "percentile": 72
+          "percentile": 80
         },
         {
-          "ms": 15,
-          "percentile": 50
+          "ms": 18,
+          "percentile": 60
         },
         {
-          "ms": 8,
-          "percentile": 28
+          "ms": 12,
+          "percentile": 38
         },
         {
-          "ms": 4,
-          "percentile": 8
+          "ms": 7,
+          "percentile": 15
         },
         {
-          "ms": 1,
-          "percentile": 2
+          "ms": 3,
+          "percentile": 3
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 45,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Quantitative Oracle",
           "subtitle": "Does ROI calculations in their head mid-meeting",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 28,
+          "maxMs": 9999,
           "color": "#10B981",
           "title": "Sharp Analyst",
           "subtitle": "Catches spreadsheet errors before they're sent",
@@ -1303,7 +1323,7 @@
         },
         {
           "label": "B",
-          "maxMs": 16,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Reliable Estimator",
           "subtitle": "Splits bills without a calculator. Mostly.",
@@ -1311,11 +1331,11 @@
         },
         {
           "label": "C",
-          "maxMs": 7,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Approximate Thinker",
           "subtitle": "Always says let me circle back on the numbers",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 72%"
         },
         {
           "label": "D",
@@ -1323,7 +1343,7 @@
           "color": "#EF4444",
           "title": "Innumerate",
           "subtitle": "Leaves a 10% tip on a $200 bill. Accidentally.",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 28%"
         }
       ]
     }
@@ -1380,15 +1400,15 @@
         },
         {
           "ms": 2,
-          "percentile": 90
+          "percentile": 94
         },
         {
           "ms": 4,
-          "percentile": 72
+          "percentile": 80
         },
         {
           "ms": 7,
-          "percentile": 50
+          "percentile": 55
         },
         {
           "ms": 12,
@@ -1400,7 +1420,7 @@
         },
         {
           "ms": 35,
-          "percentile": 2
+          "percentile": 1
         }
       ],
       "ranks": [
@@ -1410,7 +1430,7 @@
           "color": "#FFD700",
           "title": "Spatial Surgeon",
           "subtitle": "Hangs pictures perfectly on the first try. Always.",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
@@ -1426,7 +1446,7 @@
           "color": "#58A6FF",
           "title": "Decent Navigator",
           "subtitle": "Owns a level. Uses a level.",
-          "percentileLabel": "Top 45%"
+          "percentileLabel": "Top 48%"
         },
         {
           "label": "C",
@@ -1434,7 +1454,7 @@
           "color": "#94A3B8",
           "title": "Approximate Artisan",
           "subtitle": "Their IKEA furniture is mostly straight",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 77%"
         },
         {
           "label": "D",
@@ -1442,7 +1462,7 @@
           "color": "#EF4444",
           "title": "Spatially Chaotic",
           "subtitle": "Hangs pictures, immediately regrets it",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 23%"
         }
       ]
     }
@@ -1495,66 +1515,66 @@
     "stats": {
       "percentiles": [
         {
-          "ms": 10,
+          "ms": 15,
           "percentile": 99
         },
         {
-          "ms": 8,
-          "percentile": 90
+          "ms": 12,
+          "percentile": 93
+        },
+        {
+          "ms": 9,
+          "percentile": 78
         },
         {
           "ms": 6,
-          "percentile": 72
+          "percentile": 52
         },
         {
           "ms": 4,
-          "percentile": 50
-        },
-        {
-          "ms": 3,
-          "percentile": 28
+          "percentile": 25
         },
         {
           "ms": 2,
-          "percentile": 8
+          "percentile": 7
         },
         {
           "ms": 1,
-          "percentile": 2
+          "percentile": 1
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 8,
+          "maxMs": 9999,
           "color": "#FFD700",
           "title": "Eagle Eye",
           "subtitle": "Spots typos in slide decks from across the room",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 6,
+          "maxMs": 9999,
           "color": "#F97316",
           "title": "Sharp Scanner",
           "subtitle": "Finds Waldo without looking like they're trying",
-          "percentileLabel": "Top 20%"
+          "percentileLabel": "Top 22%"
         },
         {
           "label": "B",
-          "maxMs": 4,
+          "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Reliable Observer",
           "subtitle": "Usually spots the different one",
-          "percentileLabel": "Top 45%"
+          "percentileLabel": "Top 50%"
         },
         {
           "label": "C",
-          "maxMs": 2,
+          "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Casual Scanner",
           "subtitle": "Misses Reply All warnings every time",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 77%"
         },
         {
           "label": "D",
@@ -1562,7 +1582,7 @@
           "color": "#EF4444",
           "title": "Attention Deficit",
           "subtitle": "Has walked past their own name on a sign",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 23%"
         }
       ]
     }
@@ -1620,41 +1640,41 @@
         },
         {
           "ms": 20,
-          "percentile": 90
+          "percentile": 93
         },
         {
-          "ms": 40,
-          "percentile": 72
+          "ms": 35,
+          "percentile": 80
         },
         {
-          "ms": 70,
-          "percentile": 50
+          "ms": 55,
+          "percentile": 58
         },
         {
-          "ms": 110,
-          "percentile": 28
+          "ms": 80,
+          "percentile": 35
         },
         {
-          "ms": 160,
-          "percentile": 8
+          "ms": 120,
+          "percentile": 12
         },
         {
-          "ms": 250,
+          "ms": 200,
           "percentile": 2
         }
       ],
       "ranks": [
         {
           "label": "S",
-          "maxMs": 15,
+          "maxMs": 20,
           "color": "#FFD700",
           "title": "Human Metronome",
           "subtitle": "Arrives at meetings exactly on time. To the second.",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 35,
+          "maxMs": 45,
           "color": "#A855F7",
           "title": "Precision Timer",
           "subtitle": "Their Pomodoros actually last 25 minutes",
@@ -1662,19 +1682,19 @@
         },
         {
           "label": "B",
-          "maxMs": 65,
+          "maxMs": 75,
           "color": "#58A6FF",
           "title": "Rhythmic Thinker",
           "subtitle": "Gives accurate ETAs. Occasionally.",
-          "percentileLabel": "Top 45%"
+          "percentileLabel": "Top 48%"
         },
         {
           "label": "C",
-          "maxMs": 120,
+          "maxMs": 130,
           "color": "#94A3B8",
           "title": "Approximate Clocker",
           "subtitle": "Says 5 minutes and means 20",
-          "percentileLabel": "Top 65%"
+          "percentileLabel": "Top 78%"
         },
         {
           "label": "D",
@@ -1682,7 +1702,7 @@
           "color": "#EF4444",
           "title": "Temporally Unmoored",
           "subtitle": "Has no idea what time it is. Ever.",
-          "percentileLabel": "Bottom 25%"
+          "percentileLabel": "Bottom 22%"
         }
       ]
     }
@@ -1739,27 +1759,27 @@
         },
         {
           "ms": 280,
-          "percentile": 90
+          "percentile": 93
         },
         {
-          "ms": 350,
-          "percentile": 72
+          "ms": 360,
+          "percentile": 78
         },
         {
-          "ms": 420,
-          "percentile": 50
+          "ms": 450,
+          "percentile": 52
         },
         {
-          "ms": 520,
-          "percentile": 28
+          "ms": 560,
+          "percentile": 26
         },
         {
-          "ms": 650,
+          "ms": 700,
           "percentile": 8
         },
         {
-          "ms": 800,
-          "percentile": 2
+          "ms": 900,
+          "percentile": 1
         }
       ],
       "ranks": [
@@ -1769,39 +1789,39 @@
           "color": "#FFD700",
           "title": "Eagle Cortex",
           "subtitle": "Notices your haircut. Every. Single. Time.",
-          "percentileLabel": "Top 1%"
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
-          "maxMs": 360,
+          "maxMs": 370,
           "color": "#06B6D4",
           "title": "Sharp Vigilance",
           "subtitle": "Spots the typo before the email is sent",
-          "percentileLabel": "Top 20%"
+          "percentileLabel": "Top 22%"
         },
         {
           "label": "B",
-          "maxMs": 460,
+          "maxMs": 490,
           "color": "#58A6FF",
-          "title": "Reliable Observer",
-          "subtitle": "Usually notices when the presentation changes",
-          "percentileLabel": "Top 45%"
+          "title": "Attentive Observer",
+          "subtitle": "Usually catches the important stuff",
+          "percentileLabel": "Top 50%"
         },
         {
           "label": "C",
-          "maxMs": 600,
+          "maxMs": 650,
           "color": "#94A3B8",
-          "title": "Selective Attention",
-          "subtitle": "Misses the obvious. Often.",
-          "percentileLabel": "Top 65%"
+          "title": "Selective Notifier",
+          "subtitle": "Walked past a fire alarm for three days",
+          "percentileLabel": "Top 78%"
         },
         {
           "label": "D",
           "maxMs": 9999,
           "color": "#EF4444",
           "title": "Change Blind",
-          "subtitle": "Would not notice a bear in a meeting",
-          "percentileLabel": "Bottom 25%"
+          "subtitle": "Didn't notice their own haircut in the mirror",
+          "percentileLabel": "Bottom 22%"
         }
       ]
     }
@@ -1858,27 +1878,27 @@
         },
         {
           "ms": 88,
-          "percentile": 90
+          "percentile": 93
         },
         {
           "ms": 80,
-          "percentile": 72
+          "percentile": 78
         },
         {
           "ms": 70,
-          "percentile": 50
+          "percentile": 52
         },
         {
           "ms": 58,
-          "percentile": 28
+          "percentile": 26
         },
         {
-          "ms": 45,
+          "ms": 44,
           "percentile": 8
         },
         {
           "ms": 30,
-          "percentile": 2
+          "percentile": 1
         }
       ],
       "ranks": [
@@ -1886,41 +1906,41 @@
           "label": "S",
           "maxMs": 9999,
           "color": "#FFD700",
-          "title": "Numerical Savant",
-          "subtitle": "Counts coins by sound",
-          "percentileLabel": "Top 1%"
+          "title": "Rain Man",
+          "subtitle": "Counts toothpicks before they hit the floor",
+          "percentileLabel": "Top 2%"
         },
         {
           "label": "A",
           "maxMs": 9999,
           "color": "#F59E0B",
-          "title": "Sharp Estimator",
-          "subtitle": "Always knows if the bill split was fair",
-          "percentileLabel": "Top 20%"
+          "title": "Quantitative Mind",
+          "subtitle": "Estimates meeting attendance to within 2 people",
+          "percentileLabel": "Top 22%"
         },
         {
           "label": "B",
           "maxMs": 9999,
           "color": "#58A6FF",
-          "title": "Reliable Counter",
-          "subtitle": "Gets the right aisle at the grocery store",
-          "percentileLabel": "Top 45%"
+          "title": "Decent Estimator",
+          "subtitle": "Gets the restaurant order count right most times",
+          "percentileLabel": "Top 50%"
         },
         {
           "label": "C",
           "maxMs": 9999,
           "color": "#94A3B8",
-          "title": "Approximate Guesser",
-          "subtitle": "Frequently miscounts coffee orders",
-          "percentileLabel": "Top 65%"
+          "title": "Rough Guesser",
+          "subtitle": "Their estimates are in the right decade",
+          "percentileLabel": "Top 78%"
         },
         {
           "label": "D",
           "maxMs": 0,
           "color": "#EF4444",
           "title": "Quantity Blind",
-          "subtitle": "Bought 12 eggs. Came home with 11.",
-          "percentileLabel": "Bottom 25%"
+          "subtitle": "Orders food for 4, feeds 11",
+          "percentileLabel": "Bottom 22%"
         }
       ]
     }

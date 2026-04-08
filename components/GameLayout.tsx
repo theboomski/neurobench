@@ -1,4 +1,5 @@
 import type { GameData } from "@/lib/types";
+import DistributionGraph from "@/components/DistributionGraph";
 import { dict } from "@/lib/i18n";
 
 const t = dict.en;
@@ -54,8 +55,11 @@ export default function GameLayout({ game, children }: { game: GameData; childre
           <span style={{ fontSize: 10, color: game.accent, fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase" }}>02 /</span>
           {t.game.scienceTitle}
         </h2>
-        <div style={{ paddingLeft: 20, marginBottom: 36 }}>
+        <div style={{ paddingLeft: 20, marginBottom: 8 }}>
           <p style={{ color: "var(--text-2)", lineHeight: 1.85, fontSize: 14 }}>{game.content.science}</p>
+        </div>
+        <div style={{ paddingLeft: 20, marginBottom: 36 }}>
+          <DistributionGraph game={game} />
         </div>
 
         {/* 03 Tips */}
