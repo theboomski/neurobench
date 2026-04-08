@@ -1,5 +1,16 @@
 "use client";
 
+// Show interstitial every N plays
+const AD_EVERY = 3;
+const STORAGE_KEY = "zazaza_play_count";
+
+export function shouldShowAd(): boolean {
+  if (typeof window === "undefined") return false;
+  const count = parseInt(localStorage.getItem(STORAGE_KEY) ?? "0", 10) + 1;
+  localStorage.setItem(STORAGE_KEY, String(count));
+  return count % AD_EVERY === 0;
+}
+
 export default function InterstitialAd({ onDone }: { onDone: () => void }) {
   return (
     <div style={{
@@ -14,28 +25,26 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
         padding: "28px 24px", width: "100%", maxWidth: 480, textAlign: "center",
       }}>
         <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
-          Initiating Next Protocol...
+          Loading Next Test...
         </div>
 
-        {/* ── Replace with real AdSense unit ──────────────────────────────
+        {/* ── AdSense unit (활성화 후 아래 주석 해제) ──────────────────────
           <ins className="adsbygoogle"
             style={{ display: "block" }}
-            data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+            data-ad-client="ca-pub-5822666577768735"
             data-ad-slot="XXXXXXXXXX"
             data-ad-format="auto"
             data-full-width-responsive="true"
           />
           <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         ─────────────────────────────────────────────────────────────── */}
-        <div className="ad-slot ad-interstitial" style={{ margin: "0 auto 20px", width: "100%" }}>
+        <div className="ad-slot ad-interstitial" style={{ margin: "0 auto 20px", width: "100%", minHeight: 100, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 28, marginBottom: 6 }}>📺</div>
-            <div style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Ad Placeholder</div>
-            <div style={{ fontSize: 10, color: "var(--text-3)", marginTop: 4, opacity: 0.5 }}>→ Replace with Google AdSense</div>
+            <div style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Advertisement</div>
           </div>
         </div>
 
-        {/* AdSense policy: user must be able to skip immediately */}
         <button
           onClick={onDone}
           className="pressable"
@@ -46,7 +55,7 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
             letterSpacing: "0.04em",
           }}
         >
-          ▶ RUN AGAIN
+          ▶ PLAY AGAIN
         </button>
       </div>
     </div>

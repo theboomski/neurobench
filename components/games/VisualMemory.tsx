@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
-import InterstitialAd from "@/components/InterstitialAd";
+import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
 
@@ -105,7 +105,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
     }
   }, [phase, clicked, targets, level, game.id, startLevel]);
 
-  const handleRetry = () => setShowAd(true);
+  const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); setLevel(1); };
 
   const rank = finalScore > 0 ? getRank(finalScore, game) : null;

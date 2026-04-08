@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
-import InterstitialAd from "@/components/InterstitialAd";
+import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
 const ROUNDS = 10;
@@ -121,7 +121,7 @@ export default function DontBlink({ game }: { game: GameData }) {
   }, [phase, startRound, finalize]);
 
   const startGame = () => { resultsRef.current = []; setResults([]); setRound(1); startRound(1, []); };
-  const handleRetry = () => setShowAd(true);
+  const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
 
   const rank = finalScore > 0 ? getRank(finalScore, game) : getRank(9999, game);

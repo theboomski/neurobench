@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
-import InterstitialAd from "@/components/InterstitialAd";
+import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
 const GRID_SIZE = 9;
@@ -116,7 +116,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     }
   }, [phase, userSeq, sequence, game.id, playSequence]);
 
-  const handleRetry = () => setShowAd(true);
+  const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => {
     setShowAd(false); setPhase("idle"); setSequence([]); setUserSeq([]);
     setHighlighted(null); setWrongCell(null); setCorrectCells([]);

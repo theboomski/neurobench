@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
-import InterstitialAd from "@/components/InterstitialAd";
+import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
 const TIME_LIMIT = 2500; // ms per round
@@ -127,7 +127,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
 
   useEffect(() => () => clearTimers(), []);
 
-  const handleRetry = () => setShowAd(true);
+  const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
 
   const rank = getRank(finalScore, game);
