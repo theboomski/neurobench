@@ -17,6 +17,12 @@ import InstantComparison from "@/components/games/InstantComparison";
 import AnglePrecision from "@/components/games/AnglePrecision";
 import RapidScan from "@/components/games/RapidScan";
 import TemporalPulse from "@/components/games/TemporalPulse";
+import DontBlink from "@/components/games/DontBlink";
+import CountMaster from "@/components/games/CountMaster";
+import ReportOrFavor from "@/components/games/ReportOrFavor";
+import BossDodge from "@/components/games/BossDodge";
+import RaiseOrRaise from "@/components/games/RaiseOrRaise";
+import CorporateClimber from "@/components/games/CorporateClimber";
 
 const games = gamesData as GameData[];
 type Props = { params: Promise<{ id: string }> };
@@ -53,6 +59,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "angle-precision":     return <AnglePrecision game={game} />;
     case "rapid-scan":          return <RapidScan game={game} />;
     case "temporal-pulse":      return <TemporalPulse game={game} />;
+    case "dont-blink":          return <DontBlink game={game} />;
+    case "count-master":        return <CountMaster game={game} />;
+    case "report-or-favor":     return <ReportOrFavor game={game} />;
+    case "boss-dodge":          return <BossDodge game={game} />;
+    case "raise-or-raise":      return <RaiseOrRaise game={game} />;
+    case "corporate-climber":   return <CorporateClimber game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
