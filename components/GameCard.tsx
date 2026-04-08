@@ -11,7 +11,7 @@ function displayTitle(game: GameData): string {
   return game.title.replace(/\s*Test$/i, "").replace(/\s*Test\s*/i, " ").trim();
 }
 
-export function SortedGrid({ games, category }: { games: GameData[]; category: "clinical" | "office" }) {
+export function SortedGrid({ games, category }: { games: GameData[]; category: "brain-age" | "office-iq" | "eye-age" | "focus-test" | "dark-personality" | "word-iq" }) {
   const filtered = games.filter(g => g.category === category);
   const [sorted, setSorted] = useState(filtered);
 
@@ -34,7 +34,7 @@ export function GameCard({ game, rank }: { game: GameData; rank?: number }) {
   useEffect(() => { setClicks(getClicks(game.id)); }, [game.id]);
 
   return (
-    <Link href={`/games/${game.id}`} style={{ textDecoration: "none", display: "block" }} onClick={() => recordClick(game.id)}>
+    <Link href={`/${game.category}/${game.id}`} style={{ textDecoration: "none", display: "block" }} onClick={() => recordClick(game.id)}>
       <div
         className="pressable"
         style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: `3px solid ${game.accent}`, borderRadius: "var(--radius-lg)", padding: "24px 22px", height: "100%", position: "relative", transition: "background 0.2s, box-shadow 0.2s" }}

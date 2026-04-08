@@ -8,7 +8,7 @@
     "emoji": "👹",
     "accent": "#FF6B6B",
     "accentDim": "rgba(255,107,107,0.10)",
-    "category": "office",
+    "category": "office-iq",
     "categoryLabel": "Office IQ Test",
     "tags": [
       "stress relief game",
@@ -132,7 +132,7 @@
     "emoji": "🧠",
     "accent": "#818CF8",
     "accentDim": "rgba(129,140,248,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "number memory test",
@@ -261,7 +261,7 @@
     "emoji": "🔲",
     "accent": "#F59E0B",
     "accentDim": "rgba(245,158,11,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "sequence memory test",
@@ -382,7 +382,7 @@
     "emoji": "📝",
     "accent": "#34D399",
     "accentDim": "rgba(52,211,153,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "verbal memory test",
@@ -501,7 +501,7 @@
     "emoji": "👁️",
     "accent": "#A78BFA",
     "accentDim": "rgba(167,139,250,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "visual memory test",
@@ -616,7 +616,7 @@
     "emoji": "🐒",
     "accent": "#FB923C",
     "accentDim": "rgba(251,146,60,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "chimp test",
@@ -735,7 +735,7 @@
     "emoji": "⌨️",
     "accent": "#06B6D4",
     "accentDim": "rgba(6,182,212,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "typing speed test",
@@ -864,7 +864,7 @@
     "emoji": "🎨",
     "accent": "#EC4899",
     "accentDim": "rgba(236,72,153,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "stroop test online",
@@ -985,7 +985,7 @@
     "emoji": "⚖️",
     "accent": "#10B981",
     "accentDim": "rgba(16,185,129,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "math speed test",
@@ -1105,7 +1105,7 @@
     "emoji": "📐",
     "accent": "#6366F1",
     "accentDim": "rgba(99,102,241,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "angle estimation test",
@@ -1224,7 +1224,7 @@
     "emoji": "🔍",
     "accent": "#F97316",
     "accentDim": "rgba(249,115,22,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "visual search test",
@@ -1344,7 +1344,7 @@
     "emoji": "⏱️",
     "accent": "#A855F7",
     "accentDim": "rgba(168,85,247,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "rhythm test online",
@@ -1464,7 +1464,7 @@
     "emoji": "👁️",
     "accent": "#06B6D4",
     "accentDim": "rgba(6,182,212,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "change blindness test",
@@ -1583,7 +1583,7 @@
     "emoji": "🔢",
     "accent": "#F59E0B",
     "accentDim": "rgba(245,158,11,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "subitizing test",
@@ -1702,7 +1702,7 @@
     "emoji": "⚡",
     "accent": "#00FF94",
     "accentDim": "rgba(0,255,148,0.10)",
-    "category": "clinical",
+    "category": "brain-age",
     "categoryLabel": "Brain Age Test",
     "tags": [
       "reaction time test",
@@ -1833,7 +1833,7 @@
     "emoji": "📋",
     "accent": "#FF6B6B",
     "accentDim": "rgba(255,107,107,0.10)",
-    "category": "office",
+    "category": "office-iq",
     "categoryLabel": "Office IQ Test",
     "tags": [
       "office game online",
@@ -1952,7 +1952,7 @@
     "emoji": "👹",
     "accent": "#FF6B6B",
     "accentDim": "rgba(255,107,107,0.10)",
-    "category": "office",
+    "category": "office-iq",
     "categoryLabel": "Office IQ Test",
     "tags": [
       "boss dodge game",
@@ -2072,7 +2072,7 @@
     "emoji": "💰",
     "accent": "#22C55E",
     "accentDim": "rgba(34,197,94,0.10)",
-    "category": "office",
+    "category": "office-iq",
     "categoryLabel": "Office IQ Test",
     "tags": [
       "salary negotiation game",
@@ -2191,7 +2191,7 @@
     "emoji": "🏢",
     "accent": "#F59E0B",
     "accentDim": "rgba(245,158,11,0.10)",
-    "category": "office",
+    "category": "office-iq",
     "categoryLabel": "Office IQ Test",
     "tags": [
       "corporate snake game",
@@ -2296,6 +2296,1401 @@
           "color": "#EF4444",
           "title": "Intern Energy",
           "subtitle": "Still can't find the printer",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "color-blind-test",
+    "title": "Color Blind Test",
+    "clinicalTitle": "Ishihara Color Vision Deficiency Screening",
+    "shortDescription": "Do you see the number hidden in the dots? The world's most recognized color vision test.",
+    "description": "A digital adaptation of the Ishihara color vision test. Colored dot patterns conceal numbers — people with normal color vision see them instantly. Color blind individuals cannot. Find out in 60 seconds.",
+    "emoji": "🔴",
+    "accent": "#EF4444",
+    "accentDim": "rgba(239,68,68,0.10)",
+    "category": "eye-age",
+    "categoryLabel": "Eye Age Test",
+    "tags": [
+      "color blind test",
+      "color vision test",
+      "ishihara test online",
+      "color blindness test free"
+    ],
+    "seo": {
+      "metaTitle": "Free Color Blind Test – Ishihara Color Vision Test Online | ZAZAZA",
+      "metaDescription": "Take the free Ishihara color blind test online. Find out if you have color vision deficiency in 60 seconds. No signup. Instant results.",
+      "keywords": [
+        "color blind test",
+        "color vision test online",
+        "ishihara test",
+        "color blindness test free"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A circular pattern of colored dots will appear on screen.",
+        "A number is hidden within the dots — visible to people with normal color vision.",
+        "Enter the number you see using the keypad. If you see nothing, enter 0.",
+        "Complete all rounds — your color vision profile is calculated at the end.",
+        "Results show which color channels may be affected."
+      ],
+      "science": "The Ishihara color vision test, developed by Dr. Shinobu Ishihara in 1917, uses pseudoisochromatic plates — dot patterns where numbers are distinguishable by hue but not by luminance. Red-green color blindness (deuteranopia and protanopia) affects approximately 8% of males and 0.5% of females of Northern European descent. The condition results from absence or malfunction of cone photoreceptors in the retina. This digital adaptation uses the same psychophysical principles as the clinical plates.",
+      "tips": [
+        "View the test in good lighting — avoid dimly lit rooms.",
+        "Don't zoom in — view at normal screen distance.",
+        "If you're uncertain, go with your first impression.",
+        "Some plates test for different color blindness types — answer what you genuinely see.",
+        "Color blindness is hereditary and cannot be corrected by practice."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 12,
+          "percentile": 99
+        },
+        {
+          "ms": 10,
+          "percentile": 90
+        },
+        {
+          "ms": 8,
+          "percentile": 75
+        },
+        {
+          "ms": 6,
+          "percentile": 55
+        },
+        {
+          "ms": 4,
+          "percentile": 30
+        },
+        {
+          "ms": 2,
+          "percentile": 8
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Tetrachromat",
+          "subtitle": "Sees colors humans haven't named yet",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Sharp Eyes",
+          "subtitle": "Notices when the office plants are slightly off-color",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Normal Vision",
+          "subtitle": "Sees the rainbow. All of it.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Mild Deficiency",
+          "subtitle": "Traffic lights are more of a suggestion",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Color Blind",
+          "subtitle": "The dots are just dots",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "contrast-sensitivity",
+    "title": "Contrast Sensitivity",
+    "clinicalTitle": "Visual Contrast Detection Threshold Assessment",
+    "shortDescription": "Can you see the faint pattern? Your contrast sensitivity reveals how well your vision handles low-light and aging.",
+    "description": "A measure of your visual system's ability to detect differences in luminance. Patterns fade progressively — how faint can you still detect? Contrast sensitivity declines before standard acuity, making it an early indicator of visual aging.",
+    "emoji": "🌫️",
+    "accent": "#94A3B8",
+    "accentDim": "rgba(148,163,184,0.10)",
+    "category": "eye-age",
+    "categoryLabel": "Eye Age Test",
+    "tags": [
+      "contrast sensitivity test",
+      "visual acuity test",
+      "eye age test",
+      "vision test online free"
+    ],
+    "seo": {
+      "metaTitle": "Free Contrast Sensitivity Test – Visual Acuity Eye Age | ZAZAZA",
+      "metaDescription": "Test your contrast sensitivity online. Fading patterns reveal your visual system's detection threshold. Free eye age test, instant results, no signup.",
+      "keywords": [
+        "contrast sensitivity test online",
+        "visual acuity test free",
+        "eye age test",
+        "vision test online"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A striped grating pattern will appear at decreasing contrast levels.",
+        "Indicate whether you can see a pattern (YES) or whether the screen looks blank (NO).",
+        "The contrast decreases with each correct detection — find your threshold.",
+        "Complete all rounds — your contrast sensitivity score is calculated.",
+        "Lower threshold = better vision."
+      ],
+      "science": "Contrast sensitivity function (CSF) measures the visual system's ability to detect spatial luminance differences across a range of spatial frequencies. Unlike standard Snellen acuity (20/20), CSF captures the full range of visual performance. Contrast sensitivity begins declining in the mid-30s and accelerates after 60, often before any decline in standard acuity is detectable. It is used clinically to assess early cataracts, glaucoma, and amblyopia.",
+      "tips": [
+        "Ensure your screen brightness is set to maximum for accurate results.",
+        "Test in a moderately lit room — not too bright, not too dark.",
+        "Blink naturally — eye strain degrades sensitivity.",
+        "If you wear glasses or contacts, wear them during the test.",
+        "Results may vary by screen quality — IPS panels provide the most accurate results."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 12,
+          "percentile": 99
+        },
+        {
+          "ms": 10,
+          "percentile": 90
+        },
+        {
+          "ms": 7,
+          "percentile": 70
+        },
+        {
+          "ms": 5,
+          "percentile": 45
+        },
+        {
+          "ms": 3,
+          "percentile": 20
+        },
+        {
+          "ms": 1,
+          "percentile": 4
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Eagle Vision",
+          "subtitle": "Sees pixels others call smooth",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Sharp Contrast",
+          "subtitle": "Spots the faded text no one else bothers to read",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Normal Range",
+          "subtitle": "Sees fine in daylight. Mostly fine at night.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Mild Decline",
+          "subtitle": "Squints at restaurant menus in dim lighting",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Low Contrast",
+          "subtitle": "Blames the lighting. Always.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "visual-reaction",
+    "title": "Visual Reaction Age",
+    "clinicalTitle": "Visual Stimulus Response & Eye Age Assessment",
+    "shortDescription": "How quickly do your eyes and brain process visual stimuli? Your reaction speed reveals your visual processing age.",
+    "description": "Your visual reaction time reflects both eye health and neural processing speed. As eyes age, photoreceptor sensitivity decreases and neural conduction slows. This test isolates visual processing speed to estimate your eye age.",
+    "emoji": "👁️",
+    "accent": "#06B6D4",
+    "accentDim": "rgba(6,182,212,0.10)",
+    "category": "eye-age",
+    "categoryLabel": "Eye Age Test",
+    "tags": [
+      "visual reaction time test",
+      "eye age test",
+      "visual processing speed",
+      "eye reaction test online"
+    ],
+    "seo": {
+      "metaTitle": "Visual Reaction Age Test – Eye Speed & Processing | ZAZAZA",
+      "metaDescription": "Test your visual reaction age. How fast do your eyes detect and respond to stimuli? Free eye age reaction test, instant results, no signup.",
+      "keywords": [
+        "visual reaction time test",
+        "eye age test online",
+        "visual processing speed test",
+        "eye reaction speed"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Focus on the center of the screen.",
+        "When a visual stimulus appears, click or tap as fast as possible.",
+        "Complete 10 rounds — your average visual reaction time is your score.",
+        "Your reaction time is compared to population norms by age group.",
+        "Lower milliseconds = younger visual processing age."
+      ],
+      "science": "Visual reaction time integrates retinal processing speed, optic nerve conduction velocity, and primary visual cortex response time. Unlike simple reaction time tests, this protocol uses specific visual stimulus parameters to isolate the visual processing component. Research shows visual RT increases approximately 1ms per year from age 25, accelerating after 60. The test provides an estimate of your visual processing age relative to population norms.",
+      "tips": [
+        "Fixate on the center of the screen — peripheral detection is slower.",
+        "Blink before each trial to refresh your visual field.",
+        "Avoid caffeine deficit — visual processing speed is sensitive to arousal state.",
+        "Screen refresh rate matters — 60Hz+ displays give most accurate results.",
+        "Test in consistent lighting conditions for repeatable results."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 170,
+          "percentile": 99
+        },
+        {
+          "ms": 200,
+          "percentile": 90
+        },
+        {
+          "ms": 230,
+          "percentile": 72
+        },
+        {
+          "ms": 260,
+          "percentile": 50
+        },
+        {
+          "ms": 300,
+          "percentile": 25
+        },
+        {
+          "ms": 360,
+          "percentile": 7
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 195,
+          "color": "#FFD700",
+          "title": "Eye of the Hawk",
+          "subtitle": "Sees the ball leave the pitcher's hand",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 235,
+          "color": "#06B6D4",
+          "title": "Sharp Visual System",
+          "subtitle": "Never misses a notification",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 270,
+          "color": "#58A6FF",
+          "title": "Normal Processing",
+          "subtitle": "Catches things before they fall. Usually.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 320,
+          "color": "#94A3B8",
+          "title": "Aging Gracefully",
+          "subtitle": "Yellow lights are more of a 'maybe'",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Slow Visual Age",
+          "subtitle": "Blinks during the important moment. Always.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "attention-span",
+    "title": "Attention Span Test",
+    "clinicalTitle": "Sustained Attention & Vigilance Assessment",
+    "shortDescription": "How long can you stay focused without missing a target? Test your sustained attention span.",
+    "description": "A clinical measure of sustained attention and vigilance. Targets appear among distractors over a continuous period — miss too many and your attention span is flagged. How long can you maintain peak focus?",
+    "emoji": "🎯",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "focus-test",
+    "categoryLabel": "Focus & Attention",
+    "tags": [
+      "attention span test",
+      "focus test online",
+      "sustained attention test",
+      "ADHD test online free",
+      "concentration test"
+    ],
+    "seo": {
+      "metaTitle": "Free Attention Span Test – Focus & ADHD Screening | ZAZAZA",
+      "metaDescription": "Test your attention span and sustained focus online. Free attention test with ADHD insights. How long can you stay focused? Instant results, no signup.",
+      "keywords": [
+        "attention span test online",
+        "focus test free",
+        "sustained attention test",
+        "ADHD screening online",
+        "concentration test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Targets will appear on screen at random intervals among distractors.",
+        "Tap or click only the target — not the distractors.",
+        "Maintain focus for the full 90-second session.",
+        "Your score is accuracy % combined with reaction consistency.",
+        "Attention lapses (missed targets or false alarms) are tracked separately."
+      ],
+      "science": "Sustained attention — the ability to maintain focused alertness over time — is mediated by the right prefrontal cortex and anterior cingulate cortex, with arousal modulation from the locus coeruleus-norepinephrine system. The Continuous Performance Test (CPT), on which this assessment is based, is the gold-standard clinical measure for ADHD screening. Attention performance peaks at ages 20-35 and shows gradual decline thereafter. Individual differences in sustained attention strongly predict academic and professional performance.",
+      "tips": [
+        "Minimize external distractions before starting — close other tabs.",
+        "Sit upright — posture affects alertness and prefrontal cortex activity.",
+        "Avoid testing when fatigued — sustained attention is highly sensitive to sleep debt.",
+        "Focus on consistency, not speed — accuracy matters more than reaction time here.",
+        "If you notice your mind wandering, gently refocus without judgment."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 95,
+          "percentile": 99
+        },
+        {
+          "ms": 88,
+          "percentile": 90
+        },
+        {
+          "ms": 80,
+          "percentile": 72
+        },
+        {
+          "ms": 70,
+          "percentile": 50
+        },
+        {
+          "ms": 58,
+          "percentile": 25
+        },
+        {
+          "ms": 42,
+          "percentile": 7
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Laser Focus",
+          "subtitle": "Notices every detail in every meeting. Every one.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Sharp Attention",
+          "subtitle": "Reads the full email before replying",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Normal Span",
+          "subtitle": "Focused. Mostly. Until something shiny appears.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Wandering Mind",
+          "subtitle": "Has 47 tabs open. All important.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Attention Deficit",
+          "subtitle": "Opened this test and forgot why",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "distraction-shield",
+    "title": "Distraction Shield",
+    "clinicalTitle": "Selective Attention & Interference Resistance Assessment",
+    "shortDescription": "Find the target while ignoring everything else. How resistant are you to distraction?",
+    "description": "A measure of selective attention and interference resistance. Visual noise surrounds the target — your job is to filter it out and respond only to what matters. The interference grows with each level.",
+    "emoji": "🛡️",
+    "accent": "#10B981",
+    "accentDim": "rgba(16,185,129,0.10)",
+    "category": "focus-test",
+    "categoryLabel": "Focus & Attention",
+    "tags": [
+      "distraction test",
+      "selective attention test",
+      "focus test online",
+      "interference resistance test",
+      "concentration test"
+    ],
+    "seo": {
+      "metaTitle": "Free Distraction Shield Test – Selective Attention | ZAZAZA",
+      "metaDescription": "Test your resistance to distraction. Find the target in visual noise. Free selective attention test, instant results, no signup.",
+      "keywords": [
+        "distraction test online",
+        "selective attention test",
+        "interference resistance test",
+        "focus concentration test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A target symbol will appear among distractors on screen.",
+        "Tap the target as fast as possible while ignoring all distractors.",
+        "Distractors increase in number and similarity each round.",
+        "Your score is levels completed before accuracy drops below threshold.",
+        "Speed and accuracy are both measured."
+      ],
+      "science": "Selective attention — the ability to focus on relevant stimuli while filtering irrelevant ones — is mediated by top-down control from the prefrontal cortex and bottom-up salience signals from the parietal cortex. The ability to suppress interference is a core component of executive function and strongly predicts academic performance, driving safety, and professional decision-making quality. Distractor interference increases with similarity to the target — a phenomenon called the flanker effect, first described by Eriksen & Eriksen (1974).",
+      "tips": [
+        "Fixate on the center of the display — let peripheral vision flag the target.",
+        "Don't scan systematically — allow your visual system to detect the target pre-attentively.",
+        "Resist the urge to confirm — trust your first identification.",
+        "Maintain steady breathing — anxiety narrows attentional spotlight and increases false alarms.",
+        "The more similar distractors look to the target, the more processing power you need."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 12,
+          "percentile": 99
+        },
+        {
+          "ms": 9,
+          "percentile": 90
+        },
+        {
+          "ms": 7,
+          "percentile": 72
+        },
+        {
+          "ms": 5,
+          "percentile": 50
+        },
+        {
+          "ms": 3,
+          "percentile": 25
+        },
+        {
+          "ms": 1,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Distraction Immune",
+          "subtitle": "Works in open offices without headphones. By choice.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Focus Master",
+          "subtitle": "Reads in coffee shops. Genuinely.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Selective Filter",
+          "subtitle": "Tunes out most things. Not all things.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Distraction Prone",
+          "subtitle": "Gets sidetracked by their own notifications",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Fully Distractible",
+          "subtitle": "A bird flew past the window. Gone.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "task-switching",
+    "title": "Task Switch Speed",
+    "clinicalTitle": "Cognitive Flexibility & Task-Switching Cost Assessment",
+    "shortDescription": "Switch between tasks as fast as possible. Your switching cost reveals your mental flexibility.",
+    "description": "Measures cognitive flexibility — how quickly your brain can reconfigure itself for a new task. Alternating rules require you to switch mental sets rapidly. The switching cost (delay vs. non-switch) is your key metric.",
+    "emoji": "🔄",
+    "accent": "#8B5CF6",
+    "accentDim": "rgba(139,92,246,0.10)",
+    "category": "focus-test",
+    "categoryLabel": "Focus & Attention",
+    "tags": [
+      "task switching test",
+      "cognitive flexibility test",
+      "mental flexibility test",
+      "executive function test",
+      "focus test online"
+    ],
+    "seo": {
+      "metaTitle": "Free Task Switch Speed Test – Cognitive Flexibility | ZAZAZA",
+      "metaDescription": "Test your cognitive flexibility with the task switching test. How quickly can your brain switch between rules? Free executive function test, instant results.",
+      "keywords": [
+        "task switching test online",
+        "cognitive flexibility test",
+        "mental flexibility test",
+        "executive function test free"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Two alternating rules appear — follow the rule shown on screen.",
+        "Switch between rules as fast as possible when prompted.",
+        "Your reaction time on switch trials vs. non-switch trials is compared.",
+        "Your switching cost (the delay caused by switching) is your score.",
+        "Lower switching cost = greater cognitive flexibility."
+      ],
+      "science": "Task-switching cost — the additional reaction time incurred when switching between tasks compared to repeating the same task — is a reliable measure of cognitive flexibility and executive control. Mediated by the prefrontal cortex and anterior cingulate cortex, task switching requires active inhibition of the previous task set and retrieval of the new one. Switching costs decrease with practice and are larger in older adults, individuals with ADHD, and under cognitive load. The ability to switch rapidly between tasks predicts multitasking performance and professional adaptability.",
+      "tips": [
+        "Read the rule cue before the stimulus appears — preparation reduces switching cost.",
+        "Don't carry over the previous rule — fully reset between trials.",
+        "Consistent rhythm helps — irregular pacing increases switching cost.",
+        "Cognitive flexibility improves with dual-task practice and novel learning.",
+        "Switching cost naturally increases with fatigue — test when alert."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 50,
+          "percentile": 99
+        },
+        {
+          "ms": 100,
+          "percentile": 90
+        },
+        {
+          "ms": 180,
+          "percentile": 72
+        },
+        {
+          "ms": 280,
+          "percentile": 50
+        },
+        {
+          "ms": 420,
+          "percentile": 25
+        },
+        {
+          "ms": 600,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 90,
+          "color": "#FFD700",
+          "title": "Mental Gymnast",
+          "subtitle": "Switches between 12 tasks without losing track of any",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 200,
+          "color": "#8B5CF6",
+          "title": "Flexible Thinker",
+          "subtitle": "Context switches without rebooting",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 320,
+          "color": "#58A6FF",
+          "title": "Adaptable Mind",
+          "subtitle": "Handles interruptions. Mostly.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 480,
+          "color": "#94A3B8",
+          "title": "Slow Switcher",
+          "subtitle": "Needs a minute to remember what they were doing",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Single-Threaded",
+          "subtitle": "Multitasking is a personal affront",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dark-triad",
+    "title": "Dark Triad Score",
+    "clinicalTitle": "Dark Triad Personality Trait Assessment",
+    "shortDescription": "Narcissism, Machiavellianism, Psychopathy. How dark is your personality? Be honest.",
+    "description": "The Dark Triad measures three subclinical personality traits: narcissism (entitlement and grandiosity), Machiavellianism (strategic manipulation), and psychopathy (callousness and impulsivity). Most people score somewhere on each dimension. Find out where you land.",
+    "emoji": "🌑",
+    "accent": "#A855F7",
+    "accentDim": "rgba(168,85,247,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "dark triad test",
+      "narcissism test",
+      "psychopathy test online",
+      "dark personality test",
+      "machiavellian test"
+    ],
+    "seo": {
+      "metaTitle": "Free Dark Triad Test – Narcissism, Psychopathy & Machiavellianism | ZAZAZA",
+      "metaDescription": "Take the free Dark Triad personality test. Measure your narcissism, Machiavellianism and psychopathy scores. Instant results. No signup. Are you ready for the truth?",
+      "keywords": [
+        "dark triad test online",
+        "narcissism test free",
+        "psychopathy test online",
+        "dark personality test",
+        "machiavellian test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 27 questions honestly — there are no right or wrong answers.",
+        "Rate each statement from 1 (strongly disagree) to 5 (strongly agree).",
+        "Do not overthink — your first instinct is most accurate.",
+        "Your scores on Narcissism, Machiavellianism, and Psychopathy are calculated separately.",
+        "Results show your profile relative to population norms."
+      ],
+      "science": "The Dark Triad, conceptualized by Paulhus and Williams (2002), identifies three overlapping but distinct personality constructs that share a tendency toward social aversion. Narcissism is measured using the Narcissistic Personality Inventory (NPI); Machiavellianism via the Mach-IV scale; and psychopathy via the Self-Report Psychopathy scale. Subclinical levels of these traits are found throughout the general population and correlate with leadership emergence, risk tolerance, and persuasion effectiveness — as well as interpersonal conflict and ethical violations.",
+      "tips": [
+        "Answer based on your genuine tendencies, not your ideal self.",
+        "High scores on any dimension are not inherently negative — context matters.",
+        "Narcissism at moderate levels correlates with confidence and leadership.",
+        "Machiavellianism predicts strategic thinking and negotiation skill.",
+        "This test measures subclinical traits, not clinical personality disorders."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 72
+        },
+        {
+          "ms": 45,
+          "percentile": 50
+        },
+        {
+          "ms": 30,
+          "percentile": 25
+        },
+        {
+          "ms": 15,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Dark Lord",
+          "subtitle": "Already knew your score before taking the test",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#A855F7",
+          "title": "Strategic Mind",
+          "subtitle": "Three steps ahead. Always.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Calculated",
+          "subtitle": "Has opinions about people but keeps them to themselves",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Mostly Harmless",
+          "subtitle": "Occasionally passive aggressive",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Pure of Heart",
+          "subtitle": "Genuinely wishes everyone well. Suspicious.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "empathy-score",
+    "title": "Empathy Score",
+    "clinicalTitle": "Cognitive & Affective Empathy Quotient Assessment",
+    "shortDescription": "How well do you read other people's emotions? Your empathy score reveals your social intelligence.",
+    "description": "Measures both cognitive empathy (understanding others' mental states) and affective empathy (sharing others' emotional experiences). High empathy predicts social connection quality; low empathy predicts Dark Triad tendencies. Where do you fall?",
+    "emoji": "🫀",
+    "accent": "#EC4899",
+    "accentDim": "rgba(236,72,153,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "empathy test",
+      "empathy score online",
+      "emotional intelligence test",
+      "social intelligence test free",
+      "EQ test"
+    ],
+    "seo": {
+      "metaTitle": "Free Empathy Score Test – Emotional & Social Intelligence | ZAZAZA",
+      "metaDescription": "Test your empathy score online. Measure cognitive and affective empathy. Free emotional intelligence test. How well do you read other people? Instant results.",
+      "keywords": [
+        "empathy test online",
+        "empathy score test",
+        "emotional intelligence test free",
+        "EQ test online",
+        "social intelligence test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "You will be shown faces, scenarios, and statements.",
+        "Identify the emotion displayed or choose how you would feel in each scenario.",
+        "Answer quickly and honestly — your first response is usually most accurate.",
+        "Your cognitive empathy and affective empathy scores are calculated separately.",
+        "Results compare your profile to population norms."
+      ],
+      "science": "Empathy comprises two distinct components: cognitive empathy (theory of mind — the ability to infer others' mental states) and affective empathy (emotional contagion — the tendency to share others' feelings). Cognitive empathy is mediated by the temporoparietal junction and medial prefrontal cortex; affective empathy by the anterior insula and anterior cingulate cortex. Baron-Cohen's Empathy Quotient (EQ) is the most widely used research tool in this domain. Empathy scores correlate inversely with Dark Triad traits and predict prosocial behavior, relationship quality, and therapeutic effectiveness.",
+      "tips": [
+        "Don't try to give the 'right' answer — empathy tests are most accurate when answered instinctively.",
+        "High affective empathy is not always adaptive — it can lead to empathy fatigue.",
+        "Cognitive empathy without affective empathy is associated with Machiavellianism.",
+        "Affective empathy without cognitive empathy can lead to emotional overwhelm.",
+        "Empathy is partially heritable but also highly trainable through deliberate social practice."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 72
+        },
+        {
+          "ms": 48,
+          "percentile": 50
+        },
+        {
+          "ms": 35,
+          "percentile": 25
+        },
+        {
+          "ms": 20,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Empath",
+          "subtitle": "Feels everyone's feelings. Exhausting but beautiful.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#EC4899",
+          "title": "Highly Attuned",
+          "subtitle": "Knows you're upset before you do",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Socially Aware",
+          "subtitle": "Reads the room. Usually.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Low Empathy",
+          "subtitle": "Understands feelings intellectually but doesn't feel them",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Empathy Deficit",
+          "subtitle": "Asks 'are you okay?' while already walking away",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "manipulation-detector",
+    "title": "Manipulation Detector",
+    "clinicalTitle": "Machiavellian Reasoning & Deception Detection Assessment",
+    "shortDescription": "Can you spot manipulation when you see it? Or are you the one doing it?",
+    "description": "Tests both your ability to detect manipulative behavior in others AND your own tendency toward Machiavellian reasoning. Two sides of the same coin — your score reveals which side of the chess board you're on.",
+    "emoji": "🎭",
+    "accent": "#F97316",
+    "accentDim": "rgba(249,115,22,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "manipulation test",
+      "machiavellian test",
+      "deception detection test",
+      "dark psychology test",
+      "personality test online"
+    ],
+    "seo": {
+      "metaTitle": "Free Manipulation Detector Test – Dark Psychology | ZAZAZA",
+      "metaDescription": "Can you spot manipulation? Or are you the manipulator? Free dark psychology test measuring Machiavellian reasoning and deception detection. Instant results.",
+      "keywords": [
+        "manipulation detector test",
+        "machiavellian test online",
+        "deception detection test",
+        "dark psychology test free",
+        "manipulation test online"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Read scenarios describing social interactions.",
+        "Identify the manipulative element — or rate how you would respond.",
+        "Answer honestly — the test detects both detection skill and personal tendency.",
+        "Your Detector Score (how well you spot manipulation) and your Operator Score (tendency to use it) are calculated separately.",
+        "Most people are higher on one than the other."
+      ],
+      "science": "Machiavellianism — named for Niccolò Machiavelli's treatise on political strategy — describes a personality disposition characterized by strategic interpersonal manipulation, cynical worldview, and long-term self-interest orientation. The Mach-IV scale (Christie & Geis, 1970) is the foundational measure. High Machiavellians are skilled at identifying and exploiting social leverage points, making them effective negotiators and political operators. Deception detection ability is correlated but distinct — research shows most people perform only slightly above chance at detecting lies, regardless of Mach score.",
+      "tips": [
+        "Look for incongruence between stated motives and actual outcomes in scenarios.",
+        "Manipulation often involves flattery, urgency, and appeals to reciprocity.",
+        "High Mach scorers often project their own tendencies onto others.",
+        "Deception detection improves with awareness of common manipulation patterns.",
+        "Answer the personal tendency questions about your actual behavior, not your ideal."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 72
+        },
+        {
+          "ms": 45,
+          "percentile": 50
+        },
+        {
+          "ms": 30,
+          "percentile": 25
+        },
+        {
+          "ms": 15,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Grand Operator",
+          "subtitle": "Sees seventeen moves ahead and three chess boards at once",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F97316",
+          "title": "Strategic Thinker",
+          "subtitle": "Spots the angle in every conversation",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Situationally Aware",
+          "subtitle": "Suspects something's off but can't prove it",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Trusting",
+          "subtitle": "Takes things at face value. Endearing.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Fully Transparent",
+          "subtitle": "Has never had an ulterior motive in their life",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "vocabulary-age",
+    "title": "Vocabulary Age",
+    "clinicalTitle": "Lexical Knowledge & Verbal Intelligence Assessment",
+    "shortDescription": "How rich is your vocabulary? Your word knowledge reveals your verbal brain age.",
+    "description": "Vocabulary size is one of the strongest predictors of verbal intelligence, educational attainment, and reading comprehension. This test measures the breadth of your lexical knowledge to estimate your vocabulary age relative to population norms.",
+    "emoji": "📚",
+    "accent": "#F97316",
+    "accentDim": "rgba(249,115,22,0.10)",
+    "category": "word-iq",
+    "categoryLabel": "Vocab & Word IQ",
+    "tags": [
+      "vocabulary test online",
+      "vocab age test",
+      "word knowledge test",
+      "verbal intelligence test",
+      "vocabulary IQ test"
+    ],
+    "seo": {
+      "metaTitle": "Free Vocabulary Age Test – Word Knowledge & Verbal IQ | ZAZAZA",
+      "metaDescription": "Find your vocabulary age. Test your word knowledge and verbal intelligence. Free vocab age test with instant results. How old is your vocabulary? No signup.",
+      "keywords": [
+        "vocabulary age test online",
+        "vocab test free",
+        "verbal intelligence test",
+        "word knowledge test",
+        "vocabulary IQ test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Words will appear on screen — some real, some invented.",
+        "Indicate whether each word is a real English word (YES) or not (NO).",
+        "You will also be asked to identify definitions for some words.",
+        "Answer as fast as you can — hesitation may indicate word unfamiliarity.",
+        "Your vocabulary size estimate and vocabulary age are calculated from your performance."
+      ],
+      "science": "Vocabulary size in adults ranges from approximately 20,000 to 100,000+ word families, with the average educated adult knowing around 40,000-60,000 words. The Vocabulary Levels Test (Nation, 1990) and the Vocabulary Size Test (Nation & Beglar, 2007) are foundational research instruments. Vocabulary is highly correlated with crystallized intelligence (Gc) and continues growing throughout adulthood, unlike most other cognitive abilities. It is the single strongest predictor of academic success and is highly valued in high-income professional contexts, driving premium advertising CPM rates.",
+      "tips": [
+        "Don't guess randomly on invented words — false positive errors reduce your score.",
+        "If a word looks familiar, it probably is — trust lexical familiarity signals.",
+        "Vocabulary grows with reading — breadth of reading material matters more than volume.",
+        "Technical vocabulary in your professional domain inflates scores in that register.",
+        "Vocabulary age continues to grow throughout life — unlike most cognitive metrics."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 80,
+          "percentile": 90
+        },
+        {
+          "ms": 70,
+          "percentile": 72
+        },
+        {
+          "ms": 58,
+          "percentile": 50
+        },
+        {
+          "ms": 44,
+          "percentile": 25
+        },
+        {
+          "ms": 28,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Lexical Genius",
+          "subtitle": "Uses words others have to Google",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F97316",
+          "title": "Word Wizard",
+          "subtitle": "Always has the exact right word. Always.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Articulate",
+          "subtitle": "Expresses ideas clearly. Usually.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Average Vocabulary",
+          "subtitle": "Gets the point across. Eventually.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Word Challenged",
+          "subtitle": "Uses 'thing' as a noun for everything",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "word-speed",
+    "title": "Word Recognition Speed",
+    "clinicalTitle": "Orthographic Processing & Lexical Access Speed Assessment",
+    "shortDescription": "How fast can your brain recognize words? Speed of lexical access reveals your reading brain age.",
+    "description": "Measures the speed at which your brain accesses word meanings from written input. Fast lexical access is the foundation of reading fluency and verbal intelligence. This test isolates pure word recognition speed from comprehension.",
+    "emoji": "⚡",
+    "accent": "#EAB308",
+    "accentDim": "rgba(234,179,8,0.10)",
+    "category": "word-iq",
+    "categoryLabel": "Vocab & Word IQ",
+    "tags": [
+      "word recognition speed test",
+      "reading speed test",
+      "lexical access test",
+      "verbal processing speed",
+      "word IQ test online"
+    ],
+    "seo": {
+      "metaTitle": "Free Word Recognition Speed Test – Reading Brain Age | ZAZAZA",
+      "metaDescription": "Test your word recognition speed. How fast does your brain access word meanings? Free lexical access speed test, instant results, no signup.",
+      "keywords": [
+        "word recognition speed test",
+        "reading speed test online",
+        "lexical access test",
+        "verbal processing speed test free"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Words and non-words will flash on screen briefly.",
+        "Decide as fast as possible: real word (YES) or made-up word (NO).",
+        "Reaction time is measured for each decision.",
+        "Your average lexical decision time is your score — lower is faster.",
+        "Speed and accuracy are both measured."
+      ],
+      "science": "Lexical decision tasks — deciding whether a letter string is a real word — are the gold standard measure of orthographic processing speed and lexical access in cognitive psychology. Response times in lexical decision tasks are highly predictive of reading fluency, verbal working memory efficiency, and crystallized intelligence. Average lexical decision RT in skilled adult readers is approximately 600-800ms. Faster access indicates more efficient mental lexicon organization and stronger orthographic representations in the left fusiform gyrus.",
+      "tips": [
+        "Trust your instinct — if it feels like a word, it probably is.",
+        "Common high-frequency words (the, run, big) will feel faster than rare words.",
+        "Non-words that sound like words (e.g., 'blick') are harder — this is normal.",
+        "Reading volume predicts word recognition speed — avid readers are systematically faster.",
+        "Bilingualism can sometimes slow lexical decision due to cross-language competition."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 450,
+          "percentile": 99
+        },
+        {
+          "ms": 550,
+          "percentile": 90
+        },
+        {
+          "ms": 650,
+          "percentile": 72
+        },
+        {
+          "ms": 750,
+          "percentile": 50
+        },
+        {
+          "ms": 900,
+          "percentile": 25
+        },
+        {
+          "ms": 1100,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 510,
+          "color": "#FFD700",
+          "title": "Speed Reader Brain",
+          "subtitle": "Processes words before they finish loading",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 610,
+          "color": "#EAB308",
+          "title": "Fast Lexical Access",
+          "subtitle": "Reads subtitles faster than the dialogue",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 720,
+          "color": "#58A6FF",
+          "title": "Fluent Reader",
+          "subtitle": "Reads at a solid pace",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 870,
+          "color": "#94A3B8",
+          "title": "Deliberate Reader",
+          "subtitle": "Gets there. Takes their time.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Slow Lexical Access",
+          "subtitle": "Reads menus out loud. In their head. Slowly.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "word-association",
+    "title": "Word Association IQ",
+    "clinicalTitle": "Semantic Network & Associative Intelligence Assessment",
+    "shortDescription": "What comes to mind? The speed and quality of your word associations reveals your semantic intelligence.",
+    "description": "Measures the richness and speed of your semantic network — the web of word meanings and associations your brain maintains. Strong associative intelligence predicts creative thinking, verbal fluency, and problem-solving flexibility.",
+    "emoji": "🕸️",
+    "accent": "#6366F1",
+    "accentDim": "rgba(99,102,241,0.10)",
+    "category": "word-iq",
+    "categoryLabel": "Vocab & Word IQ",
+    "tags": [
+      "word association test",
+      "semantic intelligence test",
+      "verbal fluency test",
+      "word IQ test",
+      "creative intelligence test online"
+    ],
+    "seo": {
+      "metaTitle": "Free Word Association IQ Test – Semantic Intelligence | ZAZAZA",
+      "metaDescription": "Test your word association speed and semantic network strength. Free verbal fluency and creative intelligence test. Instant results, no signup.",
+      "keywords": [
+        "word association test online",
+        "semantic intelligence test",
+        "verbal fluency test free",
+        "word IQ test",
+        "associative thinking test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A word will appear on screen.",
+        "Type or select the first related word that comes to mind as fast as possible.",
+        "There are no wrong answers — speed and semantic distance are both measured.",
+        "10 rounds covering different semantic categories.",
+        "Your associative speed and semantic network breadth determine your score."
+      ],
+      "science": "Semantic network theory (Collins & Loftus, 1975) models the mental lexicon as a network of nodes (concepts) connected by weighted edges (associations). Faster and more distant associations indicate a richer, more densely interconnected semantic network. Verbal fluency tasks — a related measure — are among the most sensitive neuropsychological tests for detecting early cognitive decline, as semantic network degradation is an early sign of neurodegenerative disease. High associative intelligence predicts creative problem-solving, metaphor comprehension, and verbal IQ.",
+      "tips": [
+        "Go with your first association — deliberated responses are less diagnostic.",
+        "Don't try to be creative or clever — natural associations are more revealing.",
+        "Common associations (dog → cat) are not worse than unusual ones — both are measured.",
+        "Semantic association speed is trainable through wide reading and word games.",
+        "Bilingual individuals often show different association patterns — both are valid."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 78,
+          "percentile": 90
+        },
+        {
+          "ms": 65,
+          "percentile": 72
+        },
+        {
+          "ms": 52,
+          "percentile": 50
+        },
+        {
+          "ms": 38,
+          "percentile": 25
+        },
+        {
+          "ms": 24,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Semantic Genius",
+          "subtitle": "Connects ideas three degrees apart. Instantly.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#6366F1",
+          "title": "Rich Associator",
+          "subtitle": "Makes unexpected connections that turn out to be obvious",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Solid Network",
+          "subtitle": "Good at word games. Better than average.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Linear Thinker",
+          "subtitle": "Associations are reliable but predictable",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Narrow Network",
+          "subtitle": "Dog → cat. Cat → dog. That's the range.",
           "percentileLabel": "Bottom 25%"
         }
       ]
