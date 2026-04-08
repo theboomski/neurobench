@@ -10,11 +10,21 @@
     "accentDim": "rgba(0,255,148,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["reaction time test", "reflex test", "neural latency", "cognitive benchmark"],
+    "tags": [
+      "reaction time test",
+      "reflex test",
+      "neural latency",
+      "cognitive benchmark"
+    ],
     "seo": {
       "metaTitle": "Neural Latency Test – Free Online Reaction Time Benchmark",
       "metaDescription": "Measure your reaction time with clinical precision. Click when green appears and benchmark your neural response speed against thousands of high-performers worldwide. Free, instant, no signup.",
-      "keywords": ["reaction time test", "neural latency test", "reflex speed test", "cognitive benchmark online"]
+      "keywords": [
+        "reaction time test",
+        "neural latency test",
+        "reflex speed test",
+        "cognitive benchmark online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -35,23 +45,88 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 150, "percentile": 99 },
-        { "ms": 175, "percentile": 97 },
-        { "ms": 200, "percentile": 90 },
-        { "ms": 225, "percentile": 80 },
-        { "ms": 250, "percentile": 65 },
-        { "ms": 275, "percentile": 50 },
-        { "ms": 300, "percentile": 35 },
-        { "ms": 350, "percentile": 18 },
-        { "ms": 400, "percentile": 8 },
-        { "ms": 500, "percentile": 2 }
+        {
+          "ms": 150,
+          "percentile": 99
+        },
+        {
+          "ms": 175,
+          "percentile": 97
+        },
+        {
+          "ms": 200,
+          "percentile": 90
+        },
+        {
+          "ms": 225,
+          "percentile": 80
+        },
+        {
+          "ms": 250,
+          "percentile": 65
+        },
+        {
+          "ms": 275,
+          "percentile": 50
+        },
+        {
+          "ms": 300,
+          "percentile": 35
+        },
+        {
+          "ms": 350,
+          "percentile": 18
+        },
+        {
+          "ms": 400,
+          "percentile": 8
+        },
+        {
+          "ms": 500,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 180, "color": "#FFD700", "title": "Neural God", "subtitle": "Immune to 3-Hour Meetings", "percentileLabel": "Top 1%" },
-        { "label": "A", "maxMs": 220, "color": "#00FF94", "title": "High Performer", "subtitle": "Responds to Slack before it's sent", "percentileLabel": "Top 10%" },
-        { "label": "B", "maxMs": 265, "color": "#58A6FF", "title": "Above Average", "subtitle": "Actually reads the meeting agenda", "percentileLabel": "Top 30%" },
-        { "label": "C", "maxMs": 320, "color": "#94A3B8", "title": "The Average Joe", "subtitle": "Shows up 3 mins late to every call", "percentileLabel": "Top 50%" },
-        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Offline", "subtitle": "Suffering from Extreme Burnout", "percentileLabel": "Bottom 10%" }
+        {
+          "label": "S",
+          "maxMs": 180,
+          "color": "#FFD700",
+          "title": "Neural God",
+          "subtitle": "Immune to 3-Hour Meetings",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 220,
+          "color": "#00FF94",
+          "title": "High Performer",
+          "subtitle": "Responds to Slack before it's sent",
+          "percentileLabel": "Top 10%"
+        },
+        {
+          "label": "B",
+          "maxMs": 265,
+          "color": "#58A6FF",
+          "title": "Above Average",
+          "subtitle": "Actually reads the meeting agenda",
+          "percentileLabel": "Top 30%"
+        },
+        {
+          "label": "C",
+          "maxMs": 320,
+          "color": "#94A3B8",
+          "title": "The Average Joe",
+          "subtitle": "Shows up 3 mins late to every call",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Offline",
+          "subtitle": "Suffering from Extreme Burnout",
+          "percentileLabel": "Bottom 10%"
+        }
       ]
     }
   },
@@ -66,11 +141,22 @@
     "accentDim": "rgba(255,107,107,0.10)",
     "category": "office",
     "categoryLabel": "Office Survival Test",
-    "tags": ["stress relief game", "office game", "boss slapper", "tap speed test"],
+    "tags": [
+      "stress relief game",
+      "office game",
+      "boss slapper",
+      "tap speed test"
+    ],
     "seo": {
       "metaTitle": "Office Avenger – Stress Relief Speed Test | NeuroBench",
       "metaDescription": "How fast can you neutralize a workplace stressor? Tap the boss 10 times as fast as possible. Measure your stress-relief velocity and share your catharsis score. Free instant test.",
-      "keywords": ["stress relief game", "office stress test", "tap speed test", "boss slapper game", "workplace humor game"]
+      "keywords": [
+        "stress relief game",
+        "office stress test",
+        "tap speed test",
+        "boss slapper game",
+        "workplace humor game"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -91,21 +177,80 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 1200, "percentile": 99 },
-        { "ms": 1500, "percentile": 95 },
-        { "ms": 1800, "percentile": 85 },
-        { "ms": 2200, "percentile": 65 },
-        { "ms": 2700, "percentile": 45 },
-        { "ms": 3200, "percentile": 25 },
-        { "ms": 4000, "percentile": 10 },
-        { "ms": 5000, "percentile": 3 }
+        {
+          "ms": 1200,
+          "percentile": 99
+        },
+        {
+          "ms": 1500,
+          "percentile": 95
+        },
+        {
+          "ms": 1800,
+          "percentile": 85
+        },
+        {
+          "ms": 2200,
+          "percentile": 65
+        },
+        {
+          "ms": 2700,
+          "percentile": 45
+        },
+        {
+          "ms": 3200,
+          "percentile": 25
+        },
+        {
+          "ms": 4000,
+          "percentile": 10
+        },
+        {
+          "ms": 5000,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 1400, "color": "#FFD700", "title": "Workplace Deity", "subtitle": "HR has a restraining order against you", "percentileLabel": "Top 1%" },
-        { "label": "A", "maxMs": 1900, "color": "#FF6B6B", "title": "Senior Avenger", "subtitle": "Your manager avoids eye contact", "percentileLabel": "Top 10%" },
-        { "label": "B", "maxMs": 2500, "color": "#58A6FF", "title": "Passive Aggressor", "subtitle": "Exclusively communicates via 'per my last email'", "percentileLabel": "Top 30%" },
-        { "label": "C", "maxMs": 3500, "color": "#94A3B8", "title": "The Suppressor", "subtitle": "Smiles through every pointless standup", "percentileLabel": "Top 50%" },
-        { "label": "D", "maxMs": 9999, "color": "#EF4444", "title": "Fully Institutionalized", "subtitle": "Has not taken PTO since 2019", "percentileLabel": "Bottom 10%" }
+        {
+          "label": "S",
+          "maxMs": 1400,
+          "color": "#FFD700",
+          "title": "Workplace Deity",
+          "subtitle": "HR has a restraining order against you",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 1900,
+          "color": "#FF6B6B",
+          "title": "Senior Avenger",
+          "subtitle": "Your manager avoids eye contact",
+          "percentileLabel": "Top 10%"
+        },
+        {
+          "label": "B",
+          "maxMs": 2500,
+          "color": "#58A6FF",
+          "title": "Passive Aggressor",
+          "subtitle": "Exclusively communicates via 'per my last email'",
+          "percentileLabel": "Top 30%"
+        },
+        {
+          "label": "C",
+          "maxMs": 3500,
+          "color": "#94A3B8",
+          "title": "The Suppressor",
+          "subtitle": "Smiles through every pointless standup",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Fully Institutionalized",
+          "subtitle": "Has not taken PTO since 2019",
+          "percentileLabel": "Bottom 10%"
+        }
       ]
     }
   },
@@ -120,11 +265,23 @@
     "accentDim": "rgba(129,140,248,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["number memory test", "working memory test", "digit span test", "cognitive benchmark", "memory test online"],
+    "tags": [
+      "number memory test",
+      "working memory test",
+      "digit span test",
+      "cognitive benchmark",
+      "memory test online"
+    ],
     "seo": {
       "metaTitle": "Number Memory Test – Working Memory Capacity Benchmark | NeuroBench",
       "metaDescription": "How many digits can you memorize? Test your working memory span online for free. The average person remembers 7 digits — can you beat it? Instant results, no signup.",
-      "keywords": ["number memory test", "working memory test", "digit span test", "memory capacity test", "cognitive benchmark online"]
+      "keywords": [
+        "number memory test",
+        "working memory test",
+        "digit span test",
+        "memory capacity test",
+        "cognitive benchmark online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -145,20 +302,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 5,  "percentile": 99 },
-        { "ms": 6,  "percentile": 95 },
-        { "ms": 7,  "percentile": 75 },
-        { "ms": 8,  "percentile": 50 },
-        { "ms": 9,  "percentile": 25 },
-        { "ms": 10, "percentile": 10 },
-        { "ms": 12, "percentile": 3  }
+        {
+          "ms": 5,
+          "percentile": 99
+        },
+        {
+          "ms": 6,
+          "percentile": 95
+        },
+        {
+          "ms": 7,
+          "percentile": 75
+        },
+        {
+          "ms": 8,
+          "percentile": 50
+        },
+        {
+          "ms": 9,
+          "percentile": 25
+        },
+        {
+          "ms": 10,
+          "percentile": 10
+        },
+        {
+          "ms": 12,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 13, "color": "#FFD700", "title": "Photographic Memory",   "subtitle": "Your brain has more RAM than the server",          "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 10, "color": "#818CF8", "title": "High Bandwidth",         "subtitle": "Remembers everyone's coffee order. Always.",       "percentileLabel": "Top 25%"   },
-        { "label": "B", "maxMs": 8,  "color": "#58A6FF", "title": "Within Normal Range",    "subtitle": "Miller's Law says you're fine. Miller was nice.",  "percentileLabel": "Top 50%"   },
-        { "label": "C", "maxMs": 6,  "color": "#94A3B8", "title": "Slight Buffering",       "subtitle": "Forgets why they opened the fridge. Daily.",       "percentileLabel": "Top 75%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "404: Memory Not Found",  "subtitle": "Has 47 browser tabs open and counting",           "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 13,
+          "color": "#FFD700",
+          "title": "Photographic Memory",
+          "subtitle": "Your brain has more RAM than the server",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 10,
+          "color": "#818CF8",
+          "title": "High Bandwidth",
+          "subtitle": "Remembers everyone's coffee order. Always.",
+          "percentileLabel": "Top 25%"
+        },
+        {
+          "label": "B",
+          "maxMs": 8,
+          "color": "#58A6FF",
+          "title": "Within Normal Range",
+          "subtitle": "Miller's Law says you're fine. Miller was nice.",
+          "percentileLabel": "Top 50%"
+        },
+        {
+          "label": "C",
+          "maxMs": 6,
+          "color": "#94A3B8",
+          "title": "Slight Buffering",
+          "subtitle": "Forgets why they opened the fridge. Daily.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "404: Memory Not Found",
+          "subtitle": "Has 47 browser tabs open and counting",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -173,11 +386,23 @@
     "accentDim": "rgba(245,158,11,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["sequence memory test", "pattern memory test", "visual memory test", "cognitive benchmark", "memory game online"],
+    "tags": [
+      "sequence memory test",
+      "pattern memory test",
+      "visual memory test",
+      "cognitive benchmark",
+      "memory game online"
+    ],
     "seo": {
       "metaTitle": "Sequence Memory Test – Pattern Recognition Benchmark | NeuroBench",
       "metaDescription": "How long can you follow a growing sequence? Watch the pattern, repeat it back, and benchmark your sequential memory against players worldwide. Free, instant, no signup.",
-      "keywords": ["sequence memory test", "pattern memory game", "visual memory test", "simon says online", "cognitive benchmark"]
+      "keywords": [
+        "sequence memory test",
+        "pattern memory game",
+        "visual memory test",
+        "simon says online",
+        "cognitive benchmark"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -198,20 +423,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 15, "percentile": 99 },
-        { "ms": 12, "percentile": 95 },
-        { "ms": 10, "percentile": 85 },
-        { "ms": 8,  "percentile": 65 },
-        { "ms": 6,  "percentile": 40 },
-        { "ms": 4,  "percentile": 15 },
-        { "ms": 2,  "percentile": 3  }
+        {
+          "ms": 15,
+          "percentile": 99
+        },
+        {
+          "ms": 12,
+          "percentile": 95
+        },
+        {
+          "ms": 10,
+          "percentile": 85
+        },
+        {
+          "ms": 8,
+          "percentile": 65
+        },
+        {
+          "ms": 6,
+          "percentile": 40
+        },
+        {
+          "ms": 4,
+          "percentile": 15
+        },
+        {
+          "ms": 2,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 12, "color": "#FFD700", "title": "Pattern Deity",       "subtitle": "Recites meeting minutes verbatim. Unprompted.", "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 9,  "color": "#F59E0B", "title": "Sequence Savant",     "subtitle": "Never forgets a face. Or a grudge.",          "percentileLabel": "Top 15%"   },
-        { "label": "B", "maxMs": 7,  "color": "#58A6FF", "title": "Reliable Recall",     "subtitle": "Actually remembers action items from standups","percentileLabel": "Top 35%"   },
-        { "label": "C", "maxMs": 5,  "color": "#94A3B8", "title": "Average Retention",   "subtitle": "Needs to be CC'd on everything. Twice.",      "percentileLabel": "Top 60%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Goldfish Protocol",   "subtitle": "Forgot they were taking this test",           "percentileLabel": "Bottom 20%"}
+        {
+          "label": "S",
+          "maxMs": 12,
+          "color": "#FFD700",
+          "title": "Pattern Deity",
+          "subtitle": "Recites meeting minutes verbatim. Unprompted.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9,
+          "color": "#F59E0B",
+          "title": "Sequence Savant",
+          "subtitle": "Never forgets a face. Or a grudge.",
+          "percentileLabel": "Top 15%"
+        },
+        {
+          "label": "B",
+          "maxMs": 7,
+          "color": "#58A6FF",
+          "title": "Reliable Recall",
+          "subtitle": "Actually remembers action items from standups",
+          "percentileLabel": "Top 35%"
+        },
+        {
+          "label": "C",
+          "maxMs": 5,
+          "color": "#94A3B8",
+          "title": "Average Retention",
+          "subtitle": "Needs to be CC'd on everything. Twice.",
+          "percentileLabel": "Top 60%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Goldfish Protocol",
+          "subtitle": "Forgot they were taking this test",
+          "percentileLabel": "Bottom 20%"
+        }
       ]
     }
   },
@@ -226,11 +507,21 @@
     "accentDim": "rgba(52,211,153,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["verbal memory test", "word memory test", "semantic memory test", "cognitive benchmark online"],
+    "tags": [
+      "verbal memory test",
+      "word memory test",
+      "semantic memory test",
+      "cognitive benchmark online"
+    ],
     "seo": {
       "metaTitle": "Verbal Memory Test – Semantic Recognition Benchmark | NeuroBench",
       "metaDescription": "Can you remember which words you've seen? Test your verbal memory with our free semantic recognition assessment. One mistake ends it — how long can you last?",
-      "keywords": ["verbal memory test", "word memory test", "semantic memory benchmark", "cognitive test online"]
+      "keywords": [
+        "verbal memory test",
+        "word memory test",
+        "semantic memory benchmark",
+        "cognitive test online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -251,20 +542,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 150, "percentile": 99 },
-        { "ms": 100, "percentile": 95 },
-        { "ms": 75,  "percentile": 85 },
-        { "ms": 50,  "percentile": 65 },
-        { "ms": 30,  "percentile": 40 },
-        { "ms": 15,  "percentile": 15 },
-        { "ms": 5,   "percentile": 3  }
+        {
+          "ms": 150,
+          "percentile": 99
+        },
+        {
+          "ms": 100,
+          "percentile": 95
+        },
+        {
+          "ms": 75,
+          "percentile": 85
+        },
+        {
+          "ms": 50,
+          "percentile": 65
+        },
+        {
+          "ms": 30,
+          "percentile": 40
+        },
+        {
+          "ms": 15,
+          "percentile": 15
+        },
+        {
+          "ms": 5,
+          "percentile": 3
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 100, "color": "#FFD700", "title": "Lexical Legend",      "subtitle": "Remembers every email thread since 2018",        "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 60,  "color": "#34D399", "title": "Sharp Recall",        "subtitle": "Quotes meeting notes from last quarter",         "percentileLabel": "Top 15%"   },
-        { "label": "B", "maxMs": 35,  "color": "#58A6FF", "title": "Reliable Memory",     "subtitle": "Usually remembers names. Sometimes.",            "percentileLabel": "Top 35%"   },
-        { "label": "C", "maxMs": 18,  "color": "#94A3B8", "title": "Average Retention",   "subtitle": "Definitely read that email. Probably.",          "percentileLabel": "Top 60%"   },
-        { "label": "D", "maxMs": 0,   "color": "#EF4444", "title": "Clean Slate",         "subtitle": "Introduces themselves to the same colleague weekly", "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 100,
+          "color": "#FFD700",
+          "title": "Lexical Legend",
+          "subtitle": "Remembers every email thread since 2018",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 60,
+          "color": "#34D399",
+          "title": "Sharp Recall",
+          "subtitle": "Quotes meeting notes from last quarter",
+          "percentileLabel": "Top 15%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#58A6FF",
+          "title": "Reliable Memory",
+          "subtitle": "Usually remembers names. Sometimes.",
+          "percentileLabel": "Top 35%"
+        },
+        {
+          "label": "C",
+          "maxMs": 18,
+          "color": "#94A3B8",
+          "title": "Average Retention",
+          "subtitle": "Definitely read that email. Probably.",
+          "percentileLabel": "Top 60%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Clean Slate",
+          "subtitle": "Introduces themselves to the same colleague weekly",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -279,11 +626,21 @@
     "accentDim": "rgba(167,139,250,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["visual memory test", "spatial memory test", "visuospatial memory benchmark", "cognitive test online"],
+    "tags": [
+      "visual memory test",
+      "spatial memory test",
+      "visuospatial memory benchmark",
+      "cognitive test online"
+    ],
     "seo": {
       "metaTitle": "Visual Memory Test – Visuospatial Working Memory Benchmark | NeuroBench",
       "metaDescription": "How many squares can you remember? Test your visual working memory with our free spatial benchmark. Grids get larger each round — how far can you go?",
-      "keywords": ["visual memory test", "spatial memory test", "visuospatial memory", "cognitive benchmark online"]
+      "keywords": [
+        "visual memory test",
+        "spatial memory test",
+        "visuospatial memory",
+        "cognitive benchmark online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -304,19 +661,72 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 12, "percentile": 99 },
-        { "ms": 10, "percentile": 90 },
-        { "ms": 8,  "percentile": 70 },
-        { "ms": 6,  "percentile": 45 },
-        { "ms": 4,  "percentile": 20 },
-        { "ms": 2,  "percentile": 5  }
+        {
+          "ms": 12,
+          "percentile": 99
+        },
+        {
+          "ms": 10,
+          "percentile": 90
+        },
+        {
+          "ms": 8,
+          "percentile": 70
+        },
+        {
+          "ms": 6,
+          "percentile": 45
+        },
+        {
+          "ms": 4,
+          "percentile": 20
+        },
+        {
+          "ms": 2,
+          "percentile": 5
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 10, "color": "#FFD700", "title": "Spatial Oracle",      "subtitle": "Mentally renders 4K environments in real time",   "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 7,  "color": "#A78BFA", "title": "Sharp Vision",        "subtitle": "Never loses their car in a parking lot",         "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 5,  "color": "#58A6FF", "title": "Reliable Spatialist", "subtitle": "Can assemble IKEA furniture without instructions", "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 3,  "color": "#94A3B8", "title": "Average Navigator",   "subtitle": "Uses Google Maps inside buildings",              "percentileLabel": "Top 70%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Spatially Challenged","subtitle": "Gets lost in their own office",                  "percentileLabel": "Bottom 20%"}
+        {
+          "label": "S",
+          "maxMs": 10,
+          "color": "#FFD700",
+          "title": "Spatial Oracle",
+          "subtitle": "Mentally renders 4K environments in real time",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 7,
+          "color": "#A78BFA",
+          "title": "Sharp Vision",
+          "subtitle": "Never loses their car in a parking lot",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 5,
+          "color": "#58A6FF",
+          "title": "Reliable Spatialist",
+          "subtitle": "Can assemble IKEA furniture without instructions",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 3,
+          "color": "#94A3B8",
+          "title": "Average Navigator",
+          "subtitle": "Uses Google Maps inside buildings",
+          "percentileLabel": "Top 70%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Spatially Challenged",
+          "subtitle": "Gets lost in their own office",
+          "percentileLabel": "Bottom 20%"
+        }
       ]
     }
   },
@@ -331,11 +741,21 @@
     "accentDim": "rgba(251,146,60,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["chimp test", "sequential memory test", "numerical memory benchmark", "chimpanzee memory test online"],
+    "tags": [
+      "chimp test",
+      "sequential memory test",
+      "numerical memory benchmark",
+      "chimpanzee memory test online"
+    ],
     "seo": {
       "metaTitle": "Chimp Test – Sequential Numerical Memory Benchmark | NeuroBench",
       "metaDescription": "Chimpanzees beat humans at this test. Can you prove them wrong? Numbers flash briefly — click them in order. Free online chimp memory test, instant results.",
-      "keywords": ["chimp test online", "chimpanzee memory test", "sequential numerical memory", "cognitive benchmark"]
+      "keywords": [
+        "chimp test online",
+        "chimpanzee memory test",
+        "sequential numerical memory",
+        "cognitive benchmark"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -356,19 +776,72 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 9,  "percentile": 99 },
-        { "ms": 8,  "percentile": 90 },
-        { "ms": 7,  "percentile": 70 },
-        { "ms": 6,  "percentile": 45 },
-        { "ms": 5,  "percentile": 20 },
-        { "ms": 4,  "percentile": 5  }
+        {
+          "ms": 9,
+          "percentile": 99
+        },
+        {
+          "ms": 8,
+          "percentile": 90
+        },
+        {
+          "ms": 7,
+          "percentile": 70
+        },
+        {
+          "ms": 6,
+          "percentile": 45
+        },
+        {
+          "ms": 5,
+          "percentile": 20
+        },
+        {
+          "ms": 4,
+          "percentile": 5
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 8,  "color": "#FFD700", "title": "Honorary Chimp",      "subtitle": "The primates are filing a formal complaint",      "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 6,  "color": "#FB923C", "title": "Primate Tier",        "subtitle": "Evolution is having second thoughts about you",   "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 5,  "color": "#58A6FF", "title": "Respectable Human",   "subtitle": "Beats the office plant. Barely.",                "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 4,  "color": "#94A3B8", "title": "Average Primate",     "subtitle": "Lost to a bonobo in a blind test",               "percentileLabel": "Top 70%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Below Chimp Level",   "subtitle": "The chimps are embarrassed for you",             "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 8,
+          "color": "#FFD700",
+          "title": "Honorary Chimp",
+          "subtitle": "The primates are filing a formal complaint",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 6,
+          "color": "#FB923C",
+          "title": "Primate Tier",
+          "subtitle": "Evolution is having second thoughts about you",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 5,
+          "color": "#58A6FF",
+          "title": "Respectable Human",
+          "subtitle": "Beats the office plant. Barely.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 4,
+          "color": "#94A3B8",
+          "title": "Average Primate",
+          "subtitle": "Lost to a bonobo in a blind test",
+          "percentileLabel": "Top 70%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Below Chimp Level",
+          "subtitle": "The chimps are embarrassed for you",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -383,11 +856,23 @@
     "accentDim": "rgba(244,63,94,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["aim trainer online", "aim test", "mouse accuracy test", "visuomotor test", "reaction speed test"],
+    "tags": [
+      "aim trainer online",
+      "aim test",
+      "mouse accuracy test",
+      "visuomotor test",
+      "reaction speed test"
+    ],
     "seo": {
       "metaTitle": "Aim Trainer – Visuomotor Precision Speed Test | NeuroBench",
       "metaDescription": "Test your aim and mouse precision. Click targets as fast as possible in 30 seconds. Targets shrink as you improve. Free online aim trainer, instant benchmark results.",
-      "keywords": ["aim trainer online", "aim test free", "mouse accuracy test", "visuomotor benchmark", "aim speed test"]
+      "keywords": [
+        "aim trainer online",
+        "aim test free",
+        "mouse accuracy test",
+        "visuomotor benchmark",
+        "aim speed test"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -408,20 +893,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 500, "percentile": 99 },
-        { "ms": 400, "percentile": 95 },
-        { "ms": 300, "percentile": 80 },
-        { "ms": 220, "percentile": 60 },
-        { "ms": 150, "percentile": 35 },
-        { "ms": 80,  "percentile": 10 },
-        { "ms": 40,  "percentile": 2  }
+        {
+          "ms": 500,
+          "percentile": 99
+        },
+        {
+          "ms": 400,
+          "percentile": 95
+        },
+        {
+          "ms": 300,
+          "percentile": 80
+        },
+        {
+          "ms": 220,
+          "percentile": 60
+        },
+        {
+          "ms": 150,
+          "percentile": 35
+        },
+        {
+          "ms": 80,
+          "percentile": 10
+        },
+        {
+          "ms": 40,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 9999, "color": "#FFD700", "title": "Surgical Precision",  "subtitle": "HR is monitoring your mouse movements",           "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 9999, "color": "#F43F5E", "title": "Sharpshooter",        "subtitle": "Clicks 'Reply All' only when intended",          "percentileLabel": "Top 15%"   },
-        { "label": "B", "maxMs": 9999, "color": "#58A6FF", "title": "Reliable Aim",        "subtitle": "Closes the right browser tab most of the time",  "percentileLabel": "Top 40%"   },
-        { "label": "C", "maxMs": 9999, "color": "#94A3B8", "title": "Spray and Pray",      "subtitle": "Accidentally likes posts from 3 years ago",       "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 0,    "color": "#EF4444", "title": "Needs a Trackpad",    "subtitle": "Double-clicks single-click buttons. Always.",     "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Surgical Precision",
+          "subtitle": "HR is monitoring your mouse movements",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F43F5E",
+          "title": "Sharpshooter",
+          "subtitle": "Clicks 'Reply All' only when intended",
+          "percentileLabel": "Top 15%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Reliable Aim",
+          "subtitle": "Closes the right browser tab most of the time",
+          "percentileLabel": "Top 40%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Spray and Pray",
+          "subtitle": "Accidentally likes posts from 3 years ago",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Needs a Trackpad",
+          "subtitle": "Double-clicks single-click buttons. Always.",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -436,11 +977,23 @@
     "accentDim": "rgba(6,182,212,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["typing speed test", "wpm test", "words per minute test", "typing test online", "keyboard speed test"],
+    "tags": [
+      "typing speed test",
+      "wpm test",
+      "words per minute test",
+      "typing test online",
+      "keyboard speed test"
+    ],
     "seo": {
       "metaTitle": "Typing Speed Test – WPM & Accuracy Benchmark | NeuroBench",
       "metaDescription": "How fast do you type? Measure your WPM and accuracy in 60 seconds. Free online typing speed test with instant benchmark results. No signup needed.",
-      "keywords": ["typing speed test", "wpm test online", "words per minute test", "typing accuracy test", "keyboard speed benchmark"]
+      "keywords": [
+        "typing speed test",
+        "wpm test online",
+        "words per minute test",
+        "typing accuracy test",
+        "keyboard speed benchmark"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -461,20 +1014,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 120, "percentile": 99 },
-        { "ms": 100, "percentile": 95 },
-        { "ms": 80,  "percentile": 80 },
-        { "ms": 60,  "percentile": 55 },
-        { "ms": 45,  "percentile": 30 },
-        { "ms": 30,  "percentile": 10 },
-        { "ms": 20,  "percentile": 2  }
+        {
+          "ms": 120,
+          "percentile": 99
+        },
+        {
+          "ms": 100,
+          "percentile": 95
+        },
+        {
+          "ms": 80,
+          "percentile": 80
+        },
+        {
+          "ms": 60,
+          "percentile": 55
+        },
+        {
+          "ms": 45,
+          "percentile": 30
+        },
+        {
+          "ms": 30,
+          "percentile": 10
+        },
+        {
+          "ms": 20,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 9999, "color": "#FFD700", "title": "Keyboard Deity",     "subtitle": "Types faster than you think",                    "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 9999, "color": "#06B6D4", "title": "Professional Typist","subtitle": "Slack messages arrive before you finish reading",  "percentileLabel": "Top 15%"   },
-        { "label": "B", "maxMs": 9999, "color": "#58A6FF", "title": "Competent Keyboarder","subtitle": "Touch types. Mostly.",                           "percentileLabel": "Top 40%"   },
-        { "label": "C", "maxMs": 9999, "color": "#94A3B8", "title": "Two-Finger Typist",  "subtitle": "Looks at keyboard more than screen",             "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 0,    "color": "#EF4444", "title": "One-Finger Protocol", "subtitle": "Uses autocorrect as a crutch. It fails them.",   "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Keyboard Deity",
+          "subtitle": "Types faster than you think",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Professional Typist",
+          "subtitle": "Slack messages arrive before you finish reading",
+          "percentileLabel": "Top 15%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Competent Keyboarder",
+          "subtitle": "Touch types. Mostly.",
+          "percentileLabel": "Top 40%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Two-Finger Typist",
+          "subtitle": "Looks at keyboard more than screen",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "One-Finger Protocol",
+          "subtitle": "Uses autocorrect as a crutch. It fails them.",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -489,11 +1098,23 @@
     "accentDim": "rgba(236,72,153,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["stroop test online", "inhibitory control test", "color word test", "cognitive interference test", "stroop effect"],
+    "tags": [
+      "stroop test online",
+      "inhibitory control test",
+      "color word test",
+      "cognitive interference test",
+      "stroop effect"
+    ],
     "seo": {
       "metaTitle": "Color Conflict – Stroop Inhibitory Control Test | NeuroBench",
       "metaDescription": "Can your brain override what it reads? The Stroop Effect tests your inhibitory control. Click the ink color, not the word. Free online Stroop test with instant results.",
-      "keywords": ["stroop test online", "color word test", "inhibitory control test", "cognitive interference", "stroop effect test"]
+      "keywords": [
+        "stroop test online",
+        "color word test",
+        "inhibitory control test",
+        "cognitive interference",
+        "stroop effect test"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -514,20 +1135,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 50, "percentile": 99 },
-        { "ms": 35, "percentile": 90 },
-        { "ms": 25, "percentile": 75 },
-        { "ms": 15, "percentile": 55 },
-        { "ms": 8,  "percentile": 30 },
-        { "ms": 4,  "percentile": 10 },
-        { "ms": 1,  "percentile": 2  }
+        {
+          "ms": 50,
+          "percentile": 99
+        },
+        {
+          "ms": 35,
+          "percentile": 90
+        },
+        {
+          "ms": 25,
+          "percentile": 75
+        },
+        {
+          "ms": 15,
+          "percentile": 55
+        },
+        {
+          "ms": 8,
+          "percentile": 30
+        },
+        {
+          "ms": 4,
+          "percentile": 10
+        },
+        {
+          "ms": 1,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 40, "color": "#FFD700", "title": "Inhibition Master",  "subtitle": "Never accidentally sends the wrong Slack reaction",   "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 25, "color": "#EC4899", "title": "Focused Executive",  "subtitle": "Reads the fine print. Actually.",                    "percentileLabel": "Top 15%"   },
-        { "label": "B", "maxMs": 15, "color": "#58A6FF", "title": "Controlled Thinker", "subtitle": "Occasionally gets tricked. Like a normal person.",    "percentileLabel": "Top 40%"   },
-        { "label": "C", "maxMs": 7,  "color": "#94A3B8", "title": "Easily Distracted",  "subtitle": "Has sent sounds good! to an email they didn't read",  "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Fully Conflicted",   "subtitle": "Brain.exe has stopped working",                       "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 40,
+          "color": "#FFD700",
+          "title": "Inhibition Master",
+          "subtitle": "Never accidentally sends the wrong Slack reaction",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 25,
+          "color": "#EC4899",
+          "title": "Focused Executive",
+          "subtitle": "Reads the fine print. Actually.",
+          "percentileLabel": "Top 15%"
+        },
+        {
+          "label": "B",
+          "maxMs": 15,
+          "color": "#58A6FF",
+          "title": "Controlled Thinker",
+          "subtitle": "Occasionally gets tricked. Like a normal person.",
+          "percentileLabel": "Top 40%"
+        },
+        {
+          "label": "C",
+          "maxMs": 7,
+          "color": "#94A3B8",
+          "title": "Easily Distracted",
+          "subtitle": "Has sent sounds good! to an email they didn't read",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Fully Conflicted",
+          "subtitle": "Brain.exe has stopped working",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -542,11 +1219,22 @@
     "accentDim": "rgba(16,185,129,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["math speed test", "numerical comparison test", "mental math speed", "cognitive benchmark", "number sense test"],
+    "tags": [
+      "math speed test",
+      "numerical comparison test",
+      "mental math speed",
+      "cognitive benchmark",
+      "number sense test"
+    ],
     "seo": {
       "metaTitle": "Instant Comparison – Numerical Processing Speed Test | NeuroBench",
       "metaDescription": "How fast can your brain compare numbers? Two equations appear — click the larger side as fast as possible. Free numerical magnitude processing benchmark.",
-      "keywords": ["math speed test", "numerical comparison test", "mental math benchmark", "number sense test online"]
+      "keywords": [
+        "math speed test",
+        "numerical comparison test",
+        "mental math benchmark",
+        "number sense test online"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -567,20 +1255,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 60, "percentile": 99 },
-        { "ms": 40, "percentile": 90 },
-        { "ms": 25, "percentile": 72 },
-        { "ms": 15, "percentile": 50 },
-        { "ms": 8,  "percentile": 28 },
-        { "ms": 4,  "percentile": 8  },
-        { "ms": 1,  "percentile": 2  }
+        {
+          "ms": 60,
+          "percentile": 99
+        },
+        {
+          "ms": 40,
+          "percentile": 90
+        },
+        {
+          "ms": 25,
+          "percentile": 72
+        },
+        {
+          "ms": 15,
+          "percentile": 50
+        },
+        {
+          "ms": 8,
+          "percentile": 28
+        },
+        {
+          "ms": 4,
+          "percentile": 8
+        },
+        {
+          "ms": 1,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 45, "color": "#FFD700", "title": "Quantitative Oracle", "subtitle": "Does ROI calculations in their head mid-meeting",      "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 28, "color": "#10B981", "title": "Sharp Analyst",       "subtitle": "Catches spreadsheet errors before they're sent",       "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 16, "color": "#58A6FF", "title": "Reliable Estimator",  "subtitle": "Splits bills without a calculator. Mostly.",           "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 7,  "color": "#94A3B8", "title": "Approximate Thinker", "subtitle": "Always says let me circle back on the numbers",        "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 0,  "color": "#EF4444", "title": "Innumerate",          "subtitle": "Leaves a 10% tip on a $200 bill. Accidentally.",        "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 45,
+          "color": "#FFD700",
+          "title": "Quantitative Oracle",
+          "subtitle": "Does ROI calculations in their head mid-meeting",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 28,
+          "color": "#10B981",
+          "title": "Sharp Analyst",
+          "subtitle": "Catches spreadsheet errors before they're sent",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 16,
+          "color": "#58A6FF",
+          "title": "Reliable Estimator",
+          "subtitle": "Splits bills without a calculator. Mostly.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 7,
+          "color": "#94A3B8",
+          "title": "Approximate Thinker",
+          "subtitle": "Always says let me circle back on the numbers",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Innumerate",
+          "subtitle": "Leaves a 10% tip on a $200 bill. Accidentally.",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -595,11 +1339,21 @@
     "accentDim": "rgba(99,102,241,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["angle estimation test", "spatial precision test", "visuospatial accuracy", "cognitive benchmark online"],
+    "tags": [
+      "angle estimation test",
+      "spatial precision test",
+      "visuospatial accuracy",
+      "cognitive benchmark online"
+    ],
     "seo": {
       "metaTitle": "Angle Precision – Visuospatial Accuracy Benchmark | NeuroBench",
       "metaDescription": "How precise is your spatial perception? Rotate a line to match the reference angle. Your error in degrees determines your rank. Free visuospatial benchmark.",
-      "keywords": ["angle estimation test", "spatial precision test", "visuospatial accuracy benchmark", "cognitive spatial test"]
+      "keywords": [
+        "angle estimation test",
+        "spatial precision test",
+        "visuospatial accuracy benchmark",
+        "cognitive spatial test"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -620,20 +1374,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 1,  "percentile": 99 },
-        { "ms": 2,  "percentile": 90 },
-        { "ms": 4,  "percentile": 72 },
-        { "ms": 7,  "percentile": 50 },
-        { "ms": 12, "percentile": 28 },
-        { "ms": 20, "percentile": 8  },
-        { "ms": 35, "percentile": 2  }
+        {
+          "ms": 1,
+          "percentile": 99
+        },
+        {
+          "ms": 2,
+          "percentile": 90
+        },
+        {
+          "ms": 4,
+          "percentile": 72
+        },
+        {
+          "ms": 7,
+          "percentile": 50
+        },
+        {
+          "ms": 12,
+          "percentile": 28
+        },
+        {
+          "ms": 20,
+          "percentile": 8
+        },
+        {
+          "ms": 35,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 2,   "color": "#FFD700", "title": "Spatial Surgeon",     "subtitle": "Hangs pictures perfectly on the first try. Always.",   "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 5,   "color": "#6366F1", "title": "Precision Engineer",  "subtitle": "Their PowerPoint arrows actually align",              "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 9,   "color": "#58A6FF", "title": "Decent Navigator",    "subtitle": "Owns a level. Uses a level.",                          "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 18,  "color": "#94A3B8", "title": "Approximate Artisan", "subtitle": "Their IKEA furniture is mostly straight",              "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 999, "color": "#EF4444", "title": "Spatially Chaotic",   "subtitle": "Hangs pictures, immediately regrets it",               "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 2,
+          "color": "#FFD700",
+          "title": "Spatial Surgeon",
+          "subtitle": "Hangs pictures perfectly on the first try. Always.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 5,
+          "color": "#6366F1",
+          "title": "Precision Engineer",
+          "subtitle": "Their PowerPoint arrows actually align",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9,
+          "color": "#58A6FF",
+          "title": "Decent Navigator",
+          "subtitle": "Owns a level. Uses a level.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 18,
+          "color": "#94A3B8",
+          "title": "Approximate Artisan",
+          "subtitle": "Their IKEA furniture is mostly straight",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 999,
+          "color": "#EF4444",
+          "title": "Spatially Chaotic",
+          "subtitle": "Hangs pictures, immediately regrets it",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -648,11 +1458,22 @@
     "accentDim": "rgba(249,115,22,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["visual search test", "rapid scan test", "attention test online", "find the letter test", "visual processing speed"],
+    "tags": [
+      "visual search test",
+      "rapid scan test",
+      "attention test online",
+      "find the letter test",
+      "visual processing speed"
+    ],
     "seo": {
       "metaTitle": "Rapid Scan – Visual Search Speed Test | NeuroBench",
       "metaDescription": "Find the Q among hundreds of O's as fast as possible. Test your visual search speed and pre-attentive processing. Free online visual attention benchmark.",
-      "keywords": ["visual search test online", "find the letter test", "attention speed test", "visual processing benchmark"]
+      "keywords": [
+        "visual search test online",
+        "find the letter test",
+        "attention speed test",
+        "visual processing benchmark"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -673,20 +1494,76 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 10, "percentile": 99 },
-        { "ms": 8,  "percentile": 90 },
-        { "ms": 6,  "percentile": 72 },
-        { "ms": 4,  "percentile": 50 },
-        { "ms": 3,  "percentile": 28 },
-        { "ms": 2,  "percentile": 8  },
-        { "ms": 1,  "percentile": 2  }
+        {
+          "ms": 10,
+          "percentile": 99
+        },
+        {
+          "ms": 8,
+          "percentile": 90
+        },
+        {
+          "ms": 6,
+          "percentile": 72
+        },
+        {
+          "ms": 4,
+          "percentile": 50
+        },
+        {
+          "ms": 3,
+          "percentile": 28
+        },
+        {
+          "ms": 2,
+          "percentile": 8
+        },
+        {
+          "ms": 1,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 8, "color": "#FFD700", "title": "Eagle Eye",          "subtitle": "Spots typos in slide decks from across the room",     "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 6, "color": "#F97316", "title": "Sharp Scanner",      "subtitle": "Finds Waldo without looking like they're trying",      "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 4, "color": "#58A6FF", "title": "Reliable Observer",  "subtitle": "Usually spots the different one",                     "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 2, "color": "#94A3B8", "title": "Casual Scanner",     "subtitle": "Misses Reply All warnings every time",                "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 0, "color": "#EF4444", "title": "Attention Deficit",  "subtitle": "Has walked past their own name on a sign",            "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 8,
+          "color": "#FFD700",
+          "title": "Eagle Eye",
+          "subtitle": "Spots typos in slide decks from across the room",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 6,
+          "color": "#F97316",
+          "title": "Sharp Scanner",
+          "subtitle": "Finds Waldo without looking like they're trying",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 4,
+          "color": "#58A6FF",
+          "title": "Reliable Observer",
+          "subtitle": "Usually spots the different one",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 2,
+          "color": "#94A3B8",
+          "title": "Casual Scanner",
+          "subtitle": "Misses Reply All warnings every time",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Attention Deficit",
+          "subtitle": "Has walked past their own name on a sign",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   },
@@ -701,11 +1578,22 @@
     "accentDim": "rgba(168,85,247,0.10)",
     "category": "clinical",
     "categoryLabel": "Professional Benchmark",
-    "tags": ["rhythm test online", "internal clock test", "timing precision test", "beat synchronization test", "temporal processing"],
+    "tags": [
+      "rhythm test online",
+      "internal clock test",
+      "timing precision test",
+      "beat synchronization test",
+      "temporal processing"
+    ],
     "seo": {
       "metaTitle": "Temporal Pulse – Internal Clock Precision Test | NeuroBench",
       "metaDescription": "How precise is your internal sense of time? Watch 3 flashes at 1000ms intervals, then tap the hidden 4th beat. Free timing precision benchmark.",
-      "keywords": ["rhythm test online", "internal clock test", "timing precision benchmark", "beat synchronization test"]
+      "keywords": [
+        "rhythm test online",
+        "internal clock test",
+        "timing precision benchmark",
+        "beat synchronization test"
+      ]
     },
     "content": {
       "howToPlay": [
@@ -726,20 +1614,1506 @@
     },
     "stats": {
       "percentiles": [
-        { "ms": 10,  "percentile": 99 },
-        { "ms": 20,  "percentile": 90 },
-        { "ms": 40,  "percentile": 72 },
-        { "ms": 70,  "percentile": 50 },
-        { "ms": 110, "percentile": 28 },
-        { "ms": 160, "percentile": 8  },
-        { "ms": 250, "percentile": 2  }
+        {
+          "ms": 10,
+          "percentile": 99
+        },
+        {
+          "ms": 20,
+          "percentile": 90
+        },
+        {
+          "ms": 40,
+          "percentile": 72
+        },
+        {
+          "ms": 70,
+          "percentile": 50
+        },
+        {
+          "ms": 110,
+          "percentile": 28
+        },
+        {
+          "ms": 160,
+          "percentile": 8
+        },
+        {
+          "ms": 250,
+          "percentile": 2
+        }
       ],
       "ranks": [
-        { "label": "S", "maxMs": 15,  "color": "#FFD700", "title": "Human Metronome",     "subtitle": "Arrives at meetings exactly on time. To the second.",  "percentileLabel": "Top 1%"    },
-        { "label": "A", "maxMs": 35,  "color": "#A855F7", "title": "Precision Timer",     "subtitle": "Their Pomodoros actually last 25 minutes",            "percentileLabel": "Top 20%"   },
-        { "label": "B", "maxMs": 65,  "color": "#58A6FF", "title": "Rhythmic Thinker",    "subtitle": "Gives accurate ETAs. Occasionally.",                  "percentileLabel": "Top 45%"   },
-        { "label": "C", "maxMs": 120, "color": "#94A3B8", "title": "Approximate Clocker", "subtitle": "Says 5 minutes and means 20",                         "percentileLabel": "Top 65%"   },
-        { "label": "D", "maxMs": 999, "color": "#EF4444", "title": "Temporally Unmoored", "subtitle": "Has no idea what time it is. Ever.",                  "percentileLabel": "Bottom 25%"}
+        {
+          "label": "S",
+          "maxMs": 15,
+          "color": "#FFD700",
+          "title": "Human Metronome",
+          "subtitle": "Arrives at meetings exactly on time. To the second.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 35,
+          "color": "#A855F7",
+          "title": "Precision Timer",
+          "subtitle": "Their Pomodoros actually last 25 minutes",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 65,
+          "color": "#58A6FF",
+          "title": "Rhythmic Thinker",
+          "subtitle": "Gives accurate ETAs. Occasionally.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 120,
+          "color": "#94A3B8",
+          "title": "Approximate Clocker",
+          "subtitle": "Says 5 minutes and means 20",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 999,
+          "color": "#EF4444",
+          "title": "Temporally Unmoored",
+          "subtitle": "Has no idea what time it is. Ever.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dont-blink",
+    "title": "Don't Blink",
+    "clinicalTitle": "Change Detection & Visual Vigilance Assessment",
+    "shortDescription": "Something on screen will change. Catch it the instant it happens.",
+    "description": "A clinical measure of visual vigilance and change detection speed. An object is displayed — at a random moment it subtly changes. Click the instant you notice. Changes get more subtle each round.",
+    "emoji": "👁️",
+    "accent": "#06B6D4",
+    "accentDim": "rgba(6,182,212,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": [
+      "change blindness test",
+      "visual vigilance test",
+      "attention test online",
+      "change detection benchmark"
+    ],
+    "seo": {
+      "metaTitle": "Don't Blink – Change Detection Visual Vigilance Test | NeuroBench",
+      "metaDescription": "Something will change on screen. Can you catch it? Test your visual vigilance and change detection speed. Free online attention benchmark with instant results.",
+      "keywords": [
+        "change blindness test",
+        "visual vigilance test",
+        "change detection speed",
+        "attention benchmark online"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "An object will appear on screen — stare at it without blinking.",
+        "At a random moment between 1–4 seconds, something will subtly change.",
+        "Click or tap the instant you notice the change.",
+        "If you miss it, the round counts as a miss — you get 10 rounds total.",
+        "Your score combines average reaction speed and detection accuracy."
+      ],
+      "science": "Change blindness — the failure to detect visual changes that occur during brief interruptions — is one of the most striking demonstrations of the limits of human visual attention. Even large changes can go unnoticed when attention is divided or misdirected. The phenomenon reveals that visual perception is not a passive recording of the scene but an active, attention-dependent process. The superior colliculus and V5/MT area of the visual cortex are responsible for detecting motion and change signals, but these signals only reach conscious awareness when top-down attention from the prefrontal cortex is directed to the relevant location. This test specifically measures the efficiency of that attentional spotlight.",
+      "tips": [
+        "Fixate on the center of the object — do not let your gaze drift.",
+        "Blink as little as possible — the change may occur during a blink.",
+        "Broaden your attentional focus rather than fixating on one feature.",
+        "Changes are always in one of three domains: color, number, or position.",
+        "At higher rounds, changes become extremely subtle — trust your gut rather than deliberating."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 200,
+          "percentile": 99
+        },
+        {
+          "ms": 280,
+          "percentile": 90
+        },
+        {
+          "ms": 350,
+          "percentile": 72
+        },
+        {
+          "ms": 420,
+          "percentile": 50
+        },
+        {
+          "ms": 520,
+          "percentile": 28
+        },
+        {
+          "ms": 650,
+          "percentile": 8
+        },
+        {
+          "ms": 800,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 260,
+          "color": "#FFD700",
+          "title": "Eagle Cortex",
+          "subtitle": "Notices your haircut. Every. Single. Time.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 360,
+          "color": "#06B6D4",
+          "title": "Sharp Vigilance",
+          "subtitle": "Spots the typo before the email is sent",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 460,
+          "color": "#58A6FF",
+          "title": "Reliable Observer",
+          "subtitle": "Usually notices when the presentation changes",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 600,
+          "color": "#94A3B8",
+          "title": "Selective Attention",
+          "subtitle": "Misses the obvious. Often.",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Change Blind",
+          "subtitle": "Would not notice a bear in a meeting",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "count-master",
+    "title": "Count Master",
+    "clinicalTitle": "Subitizing & Numerical Estimation Assessment",
+    "shortDescription": "Dots flash for half a second. How many were there?",
+    "description": "A clinical measure of subitizing ability and approximate number system acuity. Dots flash briefly — estimate the count as accurately as possible. Accuracy and average error determine your rank.",
+    "emoji": "🔢",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": [
+      "subitizing test",
+      "number estimation test",
+      "count master online",
+      "approximate number system test"
+    ],
+    "seo": {
+      "metaTitle": "Count Master – Subitizing & Number Estimation Test | NeuroBench",
+      "metaDescription": "Dots flash for 0.5 seconds — how many were there? Test your subitizing ability and approximate number sense. Free online benchmark with instant results.",
+      "keywords": [
+        "subitizing test online",
+        "number estimation test",
+        "count master game",
+        "approximate number system benchmark"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A cluster of dots will flash on screen for exactly 0.5 seconds.",
+        "Enter how many dots you saw using the keypad.",
+        "Submit your answer before the next round begins.",
+        "Complete 10 rounds — your accuracy percentage and average error are your scores.",
+        "Dots range from 5 to 20 — estimates, not exact counts, are expected for larger numbers."
+      ],
+      "science": "Subitizing — from the Latin 'subitus' (sudden) — is the rapid, accurate, pre-attentive perception of small quantities (typically 1–4 items). For quantities above 4, the brain switches to estimation via the Approximate Number System (ANS), a phylogenetically ancient capacity shared with many non-human species. ANS acuity follows Weber's Law: the just-noticeable difference between two quantities is a constant ratio rather than a fixed number. Individual ANS acuity, measured by tasks like this, is a robust predictor of formal mathematical achievement from kindergarten through university.",
+      "tips": [
+        "For 5 or fewer dots, do not count — let subitizing work instantly.",
+        "For larger quantities, look for spatial patterns: rows, columns, clusters.",
+        "Guess slightly higher than your estimate — humans systematically undercount in brief exposures.",
+        "Do not try to count individually — the flash is too brief. Trust your gestalt impression.",
+        "Practice improves ANS acuity measurably over weeks of regular training."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 95,
+          "percentile": 99
+        },
+        {
+          "ms": 88,
+          "percentile": 90
+        },
+        {
+          "ms": 80,
+          "percentile": 72
+        },
+        {
+          "ms": 70,
+          "percentile": 50
+        },
+        {
+          "ms": 58,
+          "percentile": 28
+        },
+        {
+          "ms": 45,
+          "percentile": 8
+        },
+        {
+          "ms": 30,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Numerical Savant",
+          "subtitle": "Counts coins by sound",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Sharp Estimator",
+          "subtitle": "Always knows if the bill split was fair",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Reliable Counter",
+          "subtitle": "Gets the right aisle at the grocery store",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Approximate Guesser",
+          "subtitle": "Frequently miscounts coffee orders",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Quantity Blind",
+          "subtitle": "Bought 12 eggs. Came home with 11.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "report-or-favor",
+    "title": "Report or Favor",
+    "clinicalTitle": "Workplace Request Classification Test",
+    "shortDescription": "Work task or personal favor? You have 1.5 seconds to decide.",
+    "description": "Requests are flying in from your boss. Real work tasks must be ACCEPTED. Outrageous personal favors must be DODGED. Respond fast — hesitation is not a corporate survival skill.",
+    "emoji": "📋",
+    "accent": "#FF6B6B",
+    "accentDim": "rgba(255,107,107,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival Test",
+    "tags": [
+      "office game online",
+      "workplace humor game",
+      "reaction speed game",
+      "office survival test"
+    ],
+    "seo": {
+      "metaTitle": "Report or Favor – Office Survival Reaction Test | NeuroBench",
+      "metaDescription": "Your boss keeps sending requests. Work task or personal favor? You have 1.5 seconds to decide. Free office survival reaction test with instant results.",
+      "keywords": [
+        "office game online",
+        "workplace humor test",
+        "office survival game",
+        "reaction speed test funny"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Requests fall from the top of the screen one at a time.",
+        "Tap ACCEPT for real work tasks — reports, meetings, deadlines.",
+        "Tap DODGE for personal favors — anything your boss has absolutely no right to ask.",
+        "You have 1.5 seconds per request. Hesitate and you're done.",
+        "One wrong answer ends the test. Your streak is your score."
+      ],
+      "science": "Rapid categorization under time pressure activates the anterior cingulate cortex and lateral prefrontal cortex — the same neural circuits engaged in conflict monitoring and response inhibition. Workplace boundary recognition requires simultaneous evaluation of social norms, professional context, and personal risk — a complex executive function task dressed up as reflexive response. Individuals with stronger inhibitory control and faster categorical processing make boundary decisions more quickly and accurately, with less post-decisional regret.",
+      "tips": [
+        "Anything involving the boss's home, car, pets, family, or weekend is always a DODGE.",
+        "Anything with a deadline, a report name, or a client is always an ACCEPT.",
+        "Do not overthink — your first instinct is calibrated by years of workplace exposure.",
+        "The requests escalate in absurdity as your streak grows — trust the obvious.",
+        "Speed matters as much as accuracy — a correct answer after 1.4 seconds is barely a win."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 30,
+          "percentile": 99
+        },
+        {
+          "ms": 20,
+          "percentile": 90
+        },
+        {
+          "ms": 14,
+          "percentile": 72
+        },
+        {
+          "ms": 9,
+          "percentile": 50
+        },
+        {
+          "ms": 5,
+          "percentile": 28
+        },
+        {
+          "ms": 2,
+          "percentile": 8
+        },
+        {
+          "ms": 1,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Boundary Deity",
+          "subtitle": "Has never once helped anyone move apartments",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#FF6B6B",
+          "title": "Corporate Survivor",
+          "subtitle": "Politely declines while already walking away",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Cautious Employee",
+          "subtitle": "Sometimes says yes to things they regret immediately",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "People Pleaser",
+          "subtitle": "Has watered their boss's plants for 3 years",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Fully Exploited",
+          "subtitle": "Currently assembling their boss's IKEA furniture",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "boss-dodge",
+    "title": "Boss Dodge",
+    "clinicalTitle": "Workplace Threat Assessment & Response Protocol",
+    "shortDescription": "Catch the reports. Dodge the boss. 30 seconds. 3 lives.",
+    "description": "Reports and boss emojis rain down the screen. Tap every report you see — but do NOT tap the boss. Three boss taps and you're fired. Speed increases with your score.",
+    "emoji": "👹",
+    "accent": "#FF6B6B",
+    "accentDim": "rgba(255,107,107,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival Test",
+    "tags": [
+      "boss dodge game",
+      "office survival game",
+      "tap game online",
+      "workplace humor game",
+      "reaction game"
+    ],
+    "seo": {
+      "metaTitle": "Boss Dodge – Office Survival Tap Game | NeuroBench",
+      "metaDescription": "Reports rain down — tap them all. But don't tap the boss! 30 seconds, 3 lives. Free office survival reflex game with instant results.",
+      "keywords": [
+        "boss dodge game online",
+        "office tap game",
+        "workplace survival game",
+        "reaction tap test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Objects fall from the top of the screen in multiple lanes.",
+        "Tap every 📋 report you see to catch it — each one scores a point.",
+        "Do NOT tap the 👹 boss — three boss taps and the test terminates.",
+        "Objects fall faster as your score increases.",
+        "Survive 30 seconds and catch as many reports as possible."
+      ],
+      "science": "Selective attention under time pressure — the ability to respond to target stimuli while suppressing responses to distractors — is a core executive function mediated by the prefrontal cortex and anterior cingulate cortex. This task is structurally identical to clinical go/no-go paradigms used to assess impulse control and attentional selectivity. The increasing speed manipulation places additional demands on processing efficiency, mimicking the neural load experienced under genuine time pressure in professional environments.",
+      "tips": [
+        "Focus on the lower third of the screen — by the time objects reach there, you have enough information to respond.",
+        "Use your peripheral vision to track multiple lanes simultaneously.",
+        "The boss emoji is visually distinct — train yourself to react to its absence rather than its presence.",
+        "At high speeds, accept that you will miss some reports — the priority is boss avoidance.",
+        "Tap with your index finger and keep your hand centered for fastest cross-lane reach."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 60,
+          "percentile": 99
+        },
+        {
+          "ms": 45,
+          "percentile": 90
+        },
+        {
+          "ms": 32,
+          "percentile": 72
+        },
+        {
+          "ms": 20,
+          "percentile": 50
+        },
+        {
+          "ms": 12,
+          "percentile": 28
+        },
+        {
+          "ms": 6,
+          "percentile": 8
+        },
+        {
+          "ms": 2,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Untouchable",
+          "subtitle": "Has eyes in the back of their head. Literally.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#FF6B6B",
+          "title": "Office Ninja",
+          "subtitle": "Always busy when the boss walks by",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Reliable Dodger",
+          "subtitle": "Makes eye contact exactly twice per week",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Occasional Target",
+          "subtitle": "Gets voluntold for everything",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "The Chosen One",
+          "subtitle": "Boss has their desk on speed dial",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "raise-or-raise",
+    "title": "Raise or Raise",
+    "clinicalTitle": "Negotiation Timing & Peak Detection Assessment",
+    "shortDescription": "Your salary is rising. Lock it in at the peak. Don't get greedy.",
+    "description": "Your annual salary climbs on screen. It will peak at a random moment then drop. Hit LOCK IT IN at the highest point you can — but wait too long and it crashes. 5 rounds. Average salary is your score.",
+    "emoji": "💰",
+    "accent": "#22C55E",
+    "accentDim": "rgba(34,197,94,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival Test",
+    "tags": [
+      "salary negotiation game",
+      "office game online",
+      "timing game",
+      "workplace humor game"
+    ],
+    "seo": {
+      "metaTitle": "Raise or Raise – Salary Negotiation Timing Game | NeuroBench",
+      "metaDescription": "Your salary is climbing. Lock it in at the peak before it crashes. Test your negotiation timing instinct. Free office survival game with instant results.",
+      "keywords": [
+        "salary negotiation game",
+        "office timing game",
+        "raise game online",
+        "workplace humor test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Your salary starts at $80,000 and begins climbing.",
+        "The number rises at a random rate and peaks at an unpredictable moment.",
+        "Hit LOCK IT IN when you think you've reached the peak.",
+        "Wait too long and the salary drops — whatever you locked in is your round score.",
+        "Complete 5 rounds — your average locked salary is your final score."
+      ],
+      "science": "Peak detection under uncertainty is a classic problem in optimal stopping theory — the mathematical framework underlying real-world decisions from hiring to negotiation. The optimal strategy for maximizing expected value in such tasks is related to the secretary problem: observe a fixed fraction of options, then commit to the next option that exceeds all previous observations. In salary negotiation contexts, research shows that anchoring and loss aversion systematically bias humans away from optimal stopping, causing both premature commitment and excessive holding. This test measures your intuitive calibration against theoretical optima.",
+      "tips": [
+        "The peak is random — there is no pattern to learn. Pure instinct.",
+        "Statistically, locking in when the number feels 'about right' outperforms both early and late strategies.",
+        "Loss aversion will make you hold too long — resist the urge to squeeze out the last few thousand.",
+        "Each round is independent — a bad round does not predict the next.",
+        "The optimal stopping rule: lock in after the salary has risen for at least 2 seconds."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 175000,
+          "percentile": 99
+        },
+        {
+          "ms": 160000,
+          "percentile": 90
+        },
+        {
+          "ms": 145000,
+          "percentile": 72
+        },
+        {
+          "ms": 130000,
+          "percentile": 50
+        },
+        {
+          "ms": 115000,
+          "percentile": 28
+        },
+        {
+          "ms": 100000,
+          "percentile": 8
+        },
+        {
+          "ms": 85000,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999999,
+          "color": "#FFD700",
+          "title": "Master Negotiator",
+          "subtitle": "LinkedIn says Open to Work. They are not.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999999,
+          "color": "#22C55E",
+          "title": "Sharp Closer",
+          "subtitle": "Always counters. Always wins.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999999,
+          "color": "#58A6FF",
+          "title": "Decent Negotiator",
+          "subtitle": "Got a raise once. Still telling the story.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999999,
+          "color": "#94A3B8",
+          "title": "Accepts First Offer",
+          "subtitle": "Said thank you after being lowballed",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Negotiation Victim",
+          "subtitle": "Their bonus is a pizza party",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "corporate-climber",
+    "title": "Corporate Climber",
+    "clinicalTitle": "Strategic Navigation & Impulse Control Assessment",
+    "shortDescription": "Collect promotions. Dodge the chaos. How far up the ladder can you climb?",
+    "description": "Navigate the corporate maze. Collect promotions and bonuses to grow your career. Avoid personal favors, overtime demands, and angry bosses — they block your path permanently. How high can you climb?",
+    "emoji": "🏢",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival Test",
+    "tags": [
+      "corporate snake game",
+      "office survival game",
+      "snake game online",
+      "workplace humor game"
+    ],
+    "seo": {
+      "metaTitle": "Corporate Climber – Office Snake Survival Game | NeuroBench",
+      "metaDescription": "Collect promotions. Dodge overtime and angry bosses. A corporate twist on the classic snake game. Free office survival game with instant results.",
+      "keywords": [
+        "corporate snake game online",
+        "office survival game",
+        "snake game funny",
+        "workplace humor game"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Use arrow keys (desktop) or swipe (mobile) to navigate your career path.",
+        "Collect 🏆 promotions and ⭐ bonuses to grow your career length.",
+        "Avoid 📋 personal favors, 💼 overtime demands, and 😤 angry bosses.",
+        "Hitting any obstacle turns it into a permanent wall — plan your route.",
+        "Your score is your maximum career length. How far up can you climb?"
+      ],
+      "science": "Navigation tasks requiring simultaneous path planning and obstacle avoidance engage the hippocampal-entorhinal circuit for spatial mapping, the prefrontal cortex for prospective planning, and the basal ganglia for action sequence selection. The snake paradigm specifically tests an aspect of working memory called prospective interference — the ability to inhibit future collision paths while maintaining current trajectory. Performance on spatial navigation tasks of this type correlates with fluid intelligence and executive function battery scores.",
+      "tips": [
+        "Always plan 3–4 moves ahead — reacting only to the immediate cell leads to dead ends.",
+        "Hug the walls early to maximize open space in the center.",
+        "Never turn back on yourself — reversals guarantee immediate collision.",
+        "Prioritize path preservation over item collection at higher lengths.",
+        "On mobile, swipe decisively — a partial swipe registers as no input."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 30,
+          "percentile": 99
+        },
+        {
+          "ms": 22,
+          "percentile": 90
+        },
+        {
+          "ms": 16,
+          "percentile": 72
+        },
+        {
+          "ms": 10,
+          "percentile": 50
+        },
+        {
+          "ms": 6,
+          "percentile": 28
+        },
+        {
+          "ms": 3,
+          "percentile": 8
+        },
+        {
+          "ms": 1,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "C-Suite Material",
+          "subtitle": "Has a parking spot. Reserved. With their name.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Director Level",
+          "subtitle": "Gets promoted before they apply",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Middle Manager",
+          "subtitle": "Has a team. Barely.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Permanent Associate",
+          "subtitle": "Been here 5 years. Same title.",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Intern Energy",
+          "subtitle": "Still can't find the printer",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dont-blink",
+    "title": "Don't Blink",
+    "clinicalTitle": "Change Detection & Visual Attention Assessment",
+    "shortDescription": "Something changed on screen. Did you catch it? React the instant it happens.",
+    "description": "A clinical measure of change detection speed and visual attention. An object appears and subtly changes — color, number, or position. Catch the change the instant it happens.",
+    "emoji": "👁️",
+    "accent": "#06B6D4",
+    "accentDim": "rgba(6,182,212,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": [
+      "change blindness test",
+      "visual attention test",
+      "change detection test",
+      "cognitive awareness test"
+    ],
+    "seo": {
+      "metaTitle": "Don't Blink – Change Detection Speed Test | NeuroBench",
+      "metaDescription": "Something on screen just changed. Did you catch it? Test your visual attention and change detection speed. Free cognitive awareness benchmark.",
+      "keywords": [
+        "change blindness test",
+        "visual attention test",
+        "change detection benchmark"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "An object will appear on screen — a color, number, or shape.",
+        "At a random moment between 1 and 4 seconds, it will subtly change.",
+        "Tap or click the instant you notice the change.",
+        "Changes get more subtle as rounds progress — early rounds are obvious, later rounds are tricky.",
+        "10 rounds total. Missed changes count as a 1500ms penalty. Average reaction time is your score."
+      ],
+      "science": "Change blindness — the failure to detect visual changes — occurs because the visual system does not build a complete detailed representation of a scene. Attention acts as a spotlight, and changes outside its focus go unnoticed even when obvious in retrospect. This phenomenon, studied by Ronald Rensink and Daniel Simons, reveals that conscious perception is far more selective than we believe. Change detection speed directly measures attentional breadth and the efficiency of the brain's visual change-detection circuitry in the superior colliculus and V4/V5 cortex.",
+      "tips": [
+        "Defocus your gaze — distributed attention catches peripheral changes faster than focused foveal attention.",
+        "Don't try to memorize details — let your visual system flag discrepancies automatically.",
+        "Changes often occur in the most salient feature — weight color and number changes heavily.",
+        "Blink between rounds, not during — blinking during the display window causes misses.",
+        "Your first instinct is usually right — don't second-guess a change you think you saw."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 200,
+          "percentile": 99
+        },
+        {
+          "ms": 320,
+          "percentile": 90
+        },
+        {
+          "ms": 480,
+          "percentile": 72
+        },
+        {
+          "ms": 650,
+          "percentile": 50
+        },
+        {
+          "ms": 900,
+          "percentile": 28
+        },
+        {
+          "ms": 1200,
+          "percentile": 8
+        },
+        {
+          "ms": 1500,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Hawk Eye",
+          "subtitle": "Notices when someone moved their stapler 2mm",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Sharp Observer",
+          "subtitle": "First to notice the new office plant",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Attentive Mind",
+          "subtitle": "Usually catches the important stuff",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Selective Notifier",
+          "subtitle": "Walked past a fire alarm for three days",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Change Blind",
+          "subtitle": "Didn't notice their own haircut in the mirror",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "count-master",
+    "title": "Count Master",
+    "clinicalTitle": "Subitizing & Numerosity Estimation Assessment",
+    "shortDescription": "Dots flash for half a second. How many were there? Trust your gut.",
+    "description": "A clinical measure of subitizing capacity and approximate number system acuity. Dots flash briefly — estimate the count as accurately as possible. No time to count. Trust your brain.",
+    "emoji": "🔢",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "clinical",
+    "categoryLabel": "Professional Benchmark",
+    "tags": [
+      "subitizing test",
+      "number sense test",
+      "dot counting test",
+      "numerosity estimation"
+    ],
+    "seo": {
+      "metaTitle": "Count Master – Subitizing & Number Sense Test | NeuroBench",
+      "metaDescription": "Dots flash for half a second. How many were there? Test your subitizing ability and number sense. Free numerosity estimation benchmark.",
+      "keywords": [
+        "subitizing test online",
+        "number sense test",
+        "dot counting test",
+        "numerosity estimation"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A cluster of dots will flash on screen for exactly 0.5 seconds.",
+        "Enter how many dots you saw using the number pad.",
+        "You cannot count — trust your visual estimate.",
+        "10 rounds with 5 to 20 dots each.",
+        "Your score is accuracy percentage and average error across all rounds."
+      ],
+      "science": "Subitizing — the instant effortless perception of small quantities (1-4) without counting — is a distinct cognitive process from estimation. Numbers above 4 require the approximate number system (ANS), which represents quantity on a logarithmic mental number line. The ANS is present at birth and in many non-human species, suggesting it is a core evolutionary capacity. ANS acuity is one of the strongest predictors of formal mathematical ability, stronger than IQ in some longitudinal studies.",
+      "tips": [
+        "For 5 or fewer dots, your brain perceives the number instantly — trust it completely.",
+        "For larger clusters, look for sub-groups — your brain naturally chunks into 3-4 item groups.",
+        "Fixate the center of the flash area — peripheral vision contributes to quantity estimation.",
+        "Don't adjust your first impression — second-guessing introduces systematic bias.",
+        "Relax your eyes — tension narrows attentional focus and reduces estimation range."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 95,
+          "percentile": 99
+        },
+        {
+          "ms": 88,
+          "percentile": 90
+        },
+        {
+          "ms": 80,
+          "percentile": 72
+        },
+        {
+          "ms": 70,
+          "percentile": 50
+        },
+        {
+          "ms": 58,
+          "percentile": 28
+        },
+        {
+          "ms": 44,
+          "percentile": 8
+        },
+        {
+          "ms": 30,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Rain Man",
+          "subtitle": "Counts toothpicks before they hit the floor",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Quantitative Mind",
+          "subtitle": "Estimates meeting attendance to within 2 people",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Decent Estimator",
+          "subtitle": "Gets the restaurant order count right most times",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Rough Guesser",
+          "subtitle": "Their estimates are in the right decade",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Quantity Blind",
+          "subtitle": "Orders food for 4, feeds 11",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "report-or-favor",
+    "title": "Report or Favor",
+    "clinicalTitle": "Professional Boundary Recognition Assessment",
+    "shortDescription": "Work task or personal favor? You have 1.5 seconds to decide.",
+    "description": "Your manager is firing off requests. Some are legitimate work tasks. Some are deeply, obviously personal. ACCEPT the work. DODGE the favor. You have 1.5 seconds.",
+    "emoji": "📋",
+    "accent": "#EF4444",
+    "accentDim": "rgba(239,68,68,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival",
+    "tags": [
+      "office game",
+      "work stress game",
+      "boss game",
+      "office survival",
+      "workplace humor game"
+    ],
+    "seo": {
+      "metaTitle": "Report or Favor – Office Survival Reaction Game | NeuroBench",
+      "metaDescription": "Your boss is throwing requests at you. Work task or personal favor? ACCEPT or DODGE in 1.5 seconds. Free office survival reaction game.",
+      "keywords": [
+        "office game online",
+        "work stress game",
+        "boss reaction game",
+        "office survival test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Your boss fires a request at you from above.",
+        "If it is a legitimate work task — hit ACCEPT.",
+        "If it is a personal favor — hit DODGE.",
+        "You have 1.5 seconds. Hesitate and you are fired.",
+        "How many can you handle before you snap?"
+      ],
+      "science": "The ability to rapidly distinguish professional obligations from personal requests requires the prefrontal cortex to apply social norms under time pressure. This task measures cognitive boundary enforcement speed — a proxy for professional assertiveness and executive function efficiency. Research in organizational psychology shows that employees who fail to enforce professional boundaries experience significantly higher burnout rates, as boundary violations accumulate into chronic role conflict.",
+      "tips": [
+        "Anything involving your boss's personal life, family, pets, or property is a DODGE.",
+        "Anything with a deadline, client name, or deliverable format is an ACCEPT.",
+        "When in doubt: would HR raise an eyebrow? DODGE.",
+        "Speed matters as much as accuracy — hesitation costs you.",
+        "The requests get more absurd as your streak grows. Stay focused."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 40,
+          "percentile": 99
+        },
+        {
+          "ms": 30,
+          "percentile": 90
+        },
+        {
+          "ms": 22,
+          "percentile": 72
+        },
+        {
+          "ms": 15,
+          "percentile": 50
+        },
+        {
+          "ms": 10,
+          "percentile": 28
+        },
+        {
+          "ms": 5,
+          "percentile": 8
+        },
+        {
+          "ms": 2,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Boundary Lord",
+          "subtitle": "Has never moved anyone's furniture. Ever.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Professionally Firm",
+          "subtitle": "Says no to favors. Politely. Immediately.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Mostly Boundaried",
+          "subtitle": "Only helped move the couch that one time",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Boundary Permeable",
+          "subtitle": "Has watered their boss's plants twice this month",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Yes Person",
+          "subtitle": "Is currently watching their boss's dog",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "boss-dodge",
+    "title": "Boss Dodge",
+    "clinicalTitle": "Threat Assessment & Selective Response Protocol",
+    "shortDescription": "Catch the reports. Avoid the boss. 30 seconds, 3 lives.",
+    "description": "Objects rain from above. Tap reports to catch them. Let the boss pass — tapping him costs a life. 30 seconds, 3 lives. Speed increases. How much work can you actually handle?",
+    "emoji": "👹",
+    "accent": "#F97316",
+    "accentDim": "rgba(249,115,22,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival",
+    "tags": [
+      "boss dodge game",
+      "office survival game",
+      "reflex game online",
+      "tap game",
+      "work stress game"
+    ],
+    "seo": {
+      "metaTitle": "Boss Dodge – Office Survival Reflex Game | NeuroBench",
+      "metaDescription": "Reports rain from above — catch them. But don't tap the boss or you lose a life. 30 seconds, 3 lives. Free office survival reflex game.",
+      "keywords": [
+        "boss dodge game",
+        "office survival game",
+        "reflex tap game",
+        "work stress game online"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Objects fall from the top of the screen in multiple lanes.",
+        "TAP reports (📋) and coffee (☕) to catch them — each scores a point.",
+        "DO NOT tap the boss (👹) — each boss tap costs a life.",
+        "You have 3 lives and 30 seconds.",
+        "Speed increases over time. How many can you catch?"
+      ],
+      "science": "This task measures selective inhibition under time pressure — executing a response to one stimulus while suppressing the same response to a similar stimulus. The go/no-go paradigm is foundational in cognitive neuroscience, used to assess prefrontal inhibitory control and shown to predict real-world impulse control accuracy. Increasing speed introduces dual load of perceptual processing and motor inhibition, mirroring the demands of high-pressure workplace environments.",
+      "tips": [
+        "Focus on the bottom third — objects are easier to classify with more travel time.",
+        "Use two thumbs on mobile — one per side reduces reaction time significantly.",
+        "Don't panic-tap — a missed report beats a boss hit every time.",
+        "Track lanes with peripheral vision — prep your tap before the object arrives.",
+        "Save attention for fast-moving objects — slow ones give you time to decide."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 45,
+          "percentile": 99
+        },
+        {
+          "ms": 35,
+          "percentile": 90
+        },
+        {
+          "ms": 26,
+          "percentile": 72
+        },
+        {
+          "ms": 18,
+          "percentile": 50
+        },
+        {
+          "ms": 11,
+          "percentile": 28
+        },
+        {
+          "ms": 6,
+          "percentile": 8
+        },
+        {
+          "ms": 2,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "Inbox Zero Hero",
+          "subtitle": "Processes reports faster than they're generated",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F97316",
+          "title": "Efficient Handler",
+          "subtitle": "Clears the pile before lunch. Impressive.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Functional Worker",
+          "subtitle": "Keeps up. Mostly.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Overwhelmed",
+          "subtitle": "Has 847 unread emails",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Out of Office",
+          "subtitle": "Set an out-of-office in 2019. Never turned it off.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "raise-or-raise",
+    "title": "Raise or Raise",
+    "clinicalTitle": "Peak Value Detection & Negotiation Timing Assessment",
+    "shortDescription": "Your salary is climbing. Hit ACCEPT at the peak. Don't wait too long.",
+    "description": "Your annual salary offer is rising on screen. Hit ACCEPT at exactly the right moment to lock in the highest number. Too early and you leave money on the table. Too late and it drops.",
+    "emoji": "💰",
+    "accent": "#22C55E",
+    "accentDim": "rgba(34,197,94,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival",
+    "tags": [
+      "salary negotiation game",
+      "office game",
+      "timing game online",
+      "raise game"
+    ],
+    "seo": {
+      "metaTitle": "Raise or Raise – Salary Negotiation Timing Game | NeuroBench",
+      "metaDescription": "Your salary is rising on screen. Hit ACCEPT at the peak. Free salary negotiation timing game — test your negotiation instincts.",
+      "keywords": [
+        "salary negotiation game",
+        "timing game online",
+        "office survival game",
+        "raise timing test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "A salary number appears and begins rising.",
+        "The number peaks at a random point then starts dropping.",
+        "Hit ACCEPT when you think it has reached its highest point.",
+        "Complete 5 rounds — your average salary across all rounds is your score.",
+        "The higher your average, the better your rank."
+      ],
+      "science": "Peak detection under uncertainty is a core component of real-world decision-making studied in behavioral economics. The optimal stopping problem involves the prefrontal cortex, anterior cingulate cortex, and dopaminergic reward circuits. Research shows humans are systematically biased toward premature stopping due to loss aversion, with peak performance clustering near the theoretical optimum of 37% of the decision window. This task directly measures your negotiation timing instinct.",
+      "tips": [
+        "The peak is always random — there is no pattern to learn. Trust your instinct.",
+        "Humans consistently stop too early due to loss aversion — wait a beat longer than feels comfortable.",
+        "Watch the rate of increase — when it slows down, the peak is near.",
+        "Do not anchor to the starting number — evaluate each moment relative to recent trajectory.",
+        "5 rounds means variance matters — one great round can compensate for an early stop."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 145000,
+          "percentile": 99
+        },
+        {
+          "ms": 135000,
+          "percentile": 90
+        },
+        {
+          "ms": 122000,
+          "percentile": 72
+        },
+        {
+          "ms": 108000,
+          "percentile": 50
+        },
+        {
+          "ms": 92000,
+          "percentile": 28
+        },
+        {
+          "ms": 78000,
+          "percentile": 8
+        },
+        {
+          "ms": 62000,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999999,
+          "color": "#FFD700",
+          "title": "Master Negotiator",
+          "subtitle": "Gets the number. Then asks for more.",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999999,
+          "color": "#22C55E",
+          "title": "Sharp Closer",
+          "subtitle": "Leaves meetings with more than they entered with",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999999,
+          "color": "#58A6FF",
+          "title": "Decent Negotiator",
+          "subtitle": "Got a raise. Could have been bigger.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999999,
+          "color": "#94A3B8",
+          "title": "Accepts First Offer",
+          "subtitle": "Said yes before HR finished the sentence",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Negotiation Victim",
+          "subtitle": "Got a 2% raise and thanked them for it",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "corporate-climber",
+    "title": "Corporate Climber",
+    "clinicalTitle": "Strategic Navigation & Selective Acquisition Protocol",
+    "shortDescription": "Collect promotions. Avoid personal favors. Don't let the office eat you.",
+    "description": "Navigate the office grid. Collect promotions and coffee to grow your career. Avoid personal favors and angry bosses — they end your run. How far can you climb?",
+    "emoji": "🐍",
+    "accent": "#A855F7",
+    "accentDim": "rgba(168,85,247,0.10)",
+    "category": "office",
+    "categoryLabel": "Office Survival",
+    "tags": [
+      "office snake game",
+      "corporate game online",
+      "office survival game",
+      "snake game browser"
+    ],
+    "seo": {
+      "metaTitle": "Corporate Climber – Office Snake Survival Game | NeuroBench",
+      "metaDescription": "Classic snake — but you are climbing the corporate ladder. Collect promotions, avoid personal favors. Free office snake survival game.",
+      "keywords": [
+        "office snake game",
+        "corporate climber game",
+        "office survival game online",
+        "snake browser game"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Use arrow keys (desktop) or swipe (mobile) to navigate the office grid.",
+        "Collect 🏆 Promotions and ☕ Coffee to grow and score points.",
+        "Avoid 📋 Personal Favors and 😤 Angry Bosses — hitting them ends your run.",
+        "Your trail becomes a wall — don't trap yourself.",
+        "Speed increases as you grow. How long can you survive?"
+      ],
+      "science": "Strategic navigation under increasing speed and spatial constraint measures visuomotor planning and working memory capacity. The snake paradigm taxes prospective spatial memory — planning several moves ahead while executing current movement. As the trail lengthens, the planning horizon required to avoid self-collision grows exponentially, rapidly exceeding working memory capacity. Elite performance requires chunking the grid into zones and applying heuristic path-planning strategies rather than reactive steering.",
+      "tips": [
+        "Hug the walls early — center movement gives more escape routes as you grow.",
+        "Always plan 3-5 moves ahead, not just your next turn.",
+        "When a power-up is in a tight space, evaluate the exit route before entering.",
+        "Spiral inward — when the grid fills, a controlled spiral extends survival significantly.",
+        "Speed increases are predictable — mentally adjust your reaction window at each threshold."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 30,
+          "percentile": 99
+        },
+        {
+          "ms": 22,
+          "percentile": 90
+        },
+        {
+          "ms": 16,
+          "percentile": 72
+        },
+        {
+          "ms": 11,
+          "percentile": 50
+        },
+        {
+          "ms": 7,
+          "percentile": 28
+        },
+        {
+          "ms": 4,
+          "percentile": 8
+        },
+        {
+          "ms": 2,
+          "percentile": 2
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#FFD700",
+          "title": "C-Suite Material",
+          "subtitle": "Navigates office politics like a chess grandmaster",
+          "percentileLabel": "Top 1%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#A855F7",
+          "title": "Director Level",
+          "subtitle": "Gets promoted before they apply",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#58A6FF",
+          "title": "Middle Manager",
+          "subtitle": "Has a team. Barely.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Permanent Associate",
+          "subtitle": "Been here 5 years. Same title.",
+          "percentileLabel": "Top 65%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Intern Energy",
+          "subtitle": "Still can't find the printer",
+          "percentileLabel": "Bottom 25%"
+        }
       ]
     }
   }
