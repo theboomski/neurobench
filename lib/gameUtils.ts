@@ -51,7 +51,11 @@ export function getClicks(gameId: string): number {
   return parseInt(localStorage.getItem(`nb_clicks_${gameId}`) ?? "0", 10);
 }
 
-// ── Canvas Report Card ───────────────────────────────────────────────────────
+// ── Canvas Viral Report Card (9:16 stories format) ───────────────────────────
+
+const RANK_EMOJI: Record<string, string> = {
+  S: "🧠", A: "⚡", B: "☕", C: "🤯", D: "🥔",
+};
 
 export function generateReportCard(opts: {
   gameTitle: string;
@@ -66,128 +70,117 @@ export function generateReportCard(opts: {
   accent: string;
   siteUrl: string;
 }): string {
-  const W = 900, H = 480;
+  const W = 540, H = 960;
   const canvas = document.createElement("canvas");
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#0A0A0A";
+  ctx.fillStyle = "#0A0A0F";
   ctx.fillRect(0, 0, W, H);
 
   // Subtle grid
-  ctx.strokeStyle = "rgba(255,255,255,0.03)";
+  ctx.strokeStyle = "rgba(255,255,255,0.025)";
   ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 45) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-  for (let y = 0; y < H; y += 45) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  for (let x = 0; x < W; x += 36) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y = 0; y < H; y += 36) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 
   // Top accent bar
   ctx.fillStyle = opts.accent;
-  ctx.fillRect(0, 0, W, 3);
+  ctx.fillRect(0, 0, W, 4);
 
-  // Header area
-  ctx.fillStyle = "rgba(255,255,255,0.04)";
-  ctx.fillRect(0, 3, W, 70);
-
-  // Header text
-  ctx.fillStyle = opts.accent;
-  ctx.font = "700 11px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText("NEUROBENCH ASSESSMENT REPORT", 36, 32);
-
-  ctx.fillStyle = "rgba(255,255,255,0.3)";
-  ctx.font = "400 11px monospace";
-  ctx.fillText(opts.clinicalTitle.toUpperCase(), 36, 54);
-
-  ctx.fillStyle = "rgba(255,255,255,0.2)";
-  ctx.font = "400 11px monospace";
-  ctx.textAlign = "right";
-  ctx.fillText(new Date().toISOString().split("T")[0], W - 36, 32);
-  ctx.fillText("SUBJECT: ANONYMOUS", W - 36, 54);
-
-  // Left panel — score
-  ctx.fillStyle = "rgba(255,255,255,0.04)";
-  roundRect(ctx, 36, 95, 360, H - 131, 12); ctx.fill();
-  ctx.strokeStyle = `${opts.accent}30`;
-  ctx.lineWidth = 1;
-  roundRect(ctx, 36, 95, 360, H - 131, 12); ctx.stroke();
-
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.font = "600 11px monospace";
-  ctx.textAlign = "center";
-  ctx.fillText("MEASUREMENT RESULT", 216, 130);
-
-  ctx.fillStyle = "#FFFFFF";
-  ctx.font = `900 ${opts.score > 9999 ? 64 : 80}px -apple-system, sans-serif`;
-  ctx.textAlign = "center";
-  ctx.fillText(`${opts.score}`, 216, 235);
-
-  ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.font = "500 16px monospace";
-  ctx.fillText(opts.unit, 216, 262);
-
-  // Percentile bar
-  const barX = 60, barY = 290, barW = 312, barH = 6;
-  ctx.fillStyle = "rgba(255,255,255,0.08)";
-  roundRect(ctx, barX, barY, barW, barH, 3); ctx.fill();
-  ctx.fillStyle = opts.accent;
-  roundRect(ctx, barX, barY, barW * (opts.percentile / 100), barH, 3); ctx.fill();
-
+  // Logo
   ctx.fillStyle = opts.accent;
   ctx.font = "700 13px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(`TOP ${100 - opts.percentile}% GLOBALLY`, 216, 322);
+  ctx.fillText("NEUROBENCH", W / 2, 52);
+  ctx.fillStyle = "rgba(255,255,255,0.25)";
+  ctx.font = "400 11px monospace";
+  ctx.fillText(opts.clinicalTitle.toUpperCase(), W / 2, 72);
 
-  // Game title
-  ctx.fillStyle = "rgba(255,255,255,0.2)";
-  ctx.font = "500 12px -apple-system, sans-serif";
-  ctx.fillText(opts.gameTitle, 216, 360);
-
-  // Right panel — rank
-  ctx.fillStyle = "rgba(255,255,255,0.04)";
-  roundRect(ctx, 420, 95, W - 456, H - 131, 12); ctx.fill();
-  ctx.strokeStyle = `${opts.rankColor}40`;
-  ctx.lineWidth = 1;
-  roundRect(ctx, 420, 95, W - 456, H - 131, 12); ctx.stroke();
-
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.font = "600 11px monospace";
+  // Score
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "900 96px -apple-system, Arial, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("COGNITIVE CLASSIFICATION", 660, 130);
+  ctx.fillText(`${opts.score}`, W / 2, 210);
+  ctx.fillStyle = "rgba(255,255,255,0.4)";
+  ctx.font = "500 18px monospace";
+  ctx.fillText(opts.unit, W / 2, 242);
 
-  // Rank letter
-  ctx.shadowColor = opts.rankColor;
-  ctx.shadowBlur = 48;
-  ctx.fillStyle = opts.rankColor;
-  ctx.font = "900 140px -apple-system, sans-serif";
+  // Percentile bar
+  const bx = 60, by = 268, bw = W - 120, bh = 4;
+  ctx.fillStyle = "rgba(255,255,255,0.08)";
+  roundRect(ctx, bx, by, bw, bh, 2); ctx.fill();
+  ctx.fillStyle = opts.accent;
+  roundRect(ctx, bx, by, bw * (opts.percentile / 100), bh, 2); ctx.fill();
+  ctx.fillStyle = opts.accent;
+  ctx.font = "700 12px monospace";
   ctx.textAlign = "center";
-  ctx.fillText(opts.rankLabel, 660, 252);
+  ctx.fillText(`TOP ${100 - opts.percentile}% GLOBALLY`, W / 2, 300);
+
+  // Big emoji (150px+)
+  const emoji = RANK_EMOJI[opts.rankLabel] ?? "⚡";
+  if (opts.rankLabel === "D") {
+    // Glitch effect for D
+    ctx.globalAlpha = 0.25;
+    ctx.font = "160px serif";
+    ctx.fillStyle = "#FF0000";
+    ctx.fillText(emoji, W / 2 - 5, 490);
+    ctx.fillStyle = "#00FFFF";
+    ctx.fillText(emoji, W / 2 + 5, 490);
+    ctx.globalAlpha = 1;
+    ctx.shadowColor = "#EF4444";
+    ctx.shadowBlur = 40;
+  } else {
+    ctx.shadowColor = opts.accent;
+    ctx.shadowBlur = 24;
+  }
+  ctx.font = "160px serif";
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillText(emoji, W / 2, 490);
   ctx.shadowBlur = 0;
 
-  // Rank title
+  // Rank
+  ctx.shadowColor = opts.rankColor;
+  ctx.shadowBlur = 40;
   ctx.fillStyle = opts.rankColor;
-  ctx.font = "700 18px -apple-system, sans-serif";
-  ctx.fillText(opts.rankTitle, 660, 286);
+  ctx.font = "900 80px -apple-system, Arial, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText(`RANK ${opts.rankLabel}`, W / 2, 596);
+  ctx.shadowBlur = 0;
 
-  // Rank subtitle (humorous)
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.font = "italic 13px -apple-system, sans-serif";
+  ctx.fillStyle = opts.rankColor;
+  ctx.font = "700 18px -apple-system, Arial, sans-serif";
+  ctx.fillText(opts.rankTitle.toUpperCase(), W / 2, 634);
+
+  // Subtitle word wrap
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  ctx.font = "italic 15px -apple-system, Arial, sans-serif";
   const words = opts.rankSubtitle.split(" ");
-  let line = "", y = 316;
+  let line = "", sy = 668;
   for (const word of words) {
     const test = line + word + " ";
-    if (ctx.measureText(test).width > 380 && line !== "") {
-      ctx.fillText(line.trim(), 660, y); line = word + " "; y += 20;
-    } else { line = test; }
+    if (ctx.measureText(test).width > 400 && line !== "") {
+      ctx.fillText(line.trim(), W / 2, sy); line = word + " "; sy += 22;
+    } else line = test;
   }
-  ctx.fillText(line.trim(), 660, y);
+  ctx.fillText(line.trim(), W / 2, sy);
+
+  // CTA button
+  const btnY = H - 120, btnW = 420, btnH = 54, btnX = (W - btnW) / 2;
+  ctx.fillStyle = opts.accent;
+  roundRect(ctx, btnX, btnY, btnW, btnH, 12); ctx.fill();
+  ctx.fillStyle = "#000000";
+  ctx.font = "700 13px monospace";
+  ctx.textAlign = "center";
+  ctx.fillText(`CAN YOU BEAT THIS ${emoji}?  →  ${opts.siteUrl}`, W / 2, btnY + 32);
 
   // Footer
-  ctx.fillStyle = "rgba(255,255,255,0.15)";
-  ctx.fillRect(0, H - 36, W, 1);
-  ctx.font = "400 11px monospace";
-  ctx.textAlign = "center";
-  ctx.fillText(`${opts.siteUrl}  ·  Free Cognitive Assessment Platform`, W / 2, H - 14);
+  ctx.fillStyle = "rgba(255,255,255,0.1)";
+  ctx.fillRect(0, H - 38, W, 1);
+  ctx.font = "400 10px monospace";
+  ctx.fillStyle = "rgba(255,255,255,0.18)";
+  ctx.fillText(opts.siteUrl, W / 2, H - 16);
 
   return canvas.toDataURL("image/png");
 }
