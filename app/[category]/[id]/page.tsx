@@ -34,6 +34,12 @@ import ManipulationDetector from "@/components/games/ManipulationDetector";
 import VocabularyAge from "@/components/games/VocabularyAge";
 import WordSpeed from "@/components/games/WordSpeed";
 import WordAssociation from "@/components/games/WordAssociation";
+import RedFlagDetector from "@/components/games/RedFlagDetector";
+import AttachmentStyle from "@/components/games/AttachmentStyle";
+import LoveLanguage from "@/components/games/LoveLanguage";
+import MoneyMindset from "@/components/games/MoneyMindset";
+import RiskTolerance from "@/components/games/RiskTolerance";
+import FinancialIQ from "@/components/games/FinancialIQ";
 
 const games = gamesData as GameData[];
 
@@ -93,6 +99,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "vocabulary-age":          return <VocabularyAge game={game} />;
     case "word-speed":              return <WordSpeed game={game} />;
     case "word-association":        return <WordAssociation game={game} />;
+    case "red-flag-detector":  return <RedFlagDetector game={game} />;
+    case "attachment-style":    return <AttachmentStyle game={game} />;
+    case "love-language":       return <LoveLanguage game={game} />;
+    case "money-mindset":       return <MoneyMindset game={game} />;
+    case "risk-tolerance":      return <RiskTolerance game={game} />;
+    case "financial-iq":        return <FinancialIQ game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }

@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://zazaza.app";
 
   const categoryPages = [
-    "brain-age", "office-iq", "eye-age", "focus-test", "dark-personality", "word-iq"
+    "brain-age", "office-iq", "eye-age", "focus-test", "dark-personality", "word-iq", "relationship", "money"
   ].map(cat => ({
     url: `${base}/${cat}`,
     lastModified: new Date(),

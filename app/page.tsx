@@ -28,6 +28,8 @@ const CATEGORIES = [
   { slug: "focus-test",      emoji: "🎯", title: "Focus & Attention",   desc: "Attention span, distraction resistance & cognitive flexibility. ADHD insights included.",   accent: "#F59E0B", count: games.filter(g => g.category === "focus-test").length },
   { slug: "dark-personality",emoji: "🌑", title: "Dark Personality",    desc: "Dark Triad score, empathy index & manipulation detection. Are you ready for the truth?",   accent: "#A855F7", count: games.filter(g => g.category === "dark-personality").length },
   { slug: "word-iq",         emoji: "📚", title: "Vocab & Word IQ",     desc: "Vocabulary age, word recognition speed & semantic intelligence. How smart is your language?",accent: "#F97316", count: games.filter(g => g.category === "word-iq").length },
+  { slug: "relationship",    emoji: "💔", title: "Relationship IQ",     desc: "Red flags, attachment styles, love languages. What your relationships reveal about you.",         accent: "#EC4899", count: games.filter(g => g.category === "relationship").length },
+  { slug: "money",           emoji: "💰", title: "Money IQ",            desc: "Mindset, risk tolerance, financial literacy. Do you have a millionaire's psychology?",          accent: "#F59E0B", count: games.filter(g => g.category === "money").length },
 ];
 
 export default function HomePage() {

@@ -3697,5 +3697,702 @@
         }
       ]
     }
+  },
+  {
+    "id": "red-flag-detector",
+    "title": "Red Flag Detector",
+    "clinicalTitle": "Relationship Risk Pattern Recognition Assessment",
+    "shortDescription": "Score your partner's behaviors. How many red flags are you ignoring right now?",
+    "description": "A psychologically-grounded assessment of relationship warning signs. Based on attachment theory, Gottman's Four Horsemen research, and narcissistic abuse pattern recognition. How many red flags are you rationalizing?",
+    "emoji": "🚩",
+    "accent": "#EF4444",
+    "accentDim": "rgba(239,68,68,0.10)",
+    "category": "relationship",
+    "categoryLabel": "Relationship IQ",
+    "tags": [
+      "red flag test",
+      "relationship red flags quiz",
+      "toxic relationship test",
+      "narcissist test",
+      "relationship health test"
+    ],
+    "seo": {
+      "metaTitle": "Free Red Flag Detector Test – Relationship Warning Signs | ZAZAZA",
+      "metaDescription": "How many relationship red flags are you ignoring? Take the free Red Flag Detector. Based on Gottman research and attachment theory. Instant results, no signup.",
+      "keywords": [
+        "red flag test online",
+        "relationship red flags quiz",
+        "toxic relationship test free",
+        "narcissist detector test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Think about your current or most recent significant relationship.",
+        "Answer 20 questions about specific behaviors and patterns.",
+        "Be honest — the test is most accurate when you answer instinctively.",
+        "Your Red Flag Score is calculated across four Gottman dimensions.",
+        "Results show which warning patterns are most prominent."
+      ],
+      "science": "John Gottman's four decades of relationship research identified four communication patterns — contempt, criticism, defensiveness, and stonewalling — that predict relationship failure with over 90% accuracy. These 'Four Horsemen' form the core of this assessment. Narcissistic relationship abuse patterns (love bombing, devaluation, intermittent reinforcement) are drawn from clinical psychology literature on coercive control. Research shows people in high-red-flag relationships underestimate warning signs by an average of 40% due to cognitive biases including sunk cost fallacy and trauma bonding.",
+      "tips": [
+        "Answer based on patterns, not isolated incidents — everyone has bad days.",
+        "If you find yourself making excuses while answering, notice that.",
+        "The test measures your partner's behavior, not your feelings about them.",
+        "High scores don't mandate action — they prompt reflection.",
+        "Consider retaking the test about a past relationship for calibration."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#EF4444",
+          "title": "Critical Alert",
+          "subtitle": "This is not a rough patch. This is a pattern.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#F97316",
+          "title": "High Risk",
+          "subtitle": "More red flags than a Communist party parade.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Yellow Flags",
+          "subtitle": "Not red yet. Worth watching closely.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Mostly Green",
+          "subtitle": "Normal relationship friction. Keep communicating.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#06B6D4",
+          "title": "Green Zone",
+          "subtitle": "Either very healthy or very new. Time will tell.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "attachment-style",
+    "title": "Attachment Style Test",
+    "clinicalTitle": "Adult Attachment Pattern Assessment",
+    "shortDescription": "Are you anxious, avoidant, or secure? Your attachment style explains everything about your relationships.",
+    "description": "Based on Hazan & Shaver's adult attachment theory and the Experiences in Close Relationships scale. Your attachment style — formed in childhood — governs how you behave in every romantic relationship. Most people have never had this explained to them.",
+    "emoji": "💔",
+    "accent": "#EC4899",
+    "accentDim": "rgba(236,72,153,0.10)",
+    "category": "relationship",
+    "categoryLabel": "Relationship IQ",
+    "tags": [
+      "attachment style test",
+      "anxious avoidant test",
+      "attachment theory quiz",
+      "relationship attachment test",
+      "secure attachment test"
+    ],
+    "seo": {
+      "metaTitle": "Free Attachment Style Test – Anxious, Avoidant or Secure? | ZAZAZA",
+      "metaDescription": "Discover your attachment style. Are you anxious, avoidant, fearful, or secure? Free attachment theory test based on ECR research. Instant results, no signup.",
+      "keywords": [
+        "attachment style test online",
+        "anxious avoidant attachment test",
+        "secure attachment quiz free",
+        "attachment theory test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 24 statements about how you typically feel and behave in close relationships.",
+        "Respond based on your general patterns, not one specific relationship.",
+        "Rate each statement from 1 (not at all like me) to 5 (very much like me).",
+        "Your scores on Anxiety and Avoidance dimensions determine your attachment style.",
+        "Results explain what your style means for your relationships."
+      ],
+      "science": "Attachment theory, originated by John Bowlby and extended by Mary Ainsworth, identifies how early caregiver relationships create internal working models that persist into adulthood. Hazan and Shaver (1987) demonstrated these patterns manifest in adult romantic relationships. The Experiences in Close Relationships scale (Brennan et al., 1998) identifies two dimensions: Attachment Anxiety (fear of abandonment) and Attachment Avoidance (discomfort with closeness). These two axes produce four attachment styles: Secure (low anxiety, low avoidance), Anxious-Preoccupied (high anxiety, low avoidance), Dismissive-Avoidant (low anxiety, high avoidance), and Fearful-Avoidant (high anxiety, high avoidance).",
+      "tips": [
+        "Attachment styles are not permanent — they shift with secure relationship experiences.",
+        "Knowing your style is the first step toward changing patterns that don't serve you.",
+        "Two anxiously-attached partners amplify each other's fears — awareness helps.",
+        "Dismissive-avoidants often don't recognize their own patterns — notice any resistance.",
+        "Therapy (especially attachment-focused) measurably shifts insecure attachment styles."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 58,
+          "percentile": 72
+        },
+        {
+          "ms": 42,
+          "percentile": 50
+        },
+        {
+          "ms": 25,
+          "percentile": 25
+        },
+        {
+          "ms": 10,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Securely Attached",
+          "subtitle": "You are the person therapists use as the example.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Mostly Secure",
+          "subtitle": "A few rough edges. Self-aware enough to notice them.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Anxious-Preoccupied",
+          "subtitle": "You over-text. You over-analyze. You over-care.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#8B5CF6",
+          "title": "Dismissive-Avoidant",
+          "subtitle": "Intimacy makes you itch. You call it independence.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Fearful-Avoidant",
+          "subtitle": "Want connection, terrified of it. The hardest pattern to break.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "love-language",
+    "title": "Love Language Test",
+    "clinicalTitle": "Primary Affection Communication Style Assessment",
+    "shortDescription": "Words, touch, time, gifts, or acts? Find your love language — and why mismatches destroy relationships.",
+    "description": "Gary Chapman's Five Love Languages framework identifies how people give and receive love. Mismatched love languages are one of the most common — and most fixable — sources of relationship dissatisfaction. Most couples have never explicitly discussed this.",
+    "emoji": "💌",
+    "accent": "#F43F5E",
+    "accentDim": "rgba(244,63,94,0.10)",
+    "category": "relationship",
+    "categoryLabel": "Relationship IQ",
+    "tags": [
+      "love language test",
+      "five love languages quiz",
+      "love language quiz free",
+      "what is my love language",
+      "relationship quiz"
+    ],
+    "seo": {
+      "metaTitle": "Free Love Language Test – What's Your Love Language? | ZAZAZA",
+      "metaDescription": "Discover your love language. Words of affirmation, quality time, acts of service, physical touch, or gifts? Free love language test, instant results, no signup.",
+      "keywords": [
+        "love language test online free",
+        "five love languages quiz",
+        "what is my love language test",
+        "love language quiz"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 30 scenario-based questions about what makes you feel most loved.",
+        "Choose between two options in each question — go with your gut.",
+        "Think about what you actually feel, not what you think you should feel.",
+        "Your scores across five love language dimensions are calculated.",
+        "Results show your primary and secondary love languages."
+      ],
+      "science": "Gary Chapman's Five Love Languages (1992) describes five distinct ways people experience and express love: Words of Affirmation (verbal expression), Quality Time (undivided attention), Receiving Gifts (tangible symbols), Acts of Service (helpful actions), and Physical Touch (physical connection). Research supports that love language mismatch — where partners express love in ways the other doesn't register — is a primary driver of relationship dissatisfaction. A 2020 study in PLOS ONE found love language awareness significantly increased relationship satisfaction scores in couples who explicitly discussed and accommodated each other's primary languages.",
+      "tips": [
+        "Your love language often reflects what you felt most deprived of in childhood.",
+        "What you give is usually what you want to receive — a useful shortcut.",
+        "Mismatched love languages are not incompatibilities — they are communication gaps.",
+        "Share your results with your partner. The conversation itself is valuable.",
+        "Love languages can shift after major life events like children, illness, or loss."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 58,
+          "percentile": 72
+        },
+        {
+          "ms": 42,
+          "percentile": 50
+        },
+        {
+          "ms": 25,
+          "percentile": 25
+        },
+        {
+          "ms": 10,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#F43F5E",
+          "title": "Words of Affirmation",
+          "subtitle": "'I love you' hits different when you mean it.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#8B5CF6",
+          "title": "Quality Time",
+          "subtitle": "Put the phone down. That's all they're asking.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Acts of Service",
+          "subtitle": "They filled your tank without being asked. That's love.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Physical Touch",
+          "subtitle": "A hand on the shoulder says more than a paragraph.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#06B6D4",
+          "title": "Receiving Gifts",
+          "subtitle": "It's not about the money. It's about being thought of.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "money-mindset",
+    "title": "Money Mindset Test",
+    "clinicalTitle": "Financial Psychology & Wealth Attitude Assessment",
+    "shortDescription": "Do you have a millionaire's mindset — or a lottery ticket mentality? Be honest.",
+    "description": "Based on behavioral economics research and financial psychology. Your relationship with money — scarcity vs abundance mindset, delayed gratification capacity, loss aversion bias — predicts wealth accumulation more reliably than income. Find out where you actually stand.",
+    "emoji": "💰",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "money",
+    "categoryLabel": "Money IQ",
+    "tags": [
+      "money mindset test",
+      "financial psychology test",
+      "wealth mindset quiz",
+      "money personality test",
+      "rich mindset test"
+    ],
+    "seo": {
+      "metaTitle": "Free Money Mindset Test – Rich or Poor Mindset? | ZAZAZA",
+      "metaDescription": "Test your money mindset. Scarcity vs abundance thinking, loss aversion, delayed gratification. Free financial psychology test. Instant results, no signup.",
+      "keywords": [
+        "money mindset test online",
+        "financial psychology test free",
+        "wealth mindset quiz",
+        "rich vs poor mindset test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 20 questions about your financial attitudes and behaviors.",
+        "Be brutally honest — what you actually do, not what you think you should do.",
+        "Your scores across four financial psychology dimensions are calculated.",
+        "Results show your money mindset profile with behavioral insights.",
+        "No financial data is collected — this is purely psychological."
+      ],
+      "science": "Financial psychology research identifies several psychological dimensions that predict wealth accumulation independent of income: Delay Discounting (capacity to defer gratification), Loss Aversion (Kahneman & Tversky's finding that losses feel twice as painful as equivalent gains), Locus of Control (belief in personal agency over financial outcomes), and Scarcity vs Abundance Mindset (Mullainathan & Shafir, 2013). High-income earners with scarcity mindsets consistently underperform lower-income earners with abundance mindsets over 10-year wealth trajectories. Delayed gratification capacity, measured by the Marshmallow Test paradigm, predicts financial outcomes more reliably than IQ.",
+      "tips": [
+        "Scarcity mindset is adaptive in genuine poverty — it becomes maladaptive when circumstances change.",
+        "Loss aversion is evolutionary. Recognizing it doesn't eliminate it — but it lets you override it.",
+        "Delayed gratification is trainable. Start with small, visible wins.",
+        "Financial anxiety and money avoidance are more common than overconfidence — and equally destructive.",
+        "The biggest wealth predictor isn't income — it's savings rate. Mindset drives behavior."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 72
+        },
+        {
+          "ms": 45,
+          "percentile": 50
+        },
+        {
+          "ms": 30,
+          "percentile": 25
+        },
+        {
+          "ms": 15,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Wealth Builder",
+          "subtitle": "You see money as a tool. You're already building.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Growth Oriented",
+          "subtitle": "Above average financial psychology. Small blind spots remain.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Mixed Signals",
+          "subtitle": "Know what to do. Don't always do it. Classic.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Scarcity Mindset",
+          "subtitle": "Playing not to lose instead of playing to win.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Money Avoidant",
+          "subtitle": "What you avoid grows. Unfortunately, so does debt.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "risk-tolerance",
+    "title": "Risk Tolerance Test",
+    "clinicalTitle": "Financial Risk Appetite & Loss Aversion Assessment",
+    "shortDescription": "Are you built for stocks, bonds, or a mattress? Your risk tolerance determines your financial destiny.",
+    "description": "Your investment risk tolerance — the combination of your financial risk capacity and psychological risk appetite — is the single most important variable in long-term wealth building. Most people either dramatically over or underestimate it. Find out where you actually stand.",
+    "emoji": "📈",
+    "accent": "#10B981",
+    "accentDim": "rgba(16,185,129,0.10)",
+    "category": "money",
+    "categoryLabel": "Money IQ",
+    "tags": [
+      "risk tolerance test",
+      "investment risk test",
+      "financial risk quiz",
+      "investor profile test",
+      "risk appetite test"
+    ],
+    "seo": {
+      "metaTitle": "Free Investment Risk Tolerance Test – What's Your Investor Profile? | ZAZAZA",
+      "metaDescription": "Discover your investment risk tolerance. Are you aggressive, moderate, or conservative? Free risk tolerance test based on behavioral finance research. Instant results.",
+      "keywords": [
+        "risk tolerance test online",
+        "investment risk tolerance quiz free",
+        "investor profile test",
+        "financial risk appetite test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 18 questions about hypothetical financial decisions and scenarios.",
+        "Respond based on what you would actually do, not the 'correct' answer.",
+        "Some scenarios involve specific numbers — take them seriously.",
+        "Your Risk Capacity and Risk Appetite scores are calculated separately.",
+        "Results show your investor profile with evidence-based recommendations."
+      ],
+      "science": "Financial risk tolerance comprises two distinct components: Risk Capacity (objective ability to absorb losses based on time horizon, income stability, and liquidity) and Risk Appetite (subjective psychological comfort with uncertainty and volatility). Kahneman and Tversky's Prospect Theory demonstrates that losses are felt approximately twice as intensely as equivalent gains — a bias called Loss Aversion that systematically causes investors to hold underperforming assets too long and sell winners too early. Research shows most retail investors have a Risk Appetite significantly below their optimal Risk Capacity, leading to systematic underinvestment in growth assets.",
+      "tips": [
+        "Risk tolerance is not fixed — it typically decreases near retirement and increases after market gains.",
+        "Paper losses feel worse than realized losses — this is normal and well-documented.",
+        "Your gut reaction to a 30% portfolio drop is more predictive than any questionnaire.",
+        "Diversification doesn't eliminate risk — it optimizes the risk/return ratio.",
+        "Time horizon is the most underrated variable in risk tolerance calculation."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 72
+        },
+        {
+          "ms": 45,
+          "percentile": 50
+        },
+        {
+          "ms": 30,
+          "percentile": 25
+        },
+        {
+          "ms": 15,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Aggressive Growth",
+          "subtitle": "100% equities. Doesn't check portfolio during crashes.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Growth Oriented",
+          "subtitle": "80/20 stocks-bonds. Sleeps fine during corrections.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#F59E0B",
+          "title": "Moderate",
+          "subtitle": "Balanced portfolio. Checks it more than they should.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Conservative",
+          "subtitle": "Capital preservation first. Missing out on compound growth.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Risk Averse",
+          "subtitle": "High-yield savings account feels dangerous enough.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "financial-iq",
+    "title": "Financial IQ Test",
+    "clinicalTitle": "Financial Literacy & Economic Reasoning Assessment",
+    "shortDescription": "Compound interest, inflation, tax-advantaged accounts — do you actually know this stuff? Most people don't.",
+    "description": "Financial literacy is one of the most consequential and least taught skills in modern education. Research shows that people in the bottom quartile of financial literacy accumulate less than one-third the wealth of those in the top quartile — at the same income level. Test where you actually stand.",
+    "emoji": "🏦",
+    "accent": "#6366F1",
+    "accentDim": "rgba(99,102,241,0.10)",
+    "category": "money",
+    "categoryLabel": "Money IQ",
+    "tags": [
+      "financial IQ test",
+      "financial literacy test",
+      "money knowledge quiz",
+      "finance quiz online",
+      "financial intelligence test"
+    ],
+    "seo": {
+      "metaTitle": "Free Financial IQ Test – How Money-Smart Are You? | ZAZAZA",
+      "metaDescription": "Test your financial IQ. Compound interest, inflation, diversification, tax strategy. Free financial literacy test. Instant results, no signup. Most people fail.",
+      "keywords": [
+        "financial IQ test online",
+        "financial literacy quiz free",
+        "money knowledge test",
+        "finance IQ test",
+        "financial intelligence quiz"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "Answer 20 multiple-choice questions on financial concepts.",
+        "Questions range from basic (inflation) to advanced (tax-loss harvesting).",
+        "No calculator needed — these test conceptual understanding.",
+        "Your score reveals your financial literacy level and knowledge gaps.",
+        "Each question includes an explanation of the correct answer."
+      ],
+      "science": "Financial literacy — the ability to understand and apply financial concepts — is measured using Lusardi and Mitchell's Big Three financial literacy questions (interest compounding, inflation, and diversification) and their expanded scales. Research across 140 countries shows financial literacy strongly predicts retirement savings adequacy, debt management, and wealth accumulation independent of income. The OECD Financial Literacy Survey finds that only 52% of adults globally can answer basic compound interest questions correctly. In the US, financial illiteracy costs households an estimated $1,200/year in avoidable fees and suboptimal decisions.",
+      "tips": [
+        "Compound interest is the most powerful force in personal finance — and the most underestimated.",
+        "Inflation is a hidden tax. A 3% annual rate halves purchasing power in 24 years.",
+        "Most wealth destruction happens through fees, taxes, and behavioral errors — not market crashes.",
+        "Index fund investing outperforms active management 85%+ of the time over 10-year periods.",
+        "The most valuable financial skill is starting early. Time in market beats timing the market."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 80,
+          "percentile": 90
+        },
+        {
+          "ms": 70,
+          "percentile": 75
+        },
+        {
+          "ms": 55,
+          "percentile": 50
+        },
+        {
+          "ms": 40,
+          "percentile": 25
+        },
+        {
+          "ms": 25,
+          "percentile": 5
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 9999,
+          "color": "#6366F1",
+          "title": "Financial Genius",
+          "subtitle": "You know what tax-loss harvesting is. And you do it.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 9999,
+          "color": "#8B5CF6",
+          "title": "Financially Literate",
+          "subtitle": "Above the 90th percentile. Your future self thanks you.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Decent Foundation",
+          "subtitle": "You know the basics. The gaps are costing you quietly.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Financial Novice",
+          "subtitle": "School failed you. You can still fix this.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 0,
+          "color": "#EF4444",
+          "title": "Financially Illiterate",
+          "subtitle": "This is fixable. But it's costing you every single day.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
   }
 ]
