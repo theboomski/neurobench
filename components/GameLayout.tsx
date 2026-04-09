@@ -1,5 +1,7 @@
+import Link from "next/link";
 import type { GameData } from "@/lib/types";
 import DistributionGraph from "@/components/DistributionGraph";
+import RelatedTests from "@/components/RelatedTests";
 import { dict } from "@/lib/i18n";
 
 const t = dict.en;
@@ -14,8 +16,10 @@ export default function GameLayout({ game, children }: { game: GameData; childre
 
       {/* Header */}
       <div style={{ padding: "28px 0 20px" }}>
-        <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em", marginBottom: 14, textTransform: "uppercase" }}>
-          NeuroBench / {game.categoryLabel}
+        <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em", marginBottom: 14, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6 }}>
+          <Link href="/" style={{ color: "var(--text-3)", textDecoration: "none" }}>ZAZAZA</Link>
+          <span>›</span>
+          <Link href={`/${game.category}`} style={{ color: game.accent, textDecoration: "none" }}>{game.categoryLabel}</Link>
         </div>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
           <div style={{ width: 52, height: 52, flexShrink: 0, borderRadius: 12, background: `${game.accent}12`, border: `1px solid ${game.accent}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>
@@ -73,6 +77,8 @@ export default function GameLayout({ game, children }: { game: GameData; childre
           ))}
         </ul>
       </div>
+
+      <RelatedTests game={game} />
 
       <div style={{ paddingBottom: 32 }}>
         <div className="ad-slot ad-banner">Advertisement</div>
