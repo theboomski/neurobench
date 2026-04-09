@@ -176,28 +176,74 @@ export default function TypingSpeed({ game }: { game: GameData }) {
     );
   }
 
-  // Render sliding window: show from 30 chars before cursor to 150 chars after
+  // Fixed 3-line display: text stays still, only cursor moves
+  // Split text into word-wrapped lines of ~45 chars each
+  const getLines = () => {
+    const words = text.split(" ");
+    const lines: string[] = [];
+    let current = "";
+    for (const word of words) {
+      const test = current ? current + " " + word : word;
+      if (test.length > 45 && current) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = test;
+      }
+    }
+    if (current) lines.push(current);
+    return lines;
+  };
+
   const renderText = () => {
     const cursor = typed.length;
-    const windowStart = Math.max(0, cursor - 30);
-    const windowEnd = Math.min(text.length, cursor + 150);
-    const visible = text.slice(windowStart, windowEnd);
+    const lines = getLines();
     
-    return visible.split("").map((char, localI) => {
-      const i = windowStart + localI;
-      let color = "var(--text-3)";
-      if (i < cursor) color = typed[i] === char ? "#10B981" : "#ef4444";
-      else if (i === cursor) color = game.accent;
+    // Find which line the cursor is on
+    let charCount = 0;
+    let cursorLine = 0;
+    for (let i = 0; i < lines.length; i++) {
+      const lineLen = lines[i].length + (i < lines.length - 1 ? 1 : 0); // +1 for space
+      if (charCount + lineLen > cursor) { cursorLine = i; break; }
+      charCount += lineLen;
+    }
+    
+    // Show: previous line (if any), current line, next line (if any)
+    const showFrom = Math.max(0, cursorLine - 1);
+    const showTo = Math.min(lines.length - 1, cursorLine + 1);
+    const visibleLines = lines.slice(showFrom, showTo + 1);
+    
+    // Rebuild character positions for visible lines
+    let absIdx = 0;
+    for (let i = 0; i < showFrom; i++) {
+      absIdx += lines[i].length + (i < lines.length - 1 ? 1 : 0);
+    }
+    
+    return visibleLines.map((line, li) => {
+      const lineStart = absIdx;
+      const chars = line.split("").map((char, ci) => {
+        const i = lineStart + ci;
+        let color = "var(--text-3)";
+        if (i < cursor) color = typed[i] === char ? "#10B981" : "#ef4444";
+        else if (i === cursor) color = game.accent;
+        return (
+          <span key={i} style={{ color, borderBottom: i === cursor ? `2px solid ${game.accent}` : "none" }}>
+            {char}
+          </span>
+        );
+      });
+      absIdx += line.length + 1; // +1 for space between lines
+      const isCurrentLine = (showFrom + li) === cursorLine;
       return (
-        <span
-          key={i}
-          style={{
-            color,
-            borderBottom: i === cursor ? `2px solid ${game.accent}` : "none",
-          }}
-        >
-          {char}
-        </span>
+        <div key={li} style={{
+          opacity: isCurrentLine ? 1 : 0.35,
+          marginBottom: 4,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+        }}>
+          {chars}
+          {li < visibleLines.length - 1 && <span style={{ color: "transparent" }}> </span>}
+        </div>
       );
     });
   };
