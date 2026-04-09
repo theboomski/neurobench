@@ -2532,30 +2532,32 @@
     }
   },
   {
-    "id": "visual-reaction",
-    "title": "Visual Reaction Age",
-    "clinicalTitle": "Visual Stimulus Response & Eye Age Assessment",
-    "shortDescription": "How quickly do your eyes and brain process visual stimuli? Your reaction speed reveals your visual processing age.",
-    "description": "Your visual reaction time reflects both eye health and neural processing speed. As eyes age, photoreceptor sensitivity decreases and neural conduction slows. This test isolates visual processing speed to estimate your eye age.",
-    "emoji": "👁️",
-    "accent": "#06B6D4",
+    "id": "hue-ordering",
+    "title": "Hue Ordering Test",
+    "clinicalTitle": "Farnsworth-Munsell Color Discrimination Assessment",
+    "shortDescription": "Arrange the colors in perfect order. How precisely can you distinguish hue? Your color IQ revealed.",
+    "description": "A simplified adaptation of the Farnsworth-Munsell 100 Hue Test. Arrange color chips in continuous hue order — the number of errors reveals your color discrimination precision. Top scorers have near-tetrachromatic color sensitivity.",
+    "emoji": "🌈",
+    "accent": "#8B5CF6",
     "accentDim": "rgba(6,182,212,0.10)",
     "category": "eye-age",
     "categoryLabel": "Eye Age Test",
     "tags": [
-      "visual reaction time test",
-      "eye age test",
-      "visual processing speed",
-      "eye reaction test online"
+      "hue test",
+      "color discrimination test",
+      "FM 100 hue test online",
+      "color IQ test",
+      "eye age test"
     ],
     "seo": {
-      "metaTitle": "Visual Reaction Age Test – Eye Speed & Processing | ZAZAZA",
-      "metaDescription": "Test your visual reaction age. How fast do your eyes detect and respond to stimuli? Free eye age reaction test, instant results, no signup.",
+      "metaTitle": "Free Hue Ordering Test – Color Discrimination & Eye Age | ZAZAZA",
+      "metaDescription": "Take the free Farnsworth-Munsell inspired hue ordering test. How well can you arrange colors? Instant results, no signup. Test your color IQ.",
       "keywords": [
-        "visual reaction time test",
-        "eye age test online",
-        "visual processing speed test",
-        "eye reaction speed"
+        "hue ordering test",
+        "color discrimination test",
+        "FM 100 hue test online",
+        "color IQ test",
+        "eye age test"
       ]
     },
     "content": {

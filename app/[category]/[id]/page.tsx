@@ -22,6 +22,12 @@ import ReportOrFavor from "@/components/games/ReportOrFavor";
 import BossDodge from "@/components/games/BossDodge";
 import RaiseOrRaise from "@/components/games/RaiseOrRaise";
 import CorporateClimber from "@/components/games/CorporateClimber";
+import ColorBlindTest from "@/components/games/ColorBlindTest";
+import ContrastSensitivity from "@/components/games/ContrastSensitivity";
+import HueOrdering from "@/components/games/HueOrdering";
+import AttentionSpan from "@/components/games/AttentionSpan";
+import DistractionShield from "@/components/games/DistractionShield";
+import TaskSwitching from "@/components/games/TaskSwitching";
 
 const games = gamesData as GameData[];
 
@@ -69,6 +75,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "boss-dodge":        return <BossDodge game={game} />;
     case "raise-or-raise":    return <RaiseOrRaise game={game} />;
     case "corporate-climber": return <CorporateClimber game={game} />;
+    case "color-blind-test":    return <ColorBlindTest game={game} />;
+    case "contrast-sensitivity": return <ContrastSensitivity game={game} />;
+    case "hue-ordering":         return <HueOrdering game={game} />;
+    case "attention-span":       return <AttentionSpan game={game} />;
+    case "distraction-shield":   return <DistractionShield game={game} />;
+    case "task-switching":       return <TaskSwitching game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }
