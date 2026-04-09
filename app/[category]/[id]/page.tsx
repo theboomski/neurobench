@@ -28,6 +28,12 @@ import HueOrdering from "@/components/games/HueOrdering";
 import AttentionSpan from "@/components/games/AttentionSpan";
 import DistractionShield from "@/components/games/DistractionShield";
 import TaskSwitching from "@/components/games/TaskSwitching";
+import DarkTriad from "@/components/games/DarkTriad";
+import EmpathyScore from "@/components/games/EmpathyScore";
+import ManipulationDetector from "@/components/games/ManipulationDetector";
+import VocabularyAge from "@/components/games/VocabularyAge";
+import WordSpeed from "@/components/games/WordSpeed";
+import WordAssociation from "@/components/games/WordAssociation";
 
 const games = gamesData as GameData[];
 
@@ -81,6 +87,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "attention-span":       return <AttentionSpan game={game} />;
     case "distraction-shield":   return <DistractionShield game={game} />;
     case "task-switching":       return <TaskSwitching game={game} />;
+    case "dark-triad":             return <DarkTriad game={game} />;
+    case "empathy-score":           return <EmpathyScore game={game} />;
+    case "manipulation-detector":   return <ManipulationDetector game={game} />;
+    case "vocabulary-age":          return <VocabularyAge game={game} />;
+    case "word-speed":              return <WordSpeed game={game} />;
+    case "word-association":        return <WordAssociation game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }
