@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: { title: "Free Focus? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/focus-test" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is a normal attention span?", "acceptedAnswer": { "@type": "Answer", "text": "Average sustained attention duration for adults is approximately 20 minutes before performance degrades. However, selective attention — filtering distractors — is measured differently. ZAZAZA's attention tests measure vigilance, not duration preference." } },
+    { "@type": "Question", "name": "Can an online test screen for ADHD?", "acceptedAnswer": { "@type": "Answer", "text": "Online attention tests can measure ADHD-relevant cognitive metrics like sustained vigilance, false alarm rate, and task-switching cost. They are not diagnostic tools. A formal ADHD diagnosis requires clinical assessment by a licensed psychologist or psychiatrist." } },
+    { "@type": "Question", "name": "How can I improve my attention span?", "acceptedAnswer": { "@type": "Answer", "text": "Mindfulness meditation, aerobic exercise, and reducing digital multitasking measurably improve sustained attention within weeks. Single-tasking practice and sleep optimization are the highest-impact interventions." } },
+    { "@type": "Question", "name": "What is task-switching cost?", "acceptedAnswer": { "@type": "Answer", "text": "Task-switching cost is the additional reaction time incurred when switching between tasks versus repeating the same task. It measures cognitive flexibility. Average switching cost is 200–400ms. Top performers show costs below 100ms." } }
+  ]
+};
+
 export default function Page() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#F59E0B10", border: "1px solid #F59E0B25", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>

@@ -3074,17 +3074,17 @@
         {
           "label": "S",
           "maxMs": 9999,
-          "color": "#FFD700",
-          "title": "Dark Lord",
-          "subtitle": "Already knew your score before taking the test",
+          "color": "#8B5CF6",
+          "title": "Apex Predator",
+          "subtitle": "Three steps ahead of everyone. Always has been.",
           "percentileLabel": "Top 5%"
         },
         {
           "label": "A",
           "maxMs": 9999,
           "color": "#A855F7",
-          "title": "Strategic Mind",
-          "subtitle": "Three steps ahead. Always.",
+          "title": "Strategic Operator",
+          "subtitle": "Sees the angle in every room before sitting down.",
           "percentileLabel": "Top 20%"
         },
         {
@@ -3092,7 +3092,7 @@
           "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Calculated",
-          "subtitle": "Has opinions about people but keeps them to themselves",
+          "subtitle": "Has opinions about people. Keeps them filed.",
           "percentileLabel": "Top 45%"
         },
         {
@@ -3100,13 +3100,13 @@
           "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Mostly Harmless",
-          "subtitle": "Occasionally passive aggressive",
+          "subtitle": "Occasionally passive aggressive. Denies it.",
           "percentileLabel": "Top 75%"
         },
         {
           "label": "D",
           "maxMs": 0,
-          "color": "#EF4444",
+          "color": "#10B981",
           "title": "Pure of Heart",
           "subtitle": "Genuinely wishes everyone well. Suspicious.",
           "percentileLabel": "Bottom 25%"
@@ -3191,17 +3191,17 @@
         {
           "label": "S",
           "maxMs": 9999,
-          "color": "#FFD700",
+          "color": "#EC4899",
           "title": "Empath",
-          "subtitle": "Feels everyone's feelings. Exhausting but beautiful.",
+          "subtitle": "Feels the room shift before anyone speaks.",
           "percentileLabel": "Top 5%"
         },
         {
           "label": "A",
           "maxMs": 9999,
-          "color": "#EC4899",
-          "title": "Highly Attuned",
-          "subtitle": "Knows you're upset before you do",
+          "color": "#F472B6",
+          "title": "Deeply Attuned",
+          "subtitle": "Knows you're upset before you do. It's a gift. And a burden.",
           "percentileLabel": "Top 20%"
         },
         {
@@ -3209,15 +3209,15 @@
           "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Socially Aware",
-          "subtitle": "Reads the room. Usually.",
+          "subtitle": "Reads the room. Usually catches it on the second scan.",
           "percentileLabel": "Top 45%"
         },
         {
           "label": "C",
           "maxMs": 9999,
           "color": "#94A3B8",
-          "title": "Low Empathy",
-          "subtitle": "Understands feelings intellectually but doesn't feel them",
+          "title": "Selectively Empathic",
+          "subtitle": "Gets it intellectually. Feeling it is another story.",
           "percentileLabel": "Top 75%"
         },
         {
@@ -3225,7 +3225,7 @@
           "maxMs": 0,
           "color": "#EF4444",
           "title": "Empathy Deficit",
-          "subtitle": "Asks 'are you okay?' while already walking away",
+          "subtitle": "Asks 'are you okay?' while already walking away.",
           "percentileLabel": "Bottom 25%"
         }
       ]
@@ -3308,17 +3308,17 @@
         {
           "label": "S",
           "maxMs": 9999,
-          "color": "#FFD700",
+          "color": "#F97316",
           "title": "Grand Operator",
-          "subtitle": "Sees seventeen moves ahead and three chess boards at once",
+          "subtitle": "Sees seventeen moves ahead. On three chess boards at once.",
           "percentileLabel": "Top 5%"
         },
         {
           "label": "A",
           "maxMs": 9999,
-          "color": "#F97316",
-          "title": "Strategic Thinker",
-          "subtitle": "Spots the angle in every conversation",
+          "color": "#FB923C",
+          "title": "Sharp Strategist",
+          "subtitle": "Spots the angle before the conversation starts.",
           "percentileLabel": "Top 20%"
         },
         {
@@ -3326,7 +3326,7 @@
           "maxMs": 9999,
           "color": "#58A6FF",
           "title": "Situationally Aware",
-          "subtitle": "Suspects something's off but can't prove it",
+          "subtitle": "Suspects something's off. Can't quite prove it.",
           "percentileLabel": "Top 45%"
         },
         {
@@ -3334,15 +3334,15 @@
           "maxMs": 9999,
           "color": "#94A3B8",
           "title": "Trusting",
-          "subtitle": "Takes things at face value. Endearing.",
+          "subtitle": "Takes things at face value. People take advantage of this.",
           "percentileLabel": "Top 75%"
         },
         {
           "label": "D",
           "maxMs": 0,
-          "color": "#EF4444",
-          "title": "Fully Transparent",
-          "subtitle": "Has never had an ulterior motive in their life",
+          "color": "#10B981",
+          "title": "Transparent",
+          "subtitle": "Has never had an ulterior motive. Never will.",
           "percentileLabel": "Bottom 25%"
         }
       ]

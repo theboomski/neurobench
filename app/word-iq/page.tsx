@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: { title: "Free Your Language? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/word-iq" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is vocabulary age?", "acceptedAnswer": { "@type": "Answer", "text": "Vocabulary age estimates how large your lexical knowledge is relative to different age groups. Unlike most cognitive metrics that peak in the 20s, vocabulary continues growing throughout adulthood. An average educated adult knows approximately 40,000–60,000 word families." } },
+    { "@type": "Question", "name": "How can I improve my vocabulary?", "acceptedAnswer": { "@type": "Answer", "text": "Wide reading across diverse genres is the single most effective vocabulary intervention. Studies show measurable vocabulary gains within weeks of consistent reading. Word games, flashcard apps, and writing regularly also accelerate lexical growth." } },
+    { "@type": "Question", "name": "What is lexical decision speed?", "acceptedAnswer": { "@type": "Answer", "text": "Lexical decision speed measures how fast your brain accesses word meaning from written input. Skilled adult readers average 600–800ms per word. Faster access indicates more efficient mental lexicon organization and stronger orthographic representations." } },
+    { "@type": "Question", "name": "Does being bilingual affect word IQ tests?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Bilingual individuals often show slightly slower lexical decision times due to cross-language competition, but typically have larger total vocabulary across both languages. Bilingualism is associated with stronger cognitive flexibility and delayed cognitive aging." } }
+  ]
+};
+
 export default function Page() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#F9731610", border: "1px solid #F9731625", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>

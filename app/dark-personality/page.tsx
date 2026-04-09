@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: { title: "Free Your Personality? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/dark-personality" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is the Dark Triad?", "acceptedAnswer": { "@type": "Answer", "text": "The Dark Triad is a cluster of three subclinical personality traits: narcissism (entitlement and grandiosity), Machiavellianism (strategic manipulation), and psychopathy (callousness and impulsivity). Identified by Paulhus and Williams (2002), these traits exist on a continuum in the general population." } },
+    { "@type": "Question", "name": "Is a high Dark Triad score bad?", "acceptedAnswer": { "@type": "Answer", "text": "Not necessarily. Subclinical narcissism correlates with leadership emergence and confidence. Machiavellianism predicts strategic thinking. Context determines whether Dark Triad traits are adaptive or maladaptive. Most successful professionals score moderately on at least one dimension." } },
+    { "@type": "Question", "name": "What is the difference between cognitive and affective empathy?", "acceptedAnswer": { "@type": "Answer", "text": "Cognitive empathy is the ability to understand another person's mental state (theory of mind). Affective empathy is sharing another's emotional experience (emotional contagion). High cognitive empathy without affective empathy is associated with Machiavellianism. High affective empathy can lead to empathy fatigue." } },
+    { "@type": "Question", "name": "How do I know if someone is manipulating me?", "acceptedAnswer": { "@type": "Answer", "text": "Common manipulation tactics include flattery to create obligation, artificial urgency, social proof exploitation, reciprocity pressure, and guilt-tripping. ZAZAZA's Manipulation Detector tests your ability to identify these patterns in real social scenarios." } }
+  ]
+};
+
 export default function Page() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#A855F710", border: "1px solid #A855F725", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>

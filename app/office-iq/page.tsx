@@ -11,9 +11,21 @@ export const metadata: Metadata = {
   openGraph: { title: "Free You At Work? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/office-iq" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What does Office IQ measure?", "acceptedAnswer": { "@type": "Answer", "text": "Office IQ measures workplace-relevant cognitive skills: boundary recognition speed, selective inhibition, negotiation timing, and strategic decision-making under pressure — the skills that predict career advancement beyond raw IQ." } },
+    { "@type": "Question", "name": "Is there a real test for workplace intelligence?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Organizational psychology uses go/no-go tasks, optimal stopping theory assessments, and emotional intelligence scales to measure workplace performance. ZAZAZA's Office IQ tests are grounded in these paradigms." } },
+    { "@type": "Question", "name": "How can I improve my office IQ?", "acceptedAnswer": { "@type": "Answer", "text": "Deliberate practice in decision-making under time pressure, improving emotional regulation, and developing pattern recognition in social dynamics all measurably improve workplace performance metrics." } }
+  ]
+};
+
 export default function Page() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#FF6B6B10", border: "1px solid #FF6B6B25", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>

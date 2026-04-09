@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: { title: "Free Your Eyes? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/eye-age" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is a normal eye age?", "acceptedAnswer": { "@type": "Answer", "text": "Eye age corresponds to how your visual system performs relative to age-group norms. Color vision is typically stable until the 50s. Contrast sensitivity begins declining in the mid-30s. Visual reaction time increases measurably from age 25." } },
+    { "@type": "Question", "name": "Can I take a color blind test online?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Digital Ishihara-inspired tests provide rapid screening for red-green color blindness, which affects approximately 8% of males and 0.5% of females. Online tests are not clinical replacements — consult an optometrist for formal diagnosis." } },
+    { "@type": "Question", "name": "What affects contrast sensitivity?", "acceptedAnswer": { "@type": "Answer", "text": "Contrast sensitivity declines with age, cataracts, glaucoma, and vitamin A deficiency. Screen brightness and ambient lighting significantly affect online test results — use maximum brightness for most accurate readings." } },
+    { "@type": "Question", "name": "How do I know if my color vision is normal?", "acceptedAnswer": { "@type": "Answer", "text": "People with normal color vision clearly see numbers hidden in Ishihara dot patterns. If numbers appear faded, blurred, or invisible, you may have a form of color vision deficiency. ZAZAZA's free color blind test provides an instant preliminary screening." } }
+  ]
+};
+
 export default function Page() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#06B6D410", border: "1px solid #06B6D425", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>

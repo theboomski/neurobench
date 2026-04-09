@@ -11,9 +11,22 @@ export const metadata: Metadata = {
   openGraph: { title: "Free Brain Age Test – How Old Is Your Brain? | ZAZAZA", description: "Take a free brain age test. Instant results. No signup ever.", url: "https://zazaza.app/brain-age" },
 };
 
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What is a normal brain age for a 30-year-old?", "acceptedAnswer": { "@type": "Answer", "text": "A neurologically healthy 30-year-old typically scores between brain age 28–35 across cognitive domains. Reaction time, working memory, and processing speed all peak in the mid-20s, so a brain age of 25–30 at age 30 is considered above average." } },
+    { "@type": "Question", "name": "How accurate is a free online brain age test?", "acceptedAnswer": { "@type": "Answer", "text": "Free online brain age tests like ZAZAZA use validated cognitive paradigms — reaction time, digit span, Stroop effect — from peer-reviewed research. They provide reliable relative rankings but are designed for self-assessment, not clinical diagnosis." } },
+    { "@type": "Question", "name": "Can you improve your brain age?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Working memory, reaction time, and processing speed are all trainable. Regular cognitive challenges, aerobic exercise, quality sleep, and reduced screen time show measurable improvement within weeks." } },
+    { "@type": "Question", "name": "What is the average reaction time by age?", "acceptedAnswer": { "@type": "Answer", "text": "Average simple reaction time is approximately 250ms for young adults (18–25), increasing to 300–350ms by age 50 and 400ms+ after 70. Top performers score under 200ms regardless of age." } }
+  ]
+};
+
 export default function BrainAgePage() {
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "#00FF9410", border: "1px solid #00FF9425", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
