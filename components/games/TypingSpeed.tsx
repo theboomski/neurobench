@@ -37,8 +37,11 @@ const PASSAGES = [
   "The science of habit formation reveals that nearly half of our daily actions are automatic. Habits are stored in a part of the brain called the basal ganglia, which operates largely outside conscious awareness. This is why breaking bad habits is so difficult — the neural pathways are deeply encoded. The most effective approach is not to eliminate a habit but to replace it with a different behavior that satisfies the same underlying need. Small consistent actions compound over time into significant changes in both behavior and brain structure.",
 ];
 
+// Generate a long text by concatenating shuffled passages — enough for 200WPM in 60s
 function generateText(): string {
-  return PASSAGES[Math.floor(Math.random() * PASSAGES.length)];
+  const shuffled = [...PASSAGES].sort(() => Math.random() - 0.5);
+  // Join all passages — gives ~600 words, way more than 200WPM limit
+  return shuffled.join(" ");
 }
 
 type Phase = "idle" | "playing" | "done";

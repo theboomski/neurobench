@@ -36,11 +36,12 @@ function formatSalary(n: number) {
 
 // Generate a smooth random curve: rises to peak then falls
 function makeCurve(round: number) {
-  // Gets harder each round: faster, higher peaks, sharper drops
-  const speedFactor = 1 + (round - 1) * 0.2; // rounds 1-5: 1x to 1.8x speed
-  const duration = (5000 - round * 400 + Math.random() * 2000) / speedFactor;
-  const peakAt = Math.max(0.25, 0.55 - round * 0.04 + Math.random() * 0.2); // peaks earlier in later rounds
-  const maxGain = (40000 + round * 15000 + Math.random() * 60000); // higher stakes each round
+  // Much faster + harder each round
+  const speedFactor = 1 + (round - 1) * 0.35; // rounds 1-5: 1x to 2.4x speed
+  const duration = (3500 - round * 300 + Math.random() * 1000) / speedFactor;
+  // Peak comes and goes very quickly — hard to catch
+  const peakAt = Math.max(0.2, 0.45 - round * 0.05 + Math.random() * 0.15);
+  const maxGain = (50000 + round * 20000 + Math.random() * 80000);
   return { duration, peakAt, maxGain };
 }
 

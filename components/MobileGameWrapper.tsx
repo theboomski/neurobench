@@ -45,7 +45,7 @@ export default function MobileGameWrapper({
   if (!fullscreen) {
     return (
       <div
-        onClick={() => setFullscreen(true)}
+        onClick={() => { window.scrollTo({ top: 0, behavior: "instant" }); setFullscreen(true); }}
         style={{
           background: "var(--bg-card)",
           border: `1.5px solid ${game.accent}40`,

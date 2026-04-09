@@ -51,7 +51,9 @@ export default function VisualMemory({ game }: { game: GameData }) {
   const [shareImg, setShareImg]     = useState<string | null>(null);
   const [highScore, setHS]          = useState<number | null>(null);
   const [isNewBest, setIsNewBest]   = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [cellPx, setCellPx] = useState(0);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
   const clearT = () => { if (timerRef.current) clearTimeout(timerRef.current); };
@@ -70,6 +72,12 @@ export default function VisualMemory({ game }: { game: GameData }) {
     setFailed(false);
     setShowing(true);
     setPhase("showing");
+    // Compute cell size based on actual container width
+    if (containerRef.current) {
+      const w = containerRef.current.clientWidth - 20; // subtract padding*2
+      const g = cols >= 5 ? 3 : cols >= 4 ? 5 : 8;
+      setCellPx(Math.floor((w - g * (cols - 1)) / cols));
+    }
     const showMs = 800 + count * 300;
     timerRef.current = setTimeout(() => {
       setShowing(false);
@@ -177,12 +185,14 @@ export default function VisualMemory({ game }: { game: GameData }) {
         </div>
       )}
 
-      <div style={{
+      <div ref={containerRef} style={{
         background: "var(--bg-card)",
         border: `1.5px solid ${phase === "wrong" ? "#ef444440" : phase === "correct" ? `${game.accent}40` : "var(--border)"}`,
         borderRadius: "var(--radius-xl)",
         padding: "10px",
         transition: "border-color 0.15s",
+        boxSizing: "border-box",
+        overflow: "hidden",
       }}>
         {phase === "idle" ? (
           <div className="anim-fade-up" style={{ textAlign: "center", padding: "16px 0" }}>
@@ -193,10 +203,12 @@ export default function VisualMemory({ game }: { game: GameData }) {
             <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
           </div>
         ) : (
-          // Grid: 100% width, cells use aspect-ratio — never overflows
+          // Grid: fixed pixel cells computed from actual container width
           <div style={{
             display: "grid",
-            gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+            gridTemplateColumns: cellPx > 0
+              ? `repeat(${gridCols}, ${cellPx}px)`
+              : `repeat(${gridCols}, 1fr)`,
             gap: gridCols >= 5 ? 3 : gridCols >= 4 ? 5 : 8,
             width: "100%",
           }}>
@@ -220,6 +232,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
                     boxShadow: shadow,
                     borderRadius: 6,
                     aspectRatio: "1",
+                    ...(cellPx > 0 ? { width: cellPx, height: cellPx } : {}),
                     cursor: phase === "input" && !failed ? "pointer" : "default",
                     transition: "all 0.1s",
                     WebkitTapHighlightColor: "transparent",

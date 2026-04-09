@@ -127,9 +127,12 @@ export default function AnglePrecision({ game }: { game: GameData }) {
   const handleSubmit = useCallback(() => {
     if (phase !== "playing") return;
     clearTimers();
-    // Circular angle diff: 178° and 2° should both give 2° error
+    // Line symmetry diff: 0°==180° (a line has no direction)
+    // Step 1: circular diff 0-180
     let diff = ((refAngle - userAngle) % 360 + 360) % 360;
     if (diff > 180) diff = 360 - diff;
+    // Step 2: fold at 90° — 178° away = 2° away on a line
+    if (diff > 90) diff = 180 - diff;
     const error = Math.round(diff * 10) / 10;
     playBeep(error < 5 ? "success" : "tap");
 

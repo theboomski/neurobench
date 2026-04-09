@@ -85,11 +85,11 @@ export default function BossDodge({ game }: { game: GameData }) {
     setTimeLeft(remaining);
     if (remaining <= 0) { endGame(); return; }
 
-    const speedMult = 1 + elapsed / 35000; // gentler speed increase
+    const speedMult = 1 + elapsed / 50000; // very gentle speed increase
 
     // Spawn new object
     spawnRef.current += dt;
-    const spawnInterval = Math.max(900, 1800 - elapsed / 60);
+    const spawnInterval = Math.max(1200, 2200 - elapsed / 60);
     if (spawnRef.current >= spawnInterval) {
       spawnRef.current = 0;
       const isCatch = Math.random() < 0.6;
@@ -99,7 +99,7 @@ export default function BossDodge({ game }: { game: GameData }) {
       const occupiedLanes = objectsRef.current.filter(o => o.y < 15).map(o => o.lane);
       const freeLanes = Array.from({length:LANES},(_,i)=>i).filter(l => !occupiedLanes.includes(l));
       const lane = freeLanes.length > 0 ? freeLanes[Math.floor(Math.random() * freeLanes.length)] : Math.floor(Math.random() * LANES);
-      const obj: FallingObj = { id: nextId++, lane, emoji, y: -10, speed: (1.2 + Math.random() * 0.8) * speedMult, caught: false, missed: false, hit: false };
+      const obj: FallingObj = { id: nextId++, lane, emoji, y: -10, speed: (0.7 + Math.random() * 0.5) * speedMult, caught: false, missed: false, hit: false };
       objectsRef.current = [...objectsRef.current, obj];
     }
 
@@ -240,13 +240,13 @@ export default function BossDodge({ game }: { game: GameData }) {
                   left:`${obj.lane * laneWidth + laneWidth/2}%`,
                   top:`${obj.y}%`,
                   transform:"translate(-50%,-50%)",
-                  // Large tap area: 64px minimum for mobile
-                  width:"clamp(56px,14vw,72px)",
-                  height:"clamp(56px,14vw,72px)",
+                  // Extra large tap area for mobile
+                  width:"clamp(72px,18vw,88px)",
+                  height:"clamp(72px,18vw,88px)",
                   display:"flex",
                   alignItems:"center",
                   justifyContent:"center",
-                  fontSize:"clamp(28px,7vw,38px)",
+                  fontSize:"clamp(32px,8vw,44px)",
                   cursor:"pointer",
                   WebkitTapHighlightColor:"transparent",
                   touchAction:"manipulation",
