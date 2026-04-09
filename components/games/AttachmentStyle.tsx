@@ -110,7 +110,7 @@ export default function AttachmentStyle({ game }: { game: GameData }) {
   const handleShare = async () => {
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: result.score, unit: "%", rankLabel: rank.label, rankTitle: result.style, rankSubtitle: result.desc, rankColor: result.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
     setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My attachment style: ${result.style} 💔 ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
+    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My attachment style: ${result.style} 💔 Can you beat me? ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
     window.open(url, "_blank");
   };
 

@@ -163,7 +163,7 @@ export default function BossDodge({ game }: { game: GameData }) {
   const handleShare = async () => {
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "CAUGHT", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
     setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title:"NeuroBench", text:t.share.text(game.title,rank.label,rank.subtitle,t.site.url), files:[new File([blob],"report.png",{type:"image/png"})] }); return; } catch { } }
+    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title:"ZAZAZA", text:t.share.text(game.title,rank.label,rank.subtitle,t.site.url), files:[new File([blob],"report.png",{type:"image/png"})] }); return; } catch { } }
     window.open(url, "_blank");
   };
 

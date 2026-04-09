@@ -99,7 +99,7 @@ export default function EmpathyScore({ game }: { game: GameData }) {
   const handleShare = async () => {
     const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: scores.total, unit: "/100", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
     setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My Empathy Score: ${scores.total}/100 🫀 ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
+    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My Empathy Score: ${scores.total}/100 🫀 Can you beat me? ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
     window.open(url, "_blank");
   };
 

@@ -72,7 +72,7 @@ export default function BossSlapper({ game }: { game: GameData }) {
     if (navigator.share) {
       try {
         const blob = await (await fetch(url)).blob();
-        await navigator.share({ title: "My NeuroBench Report", text: t.share.text(game.title, rank.label, rank.subtitle, t.site.url), files: [new File([blob], "neurobench-report.png", { type: "image/png" })] });
+        await navigator.share({ title: "My ZAZAZA Report", text: t.share.text(game.title, rank.label, rank.subtitle, t.site.url), files: [new File([blob], "zazaza-report.png", { type: "image/png" })] });
         return;
       } catch { /* fallback */ }
     }
@@ -87,7 +87,7 @@ export default function BossSlapper({ game }: { game: GameData }) {
         <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(28px,5vw,48px) clamp(20px,4vw,40px)", textAlign: "center" }}>
 
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 28 }}>
-            NeuroBench Assessment Complete · {game.clinicalTitle}
+            ZAZAZA Assessment Complete · {game.clinicalTitle}
           </div>
 
           {/* Neutralized boss */}
@@ -146,7 +146,7 @@ export default function BossSlapper({ game }: { game: GameData }) {
 
           {shareImg && (
             <div style={{ marginTop: 28 }}>
-              <img src={shareImg} alt="NeuroBench Report Card" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} />
+              <img src={shareImg} alt="ZAZAZA Report Card" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} />
               <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, fontFamily: "var(--font-mono)" }}>Long-press (mobile) · Right-click (desktop) to save</p>
             </div>
           )}

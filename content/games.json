@@ -2375,7 +2375,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 90,
           "color": "#FFD700",
           "title": "Tetrachromat",
           "subtitle": "Sees colors humans haven't named yet",
@@ -2383,7 +2383,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#EF4444",
           "title": "Sharp Eyes",
           "subtitle": "Notices when the office plants are slightly off-color",
@@ -2391,7 +2391,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#58A6FF",
           "title": "Normal Vision",
           "subtitle": "Sees the rainbow. All of it.",
@@ -2399,7 +2399,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#94A3B8",
           "title": "Mild Deficiency",
           "subtitle": "Traffic lights are more of a suggestion",
@@ -2407,7 +2407,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Color Blind",
           "subtitle": "The dots are just dots",
@@ -2490,7 +2490,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 90,
           "color": "#FFD700",
           "title": "Eagle Vision",
           "subtitle": "Sees pixels others call smooth",
@@ -2498,7 +2498,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#94A3B8",
           "title": "Sharp Contrast",
           "subtitle": "Spots the faded text no one else bothers to read",
@@ -2506,7 +2506,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#58A6FF",
           "title": "Normal Range",
           "subtitle": "Sees fine in daylight. Mostly fine at night.",
@@ -2514,7 +2514,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#94A3B8",
           "title": "Mild Decline",
           "subtitle": "Squints at restaurant menus in dim lighting",
@@ -2522,7 +2522,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Low Contrast",
           "subtitle": "Blames the lighting. Always.",
@@ -2607,7 +2607,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 195,
+          "maxMs": 90,
           "color": "#FFD700",
           "title": "Eye of the Hawk",
           "subtitle": "Sees the ball leave the pitcher's hand",
@@ -2615,7 +2615,7 @@
         },
         {
           "label": "A",
-          "maxMs": 235,
+          "maxMs": 75,
           "color": "#06B6D4",
           "title": "Sharp Visual System",
           "subtitle": "Never misses a notification",
@@ -2623,7 +2623,7 @@
         },
         {
           "label": "B",
-          "maxMs": 270,
+          "maxMs": 55,
           "color": "#58A6FF",
           "title": "Normal Processing",
           "subtitle": "Catches things before they fall. Usually.",
@@ -2631,7 +2631,7 @@
         },
         {
           "label": "C",
-          "maxMs": 320,
+          "maxMs": 35,
           "color": "#94A3B8",
           "title": "Aging Gracefully",
           "subtitle": "Yellow lights are more of a 'maybe'",
@@ -2724,7 +2724,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 88,
           "color": "#FFD700",
           "title": "Laser Focus",
           "subtitle": "Notices every detail in every meeting. Every one.",
@@ -2732,7 +2732,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 72,
           "color": "#F59E0B",
           "title": "Sharp Attention",
           "subtitle": "Reads the full email before replying",
@@ -2740,7 +2740,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 52,
           "color": "#58A6FF",
           "title": "Normal Span",
           "subtitle": "Focused. Mostly. Until something shiny appears.",
@@ -2748,7 +2748,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 30,
           "color": "#94A3B8",
           "title": "Wandering Mind",
           "subtitle": "Has 47 tabs open. All important.",
@@ -2756,7 +2756,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Attention Deficit",
           "subtitle": "Opened this test and forgot why",
@@ -2840,7 +2840,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 88,
           "color": "#FFD700",
           "title": "Distraction Immune",
           "subtitle": "Works in open offices without headphones. By choice.",
@@ -2848,7 +2848,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 72,
           "color": "#10B981",
           "title": "Focus Master",
           "subtitle": "Reads in coffee shops. Genuinely.",
@@ -2856,7 +2856,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 52,
           "color": "#58A6FF",
           "title": "Selective Filter",
           "subtitle": "Tunes out most things. Not all things.",
@@ -2864,7 +2864,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 30,
           "color": "#94A3B8",
           "title": "Distraction Prone",
           "subtitle": "Gets sidetracked by their own notifications",
@@ -2872,7 +2872,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Fully Distractible",
           "subtitle": "A bird flew past the window. Gone.",
@@ -2956,7 +2956,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 90,
+          "maxMs": 75,
           "color": "#FFD700",
           "title": "Mental Gymnast",
           "subtitle": "Switches between 12 tasks without losing track of any",
@@ -2964,7 +2964,7 @@
         },
         {
           "label": "A",
-          "maxMs": 200,
+          "maxMs": 55,
           "color": "#8B5CF6",
           "title": "Flexible Thinker",
           "subtitle": "Context switches without rebooting",
@@ -2972,7 +2972,7 @@
         },
         {
           "label": "B",
-          "maxMs": 320,
+          "maxMs": 35,
           "color": "#58A6FF",
           "title": "Adaptable Mind",
           "subtitle": "Handles interruptions. Mostly.",
@@ -2980,7 +2980,7 @@
         },
         {
           "label": "C",
-          "maxMs": 480,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Slow Switcher",
           "subtitle": "Needs a minute to remember what they were doing",
@@ -3073,7 +3073,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#8B5CF6",
           "title": "Apex Predator",
           "subtitle": "Three steps ahead of everyone. Always has been.",
@@ -3081,7 +3081,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#A855F7",
           "title": "Strategic Operator",
           "subtitle": "Sees the angle in every room before sitting down.",
@@ -3089,7 +3089,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#58A6FF",
           "title": "Calculated",
           "subtitle": "Has opinions about people. Keeps them filed.",
@@ -3097,7 +3097,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Mostly Harmless",
           "subtitle": "Occasionally passive aggressive. Denies it.",
@@ -3105,7 +3105,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#10B981",
           "title": "Pure of Heart",
           "subtitle": "Genuinely wishes everyone well. Suspicious.",
@@ -3190,7 +3190,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#EC4899",
           "title": "Empath",
           "subtitle": "Feels the room shift before anyone speaks.",
@@ -3198,7 +3198,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#F472B6",
           "title": "Deeply Attuned",
           "subtitle": "Knows you're upset before you do. It's a gift. And a burden.",
@@ -3206,7 +3206,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#58A6FF",
           "title": "Socially Aware",
           "subtitle": "Reads the room. Usually catches it on the second scan.",
@@ -3214,7 +3214,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Selectively Empathic",
           "subtitle": "Gets it intellectually. Feeling it is another story.",
@@ -3222,7 +3222,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Empathy Deficit",
           "subtitle": "Asks 'are you okay?' while already walking away.",
@@ -3307,7 +3307,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#F97316",
           "title": "Grand Operator",
           "subtitle": "Sees seventeen moves ahead. On three chess boards at once.",
@@ -3315,7 +3315,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#FB923C",
           "title": "Sharp Strategist",
           "subtitle": "Spots the angle before the conversation starts.",
@@ -3323,7 +3323,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#58A6FF",
           "title": "Situationally Aware",
           "subtitle": "Suspects something's off. Can't quite prove it.",
@@ -3331,7 +3331,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Trusting",
           "subtitle": "Takes things at face value. People take advantage of this.",
@@ -3339,7 +3339,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#10B981",
           "title": "Transparent",
           "subtitle": "Has never had an ulterior motive. Never will.",
@@ -3424,7 +3424,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 90,
           "color": "#FFD700",
           "title": "Lexical Genius",
           "subtitle": "Uses words others have to Google",
@@ -3432,7 +3432,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#F97316",
           "title": "Word Wizard",
           "subtitle": "Always has the exact right word. Always.",
@@ -3440,7 +3440,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#58A6FF",
           "title": "Articulate",
           "subtitle": "Expresses ideas clearly. Usually.",
@@ -3448,7 +3448,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#94A3B8",
           "title": "Average Vocabulary",
           "subtitle": "Gets the point across. Eventually.",
@@ -3456,7 +3456,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Word Challenged",
           "subtitle": "Uses 'thing' as a noun for everything",
@@ -3540,7 +3540,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 510,
+          "maxMs": 75,
           "color": "#FFD700",
           "title": "Speed Reader Brain",
           "subtitle": "Processes words before they finish loading",
@@ -3548,7 +3548,7 @@
         },
         {
           "label": "A",
-          "maxMs": 610,
+          "maxMs": 55,
           "color": "#EAB308",
           "title": "Fast Lexical Access",
           "subtitle": "Reads subtitles faster than the dialogue",
@@ -3556,7 +3556,7 @@
         },
         {
           "label": "B",
-          "maxMs": 720,
+          "maxMs": 35,
           "color": "#58A6FF",
           "title": "Fluent Reader",
           "subtitle": "Reads at a solid pace",
@@ -3564,7 +3564,7 @@
         },
         {
           "label": "C",
-          "maxMs": 870,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Deliberate Reader",
           "subtitle": "Gets there. Takes their time.",
@@ -3657,7 +3657,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 88,
           "color": "#FFD700",
           "title": "Semantic Genius",
           "subtitle": "Connects ideas three degrees apart. Instantly.",
@@ -3665,7 +3665,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 72,
           "color": "#6366F1",
           "title": "Rich Associator",
           "subtitle": "Makes unexpected connections that turn out to be obvious",
@@ -3673,7 +3673,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 52,
           "color": "#58A6FF",
           "title": "Solid Network",
           "subtitle": "Good at word games. Better than average.",
@@ -3681,7 +3681,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 30,
           "color": "#94A3B8",
           "title": "Linear Thinker",
           "subtitle": "Associations are reliable but predictable",
@@ -3689,7 +3689,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Narrow Network",
           "subtitle": "Dog → cat. Cat → dog. That's the range.",
@@ -3773,7 +3773,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#EF4444",
           "title": "Critical Alert",
           "subtitle": "This is not a rough patch. This is a pattern.",
@@ -3781,7 +3781,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#F97316",
           "title": "High Risk",
           "subtitle": "More red flags than a Communist party parade.",
@@ -3789,7 +3789,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#F59E0B",
           "title": "Yellow Flags",
           "subtitle": "Not red yet. Worth watching closely.",
@@ -3797,7 +3797,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#10B981",
           "title": "Mostly Green",
           "subtitle": "Normal relationship friction. Keep communicating.",
@@ -3805,7 +3805,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#06B6D4",
           "title": "Green Zone",
           "subtitle": "Either very healthy or very new. Time will tell.",
@@ -3889,7 +3889,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#10B981",
           "title": "Securely Attached",
           "subtitle": "You are the person therapists use as the example.",
@@ -3897,7 +3897,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#06B6D4",
           "title": "Mostly Secure",
           "subtitle": "A few rough edges. Self-aware enough to notice them.",
@@ -3905,7 +3905,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#F59E0B",
           "title": "Anxious-Preoccupied",
           "subtitle": "You over-text. You over-analyze. You over-care.",
@@ -3913,7 +3913,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#8B5CF6",
           "title": "Dismissive-Avoidant",
           "subtitle": "Intimacy makes you itch. You call it independence.",
@@ -3921,7 +3921,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Fearful-Avoidant",
           "subtitle": "Want connection, terrified of it. The hardest pattern to break.",
@@ -4005,7 +4005,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#F43F5E",
           "title": "Words of Affirmation",
           "subtitle": "'I love you' hits different when you mean it.",
@@ -4013,7 +4013,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#8B5CF6",
           "title": "Quality Time",
           "subtitle": "Put the phone down. That's all they're asking.",
@@ -4021,7 +4021,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#10B981",
           "title": "Acts of Service",
           "subtitle": "They filled your tank without being asked. That's love.",
@@ -4029,7 +4029,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#F59E0B",
           "title": "Physical Touch",
           "subtitle": "A hand on the shoulder says more than a paragraph.",
@@ -4037,7 +4037,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#06B6D4",
           "title": "Receiving Gifts",
           "subtitle": "It's not about the money. It's about being thought of.",
@@ -4121,7 +4121,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#F59E0B",
           "title": "Wealth Builder",
           "subtitle": "You see money as a tool. You're already building.",
@@ -4129,7 +4129,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#10B981",
           "title": "Growth Oriented",
           "subtitle": "Above average financial psychology. Small blind spots remain.",
@@ -4137,7 +4137,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#06B6D4",
           "title": "Mixed Signals",
           "subtitle": "Know what to do. Don't always do it. Classic.",
@@ -4145,7 +4145,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Scarcity Mindset",
           "subtitle": "Playing not to lose instead of playing to win.",
@@ -4153,7 +4153,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Money Avoidant",
           "subtitle": "What you avoid grows. Unfortunately, so does debt.",
@@ -4237,7 +4237,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#10B981",
           "title": "Aggressive Growth",
           "subtitle": "100% equities. Doesn't check portfolio during crashes.",
@@ -4245,7 +4245,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#06B6D4",
           "title": "Growth Oriented",
           "subtitle": "80/20 stocks-bonds. Sleeps fine during corrections.",
@@ -4253,7 +4253,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#F59E0B",
           "title": "Moderate",
           "subtitle": "Balanced portfolio. Checks it more than they should.",
@@ -4261,7 +4261,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Conservative",
           "subtitle": "Capital preservation first. Missing out on compound growth.",
@@ -4269,7 +4269,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Risk Averse",
           "subtitle": "High-yield savings account feels dangerous enough.",
@@ -4354,7 +4354,7 @@
       "ranks": [
         {
           "label": "S",
-          "maxMs": 9999,
+          "maxMs": 75,
           "color": "#6366F1",
           "title": "Financial Genius",
           "subtitle": "You know what tax-loss harvesting is. And you do it.",
@@ -4362,7 +4362,7 @@
         },
         {
           "label": "A",
-          "maxMs": 9999,
+          "maxMs": 55,
           "color": "#8B5CF6",
           "title": "Financially Literate",
           "subtitle": "Above the 90th percentile. Your future self thanks you.",
@@ -4370,7 +4370,7 @@
         },
         {
           "label": "B",
-          "maxMs": 9999,
+          "maxMs": 35,
           "color": "#06B6D4",
           "title": "Decent Foundation",
           "subtitle": "You know the basics. The gaps are costing you quietly.",
@@ -4378,7 +4378,7 @@
         },
         {
           "label": "C",
-          "maxMs": 9999,
+          "maxMs": 15,
           "color": "#94A3B8",
           "title": "Financial Novice",
           "subtitle": "School failed you. You can still fix this.",
@@ -4386,7 +4386,7 @@
         },
         {
           "label": "D",
-          "maxMs": 0,
+          "maxMs": 9999,
           "color": "#EF4444",
           "title": "Financially Illiterate",
           "subtitle": "This is fixable. But it's costing you every single day.",
