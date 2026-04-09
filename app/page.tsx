@@ -16,9 +16,10 @@ export const metadata: Metadata = {
 };
 
 const TRENDING = [
-  { id: "reaction-time",   category: "brain-age",       emoji: "⚡", title: "Neural Latency",  desc: "How fast is your brain? Test your reaction speed.",         accent: "#00FF94" },
-  { id: "report-or-favor", category: "office-iq",       emoji: "📋", title: "Report or Favor", desc: "Work task or personal favor? You have 1.5 seconds.",        accent: "#EF4444" },
-  { id: "dark-triad",      category: "dark-personality", emoji: "🌑", title: "Dark Triad Score","desc": "How dark is your personality? Be honest.",                accent: "#A855F7" },
+  { id: "visual-memory",    category: "brain-age",        emoji: "🧩", title: "Visual Memory",    desc: "How many tiles can your brain hold? Find out fast.",        accent: "#A78BFA" },
+  { id: "instant-comparison", category: "brain-age",     emoji: "⚖️", title: "Instant Comparison", desc: "Which side has more? You have one second.",              accent: "#10B981" },
+  { id: "report-or-favor",  category: "office-iq",       emoji: "📋", title: "Report or Favor",  desc: "Work task or personal favor? You have 1.5 seconds.",        accent: "#EF4444" },
+  { id: "dark-triad",       category: "dark-personality", emoji: "🌑", title: "Dark Triad Score", desc: "How dark is your personality? Be brutally honest.",         accent: "#A855F7" },
 ];
 
 const CATEGORIES = [
