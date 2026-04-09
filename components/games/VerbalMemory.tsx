@@ -57,15 +57,20 @@ export default function VerbalMemory({ game }: { game: GameData }) {
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
 
-  const getNextWord = useCallback((shown: string[], seen: Set<string>) => {
-    // 40% chance to show a seen word (if any exist)
+  const getNextWord = useCallback((shown: string[], seen: Set<string>, current: string) => {
+    // 40% chance to show a seen word (if any exist), but never the same word twice in a row
     if (seen.size > 0 && Math.random() < 0.4) {
-      const seenArr = Array.from(seen);
-      return seenArr[Math.floor(Math.random() * seenArr.length)];
+      const seenArr = Array.from(seen).filter(w => w !== current);
+      if (seenArr.length > 0) {
+        return seenArr[Math.floor(Math.random() * seenArr.length)];
+      }
     }
-    // New word
-    const unused = WORD_POOL.filter(w => !shown.includes(w));
-    if (unused.length === 0) return WORD_POOL[Math.floor(Math.random() * WORD_POOL.length)];
+    // New word — never same as current
+    const unused = WORD_POOL.filter(w => !shown.includes(w) && w !== current);
+    if (unused.length === 0) {
+      const fallback = WORD_POOL.filter(w => w !== current);
+      return fallback[Math.floor(Math.random() * fallback.length)];
+    }
     return unused[Math.floor(Math.random() * unused.length)];
   }, []);
 
@@ -91,7 +96,7 @@ export default function VerbalMemory({ game }: { game: GameData }) {
       const newSeen = new Set(seenWords);
       if (!isSeen) newSeen.add(currentWord);
       const newShown = [...shownWords];
-      const next = getNextWord(newShown, newSeen);
+      const next = getNextWord(newShown, newSeen, currentWord);
       newShown.push(next);
       const newScore = score + 1;
       setScore(newScore);
@@ -117,7 +122,7 @@ export default function VerbalMemory({ game }: { game: GameData }) {
         const newSeen = new Set(seenWords);
         if (!isSeen) newSeen.add(currentWord);
         const newShown = [...shownWords];
-        const next = getNextWord(newShown, newSeen);
+        const next = getNextWord(newShown, newSeen, currentWord);
         newShown.push(next);
         setSeenWords(newSeen);
         setShownWords(newShown);
@@ -208,7 +213,7 @@ export default function VerbalMemory({ game }: { game: GameData }) {
           {/* Word display */}
           <div style={{ background: "var(--bg-card)", border: `1.5px solid ${borderColor}`, borderRadius: "var(--radius-xl)", minHeight: "clamp(180px,35vw,240px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", marginBottom: 16, transition: "border-color 0.15s" }}>
             <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 16 }}>
-              {isSeen ? "⚡ Previously shown" : ""}
+              {""}
             </div>
             <div style={{ fontSize: "clamp(28px,7vw,48px)", fontWeight: 900, letterSpacing: "-0.02em", color: feedback === "correct" ? "#22c55e" : feedback === "wrong" ? "#ef4444" : "var(--text-1)", transition: "color 0.15s" }}>
               {currentWord}

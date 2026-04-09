@@ -98,9 +98,10 @@ export default function SequenceMemory({ game }: { game: GameData }) {
       return;
     }
 
-    // Correct so far
+    // Correct so far — flash briefly then clear
     playBeep("tap");
-    setCorrectCells(prev => [...prev, idx]);
+    setCorrectCells([idx]);
+    timeoutRef.current = setTimeout(() => setCorrectCells([]), 200);
     setUserSeq(next);
 
     if (next.length === sequence.length) {
@@ -112,6 +113,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
         Math.floor(Math.random() * GRID_SIZE),
       ];
       setSequence(newSeq);
+      setCorrectCells([]);
       timeoutRef.current = setTimeout(() => playSequence(newSeq), 1000);
     }
   }, [phase, userSeq, sequence, game.id, playSequence]);

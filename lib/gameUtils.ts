@@ -216,10 +216,21 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
 }
 
 // ── Audio ────────────────────────────────────────────────────────────────────
+// Singleton AudioContext — avoids "suspended" on first interaction
+let _ac: AudioContext | null = null;
+function getAC(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  try {
+    if (!_ac) _ac = new AudioContext();
+    if (_ac.state === "suspended") _ac.resume();
+    return _ac;
+  } catch { return null; }
+}
 
 export function playBeep(type: "go" | "success" | "fail" | "tap") {
   try {
-    const ac = new AudioContext();
+    const ac = getAC();
+    if (!ac) return;
     const osc = ac.createOscillator();
     const gain = ac.createGain();
     osc.connect(gain); gain.connect(ac.destination);
