@@ -107,7 +107,7 @@ export default function AboutPage() {
         </div>
       </S>
 
-      <S n="05" title="Our Promise">
+      <S n="05" title="The ZAZAZA Standard">
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, margin: "14px 0" }}>
           {[
             ["🆓", "Free forever", "Every test, every result, every time. No exceptions."],
@@ -131,11 +131,11 @@ export default function AboutPage() {
       <S n="06" title="Contact">
         <p>
           Questions, feedback, or partnership enquiries:{" "}
-          <a href="mailto:hello@zazaza.app" style={{ color: "#00FF94", textDecoration: "none" }}>hello@zazaza.app</a>
+          <a href="mailto:theboomski@gmail.com" style={{ color: "#00FF94", textDecoration: "none" }}>theboomski@gmail.com</a>
         </p>
         <p style={{ marginTop: 10 }}>
           For privacy-related requests:{" "}
-          <a href="mailto:privacy@zazaza.app" style={{ color: "#00FF94", textDecoration: "none" }}>privacy@zazaza.app</a>
+          <a href="mailto:theboomski@gmail.com" style={{ color: "#00FF94", textDecoration: "none" }}>theboomski@gmail.com</a>
         </p>
       </S>
 
