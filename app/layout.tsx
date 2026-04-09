@@ -3,6 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
 import { dict } from "@/lib/i18n";
+import BottomNav from "@/components/BottomNav";
 
 const t = dict.en;
 
@@ -18,15 +19,6 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", site: "@zazazaapp" },
   robots: { index: true, follow: true },
 };
-
-const NAV_TABS = [
-  { href: "/",               emoji: "🏠", label: "Home" },
-  { href: "/brain-age",      emoji: "🧠", label: "Brain" },
-  { href: "/office-iq",      emoji: "💼", label: "Office" },
-  { href: "/dark-personality",emoji: "🌑", label: "Dark" },
-  { href: "/relationship",   emoji: "💔", label: "Relate" },
-  { href: "/money",          emoji: "💰", label: "Money" },
-];
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -62,8 +54,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main style={{ minHeight: "calc(100dvh - 76px - 64px)" }}>{children}</main>
 
-        {/* FOOTER — desktop only */}
-        <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px", display: "none" }} className="desktop-footer">
+        {/* FOOTER */}
+        <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", alignItems: "center" }}>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>ZAZAZA</span>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>© {new Date().getFullYear()}</span>
@@ -73,25 +65,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </footer>
 
-        {/* BOTTOM STICKY NAV — mobile */}
-        <nav style={{
-          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-          background: "rgba(10,10,15,0.97)",
-          backdropFilter: "blur(20px)",
-          borderTop: "1px solid var(--border)",
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-around",
-          padding: "0 4px",
-        }}>
-          {NAV_TABS.map(tab => (
-            <Link key={tab.href} href={tab.href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 2, padding: "6px 2px", borderRadius: 8, WebkitTapHighlightColor: "transparent" }}>
-              <span style={{ fontSize: 20, lineHeight: 1 }}>{tab.emoji}</span>
-              <span style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em", textTransform: "uppercase" }}>{tab.label}</span>
-            </Link>
-          ))}
-        </nav>
+        <BottomNav />
 
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-CLBWMF1Y42" strategy="afterInteractive" />
         <Script id="ga4-init" strategy="afterInteractive">{`
