@@ -181,7 +181,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
         background: "var(--bg-card)",
         border: `1.5px solid ${phase === "wrong" ? "#ef444440" : phase === "correct" ? `${game.accent}40` : "var(--border)"}`,
         borderRadius: "var(--radius-xl)",
-        padding: "clamp(12px,3vw,32px)",
+        padding: "10px",
         transition: "border-color 0.15s",
       }}>
         {phase === "idle" ? (
@@ -193,13 +193,11 @@ export default function VisualMemory({ game }: { game: GameData }) {
             <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
           </div>
         ) : (
-          // FIX 3: vw-based max width so grid never overflows border on mobile
+          // Grid: 100% width, cells use aspect-ratio — never overflows
           <div style={{
             display: "grid",
             gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-            gap: gridCols >= 4 ? "clamp(3px,1vw,6px)" : "clamp(4px,1.5vw,10px)",
-            maxWidth: gridCols === 3 ? "min(252px, 72vw)" : gridCols === 4 ? "min(280px, 72vw)" : "min(300px, 72vw)",
-            margin: "0 auto",
+            gap: gridCols >= 5 ? 3 : gridCols >= 4 ? 5 : 8,
             width: "100%",
           }}>
             {Array.from({ length: totalCells }).map((_, idx) => {

@@ -56,7 +56,7 @@ export default function TypingSpeed({ game }: { game: GameData }) {
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalWpm, setFinalWpm] = useState(0);
   const [finalAcc, setFinalAcc] = useState(100);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startedRef = useRef(false);
   const wpmRef = useRef(0);
@@ -88,7 +88,7 @@ export default function TypingSpeed({ game }: { game: GameData }) {
     setTimeout(() => inputRef.current?.focus(), 50);
   };
 
-  const handleInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (phase !== "playing") return;
     const val = e.target.value;
 
@@ -210,16 +210,28 @@ export default function TypingSpeed({ game }: { game: GameData }) {
               {renderText()}
             </div>
             {/* Input */}
-            <input
+            <textarea
               ref={inputRef}
-              type="text"
               value={typed}
               onChange={handleInput}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck={false}
-              style={{ width: "100%", background: "var(--bg-elevated)", border: `1.5px solid ${game.accent}40`, borderRadius: "var(--radius-md)", padding: "12px 16px", fontSize: 15, color: "var(--text-1)", fontFamily: "var(--font-mono)", outline: "none" }}
+              rows={3}
+              style={{
+                width: "100%",
+                background: "var(--bg-elevated)",
+                border: `1.5px solid ${game.accent}40`,
+                borderRadius: "var(--radius-md)",
+                padding: "12px 16px",
+                fontSize: 15,
+                color: "var(--text-1)",
+                fontFamily: "var(--font-mono)",
+                outline: "none",
+                resize: "none",
+                lineHeight: 1.6,
+              }}
             />
           </div>
         )}
