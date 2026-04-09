@@ -40,11 +40,11 @@ interface Item { pos: Pos; emoji: string; type: ItemType; }
 function rnd(max: number) { return Math.floor(Math.random() * max); }
 function eq(a: Pos, b: Pos) { return a.x === b.x && a.y === b.y; }
 
-function spawnItem(snake: Pos[], items: Item[]): Item {
+function spawnItem(snake: Pos[], items: Item[], forceGood = false): Item {
   let pos: Pos;
   do { pos = { x: rnd(GRID), y: rnd(GRID) }; }
   while (snake.some(s => eq(s, pos)) || items.some(i => eq(i.pos, pos)));
-  const isBad = Math.random() < 0.35;
+  const isBad = forceGood ? false : Math.random() < 0.35;
   const pool = isBad ? BAD : GOOD;
   return { pos, emoji: pool[Math.floor(Math.random() * pool.length)], type: isBad ? "bad" : "good" };
 }
@@ -119,8 +119,14 @@ export default function CorporateClimber({ game }: { game: GameData }) {
       scoreRef.current++; setScore(scoreRef.current);
       grow = true;
       newItems = newItems.filter(i => !eq(i.pos, newHead));
-      // Spawn replacement good item
-      newItems.push(spawnItem([newHead, ...snakeRef.current], newItems));
+      // Always spawn a good item as replacement to ensure at least 1 good always on board
+      const goodItem = spawnItem([newHead, ...snakeRef.current], newItems, true);
+      newItems.push(goodItem);
+      // If all remaining items are bad, also add an extra good one
+      const goodCount = newItems.filter(i => i.type === "good").length;
+      if (goodCount === 0) {
+        newItems.push(spawnItem([newHead, ...snakeRef.current], newItems, true));
+      }
     }
 
     const newSnake = grow ? [newHead, ...snakeRef.current] : [newHead, ...snakeRef.current.slice(0,-1)];

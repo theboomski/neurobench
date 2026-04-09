@@ -35,10 +35,12 @@ function formatSalary(n: number) {
 }
 
 // Generate a smooth random curve: rises to peak then falls
-function makeCurve() {
-  const duration = 4000 + Math.random() * 4000; // 4-8 seconds total
-  const peakAt = 0.3 + Math.random() * 0.5; // peak at 30-80% of duration
-  const maxGain = 30000 + Math.random() * 80000; // $30k-$110k gain at peak
+function makeCurve(round: number) {
+  // Gets harder each round: faster, higher peaks, sharper drops
+  const speedFactor = 1 + (round - 1) * 0.2; // rounds 1-5: 1x to 1.8x speed
+  const duration = (5000 - round * 400 + Math.random() * 2000) / speedFactor;
+  const peakAt = Math.max(0.25, 0.55 - round * 0.04 + Math.random() * 0.2); // peaks earlier in later rounds
+  const maxGain = (40000 + round * 15000 + Math.random() * 60000); // higher stakes each round
   return { duration, peakAt, maxGain };
 }
 
@@ -57,9 +59,10 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const timerRef    = useRef<ReturnType<typeof setInterval>|null>(null);
-  const curveRef    = useRef(makeCurve());
+  const curveRef    = useRef(makeCurve(1));
   const startRef    = useRef<number>(0);
   const acceptedRef = useRef<number[]>([]);
+  const peaksRef    = useRef<number[]>([]);
   const peakRef     = useRef(BASE_SALARY);
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
@@ -67,18 +70,21 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
   const clearT = () => { if (timerRef.current) clearInterval(timerRef.current); };
   useEffect(() => () => clearT(), []);
 
-  const finalize = useCallback((all: number[]) => {
-    const avg = Math.round(all.reduce((s,v) => s+v, 0) / all.length);
-    setFinalScore(avg);
-    const isNew = saveHighScore(game.id, avg);
-    setIsNewBest(isNew); if (isNew) setHS(avg);
+  const finalize = useCallback((all: number[], peaks: number[]) => {
+    // Score = average % of peak caught across all rounds (0-100)
+    const pcts = all.map((v, i) => Math.min(100, Math.round((v / peaks[i]) * 100)));
+    const avgPct = Math.round(pcts.reduce((s,v) => s+v, 0) / pcts.length);
+    setFinalScore(avgPct);
+    const isNew = saveHighScore(game.id, avgPct);
+    setIsNewBest(isNew); if (isNew) setHS(avgPct);
     setPhase("done");
   }, [game.id]);
 
   const startRound = useCallback((r: number, cur: number[]) => {
-    const curve = makeCurve();
+    const curve = makeCurve(r);
     curveRef.current = curve;
     startRef.current = performance.now();
+    if (r === 1) peaksRef.current = [];
     peakRef.current = BASE_SALARY;
     setSalary(BASE_SALARY); setPeak(BASE_SALARY);
     setPhase("playing");
@@ -104,13 +110,16 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
       if (progress >= 1.0) {
         clearT();
         const locked = Math.round(current);
+        const roundPeak = Math.round(peakRef.current);
         playBeep("fail");
         setLastAccepted(locked);
         const next = [...cur, locked];
+        const nextPeaks = [...peaksRef.current, roundPeak];
         acceptedRef.current = next; setAccepted(next);
+        peaksRef.current = nextPeaks;
         setPhase("accepted");
         if (next.length >= ROUNDS) {
-          setTimeout(() => finalize(next), 1200);
+          setTimeout(() => finalize(next, peaksRef.current), 1200);
         } else {
           setTimeout(() => { setRound(r+1); startRound(r+1, next); }, 1400);
         }
@@ -128,7 +137,7 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
     acceptedRef.current = next; setAccepted(next);
     setPhase("accepted");
     if (next.length >= ROUNDS) {
-      setTimeout(() => finalize(next), 1200);
+      setTimeout(() => finalize(next, peaksRef.current), 1200);
     } else {
       setTimeout(() => { setRound(r => r+1); startRound(next.length+1, next); }, 1400);
     }

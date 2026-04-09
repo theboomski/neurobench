@@ -85,11 +85,11 @@ export default function BossDodge({ game }: { game: GameData }) {
     setTimeLeft(remaining);
     if (remaining <= 0) { endGame(); return; }
 
-    const speedMult = 1 + elapsed / 20000; // speed up over time
+    const speedMult = 1 + elapsed / 35000; // gentler speed increase
 
     // Spawn new object
     spawnRef.current += dt;
-    const spawnInterval = Math.max(600, 1200 - elapsed / 50);
+    const spawnInterval = Math.max(900, 1800 - elapsed / 60);
     if (spawnRef.current >= spawnInterval) {
       spawnRef.current = 0;
       const isCatch = Math.random() < 0.6;
@@ -99,7 +99,7 @@ export default function BossDodge({ game }: { game: GameData }) {
       const occupiedLanes = objectsRef.current.filter(o => o.y < 15).map(o => o.lane);
       const freeLanes = Array.from({length:LANES},(_,i)=>i).filter(l => !occupiedLanes.includes(l));
       const lane = freeLanes.length > 0 ? freeLanes[Math.floor(Math.random() * freeLanes.length)] : Math.floor(Math.random() * LANES);
-      const obj: FallingObj = { id: nextId++, lane, emoji, y: -10, speed: (2.5 + Math.random() * 1.5) * speedMult, caught: false, missed: false, hit: false };
+      const obj: FallingObj = { id: nextId++, lane, emoji, y: -10, speed: (1.2 + Math.random() * 0.8) * speedMult, caught: false, missed: false, hit: false };
       objectsRef.current = [...objectsRef.current, obj];
     }
 
@@ -240,13 +240,20 @@ export default function BossDodge({ game }: { game: GameData }) {
                   left:`${obj.lane * laneWidth + laneWidth/2}%`,
                   top:`${obj.y}%`,
                   transform:"translate(-50%,-50%)",
-                  fontSize:"clamp(28px,7vw,40px)",
+                  // Large tap area: 64px minimum for mobile
+                  width:"clamp(56px,14vw,72px)",
+                  height:"clamp(56px,14vw,72px)",
+                  display:"flex",
+                  alignItems:"center",
+                  justifyContent:"center",
+                  fontSize:"clamp(28px,7vw,38px)",
                   cursor:"pointer",
                   WebkitTapHighlightColor:"transparent",
                   touchAction:"manipulation",
                   userSelect:"none",
                   filter: obj.caught || obj.hit ? "opacity(0.3)" : "none",
                   transition:"filter 0.1s",
+                  borderRadius:"50%",
                 }}
               >
                 {obj.emoji}

@@ -114,7 +114,7 @@ export default function MobileGameWrapper({
           {game.title.toUpperCase()}
         </span>
         <button
-          onClick={() => setFullscreen(false)}
+          onClick={() => { setFullscreen(false); setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100); }}
           style={{
             background: "var(--bg-elevated)",
             border: "1px solid var(--border)",

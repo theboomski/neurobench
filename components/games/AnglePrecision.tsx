@@ -127,7 +127,8 @@ export default function AnglePrecision({ game }: { game: GameData }) {
   const handleSubmit = useCallback(() => {
     if (phase !== "playing") return;
     clearTimers();
-    let diff = Math.abs(refAngle - userAngle) % 360;
+    // Circular angle diff: 178° and 2° should both give 2° error
+    let diff = ((refAngle - userAngle) % 360 + 360) % 360;
     if (diff > 180) diff = 360 - diff;
     const error = Math.round(diff * 10) / 10;
     playBeep(error < 5 ? "success" : "tap");
