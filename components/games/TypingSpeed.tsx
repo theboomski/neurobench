@@ -28,20 +28,17 @@ function getPercentile(score: number, game: GameData): number {
   return 50;
 }
 
-const WORDS = [
-  "the","be","to","of","and","a","in","that","have","it","for","not","on","with","he","as","you","do","at","this",
-  "but","his","by","from","they","we","say","her","she","or","an","will","my","one","all","would","there","their",
-  "what","so","up","out","if","about","who","get","which","go","me","when","make","can","like","time","no","just",
-  "him","know","take","people","into","year","your","good","some","could","them","see","other","than","then","now",
-  "look","only","come","its","over","think","also","back","after","use","two","how","our","work","first","well","way",
-  "even","new","want","because","any","these","give","day","most","us","great","between","need","large","often","hand",
-  "high","place","hold","small","real","life","few","north","open","seem","together","next","white","children","begin",
-  "got","walk","example","ease","paper","group","always","music","those","both","mark","book","letter","until","mile"
+// Real sentences — enough for 200 WPM in 60s = ~200 words
+const PASSAGES = [
+  "The human brain processes information at speeds that vary depending on the task. Simple reactions can occur in under two hundred milliseconds, while complex decisions may take several seconds. Scientists have found that regular cognitive training can improve processing speed across all age groups. The key is consistent practice combined with adequate sleep and physical exercise. Memory formation occurs during deep sleep when the brain consolidates the experiences of the day into long-term storage. People who prioritize sleep consistently outperform those who sacrifice it on nearly every cognitive measure.",
+  "Typing speed is one of the most measurable cognitive motor skills. The average adult types at around forty words per minute, while professional typists can reach over one hundred. The world record exceeds two hundred and sixteen words per minute. Accuracy matters as much as speed — errors slow you down because corrections take time. Touch typing, where you type without looking at the keyboard, is significantly faster than hunting and pecking. Most people can learn the basic touch typing technique in just a few weeks of daily practice.",
+  "The relationship between focus and productivity is well established in cognitive science. When you concentrate on a single task, your brain enters a state called flow, where performance improves and time seems to pass differently. Multitasking, despite its popularity, reduces efficiency by up to forty percent because the brain must constantly switch context. The most effective strategy is to work in focused blocks of time followed by short breaks. This approach, used by many high performers, aligns with the natural rhythm of human attention and energy.",
+  "Language shapes the way we think more than most people realize. The words available in your vocabulary influence how you perceive and categorize the world around you. Research shows that people with larger vocabularies tend to be more precise in their thinking and communication. Reading widely across different subjects is the most effective way to expand vocabulary naturally. Unlike memorizing word lists, reading in context creates strong neural associations that make words easier to recall and use in everyday speech and writing.",
+  "The science of habit formation reveals that nearly half of our daily actions are automatic. Habits are stored in a part of the brain called the basal ganglia, which operates largely outside conscious awareness. This is why breaking bad habits is so difficult — the neural pathways are deeply encoded. The most effective approach is not to eliminate a habit but to replace it with a different behavior that satisfies the same underlying need. Small consistent actions compound over time into significant changes in both behavior and brain structure.",
 ];
 
-function generateText(wordCount = 80): string {
-  const shuffled = [...WORDS].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, wordCount).join(" ");
+function generateText(): string {
+  return PASSAGES[Math.floor(Math.random() * PASSAGES.length)];
 }
 
 type Phase = "idle" | "playing" | "done";

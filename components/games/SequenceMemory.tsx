@@ -220,8 +220,6 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     const isHighlighted = highlighted === idx;
     const isWrong       = wrongCell === idx;
     const isCorrect     = correctCells.includes(idx);
-    const isNextTarget  = phase === "input" && idx === sequence[userSeq.length];
-
     let bg = "var(--bg-elevated)";
     let border = "var(--border)";
     let shadow = "none";
@@ -237,8 +235,6 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     } else if (isCorrect) {
       bg = `${game.accent}20`;
       border = `${game.accent}60`;
-    } else if (isNextTarget) {
-      border = `${game.accent}40`;
     }
 
     return {

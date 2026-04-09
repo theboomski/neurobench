@@ -41,6 +41,7 @@ export default function ChimpTest({ game }: { game: GameData }) {
   const [cells, setCells]       = useState<NumberCell[]>([]);
   const [nextExpected, setNextExpected] = useState(1);
   const [wrongCell, setWrongCell] = useState<number | null>(null);
+  const [userStarted, setUserStarted] = useState(false);
   const [finalScore, setFinalScore] = useState(0);
   const [showAd, setShowAd]     = useState(false);
   const [shareImg, setShareImg] = useState<string | null>(null);
@@ -60,6 +61,7 @@ export default function ChimpTest({ game }: { game: GameData }) {
     setCells(newCells);
     setNextExpected(1);
     setWrongCell(null);
+    setUserStarted(false);
     setPhase("showing");
     // Flash duration: longer for more numbers
     const flashMs = 800 + lvl * 200;
@@ -70,6 +72,8 @@ export default function ChimpTest({ game }: { game: GameData }) {
 
   const handleCellClick = useCallback((cellIdx: number) => {
     if (phase !== "input") return;
+    // Hide numbers the moment user clicks 1
+    if (!userStarted) setUserStarted(true);
     const cell = cells.find(c => c.cellIdx === cellIdx);
     if (!cell || cell.value !== nextExpected) {
       setWrongCell(cellIdx);
@@ -96,10 +100,10 @@ export default function ChimpTest({ game }: { game: GameData }) {
       setLevel(nextLevel);
       timerRef.current = setTimeout(() => startLevel(nextLevel), 1000);
     }
-  }, [phase, cells, nextExpected, level, game.id, startLevel]);
+  }, [phase, cells, nextExpected, level, game.id, startLevel, userStarted]);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); setLevel(4); };
+  const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); setLevel(4); setUserStarted(false); };
 
   const rank = finalScore > 0 ? getRank(finalScore, game) : null;
   const pct  = finalScore > 0 ? getPercentile(finalScore, game) : 0;
@@ -175,15 +179,15 @@ export default function ChimpTest({ game }: { game: GameData }) {
               const cell = cellMap.get(idx);
               const isWrong = wrongCell === idx;
               const isCompleted = cell && cell.value < nextExpected;
-              const showNumber = phase === "showing" && cell;
+              const showNumber = (phase === "showing" || !userStarted) && cell;
 
               return (
                 <div
                   key={idx}
                   onClick={() => cell && handleCellClick(idx)}
                   style={{
-                    background: isWrong ? "#ef444430" : isCompleted ? "var(--bg-overlay)" : cell ? (showNumber ? `${game.accent}20` : "var(--bg-elevated)") : "transparent",
-                    border: `1.5px solid ${isWrong ? "#ef4444" : isCompleted ? "transparent" : cell ? (showNumber ? `${game.accent}60` : "var(--border-md)") : "transparent"}`,
+                    background: isWrong ? "#ef444430" : isCompleted ? "rgba(255,255,255,0.03)" : cell ? (showNumber ? `${game.accent}20` : "var(--bg-elevated)") : "transparent",
+                    border: `1.5px solid ${isWrong ? "#ef4444" : isCompleted ? "rgba(255,255,255,0.04)" : cell ? (showNumber ? `${game.accent}60` : "var(--border-md)") : "transparent"}`,
                     borderRadius: 8,
                     aspectRatio: "1",
                     display: "flex", alignItems: "center", justifyContent: "center",

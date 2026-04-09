@@ -24,16 +24,24 @@ export default function MobileGameWrapper({
   useEffect(() => {
     if (fullscreen) {
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     } else {
       document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     }
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+    };
   }, [fullscreen]);
 
   // Desktop: render normally
   if (!isMobile) return <>{children}</>;
 
-  // Mobile: show "tap to play" button that opens fullscreen
+  // Mobile idle: show tap-to-play button
   if (!fullscreen) {
     return (
       <div
@@ -42,13 +50,14 @@ export default function MobileGameWrapper({
           background: "var(--bg-card)",
           border: `1.5px solid ${game.accent}40`,
           borderRadius: "var(--radius-xl)",
-          padding: "32px 24px",
+          padding: "36px 24px",
           textAlign: "center",
           cursor: "pointer",
           WebkitTapHighlightColor: "transparent",
+          touchAction: "manipulation",
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: 16 }}>{game.emoji}</div>
+        <div style={{ fontSize: 52, marginBottom: 16 }}>{game.emoji}</div>
         <div
           style={{
             display: "inline-flex",
@@ -57,71 +66,51 @@ export default function MobileGameWrapper({
             background: game.accent,
             color: "#000",
             fontWeight: 800,
-            fontSize: 15,
+            fontSize: 16,
             fontFamily: "var(--font-mono)",
-            padding: "14px 32px",
+            padding: "15px 36px",
             borderRadius: "var(--radius-md)",
-            marginBottom: 12,
+            marginBottom: 14,
+            letterSpacing: "0.04em",
           }}
         >
           ▶ TAP TO PLAY
         </div>
-        <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
-          Opens in fullscreen
+        <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
+          OPENS IN FULLSCREEN
         </p>
       </div>
     );
   }
 
-  // Mobile fullscreen overlay
+  // Mobile fullscreen — fully covers everything
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 300,
-        background: "var(--bg)",
-        overflowY: "auto",
-        WebkitOverflowScrolling: "touch",
+        zIndex: 500,
+        background: "var(--bg)",         // solid background — no bleed-through
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
       }}
     >
-      {/* Header bar */}
+      {/* Sticky header */}
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-          background: "rgba(10,10,15,0.97)",
-          backdropFilter: "blur(16px)",
+          flexShrink: 0,
+          background: "rgba(10,10,15,1)",
           borderBottom: "1px solid var(--border)",
           height: 48,
           display: "flex",
           alignItems: "center",
           padding: "0 16px",
-          gap: 12,
+          gap: 10,
         }}
       >
-        <div
-          style={{
-            width: 6,
-            height: 6,
-            borderRadius: "50%",
-            background: game.accent,
-            boxShadow: `0 0 8px ${game.accent}`,
-          }}
-        />
-        <span
-          style={{
-            fontSize: 12,
-            fontWeight: 800,
-            fontFamily: "var(--font-mono)",
-            letterSpacing: "0.06em",
-            flex: 1,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <div style={{ width: 6, height: 6, borderRadius: "50%", background: game.accent, boxShadow: `0 0 8px ${game.accent}`, flexShrink: 0 }} />
+        <span style={{ fontSize: 12, fontWeight: 800, fontFamily: "var(--font-mono)", letterSpacing: "0.06em", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "var(--text-1)" }}>
           {game.title.toUpperCase()}
         </span>
         <button
@@ -133,18 +122,32 @@ export default function MobileGameWrapper({
             color: "var(--text-2)",
             fontSize: 13,
             fontWeight: 700,
-            padding: "4px 12px",
+            padding: "5px 14px",
             cursor: "pointer",
             fontFamily: "var(--font-mono)",
             WebkitTapHighlightColor: "transparent",
+            flexShrink: 0,
           }}
         >
           ✕ EXIT
         </button>
       </div>
 
-      {/* Game content */}
-      <div style={{ padding: "16px 16px 80px" }}>{children}</div>
+      {/* Scrollable game content — centered vertically */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",   // vertical center
+          padding: "16px 16px 24px",
+          minHeight: 0,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

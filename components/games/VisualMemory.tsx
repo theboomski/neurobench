@@ -197,8 +197,8 @@ export default function VisualMemory({ game }: { game: GameData }) {
           <div style={{
             display: "grid",
             gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-            gap: "clamp(4px,1.5vw,10px)",
-            maxWidth: gridCols === 3 ? "min(260px, 76vw)" : gridCols === 4 ? "min(300px, 80vw)" : "min(340px, 84vw)",
+            gap: gridCols >= 4 ? "clamp(3px,1vw,6px)" : "clamp(4px,1.5vw,10px)",
+            maxWidth: gridCols === 3 ? "min(252px, 72vw)" : gridCols === 4 ? "min(280px, 72vw)" : "min(300px, 72vw)",
             margin: "0 auto",
             width: "100%",
           }}>
