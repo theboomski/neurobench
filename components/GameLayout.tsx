@@ -1,4 +1,5 @@
 import Link from "next/link";
+import MobileGameWrapper from "@/components/MobileGameWrapper";
 import type { GameData } from "@/lib/types";
 import DistributionGraph from "@/components/DistributionGraph";
 import RelatedTests from "@/components/RelatedTests";
@@ -38,7 +39,9 @@ export default function GameLayout({ game, children }: { game: GameData; childre
       </div>
 
       {/* Game */}
-      <div style={{ paddingBottom: 48 }}>{children}</div>
+      <div style={{ paddingBottom: 48 }}>
+        <MobileGameWrapper game={game}>{children}</MobileGameWrapper>
+      </div>
 
       {/* SEO Content Block — uniform indentation for all 3 sections */}
       <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: `3px solid ${game.accent}`, borderRadius: "var(--radius-lg)", padding: "36px 32px", marginBottom: 48 }}>

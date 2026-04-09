@@ -118,8 +118,9 @@ export default function VisualMemory({ game }: { game: GameData }) {
     setClicked(new Set()); setWrongCell(null);
   };
 
-  const rank = finalScore > 0 ? getRank(finalScore, game) : null;
-  const pct  = finalScore > 0 ? getPercentile(finalScore, game) : 0;
+  // finalScore=0 is valid (failed level 1), always compute rank when done
+  const rank = getRank(Math.max(finalScore, 0), game);
+  const pct  = phase === "done" ? getPercentile(finalScore, game) : 0;
 
   const handleShare = async () => {
     if (!rank) return;
@@ -129,7 +130,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
     window.open(url, "_blank");
   };
 
-  if (phase === "done" && rank) {
+  if (phase === "done") {
     return (
       <>
         {showAd && <InterstitialAd onDone={afterAd} />}
@@ -197,7 +198,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
             display: "grid",
             gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
             gap: "clamp(4px,1.5vw,10px)",
-            maxWidth: gridCols === 3 ? "min(280px, 82vw)" : gridCols === 4 ? "min(320px, 88vw)" : "min(360px, 92vw)",
+            maxWidth: gridCols === 3 ? "min(260px, 76vw)" : gridCols === 4 ? "min(300px, 80vw)" : "min(340px, 84vw)",
             margin: "0 auto",
             width: "100%",
           }}>

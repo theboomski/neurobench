@@ -101,7 +101,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     // Correct so far — flash briefly then clear
     playBeep("tap");
     setCorrectCells([idx]);
-    timeoutRef.current = setTimeout(() => setCorrectCells([]), 200);
+    timeoutRef.current = setTimeout(() => setCorrectCells([]), 400);
     setUserSeq(next);
 
     if (next.length === sequence.length) {
