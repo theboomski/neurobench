@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import Script from "next/script";
 import { dict } from "@/lib/i18n";
 
 const t = dict.en;
@@ -80,6 +81,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/terms-of-service" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>Terms</Link>
           </div>
         </footer>
+      <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-CLBWMF1Y42"
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-CLBWMF1Y42');
+        `}</Script>
       </body>
     </html>
   );

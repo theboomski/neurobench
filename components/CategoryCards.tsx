@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 import type { GameData } from "@/lib/types";
 
 export function GameCard({ g, basePath }: { g: GameData; basePath: string }) {
   return (
-    <Link href={`/${basePath}/${g.id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/${basePath}/${g.id}`} style={{ textDecoration: "none" }} onClick={() => trackEvent("category_card_click", { game_id: g.id, category: g.category })}>
       <div
         className="pressable"
         style={{
@@ -81,7 +82,7 @@ export function TrendingCard({ id, category, emoji, title, desc, accent }: {
   id: string; category: string; emoji: string; title: string; desc: string; accent: string;
 }) {
   return (
-    <Link href={`/${category}/${id}`} style={{ textDecoration: "none" }}>
+    <Link href={`/${category}/${id}`} style={{ textDecoration: "none" }} onClick={() => trackEvent("trending_click", { game_id: id, category })}>
       <div
         className="pressable"
         style={{
