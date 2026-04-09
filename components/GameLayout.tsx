@@ -1,3 +1,5 @@
+"use client";
+import { useEffect } from "react";
 import Link from "next/link";
 import MobileGameWrapper from "@/components/MobileGameWrapper";
 import type { GameData } from "@/lib/types";
@@ -8,6 +10,11 @@ import { dict } from "@/lib/i18n";
 const t = dict.en;
 
 export default function GameLayout({ game, children }: { game: GameData; children: React.ReactNode }) {
+  // Scroll to top when navigating to a game page
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [game.id]);
+
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 24px" }}>
 

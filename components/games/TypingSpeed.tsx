@@ -176,13 +176,29 @@ export default function TypingSpeed({ game }: { game: GameData }) {
     );
   }
 
-  // Render colored text
+  // Render sliding window: show from 30 chars before cursor to 150 chars after
   const renderText = () => {
-    return text.split("").map((char, i) => {
+    const cursor = typed.length;
+    const windowStart = Math.max(0, cursor - 30);
+    const windowEnd = Math.min(text.length, cursor + 150);
+    const visible = text.slice(windowStart, windowEnd);
+    
+    return visible.split("").map((char, localI) => {
+      const i = windowStart + localI;
       let color = "var(--text-3)";
-      if (i < typed.length) color = typed[i] === char ? "var(--text-1)" : "#ef4444";
-      else if (i === typed.length) color = game.accent;
-      return <span key={i} style={{ color, borderBottom: i === typed.length ? `2px solid ${game.accent}` : "none" }}>{char}</span>;
+      if (i < cursor) color = typed[i] === char ? "#10B981" : "#ef4444";
+      else if (i === cursor) color = game.accent;
+      return (
+        <span
+          key={i}
+          style={{
+            color,
+            borderBottom: i === cursor ? `2px solid ${game.accent}` : "none",
+          }}
+        >
+          {char}
+        </span>
+      );
     });
   };
 
@@ -209,7 +225,7 @@ export default function TypingSpeed({ game }: { game: GameData }) {
         ) : (
           <div>
             {/* Text display */}
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(14px,2.5vw,17px)", lineHeight: 2, marginBottom: 16, userSelect: "none", maxHeight: 160, overflow: "hidden" }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "clamp(14px,2.5vw,16px)", lineHeight: 1.9, marginBottom: 16, userSelect: "none", minHeight: 80 }}>
               {renderText()}
             </div>
             {/* Input */}

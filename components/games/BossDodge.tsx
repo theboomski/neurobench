@@ -234,6 +234,7 @@ export default function BossDodge({ game }: { game: GameData }) {
             {objects.map(obj => (
               <div
                 key={obj.id}
+                onTouchStart={(e) => { e.preventDefault(); handleTap(obj); }}
                 onClick={() => handleTap(obj)}
                 style={{
                   position:"absolute",
