@@ -76,14 +76,36 @@ export default function HomePage() {
       {/* SEO */}
       <section style={{ paddingBottom: 72 }}>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #00FF94", borderRadius: "var(--radius-lg)", padding: "36px 32px" }}>
-          <div style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 14 }}>About ZAZAZA</div>
-          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 16, letterSpacing: "-0.02em" }}>The Free Test Hub That Doesn&apos;t Make You Sign Up First.</h2>
-          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 14 }}>ZAZAZA is a free global test hub covering brain age, office IQ, eye age, focus & attention, dark personality, and vocabulary intelligence. Every test is free, every result is instant, and no account is ever required. Unlike Lumosity and BrainHQ, ZAZAZA never charges you or makes you create an account.</p>
-          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, marginTop: 20 }}>Frequently Asked Questions</h3>
+          <div style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 14 }}>Why ZAZAZA?</div>
+          <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 16, letterSpacing: "-0.02em" }}>Play the Test. Discover the World.</h2>
+          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 14 }}>
+            At ZAZAZA, we believe self-discovery should be as instant as a click. Our name represents a journey of infinite curiosity — from Z to A.
+          </p>
+          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 14 }}>
+            We aren&apos;t just here to give you a score. We&apos;re here to spark that "Aha!" moment — where you learn something new about yourself, the fascinating science behind a simple reaction time test, or the psychology woven into a color perception puzzle. Every test on ZAZAZA is a window into how the world actually works.
+          </p>
+          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 24 }}>
+            ZAZAZA is a bridge. Between complex neuroscience and daily curiosity. Between your score and your friend&apos;s score. Compare your results, challenge the people around you, and grow your world — one test at a time. Unlike Lumosity or BrainHQ, we never charge you, never make you sign up, and never stand between you and the insight.
+          </p>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginBottom: 28 }}>
+            {[
+              { letter: "ZA", title: "Aha! (Self)", desc: "Discover what you didn't know about yourself." },
+              { letter: "ZA", title: "Awareness (World)", desc: "Understand the science hidden inside every test." },
+              { letter: "ZA", title: "Alignment (Connection)", desc: "Share, compare, and connect with people around you." },
+            ].map((z, i) => (
+              <div key={i} style={{ flex: "1 1 180px" }}>
+                <div style={{ fontSize: 11, fontWeight: 900, color: "#00FF94", fontFamily: "var(--font-mono)", marginBottom: 4 }}>{z.letter} —</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-1)", marginBottom: 4 }}>{z.title}</div>
+                <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.7 }}>{z.desc}</div>
+              </div>
+            ))}
+          </div>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>Frequently Asked Questions</h3>
           <div style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.9 }}>
             <p style={{ marginBottom: 10 }}><strong style={{ color: "var(--text-1)" }}>Is ZAZAZA really free?</strong><br />Yes. Every test is completely free. No subscription, no trial, no hidden fees. Ever.</p>
             <p style={{ marginBottom: 10 }}><strong style={{ color: "var(--text-1)" }}>Do I need to create an account?</strong><br />No. Take any test instantly without signing up. Your scores are saved locally in your browser.</p>
-            <p style={{ marginBottom: 0 }}><strong style={{ color: "var(--text-1)" }}>How do I share my results?</strong><br />After any test, tap SHARE to generate a shareable image card with your score, rank, and brain age.</p>
+            <p style={{ marginBottom: 10 }}><strong style={{ color: "var(--text-1)" }}>How do I share my results?</strong><br />After any test, tap SHARE to generate a shareable image card with your score, rank, and brain age. Challenge your friends and see who comes out on top.</p>
+            <p style={{ marginBottom: 0 }}><strong style={{ color: "var(--text-1)" }}>What does ZAZAZA mean?</strong><br />ZAZAZA represents our core mission: Zero-friction, Absolute insight, from Z to A. Three Aha! moments in one — discovering yourself, understanding the world, and connecting with others.</p>
           </div>
         </div>
       </section>
