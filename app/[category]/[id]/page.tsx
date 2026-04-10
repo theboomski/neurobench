@@ -111,6 +111,8 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
 
 export default async function GamePage({ params }: Props) {
   const { category, id } = await params;
+  // Exclude static routes that should not be handled here
+  if (category === "blog" || category === "about" || category === "privacy-policy" || category === "terms-of-service") notFound();
   const game = games.find(g => g.id === id && g.category === category);
   if (!game) notFound();
 
