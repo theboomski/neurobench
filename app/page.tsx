@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import gamesData from "@/content/games.json";
+import postsData from "@/content/blog/posts.json";
 import type { GameData } from "@/lib/types";
 import { CategoryCard, TrendingCard } from "@/components/CategoryCards";
 
@@ -73,6 +75,45 @@ export default function HomePage() {
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
           {CATEGORIES.map(cat => <CategoryCard key={cat.slug} {...cat} />)}
+        </div>
+      </section>
+
+      {/* Latest from the Blog */}
+      <section style={{ marginBottom: 56 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+          <div>
+            <div style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>The Science Blog</div>
+            <h2 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.03em" }}>Latest from the Blog</h2>
+          </div>
+          <Link href="/blog" style={{ fontSize: 11, color: "#00FF94", fontFamily: "var(--font-mono)", fontWeight: 700, textDecoration: "none", flexShrink: 0 }}>SEE ALL →</Link>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+          {(postsData as typeof postsData).slice(0, 4).map(post => (
+            <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
+              <article style={{
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderLeft: `3px solid ${post.accent}`,
+                borderRadius: "var(--radius-lg)",
+                padding: "20px 16px",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <span style={{ fontSize: 20 }}>{post.emoji}</span>
+                  <span style={{ fontSize: 9, color: post.accent, fontFamily: "var(--font-mono)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.07em" }}>{post.category}</span>
+                </div>
+                <h3 style={{ fontSize: 14, fontWeight: 800, lineHeight: 1.4, marginBottom: 8, color: "var(--text-1)", flex: 1, letterSpacing: "-0.01em" }}>
+                  {post.title}
+                </h3>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 10 }}>
+                  <span style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{post.readTime} min read</span>
+                  <span style={{ fontSize: 10, color: post.accent, fontFamily: "var(--font-mono)", fontWeight: 700 }}>READ →</span>
+                </div>
+              </article>
+            </Link>
+          ))}
         </div>
       </section>
 
