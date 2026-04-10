@@ -1,17 +1,19 @@
-// blog post page v2
+// blog post page v3
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import postsData from "@/content/blog/posts.json";
 
 type Post = typeof postsData[0];
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   return postsData.map(p => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = postsData.find(p => p.slug === params.slug) as Post | undefined;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const post = postsData.find(p => p.slug === slug) as Post | undefined;
   if (!post) return {};
   return {
     title: `${post.title} | ZAZAZA Blog`,
@@ -24,8 +26,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = postsData.find(p => p.slug === params.slug) as Post | undefined;
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = postsData.find(p => p.slug === slug) as Post | undefined;
   if (!post) notFound();
   const p = post!;
 
@@ -63,12 +66,10 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
       {/* Article body */}
       <article style={{ paddingBottom: 48 }}>
-        {/* Intro */}
         <p style={{ fontSize: 16, lineHeight: 1.9, color: "var(--text-2)", marginBottom: 32, borderLeft: `3px solid ${p.accent}`, paddingLeft: 16, fontStyle: "italic" }}>
           {p.content.intro}
         </p>
 
-        {/* Sections */}
         {p.content.sections.map((section, i) => (
           <section key={i} style={{ marginBottom: 36 }}>
             <h2 style={{ fontSize: 20, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 14, display: "flex", alignItems: "center", gap: 8 }}>
@@ -83,7 +84,6 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
           </section>
         ))}
 
-        {/* CTA — related game */}
         <div style={{ background: `${p.accent}10`, border: `1px solid ${p.accent}30`, borderRadius: "var(--radius-lg)", padding: "24px 20px", marginTop: 48, textAlign: "center" }}>
           <p style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 12 }}>Ready to test yourself?</p>
           <Link href={`/${p.categorySlug}/${p.relatedGame}`}>
@@ -94,7 +94,6 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         </div>
       </article>
 
-      {/* More posts */}
       {otherPosts.length > 0 && (
         <section style={{ borderTop: "1px solid var(--border)", paddingTop: 40, paddingBottom: 80 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
@@ -102,12 +101,12 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             <Link href="/blog" style={{ fontSize: 11, color: "#00FF94", fontFamily: "var(--font-mono)", textDecoration: "none", fontWeight: 700 }}>SEE ALL →</Link>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
-            {otherPosts.map(p => (
-              <Link key={p.slug} href={`/blog/${p.slug}`} style={{ textDecoration: "none" }}>
-                <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: `3px solid ${p.accent}`, borderRadius: "var(--radius-md)", padding: "16px 14px" }}>
-                  <div style={{ fontSize: 20, marginBottom: 8 }}>{p.emoji}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-1)", lineHeight: 1.4, marginBottom: 6 }}>{p.title}</div>
-                  <div style={{ fontSize: 11, color: p.accent, fontFamily: "var(--font-mono)", fontWeight: 700 }}>READ →</div>
+            {otherPosts.map(op => (
+              <Link key={op.slug} href={`/blog/${op.slug}`} style={{ textDecoration: "none" }}>
+                <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: `3px solid ${op.accent}`, borderRadius: "var(--radius-md)", padding: "16px 14px" }}>
+                  <div style={{ fontSize: 20, marginBottom: 8 }}>{op.emoji}</div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text-1)", lineHeight: 1.4, marginBottom: 6 }}>{op.title}</div>
+                  <div style={{ fontSize: 11, color: op.accent, fontFamily: "var(--font-mono)", fontWeight: 700 }}>READ →</div>
                 </div>
               </Link>
             ))}
