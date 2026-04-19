@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
@@ -8,30 +8,89 @@ import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
 
-// Words by difficulty level (A1=easy → C2=very hard)
+// Each word: definition + 3 plausible wrong definitions (similar style, similar length)
+// Key rule: all 4 options must look equally plausible to someone who doesn't know the word
 const WORDS = [
-  // A2 — common
-  { word: "Ambiguous", level: "A2", options: ["Having more than one possible meaning", "Completely clear and obvious", "Relating to both sides", "Temporary or uncertain"], correct: 0 },
-  { word: "Benevolent", level: "A2", options: ["Harmful or dangerous", "Well-meaning and kind", "Neutral or indifferent", "Strict and demanding"], correct: 1 },
-  { word: "Concise", level: "A2", options: ["Long and detailed", "Brief and to the point", "Vague and unclear", "Repeated multiple times"], correct: 1 },
-  { word: "Diligent", level: "B1", options: ["Lazy and careless", "Random and haphazard", "Hardworking and persistent", "Quick but inaccurate"], correct: 2 },
-  { word: "Eloquent", level: "B1", options: ["Fluent and persuasive in speech", "Silent and reserved", "Loud and aggressive", "Confused and unclear"], correct: 0 },
-  { word: "Frugal", level: "B1", options: ["Wasteful with money", "Sparing or careful with money", "Extremely wealthy", "Generous to a fault"], correct: 1 },
-  { word: "Gregarious", level: "B2", options: ["Solitary and withdrawn", "Preferring to be alone", "Fond of the company of others", "Aggressively competitive"], correct: 2 },
-  { word: "Hubris", level: "B2", options: ["Excessive pride or self-confidence", "Deep humility and modesty", "Fear of failure", "Lack of ambition"], correct: 0 },
-  { word: "Inimitable", level: "B2", options: ["Easy to copy", "Impossible to imitate; unique", "Predictable and ordinary", "Frequently replicated"], correct: 1 },
-  { word: "Juxtapose", level: "C1", options: ["To separate clearly", "To place side by side for contrast", "To combine into one", "To analyze in isolation"], correct: 1 },
-  { word: "Laconic", level: "C1", options: ["Talkative and verbose", "Using very few words", "Emotionally expressive", "Scholarly and verbose"], correct: 1 },
-  { word: "Mendacious", level: "C1", options: ["Honest and transparent", "Given to lying; dishonest", "Uncertain or doubtful", "Modest or self-effacing"], correct: 1 },
-  { word: "Nefarious", level: "C1", options: ["Wicked or criminal", "Exceptionally virtuous", "Financially beneficial", "Legally complex"], correct: 0 },
-  { word: "Obsequious", level: "C1", options: ["Stubborn and defiant", "Excessively compliant or fawning", "Honestly direct", "Quietly confident"], correct: 1 },
-  { word: "Perfidious", level: "C2", options: ["Loyal and dependable", "Deceitful and untrustworthy", "Overly cautious", "Boldly adventurous"], correct: 1 },
-  { word: "Querulous", level: "C2", options: ["Complaining in a petulant way", "Calm and undemanding", "Intellectually curious", "Decisively confident"], correct: 0 },
-  { word: "Recalcitrant", level: "C2", options: ["Obediently compliant", "Stubbornly resistant to authority", "Eagerly cooperative", "Easily persuaded"], correct: 1 },
-  { word: "Sycophant", level: "C2", options: ["An independent thinker", "A person who flatters to gain favor", "A vocal critic", "A neutral observer"], correct: 1 },
-  { word: "Tendentious", level: "C2", options: ["Balanced and impartial", "Promoting a particular cause; biased", "Factual and objective", "Cautious and reserved"], correct: 1 },
-  { word: "Verisimilitude", level: "C2", options: ["Complete falsehood", "The appearance of being true or real", "Scientific certainty", "Logical contradiction"], correct: 1 },
+  { word: "Ambiguous", level: "A2",
+    correct: "Open to more than one interpretation; not clearly defined",
+    wrong: ["Relating to both sides of an argument equally", "Expressing strong disagreement or opposition", "Clearly stated with no room for doubt"] },
+  { word: "Benevolent", level: "A2",
+    correct: "Well-meaning and kindly disposed toward others",
+    wrong: ["Strictly enforcing rules for others' benefit", "Tolerant of other people's beliefs and choices", "Giving advice freely whether asked for or not"] },
+  { word: "Concise", level: "A2",
+    correct: "Giving a lot of information clearly in few words",
+    wrong: ["Covering every possible detail thoroughly", "Organized in a way that is easy to follow", "Written in a formal and professional style"] },
+  { word: "Diligent", level: "B1",
+    correct: "Having or showing care and conscientiousness in work",
+    wrong: ["Moving quickly from one task to another", "Focused only on outcomes, not methods", "Willing to work extra hours when required"] },
+  { word: "Eloquent", level: "B1",
+    correct: "Fluent, forceful, and persuasive in speaking or writing",
+    wrong: ["Using technical language to sound authoritative", "Choosing simple words over complex ones", "Speaking confidently without preparation"] },
+  { word: "Frugal", level: "B1",
+    correct: "Sparing or economical with money or food",
+    wrong: ["Unwilling to spend money on anything enjoyable", "Careful about tracking income and expenses", "Generous in small ways but cautious with large amounts"] },
+  { word: "Gregarious", level: "B2",
+    correct: "Fond of company; sociable by nature",
+    wrong: ["Comfortable speaking in front of large groups", "Skilled at making others feel included and at ease", "Outwardly friendly while remaining emotionally guarded"] },
+  { word: "Hubris", level: "B2",
+    correct: "Excessive pride or self-confidence, especially leading to downfall",
+    wrong: ["Intense ambition that drives a person to take risks", "Confidence that is earned through repeated success", "Pride taken in the achievements of one's group"] },
+  { word: "Inimitable", level: "B2",
+    correct: "So good or unusual as to be impossible to copy",
+    wrong: ["Recognized immediately by those who know the field", "Developed over years of dedicated practice", "Admired but rarely successfully taught to others"] },
+  { word: "Juxtapose", level: "C1",
+    correct: "To place two things side by side for contrasting effect",
+    wrong: ["To combine two opposing ideas into a single argument", "To examine two subjects using the same criteria", "To present two options and allow the reader to choose"] },
+  { word: "Laconic", level: "C1",
+    correct: "Using very few words; brief to the point of seeming rude",
+    wrong: ["Speaking only when one has something important to say", "Preferring written communication over spoken", "Delivering information in a flat, emotionless tone"] },
+  { word: "Mendacious", level: "C1",
+    correct: "Not telling the truth; lying",
+    wrong: ["Frequently changing one's stated position", "Saying what people want to hear rather than the truth", "Presenting facts selectively to create a false impression"] },
+  { word: "Nefarious", level: "C1",
+    correct: "Wicked or criminal in nature",
+    wrong: ["Done without proper legal authority", "Harmful to others through carelessness rather than intent", "Operating outside accepted social norms"] },
+  { word: "Obsequious", level: "C1",
+    correct: "Excessively eager to serve, please, or obey; fawning",
+    wrong: ["Polite and cooperative in professional settings", "Quick to agree in order to avoid conflict", "Willing to take on tasks others consider beneath them"] },
+  { word: "Perfidious", level: "C2",
+    correct: "Deceitful and untrustworthy; guilty of betrayal",
+    wrong: ["Pursuing one's interests without regard for others", "Presenting a trustworthy appearance while hiding true motives", "Willing to switch allegiances under sufficient pressure"] },
+  { word: "Querulous", level: "C2",
+    correct: "Complaining in a petulant or whining manner",
+    wrong: ["Asking detailed questions that others find irritating", "Expressing dissatisfaction in a measured, formal way", "Frequently finding fault with processes rather than people"] },
+  { word: "Recalcitrant", level: "C2",
+    correct: "Stubbornly resistant to authority or discipline",
+    wrong: ["Slow to adopt new methods or technologies", "Unwilling to engage in discussion about one's behavior", "Resistant to change even when outcomes would improve"] },
+  { word: "Sycophant", level: "C2",
+    correct: "A person who flatters powerful people to gain personal advantage",
+    wrong: ["Someone who agrees with others to avoid confrontation", "A person who admires leaders without critical judgment", "Someone who mimics those they admire in order to impress them"] },
+  { word: "Tendentious", level: "C2",
+    correct: "Promoting a particular cause or point of view; biased",
+    wrong: ["Reaching conclusions before examining the evidence", "Presenting only the strongest version of one's argument", "Allowing personal experience to influence analysis"] },
+  { word: "Verisimilitude", level: "C2",
+    correct: "The appearance of being true or real",
+    wrong: ["The quality of being verified by independent sources", "The degree to which a story follows internal logic", "The use of realistic details to create emotional impact"] },
 ];
+
+// Shuffle array utility (local, no import needed)
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build shuffled options for each word: attach correct flag to each option
+function buildShuffledOptions(word: typeof WORDS[0]) {
+  const opts = shuffle([
+    { text: word.correct, isCorrect: true },
+    ...word.wrong.map(w => ({ text: w, isCorrect: false })),
+  ]);
+  return opts;
+}
 
 function getRank(score: number, game: GameData) {
   const sorted = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);
@@ -50,7 +109,6 @@ function getPercentile(score: number, game: GameData) {
   return 50;
 }
 
-// Estimate vocab age from score
 function vocabAge(score: number): number {
   if (score >= 95) return 18;
   if (score >= 85) return 25;
@@ -71,15 +129,25 @@ export default function VocabularyAge({ game }: { game: GameData }) {
   const [shareImg, setShareImg] = useState<string | null>(null);
   const [finalScore, setFinalScore] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
+  const [shuffleKey, setShuffleKey] = useState(0);
 
-  const q = WORDS[current];
+  // Build shuffled options once per game (re-shuffles on retry)
+  const shuffledWords = useMemo(() =>
+    WORDS.map(w => ({ ...w, shuffledOptions: buildShuffledOptions(w) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shuffleKey]
+  );
+
+  const q = shuffledWords[current];
+  const correctRef = useRef(0);
 
   const handleAnswer = useCallback((idx: number) => {
     if (selected !== null) return;
     setSelected(idx);
-    const isCorrect = idx === q.correct;
+    const isCorrect = q.shuffledOptions[idx].isCorrect;
     if (isCorrect) playBeep("tap");
-    const newCorrect = isCorrect ? correct + 1 : correct;
+    if (isCorrect) correctRef.current += 1;
+    const newCorrect = correctRef.current;
     setTimeout(() => {
       if (current + 1 >= WORDS.length) {
         const score = Math.round((newCorrect / WORDS.length) * 100);
@@ -92,11 +160,15 @@ export default function VocabularyAge({ game }: { game: GameData }) {
         setCurrent(c => c + 1);
         setSelected(null);
       }
-    }, 700);
-  }, [selected, q, correct, current, game.id]);
+    }, 900);
+  }, [selected, q, current, game.id]);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0); setSelected(null); setShareImg(null); setIsNewBest(false); };
+  const afterAd = () => {
+    setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0);
+    correctRef.current = 0; setSelected(null); setShareImg(null);
+    setIsNewBest(false); setShuffleKey(k => k + 1);
+  };
 
   const rank = getRank(finalScore, game);
   const pct = getPercentile(finalScore, game);
@@ -138,15 +210,15 @@ export default function VocabularyAge({ game }: { game: GameData }) {
       <div style={{ fontSize: 56, marginBottom: 16 }}>📚</div>
       <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10 }}>Vocabulary Age Test</h2>
       <p style={{ color: "var(--text-2)", fontSize: 14, marginBottom: 16, lineHeight: 1.7, maxWidth: 380, margin: "0 auto 16px" }}>
-        {WORDS.length} words. Each has 4 possible definitions. Choose the correct one. Words get harder as you progress — from A2 to C2 level.
+        20 words. 4 definitions each — all plausible. Choose the correct one. Words escalate from A2 to C2.
       </p>
       <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 24 }}>
         {["A2", "B1", "B2", "C1", "C2"].map(l => (
           <div key={l} style={{ background: "var(--bg-elevated)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{l}</div>
         ))}
       </div>
-      <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · 20 words</p>
-      <button onClick={() => setPhase("playing")} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · Options shuffle every time</p>
+      <button onClick={() => { setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
     </div>
   );
 
@@ -172,11 +244,10 @@ export default function VocabularyAge({ game }: { game: GameData }) {
         <p style={{ fontSize: 13, color: "var(--text-3)", fontFamily: "var(--font-mono)", textAlign: "center", marginBottom: 16 }}>Choose the correct definition:</p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {q.options.map((opt, i) => {
+          {q.shuffledOptions.map((opt, i) => {
             const isSelected = selected === i;
-            const isCorrectOpt = i === q.correct;
-            const showCorrect = selected !== null && isCorrectOpt;
-            const showWrong = selected !== null && isSelected && !isCorrectOpt;
+            const showCorrect = selected !== null && opt.isCorrect;
+            const showWrong = selected !== null && isSelected && !opt.isCorrect;
             return (
               <button key={i} onClick={() => handleAnswer(i)} disabled={selected !== null} className="pressable"
                 style={{
@@ -192,9 +263,10 @@ export default function VocabularyAge({ game }: { game: GameData }) {
                   alignItems: "center",
                   gap: 12,
                   transition: "all 0.15s",
+                  lineHeight: 1.5,
                 }}>
                 <span style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-3)", minWidth: 16 }}>{String.fromCharCode(65 + i)}</span>
-                {opt}
+                {opt.text}
                 {showCorrect && <span style={{ marginLeft: "auto" }}>✓</span>}
                 {showWrong && <span style={{ marginLeft: "auto" }}>✗</span>}
               </button>

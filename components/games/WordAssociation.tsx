@@ -1,10 +1,22 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
+
+
+// Shuffle options while keeping correct answer trackable
+function shuffleOpts(options: string[], correct: number) {
+  const indexed = options.map((text, i) => ({ text, isCorrect: i === correct }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  return indexed;
+}
+
 
 const t = dict.en;
 
@@ -60,13 +72,20 @@ export default function WordAssociation({ game }: { game: GameData }) {
   const [avgRT, setAvgRT] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
 
-  const q = PAIRS[current];
+  const [shuffleKey, setShuffleKey] = useState(0);
+
+  const shuffledPairs = useMemo(() =>
+    PAIRS.map(p => ({ ...p, shuffledOptions: shuffleOpts(p.options, p.correct) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shuffleKey]
+  );
+  const q = shuffledPairs[current];
 
   const handleAnswer = useCallback((idx: number) => {
     if (selected !== null) return;
     setSelected(idx);
     const rt = Date.now() - trialStart;
-    const isCorrect = idx === q.correct;
+    const isCorrect = q.shuffledOptions[idx].isCorrect;
     if (isCorrect) playBeep("tap");
     const newCorrect = isCorrect ? correct + 1 : correct;
     const newRTs = isCorrect ? [...rts, rt] : rts;
@@ -94,7 +113,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
 
   const handleStart = () => {
     setCurrent(0); setCorrect(0); setRts([]); setSelected(null);
-    setTrialStart(Date.now());
+    setTrialStart(Date.now()); setShuffleKey(k => k + 1);
     setPhase("playing");
   };
 
@@ -173,11 +192,10 @@ export default function WordAssociation({ game }: { game: GameData }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          {q.options.map((opt, i) => {
+          {q.shuffledOptions.map((opt, i) => {
             const isSelected = selected === i;
-            const isCorrectOpt = i === q.correct;
-            const showCorrect = selected !== null && isCorrectOpt;
-            const showWrong = selected !== null && isSelected && !isCorrectOpt;
+            const showCorrect = selected !== null && opt.isCorrect;
+            const showWrong = selected !== null && isSelected && !opt.isCorrect;
             return (
               <button key={i} onClick={() => handleAnswer(i)} disabled={selected !== null} className="pressable"
                 style={{
@@ -191,7 +209,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
                   cursor: selected !== null ? "default" : "pointer",
                   transition: "all 0.15s",
                 }}>
-                {opt}
+                {opt.text}
               </button>
             );
           })}

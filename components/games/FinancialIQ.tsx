@@ -1,12 +1,23 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
 import { saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const t = dict.en;
+
+
+function shuffleOpts(options: string[], correct: number) {
+  const indexed = options.map((text, i) => ({ text, isCorrect: i === correct }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  return indexed;
+}
+
 
 const QUESTIONS = [
   {
@@ -112,12 +123,19 @@ export default function FinancialIQ({ game }: { game: GameData }) {
   const [finalScore, setFinalScore] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
 
-  const q = QUESTIONS[current];
+  const [shuffleKey, setShuffleKey] = useState(0);
+
+  const shuffledQs = useMemo(() =>
+    QUESTIONS.map(q => ({ ...q, shuffledOptions: shuffleOpts(q.options, q.correct) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shuffleKey]
+  );
+  const q = shuffledQs[current];
 
   const handleAnswer = useCallback((idx: number) => {
     if (selected !== null) return;
     setSelected(idx);
-    const isCorrect = idx === q.correct;
+    const isCorrect = q.shuffledOptions[idx].isCorrect;
     if (isCorrect) playBeep("tap");
     const newCorrect = isCorrect ? correct + 1 : correct;
     setCorrect(newCorrect);
@@ -139,7 +157,7 @@ export default function FinancialIQ({ game }: { game: GameData }) {
   }, [selected, q, correct, current, game.id]);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0); setSelected(null); setShareImg(null); setIsNewBest(false); };
+  const afterAd = () => { setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0); setSelected(null); setShareImg(null); setIsNewBest(false); setShuffleKey(k => k + 1); };
 
   const rank = getRank(finalScore, game);
   const pct = getPercentile(finalScore, game);
@@ -190,7 +208,7 @@ export default function FinancialIQ({ game }: { game: GameData }) {
         ))}
       </div>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~5 minutes · Learn while you play</p>
-      <button onClick={() => setPhase("playing")} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <button onClick={() => { setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
     </div>
   );
 
@@ -221,11 +239,10 @@ export default function FinancialIQ({ game }: { game: GameData }) {
         )}
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {q.options.map((opt, i) => {
+          {q.shuffledOptions.map((opt, i) => {
             const isSelected = selected === i;
-            const isCorrectOpt = i === q.correct;
-            const showCorrect = selected !== null && isCorrectOpt;
-            const showWrong = selected !== null && isSelected && !isCorrectOpt;
+            const showCorrect = selected !== null && opt.isCorrect;
+            const showWrong = selected !== null && isSelected && !opt.isCorrect;
             return (
               <button key={i} onClick={() => handleAnswer(i)} disabled={selected !== null} className="pressable"
                 style={{
@@ -236,7 +253,7 @@ export default function FinancialIQ({ game }: { game: GameData }) {
                   textAlign: "left", display: "flex", alignItems: "center", gap: 12, transition: "all 0.15s",
                 }}>
                 <span style={{ fontSize: 11, fontFamily: "var(--font-mono)", color: "var(--text-3)", minWidth: 16 }}>{String.fromCharCode(65 + i)}</span>
-                {opt}
+                {opt.text}
                 {showCorrect && <span style={{ marginLeft: "auto" }}>✓</span>}
                 {showWrong && <span style={{ marginLeft: "auto" }}>✗</span>}
               </button>
