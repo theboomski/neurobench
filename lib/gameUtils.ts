@@ -247,3 +247,18 @@ export function playBeep(type: "go" | "success" | "fail" | "tap") {
     osc.start(); osc.stop(ac.currentTime + cfg.dur);
   } catch { /* silent */ }
 }
+
+// ── Quiz Option Shuffler ──────────────────────────────────────────────────────
+export interface QuizOption {
+  text: string;
+  score: number;
+}
+
+export function shuffleOptions(options: QuizOption[]): QuizOption[] {
+  const arr = [...options];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}

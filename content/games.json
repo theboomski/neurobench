@@ -4394,5 +4394,705 @@
         }
       ]
     }
+  },
+  {
+    "id": "main-character",
+    "title": "Are You the Main Character?",
+    "clinicalTitle": "Narcissistic Personality Inventory — Vibe Edition",
+    "shortDescription": "Be honest. Do you walk into rooms like you're being filmed?",
+    "description": "Everyone thinks they're the protagonist. But are you actually the main character — or just an NPC who's been coping? This test measures narcissistic traits through situations you've definitely been in.",
+    "emoji": "🎬",
+    "accent": "#F59E0B",
+    "accentDim": "rgba(245,158,11,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "main character syndrome",
+      "narcissism test",
+      "main character energy",
+      "personality quiz",
+      "narcissist test"
+    ],
+    "seo": {
+      "metaTitle": "Are You the Main Character? Free Narcissism Vibe Check | ZAZAZA",
+      "metaDescription": "Do you have main character syndrome? Take the free vibe check. Instant results, no signup. Based on narcissistic personality research.",
+      "keywords": [
+        "main character syndrome test",
+        "main character energy quiz",
+        "narcissism vibe check",
+        "am I a narcissist test free"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "20 scenarios. Pick the answer that's most honest — not the one that makes you look good.",
+        "No one's watching. Be real.",
+        "Your Main Character Score is calculated across 4 dimensions.",
+        "Results include your protagonist archetype.",
+        "Share it. Let your friends disagree with the results."
+      ],
+      "science": "Narcissistic personality traits exist on a spectrum in the general population and are measured using the Narcissistic Personality Inventory (NPI), developed by Raskin and Hall (1979). Subclinical narcissism — what most people mean when they say 'main character energy' — predicts confidence, leadership emergence, and social boldness at moderate levels. At high levels, it predicts entitlement, exploitativeness, and relationship dissatisfaction. This assessment adapts validated NPI dimensions into contemporary social scenarios.",
+      "tips": [
+        "Main character energy isn't inherently bad — confidence and ambition are adaptive.",
+        "The question is whether your sense of specialness comes at others' expense.",
+        "If you're offended by your score, that's data.",
+        "High scores are extremely shareable. Low scores are more surprising.",
+        "The most accurate results come from answering what you actually do, not what you'd like to do."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#F59E0B",
+          "title": "Certified Main Character",
+          "subtitle": "The camera follows you. You know it. Everyone else suspects it.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#F97316",
+          "title": "Supporting Lead",
+          "subtitle": "You're definitely in the poster. Just not centered.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#58A6FF",
+          "title": "Recurring Character",
+          "subtitle": "You have an arc. It's just not the main one.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#94A3B8",
+          "title": "Background Character",
+          "subtitle": "You're fine with that. Which is also kind of the main character move.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Pure NPC Energy",
+          "subtitle": "Respectfully, you are someone else's side quest.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "npc-or-villain",
+    "title": "NPC or Villain?",
+    "clinicalTitle": "Dark Triad Rapid Assessment — Cultural Edition",
+    "shortDescription": "You're not the hero. The question is whether you're interesting.",
+    "description": "In every story, there are NPCs (forgettable background characters) and Villains (the ones with actual depth and motivation). This test figures out which one you are — and which Dark Triad traits are doing the heavy lifting.",
+    "emoji": "🎭",
+    "accent": "#8B5CF6",
+    "accentDim": "rgba(139,92,246,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "npc test",
+      "villain test",
+      "dark personality quiz",
+      "dark triad mz",
+      "are you an npc"
+    ],
+    "seo": {
+      "metaTitle": "NPC or Villain? Free Dark Personality Test | ZAZAZA",
+      "metaDescription": "Are you an NPC or a villain? Take the free dark personality vibe check. Instant results. Based on Dark Triad research.",
+      "keywords": [
+        "npc or villain test",
+        "am I an npc quiz",
+        "dark personality test",
+        "villain test free",
+        "dark triad vibe check"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "15 situations. Choose what you'd actually do or think — not what sounds better.",
+        "There are no wrong answers. NPCs and Villains are both valid.",
+        "Your result shows your character archetype + which traits drive it.",
+        "The more honest you are, the more accurate (and interesting) the result.",
+        "Villains get better results. Just saying."
+      ],
+      "science": "The Dark Triad — narcissism, Machiavellianism, and psychopathy — are three personality dimensions identified by Paulhus and Williams (2002) that cluster together in the general population. Unlike clinical disorders, these are subclinical traits present in normal people to varying degrees. The NPC/Villain framing maps onto genuine psychological constructs: NPCs (low on all three) are conventional and socially compliant; Villains (elevated on one or more) are strategic, self-focused, and often more compelling to interact with, for better or worse.",
+      "tips": [
+        "Villain doesn't mean bad person. It means you have a perspective and you act on it.",
+        "Most memorable people score as some flavor of Villain.",
+        "Pure NPC is actually rare — it means genuinely no agenda, which is its own kind of unusual.",
+        "Your archetype shifts in different contexts. Work-you and home-you might score differently.",
+        "The best villains always think they're the hero."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#8B5CF6",
+          "title": "Apex Villain",
+          "subtitle": "Motivated. Strategic. Three steps ahead. Genuinely unsettling to cross.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#A855F7",
+          "title": "Compelling Antagonist",
+          "subtitle": "You have a code. It's just not the same as everyone else's.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#EC4899",
+          "title": "Chaotic Neutral",
+          "subtitle": "Not evil. Just extremely self-interested and occasionally messy.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#94A3B8",
+          "title": "Reluctant NPC",
+          "subtitle": "You have villain thoughts. You just don't act on them. Yet.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Pure NPC",
+          "subtitle": "No agenda. No scheme. Genuinely just vibing. Rare, actually.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "red-flag-green-flag",
+    "title": "Red Flag or Green Flag?",
+    "clinicalTitle": "Relationship Behavior Pattern Recognition Assessment",
+    "shortDescription": "Rate your own behavior. Be honest. Your ex already knows.",
+    "description": "You know how to spot red flags in other people. But what about yourself? Rate your own relationship behaviors — the things you actually do, not the things you tell people you do.",
+    "emoji": "🚩",
+    "accent": "#EF4444",
+    "accentDim": "rgba(239,68,68,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "red flag test",
+      "green flag quiz",
+      "am I a red flag test",
+      "relationship behavior test",
+      "red flag or green flag"
+    ],
+    "seo": {
+      "metaTitle": "Red Flag or Green Flag? Rate Your Own Behavior | ZAZAZA",
+      "metaDescription": "Are you actually a red flag? Rate your own relationship behaviors. Free test, instant results, no signup. Your ex already knows the answer.",
+      "keywords": [
+        "am I a red flag test",
+        "red flag green flag quiz",
+        "red flag test free",
+        "rate your relationship behavior",
+        "red flag quiz"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "20 relationship behaviors. Rate how often you do each one.",
+        "Answer based on what you actually do, not what you'd do in an ideal world.",
+        "Your score shows your overall flag color + your worst pattern.",
+        "Green flags are boring to share. Red flags go viral.",
+        "If you're nervous to take this, that's already information."
+      ],
+      "science": "Relationship red flags are behaviors identified in clinical and social psychology research as predictors of relationship dysfunction or harm. These include patterns from Gottman's Four Horsemen (contempt, criticism, defensiveness, stonewalling), attachment theory (anxious and avoidant behaviors), and narcissistic abuse literature (love bombing, intermittent reinforcement, gaslighting). Self-report measures of these behaviors tend to underestimate their frequency due to self-serving bias — which is why this assessment asks about specific behaviors rather than general self-perception.",
+      "tips": [
+        "Most people are a mix. Pure green flag humans are extremely rare and slightly boring.",
+        "The worst red flags are the ones you don't recognize in yourself.",
+        "Knowing your patterns is the first step to changing them — or at least warning people.",
+        "Share this with someone you've dated. See if they agree with your score.",
+        "A high red flag score doesn't make you a bad person. It makes you someone with patterns worth examining."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#EF4444",
+          "title": "Walking Red Flag",
+          "subtitle": "You are the reason people go to therapy. Respect, honestly.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#F97316",
+          "title": "High Risk",
+          "subtitle": "You have patterns. Your exes have a group chat about them.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#F59E0B",
+          "title": "Yellow Flag",
+          "subtitle": "Not dealbreakers. But someone's definitely mentioned it.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#10B981",
+          "title": "Mostly Green",
+          "subtitle": "You're doing okay. A few rough edges. Nothing therapy won't fix.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#06B6D4",
+          "title": "Suspiciously Green",
+          "subtitle": "Either genuinely healthy or deeply unaware. Hard to tell which.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "puppet-master",
+    "title": "Puppet Master or Puppet?",
+    "clinicalTitle": "Social Influence & Manipulation Pattern Assessment",
+    "shortDescription": "Do you run the room — or does the room run you?",
+    "description": "Some people move through social situations like chess players — three moves ahead, engineering outcomes before anyone notices. Others get played without ever knowing it. This test figures out which one you are.",
+    "emoji": "🎪",
+    "accent": "#EC4899",
+    "accentDim": "rgba(236,72,153,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "manipulation test",
+      "puppet master test",
+      "am I manipulative",
+      "gaslighting test",
+      "social influence quiz"
+    ],
+    "seo": {
+      "metaTitle": "Puppet Master or Puppet? Free Manipulation Test | ZAZAZA",
+      "metaDescription": "Do you manipulate people — or do people manipulate you? Free test, instant results. Gaslighting, love bombing, social influence patterns.",
+      "keywords": [
+        "am I manipulative test",
+        "puppet master test free",
+        "gaslighting test",
+        "manipulation quiz",
+        "social influence test"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "20 social scenarios. Pick what you actually do or have done.",
+        "No judgment. Puppet Masters and Puppets both get interesting results.",
+        "Answers shuffle every time — retaking reveals new angles.",
+        "Your result includes your specific manipulation style (or your specific vulnerability).",
+        "Share it. Your friends will either strongly agree or strongly deny."
+      ],
+      "science": "Social influence research distinguishes between legitimate persuasion (open, rational, consensual) and manipulation (covert, exploitative, bypassing consent). Machiavellianism — one of the Dark Triad traits — specifically measures the disposition to manipulate others strategically. High-Mach individuals are characterized by strategic patience, emotional detachment, and a cynical view of human nature. Research by Christie and Geis (1970) established that high-Mach individuals are disproportionately successful in face-to-face persuasion tasks. This assessment measures where you fall on the influence spectrum.",
+      "tips": [
+        "Most people are somewhere in the middle — situational manipulators who are also occasionally manipulated.",
+        "The scariest manipulators don't think of themselves as manipulative. They call it 'reading people.'",
+        "Being a Puppet isn't just about being naive — it's often about caring too much what others think.",
+        "High scores are shareable because they're flattering in a dark way. Low scores are shareable because they're relatable.",
+        "If you're offended by a high Puppet score, notice who told you to feel that way."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#EC4899",
+          "title": "Iron Fist in a Silk Glove",
+          "subtitle": "You engineer outcomes while everyone thinks it was their idea. Genuinely unsettling.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#A855F7",
+          "title": "Puppet Master",
+          "subtitle": "You're three moves ahead and you know it. People feel it but can't prove it.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#F59E0B",
+          "title": "Situational Player",
+          "subtitle": "You manipulate when you need to. You just don't call it that.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#58A6FF",
+          "title": "Reluctant Puppet",
+          "subtitle": "You know you're being played sometimes. You do it anyway.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Pure Puppet",
+          "subtitle": "Someone in your life is reading these results and smiling right now.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "dark-empath",
+    "title": "Dark Empath: The Most Dangerous Personality",
+    "clinicalTitle": "Dark Empathy Pattern Assessment",
+    "shortDescription": "High empathy. Dark intentions. The rarest — and most dangerous — personality type.",
+    "description": "Everyone knows about psychopaths and narcissists. But the Dark Empath is rarer and more dangerous: someone who can read your emotions perfectly — and use that information strategically. This test identifies whether you're one of them.",
+    "emoji": "🖤",
+    "accent": "#6366F1",
+    "accentDim": "rgba(99,102,241,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "dark empath test",
+      "dark empathy quiz",
+      "am I a dark empath",
+      "dark empath personality",
+      "empathy manipulation test"
+    ],
+    "seo": {
+      "metaTitle": "Dark Empath Test — The Most Dangerous Personality | ZAZAZA",
+      "metaDescription": "Are you a Dark Empath? High empathy + dark traits = the most dangerous personality type. Free test, instant results. The rarest personality you've never heard of.",
+      "keywords": [
+        "dark empath test free",
+        "am I a dark empath quiz",
+        "dark empathy personality test",
+        "dark empath traits"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "20 questions measuring both empathic ability and dark personality tendencies.",
+        "Answer honestly — the combination of your scores is what reveals the pattern.",
+        "Dark Empath is a rare result. Most people are either high empathy OR dark traits, not both.",
+        "Answers shuffle every time for a fresh experience.",
+        "The result tells you exactly how your empathy and dark traits interact."
+      ],
+      "science": "The Dark Empath was identified in a 2021 study by Heym et al. published in Personality and Individual Differences. The researchers found a cluster of individuals scoring high on empathy measures while simultaneously scoring elevated on Dark Triad traits — particularly narcissism and Machiavellianism. Dark Empaths showed better emotional recognition than non-empathic dark personalities, making them more effective at social manipulation. They also reported higher wellbeing than pure dark triad individuals, suggesting the empathy component moderates some of the self-destructive tendencies of unchecked dark traits.",
+      "tips": [
+        "Dark Empaths often go undetected because their empathy reads as genuine — and it often is.",
+        "The danger isn't malice. It's capability: knowing exactly where to press.",
+        "High empathy without dark traits = therapist. High dark traits without empathy = psychopath. Both = Dark Empath.",
+        "Most Dark Empaths are unaware of their own pattern — they just think they're unusually good at reading people.",
+        "This is one of the most shareable results because it sounds both impressive and slightly terrifying."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#6366F1",
+          "title": "Dark Empath",
+          "subtitle": "You understand people deeply. You choose what to do with that. Not everyone would choose what you do.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#8B5CF6",
+          "title": "Shadow Empath",
+          "subtitle": "High empathy, some dark edges. You heal people and occasionally leave marks.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#EC4899",
+          "title": "Selective Empath",
+          "subtitle": "Your empathy is real — but so is your awareness of when to turn it off.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#10B981",
+          "title": "Light Empath",
+          "subtitle": "High empathy, low dark traits. You feel everything. It costs you.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#94A3B8",
+          "title": "Neither",
+          "subtitle": "Average empathy, average dark traits. You're the baseline everyone else is measured against.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
+  },
+  {
+    "id": "social-predator",
+    "title": "Social Predator: Shark, Wolf, or Golden Retriever?",
+    "clinicalTitle": "Social Dominance & Ambition Orientation Assessment",
+    "shortDescription": "In the social food chain, where do you actually sit?",
+    "description": "Every social environment has a food chain. Some people are apex predators — strategic, dominant, moving through rooms like they own them. Some are pack animals. Some are genuinely just happy to be there. This test finds your spot.",
+    "emoji": "🦈",
+    "accent": "#0EA5E9",
+    "accentDim": "rgba(14,165,233,0.10)",
+    "category": "dark-personality",
+    "categoryLabel": "Dark Personality",
+    "tags": [
+      "social predator test",
+      "shark wolf golden retriever test",
+      "personality animal test",
+      "social dominance quiz",
+      "alpha personality test"
+    ],
+    "seo": {
+      "metaTitle": "Shark, Wolf, or Golden Retriever? Social Predator Test | ZAZAZA",
+      "metaDescription": "Where do you sit in the social food chain? Free personality test — Shark, Lone Wolf, Fox, or Golden Retriever. Instant results, no signup.",
+      "keywords": [
+        "shark wolf golden retriever personality test",
+        "social predator test free",
+        "alpha personality quiz",
+        "social dominance test",
+        "what animal am I personality"
+      ]
+    },
+    "content": {
+      "howToPlay": [
+        "20 scenarios about social ambition, competition, and dominance.",
+        "Pick what you'd actually do — not what sounds impressive.",
+        "Answers shuffle every time so retaking feels different.",
+        "Your result is one of 5 animal archetypes with a detailed breakdown.",
+        "The archetypes are: Shark, Lone Wolf, Fox, Pack Wolf, and Golden Retriever."
+      ],
+      "science": "Social dominance orientation (SDO), developed by Pratto et al. (1994), measures the degree to which individuals prefer hierarchical relationships between social groups, with themselves at the top. High SDO correlates with competitive behavior, reduced altruism, and a tendency to view social situations as zero-sum. Combined with Machiavellian traits, high SDO individuals navigate social environments strategically, identifying opportunities for advancement and exploiting structural advantages. This assessment adapts these constructs into everyday social scenarios.",
+      "tips": [
+        "Golden Retrievers are not the consolation prize — they're the ones everyone actually wants around.",
+        "Sharks are the most viral result. Lone Wolf is the most relatable.",
+        "Most people overestimate how high they are on the food chain.",
+        "Your archetype changes with context — you might be a Shark at work and a Golden Retriever at home.",
+        "The most dangerous people in any room are usually the ones who don't look like predators."
+      ]
+    },
+    "stats": {
+      "percentiles": [
+        {
+          "ms": 90,
+          "percentile": 99
+        },
+        {
+          "ms": 75,
+          "percentile": 90
+        },
+        {
+          "ms": 60,
+          "percentile": 75
+        },
+        {
+          "ms": 45,
+          "percentile": 55
+        },
+        {
+          "ms": 30,
+          "percentile": 30
+        },
+        {
+          "ms": 15,
+          "percentile": 10
+        }
+      ],
+      "ranks": [
+        {
+          "label": "S",
+          "maxMs": 75,
+          "color": "#0EA5E9",
+          "title": "Apex Shark",
+          "subtitle": "You smell opportunity before anyone else sees it. You don't chase. You position.",
+          "percentileLabel": "Top 5%"
+        },
+        {
+          "label": "A",
+          "maxMs": 55,
+          "color": "#6366F1",
+          "title": "Lone Wolf",
+          "subtitle": "You watch from the edge. You work alone. When you move, it's decisive and it's yours.",
+          "percentileLabel": "Top 20%"
+        },
+        {
+          "label": "B",
+          "maxMs": 35,
+          "color": "#F59E0B",
+          "title": "The Fox",
+          "subtitle": "Not the strongest in the room. The smartest. You win by knowing things others don't.",
+          "percentileLabel": "Top 45%"
+        },
+        {
+          "label": "C",
+          "maxMs": 15,
+          "color": "#94A3B8",
+          "title": "Pack Wolf",
+          "subtitle": "You're strong in a group. You know when to lead and when to follow. That's rarer than it sounds.",
+          "percentileLabel": "Top 75%"
+        },
+        {
+          "label": "D",
+          "maxMs": 9999,
+          "color": "#10B981",
+          "title": "Golden Retriever",
+          "subtitle": "Genuinely liked by everyone. No agenda. Somehow always invited. Deeply underestimated.",
+          "percentileLabel": "Bottom 25%"
+        }
+      ]
+    }
   }
 ]

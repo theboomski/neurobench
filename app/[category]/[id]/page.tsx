@@ -40,6 +40,12 @@ import LoveLanguage from "@/components/games/LoveLanguage";
 import MoneyMindset from "@/components/games/MoneyMindset";
 import RiskTolerance from "@/components/games/RiskTolerance";
 import FinancialIQ from "@/components/games/FinancialIQ";
+import MainCharacter from "@/components/games/MainCharacter";
+import NPCorVillain from "@/components/games/NPCorVillain";
+import RedFlagGreenFlag from "@/components/games/RedFlagGreenFlag";
+import PuppetMaster from "@/components/games/PuppetMaster";
+import DarkEmpath from "@/components/games/DarkEmpath";
+import SocialPredator from "@/components/games/SocialPredator";
 
 const games = gamesData as GameData[];
 
@@ -105,6 +111,12 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "money-mindset":       return <MoneyMindset game={game} />;
     case "risk-tolerance":      return <RiskTolerance game={game} />;
     case "financial-iq":        return <FinancialIQ game={game} />;
+    case "main-character":      return <MainCharacter game={game} />;
+    case "npc-or-villain":      return <NPCorVillain game={game} />;
+    case "red-flag-green-flag": return <RedFlagGreenFlag game={game} />;
+    case "puppet-master":      return <PuppetMaster game={game} />;
+    case "dark-empath":        return <DarkEmpath game={game} />;
+    case "social-predator":    return <SocialPredator game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }
