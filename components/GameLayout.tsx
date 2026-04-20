@@ -88,6 +88,10 @@ export default function GameLayout({ game, children }: { game: GameData; childre
         </ul>
       </div>
 
+      {/* Disclaimer */}
+      <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "14px 16px", marginBottom: 24, fontSize: 11, color: "var(--text-3)", lineHeight: 1.7, fontFamily: "var(--font-mono)" }}>
+        <span style={{ color: "var(--text-2)", fontWeight: 700 }}>Note:</span> This test is designed for entertainment and self-reflection purposes only. Results are based on self-report and are not a substitute for professional psychological evaluation, diagnosis, or treatment. If you have concerns about your mental health, please consult a qualified professional.
+      </div>
       <RelatedTests game={game} />
 
       <div style={{ paddingBottom: 32 }}>

@@ -5,13 +5,14 @@ import { useState } from "react";
 
 const MAIN_TABS = [
   { href: "/",                emoji: "🏠", label: "Home" },
+  { href: "/blog",            emoji: "📝", label: "Blog" },
   { href: "/brain-age",       emoji: "🧠", label: "Brain" },
-  { href: "/office-iq",       emoji: "💼", label: "Office" },
   { href: "/dark-personality",emoji: "🌑", label: "Dark" },
   { href: "/relationship",    emoji: "💔", label: "Relate" },
 ];
 
 const MORE_TABS = [
+  { href: "/office-iq",       emoji: "💼", label: "Office IQ" },
   { href: "/money",           emoji: "💰", label: "Money IQ" },
   { href: "/eye-age",         emoji: "👁️", label: "Eye Age" },
   { href: "/focus-test",      emoji: "🎯", label: "Focus" },
