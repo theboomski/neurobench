@@ -4,6 +4,7 @@ import gamesData from "@/content/games.json";
 import postsData from "@/content/blog/posts.json";
 import type { GameData } from "@/lib/types";
 import { CategoryCard, TrendingCard } from "@/components/CategoryCards";
+import HeroActions from "@/components/HeroActions";
 
 const games = gamesData as GameData[];
 
@@ -44,36 +45,17 @@ export default function HomePage() {
 
       {/* Hero */}
       <section style={{ padding: "44px 0 36px", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", background: "var(--bg-card)", border: "1px solid var(--border-md)", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
-          <span style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>50+ FREE TESTS · NO SIGNUP · INSTANT RESULTS</span>
+        <div style={{ display: "inline-flex", background: "var(--bg-elevated)", border: "1px solid var(--border-md)", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
+          <span style={{ fontSize: 10, color: "var(--text-2)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>50+ FREE TESTS · NO SIGNUP · INSTANT RESULTS</span>
         </div>
-        <h1 style={{ fontSize: "clamp(30px,6.5vw,62px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 14 }}>
-          Find out what kind of person<br />
-          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>you actually are.</span>
+        <h1 style={{ fontSize: "clamp(24px,6vw,62px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 14 }}>
+          Find out what kind<br />
+          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>of person you actually are.</span>
         </h1>
         <p style={{ fontSize: "clamp(14px,2vw,17px)", color: "var(--text-2)", marginBottom: 28, lineHeight: 1.65, maxWidth: 480, margin: "0 auto 28px" }}>
-          Personality, brain age, relationships, dark psychology — all backed by real research. Takes 2–5 minutes. Free forever.
+          Science-backed personality, brain age, relationship, and dark psychology tests in 2-5 minutes. Free, no signup.
         </p>
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginBottom: 28 }}>
-          <a href="/dark-personality/dark-triad" style={{ textDecoration: "none" }}>
-            <button className="pressable" style={{ background: "#A855F7", color: "#fff", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>
-              ▶ TAKE A TEST NOW
-            </button>
-          </a>
-          <a href="#categories" style={{ textDecoration: "none" }}>
-            <button className="pressable" style={{ background: "var(--bg-card)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-mono)" }}>
-              Browse all tests
-            </button>
-          </a>
-        </div>
-        <div style={{ display: "flex", gap: 24, justifyContent: "center", flexWrap: "wrap" }}>
-          {[["50+", "free tests"], ["2 min", "average time"], ["Zero", "signup required"], ["Real", "psychology research"]].map(([n, l]) => (
-            <div key={l} style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 16, fontWeight: 900, color: "var(--text-1)", letterSpacing: "-0.02em" }}>{n}</div>
-              <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>{l.toUpperCase()}</div>
-            </div>
-          ))}
-        </div>
+        <HeroActions />
         <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 20, fontFamily: "var(--font-mono)" }}>
           For entertainment and self-reflection purposes. Not a substitute for professional psychological assessment.
         </p>
