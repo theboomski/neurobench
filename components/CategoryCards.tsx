@@ -30,7 +30,6 @@ export function GameCard({ g, basePath }: { g: GameData; basePath: string }) {
         }}
       >
         <div className="text-2xl sm:text-[32px] mb-2 sm:mb-[10px]">{g.emoji}</div>
-        <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>{g.clinicalTitle}</div>
         <div className="text-[14px] sm:text-[17px] font-extrabold mb-1.5 tracking-[-0.02em] leading-tight">{g.title}</div>
         <div className="text-[11px] sm:text-[12px] text-[var(--text-2)] leading-[1.45] sm:leading-[1.6] mb-3 sm:mb-[14px]">{g.shortDescription}</div>
         <span className="text-[10px] sm:text-[11px] font-bold font-mono" style={{ color: g.accent }}>PLAY NOW →</span>
