@@ -97,6 +97,8 @@ export default function WordAssociation({ game }: { game: GameData }) {
         const speedScore = Math.max(0, Math.round((3000 - avgRt) / 25));
         const score = Math.min(100, Math.round(accuracy * 0.65 + speedScore * 0.35));
         setAvgRT(avgRt);
+        setCorrect(newCorrect);
+        setRts(newRTs);
         setFinalScore(score);
         const isNew = saveHighScore(game.id, score);
         setIsNewBest(isNew);

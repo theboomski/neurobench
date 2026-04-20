@@ -152,6 +152,7 @@ export default function VocabularyAge({ game }: { game: GameData }) {
       if (current + 1 >= WORDS.length) {
         const score = Math.round((newCorrect / WORDS.length) * 100);
         setFinalScore(score);
+        setCorrect(newCorrect);
         const isNew = saveHighScore(game.id, score);
         setIsNewBest(isNew);
         setPhase("done");
