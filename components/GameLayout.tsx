@@ -23,24 +23,18 @@ export default function GameLayout({ game, children }: { game: GameData; childre
       </div>
 
       {/* Header */}
-      <div style={{ padding: "28px 0 20px" }}>
+      <div style={{ padding: "24px 0 14px" }}>
         <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em", marginBottom: 14, textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6 }}>
           <Link href="/" style={{ color: "var(--text-3)", textDecoration: "none" }}>ZAZAZA</Link>
           <span>›</span>
           <Link href={`/${game.category}`} style={{ color: game.accent, textDecoration: "none" }}>{game.categoryLabel}</Link>
         </div>
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-          <div style={{ width: 52, height: 52, flexShrink: 0, borderRadius: 12, background: `${game.accent}12`, border: `1px solid ${game.accent}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div style={{ width: 46, height: 46, flexShrink: 0, borderRadius: 11, background: `${game.accent}12`, border: `1px solid ${game.accent}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>
             {game.emoji}
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 8, background: `${game.accent}10`, border: `1px solid ${game.accent}25`, borderRadius: 999, padding: "3px 10px" }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: game.accent, display: "inline-block" }} />
-              <span style={{ fontSize: 9, color: game.accent, fontFamily: "var(--font-mono)", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" }}>{game.categoryLabel}</span>
-            </div>
-            <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 4 }}>{game.clinicalTitle}</div>
-            <h1 style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 900, letterSpacing: "-0.025em", marginBottom: 6 }}>{game.title}</h1>
-            <p style={{ fontSize: 14, color: "var(--text-2)", lineHeight: 1.65 }}>{game.description}</p>
+            <h1 style={{ fontSize: "clamp(22px, 4vw, 32px)", fontWeight: 900, letterSpacing: "-0.025em" }}>{game.title}</h1>
           </div>
         </div>
       </div>
