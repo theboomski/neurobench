@@ -85,7 +85,7 @@ export default function HomePage() {
           <span style={{ fontSize: 14 }}>🔥</span>
           <h2 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 800, letterSpacing: "-0.02em" }}>Trending Now</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           {TRENDING.map(t => <TrendingCard key={t.id} {...t} />)}
         </div>
       </section>
@@ -97,7 +97,7 @@ export default function HomePage() {
           <span style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>01</span>
           <h2 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 800, letterSpacing: "-0.02em" }}>All Test Categories</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           {CATEGORIES.map(cat => <CategoryCard key={cat.slug} {...cat} />)}
         </div>
       </section>
@@ -111,7 +111,7 @@ export default function HomePage() {
           </div>
           <Link href="/blog" style={{ fontSize: 11, color: "#00FF94", fontFamily: "var(--font-mono)", fontWeight: 700, textDecoration: "none", flexShrink: 0 }}>SEE ALL →</Link>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           {(postsData as typeof postsData).slice(0, 4).map(post => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
               <article style={{

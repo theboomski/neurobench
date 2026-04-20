@@ -38,7 +38,7 @@ export default function Page() {
         <p style={{ fontSize: 13, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{games.length} tests · S–D global ranking · Instant results</p>
       </section>
       <section style={{ marginBottom: 56 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 12 }}>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           {games.map(g => <GameCard key={g.id} g={g} basePath="office-iq" />)}
         </div>
       </section>

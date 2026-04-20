@@ -5,9 +5,9 @@ import type { GameData } from "@/lib/types";
 
 export function GameCard({ g, basePath }: { g: GameData; basePath: string }) {
   return (
-    <Link href={`/${basePath}/${g.id}`} style={{ textDecoration: "none" }} onClick={() => trackEvent("category_card_click", { game_id: g.id, category: g.category })}>
+    <Link href={`/${basePath}/${g.id}`} style={{ textDecoration: "none" }} className="block h-full" onClick={() => trackEvent("category_card_click", { game_id: g.id, category: g.category })}>
       <div
-        className="pressable"
+        className="pressable category-game-card"
         style={{
           background: "var(--bg-card)",
           border: "1px solid var(--border)",
@@ -29,11 +29,11 @@ export function GameCard({ g, basePath }: { g: GameData; basePath: string }) {
           d.style.boxShadow = "none";
         }}
       >
-        <div style={{ fontSize: 32, marginBottom: 10 }}>{g.emoji}</div>
+        <div className="text-2xl sm:text-[32px] mb-2 sm:mb-[10px]">{g.emoji}</div>
         <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>{g.clinicalTitle}</div>
-        <div style={{ fontSize: 17, fontWeight: 800, marginBottom: 6, letterSpacing: "-0.02em" }}>{g.title}</div>
-        <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 14 }}>{g.shortDescription}</div>
-        <span style={{ fontSize: 11, fontWeight: 700, color: g.accent, fontFamily: "var(--font-mono)" }}>PLAY NOW →</span>
+        <div className="text-[14px] sm:text-[17px] font-extrabold mb-1.5 tracking-[-0.02em] leading-tight">{g.title}</div>
+        <div className="text-[11px] sm:text-[12px] text-[var(--text-2)] leading-[1.45] sm:leading-[1.6] mb-3 sm:mb-[14px]">{g.shortDescription}</div>
+        <span className="text-[10px] sm:text-[11px] font-bold font-mono" style={{ color: g.accent }}>PLAY NOW →</span>
       </div>
     </Link>
   );
@@ -66,11 +66,11 @@ export function CategoryCard({ slug, emoji, title, desc, accent, count }: {
           d.style.boxShadow = "none";
         }}
       >
-        <div style={{ fontSize: 36, marginBottom: 14 }}>{emoji}</div>
-        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 8, letterSpacing: "-0.02em" }}>{title}</div>
-        <div style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.65, marginBottom: 16 }}>{desc}</div>
+        <div className="text-[28px] sm:text-[36px] mb-2.5 sm:mb-[14px]">{emoji}</div>
+        <div className="text-[14px] sm:text-[18px] font-extrabold mb-1.5 sm:mb-2 tracking-[-0.02em] leading-tight">{title}</div>
+        <div className="text-[11px] sm:text-[13px] text-[var(--text-2)] leading-[1.5] sm:leading-[1.65] mb-3 sm:mb-4">{desc}</div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: accent, fontFamily: "var(--font-mono)" }}>EXPLORE →</span>
+          <span className="text-[10px] sm:text-[11px] font-bold font-mono" style={{ color: accent }}>EXPLORE →</span>
           <span style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{count} tests</span>
         </div>
       </div>
@@ -97,10 +97,10 @@ export function TrendingCard({ id, category, emoji, title, desc, accent }: {
         onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "var(--bg-elevated)"; }}
         onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "var(--bg-card)"; }}
       >
-        <div style={{ fontSize: 28, marginBottom: 10 }}>{emoji}</div>
-        <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 6, letterSpacing: "-0.02em" }}>{title}</div>
-        <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.6, marginBottom: 12 }}>{desc}</div>
-        <span style={{ fontSize: 11, fontWeight: 700, color: accent, fontFamily: "var(--font-mono)" }}>PLAY NOW →</span>
+        <div className="text-[24px] sm:text-[28px] mb-2 sm:mb-[10px]">{emoji}</div>
+        <div className="text-[14px] sm:text-[16px] font-extrabold mb-1.5 sm:mb-[6px] tracking-[-0.02em] leading-tight">{title}</div>
+        <div className="text-[11px] sm:text-[12px] text-[var(--text-2)] leading-[1.45] sm:leading-[1.6] mb-2.5 sm:mb-3">{desc}</div>
+        <span className="text-[10px] sm:text-[11px] font-bold font-mono" style={{ color: accent }}>PLAY NOW →</span>
       </div>
     </Link>
   );

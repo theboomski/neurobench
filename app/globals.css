@@ -106,4 +106,10 @@ body::before {
 
 @media (max-width: 640px) {
   .ad-banner { height: 60px; }
+
+  .category-game-card {
+    padding: 16px 12px !important;
+    min-height: 180px;
+    aspect-ratio: 0.9;
+  }
 }
