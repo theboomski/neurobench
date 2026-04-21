@@ -2,11 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { GameData } from "@/lib/types";
-import { dict } from "@/lib/i18n";
-import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
+import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
-
-const t = dict.en;
+import CommonResult from "@/components/CommonResult";
+import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 const TOTAL_ROUNDS = 20;
 const TIME_LIMIT = 1800; // ms per round
 
@@ -39,7 +38,7 @@ function getPercentile(score: number, game: GameData) {
   for (let i = 0; i < pts.length - 1; i++) {
     if (score <= pts[i].ms && score >= pts[i + 1].ms) {
       const t2 = (pts[i].ms - score) / (pts[i].ms - pts[i + 1].ms);
-      return Math.round(pts[i].percentile - t2 * (pts[i].percentile - pts[i + 1].percentile));
+      return pts[i].percentile - t2 * (pts[i].percentile - pts[i + 1].percentile);
     }
   }
   return 50;
@@ -55,7 +54,6 @@ export default function DistractionShield({ game }: { game: GameData }) {
   const [rts, setRts] = useState<number[]>([]);
   const [finalScore, setFinalScore] = useState(0);
   const [showAd, setShowAd] = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
   const [highScore, setHS] = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
@@ -139,43 +137,30 @@ export default function DistractionShield({ game }: { game: GameData }) {
   useEffect(() => () => { if (timerRef.current) clearInterval(timerRef.current); }, []);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
+  const afterAd = () => { setShowAd(false); setPhase("idle"); setIsNewBest(false); };
 
   const rank = getRank(finalScore, game);
   const pct = getPercentile(finalScore, game);
 
-  const handleShare = async () => {
-    const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "%", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
-    setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My focus score: ${finalScore}%! Can you beat me? ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
-    window.open(url, "_blank");
-  };
-
-  if (phase === "done") return (
-    <>
-      {showAd && <InterstitialAd onDone={afterAd} />}
-      <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(28px,5vw,48px) clamp(20px,4vw,40px)", textAlign: "center" }}>
-        <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 20 }}>Flanker Interference Assessment</div>
-        <div style={{ width: 100, height: 100, borderRadius: "50%", background: `${rank.color}12`, border: `2px solid ${rank.color}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
-          <span style={{ fontSize: 42, fontWeight: 900, color: rank.color, lineHeight: 1 }}>{rank.label}</span>
-          <span style={{ fontSize: 9, color: rank.color, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: "var(--font-mono)" }}>{rank.percentileLabel}</span>
-        </div>
-        <div style={{ fontSize: "clamp(52px,13vw,80px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, marginBottom: 4 }}>
-          {finalScore}<span style={{ fontSize: 20, fontWeight: 400, color: "var(--text-3)", marginLeft: 4, fontFamily: "var(--font-mono)" }}>%</span>
-        </div>
-        <div style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 8 }}>{correct} / {TOTAL_ROUNDS} correct</div>
-        <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
-        <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
-        {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)" }}>◆ New Personal Record</div>}
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 8 }}>
-          <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>▶ PLAY AGAIN</button>
-          <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>↗ SHARE</button>
-        </div>
-        {shareImg && <div style={{ marginTop: 24 }}><img src={shareImg} alt="Result" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /></div>}
-      </div>
-    </>
-  );
+  if (phase === "done") {
+    const normalized = normalizeTo100FromPercentile(pct, finalScore);
+    return (
+      <CommonResult
+        game={game}
+        rawScore={finalScore}
+        rawUnit="%"
+        normalizedScore={normalized}
+        percentile={pct}
+        rank={rank}
+        highScore={highScore}
+        isNewBest={isNewBest}
+        showAd={showAd}
+        onAdDone={afterAd}
+        onRetry={handleRetry}
+        tone={resolveResultTone(game)}
+      />
+    );
+  }
 
   if (phase === "idle") return (
     <div style={{ background: "var(--bg-card)", border: "1.5px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "48px 24px", textAlign: "center" }}>
