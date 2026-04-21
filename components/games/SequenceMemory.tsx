@@ -11,8 +11,8 @@ const GRID_SIZE = 9;
 
 // Higher score = better (same as number memory)
 function getSeqRank(score: number, game: GameData) {
-  const ranks = [...game.stats.ranks].reverse();
-  return ranks.find(r => score >= r.maxMs) ?? game.stats.ranks[game.stats.ranks.length - 1];
+  const ranks = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);
+  return ranks.find(r => score >= r.maxMs) ?? ranks[ranks.length - 1];
 }
 function getSeqPercentile(score: number, game: GameData): number {
   const pts = game.stats.percentiles;
@@ -87,6 +87,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
 
     if (idx !== sequence[pos]) {
       // Wrong
+      setPhase("wrong");
       setWrongCell(idx);
       playBeep("fail");
       const score = sequence.length - 1;
@@ -107,14 +108,17 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     if (next.length === sequence.length) {
       // Full sequence correct
       playBeep("success");
-      setPhase("correct");
       const newSeq = [
         ...sequence,
         Math.floor(Math.random() * GRID_SIZE),
       ];
       setSequence(newSeq);
-      setCorrectCells([]);
-      timeoutRef.current = setTimeout(() => playSequence(newSeq), 1000);
+      setPhase("correct");
+      // Keep the last tap visibly confirmed before the next round starts.
+      timeoutRef.current = setTimeout(() => {
+        setCorrectCells([]);
+        playSequence(newSeq);
+      }, 650);
     }
   }, [phase, userSeq, sequence, game.id, playSequence]);
 

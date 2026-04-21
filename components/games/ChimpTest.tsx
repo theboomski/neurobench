@@ -186,19 +186,19 @@ export default function ChimpTest({ game }: { game: GameData }) {
                   key={idx}
                   onClick={() => cell && handleCellClick(idx)}
                   style={{
-                    background: isWrong ? "#ef444430" : isCompleted ? "rgba(255,255,255,0.03)" : cell ? (showNumber ? `${game.accent}20` : "var(--bg-elevated)") : "transparent",
-                    border: `1.5px solid ${isWrong ? "#ef4444" : isCompleted ? "rgba(255,255,255,0.04)" : cell ? (showNumber ? `${game.accent}60` : "var(--border-md)") : "transparent"}`,
+                    background: isWrong ? "#ef444430" : isCompleted ? `${game.accent}1f` : cell ? (showNumber ? `${game.accent}20` : "var(--bg-elevated)") : "transparent",
+                    border: `1.5px solid ${isWrong ? "#ef4444" : isCompleted ? `${game.accent}66` : cell ? (showNumber ? `${game.accent}60` : "var(--border-md)") : "transparent"}`,
                     borderRadius: 8,
                     aspectRatio: "1",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: "clamp(14px,3vw,20px)", fontWeight: 900, fontFamily: "var(--font-mono)",
-                    color: showNumber ? game.accent : isWrong ? "#ef4444" : "var(--text-3)",
+                    color: showNumber ? game.accent : isWrong ? "#ef4444" : isCompleted ? game.accent : "var(--text-3)",
                     cursor: cell && phase === "input" ? "pointer" : "default",
                     transition: "all 0.12s",
                     WebkitTapHighlightColor: "transparent",
                   }}
                 >
-                  {showNumber ? cell.value : isWrong ? "✗" : isCompleted ? "" : ""}
+                  {showNumber ? cell.value : isWrong ? "✗" : isCompleted ? "✓" : ""}
                 </div>
               );
             })}

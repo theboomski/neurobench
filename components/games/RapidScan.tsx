@@ -33,13 +33,13 @@ function getGridCount(level: number) {
   return Math.min(60 + level * 25, 500);
 }
 
-// Always regenerate entire grid — no Q position continuity
+// Always regenerate entire grid — no target position continuity
 function makeGrid(level: number): { grid: string[]; targetIdx: number } {
   const count = getGridCount(level);
-  const grid = Array(count).fill("O");
-  const qi = Math.floor(Math.random() * count);
-  grid[qi] = "Q";
-  return { grid, targetIdx: qi };
+  const grid = Array(count).fill("96");
+  const target = Math.floor(Math.random() * count);
+  grid[target] = "69";
+  return { grid, targetIdx: target };
 }
 
 type Phase = "idle" | "playing" | "done";
@@ -171,7 +171,7 @@ export default function RapidScan({ game }: { game: GameData }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🔍</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Visual Search Efficiency</p>
-          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Find the Q among the O&apos;s · 60 seconds total</p>
+          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Find 69 among 96 · 60 seconds total</p>
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Grid grows each round · wrong click = game over</p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
@@ -205,8 +205,8 @@ export default function RapidScan({ game }: { game: GameData }) {
               <span key={`${level}-${idx}`} onClick={() => handleClick(idx)} style={{
                 fontSize,
                 fontFamily: "monospace",
-                fontWeight: char === "Q" ? 900 : 400,
-                color: idx === wrongIdx ? "#ef4444" : char === "Q" && wrongIdx !== null ? game.accent : "var(--text-2)",
+                fontWeight: char === "69" ? 900 : 500,
+                color: idx === wrongIdx ? "#ef4444" : char === "69" && wrongIdx !== null ? game.accent : "var(--text-2)",
                 cursor: "pointer",
                 textAlign: "center",
                 lineHeight: 1.35,
@@ -217,7 +217,7 @@ export default function RapidScan({ game }: { game: GameData }) {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 8, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
-            FIND AND CLICK THE Q · {grid.length} CHARACTERS
+            FIND AND CLICK 69 · {grid.length} CELLS
           </div>
         </div>
       )}

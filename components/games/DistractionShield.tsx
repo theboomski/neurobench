@@ -182,12 +182,12 @@ export default function DistractionShield({ game }: { game: GameData }) {
       <div style={{ fontSize: 56, marginBottom: 16 }}>🛡️</div>
       <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10 }}>Distraction Shield</h2>
       <p style={{ color: "var(--text-2)", fontSize: 14, marginBottom: 16, lineHeight: 1.7, maxWidth: 360, margin: "0 auto 16px" }}>
-        Five arrows appear. Focus only on the <strong style={{ color: game.accent }}>center arrow</strong> — ignore the others. Tap LEFT or RIGHT based on which way the center points.
+        Five arrows appear. Focus only on the <strong>center arrow</strong> — ignore the others. Tap LEFT or RIGHT based on which way the center points.
       </p>
       <div style={{ background: "var(--bg-elevated)", borderRadius: 12, padding: "16px 24px", marginBottom: 24, display: "inline-block" }}>
-        <div style={{ fontSize: 28, letterSpacing: 6, marginBottom: 8 }}>← ← <span style={{ color: game.accent }}>←</span> ← ←</div>
+        <div style={{ fontSize: 28, letterSpacing: 6, marginBottom: 8 }}>← ← ← ← ←</div>
         <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>CONGRUENT → easy</div>
-        <div style={{ fontSize: 28, letterSpacing: 6, margin: "12px 0 8px" }}>→ → <span style={{ color: game.accent }}>←</span> → →</div>
+        <div style={{ fontSize: 28, letterSpacing: 6, margin: "12px 0 8px" }}>→ → ← → →</div>
         <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>INCONGRUENT → harder</div>
       </div>
       <br />
@@ -212,7 +212,7 @@ export default function DistractionShield({ game }: { game: GameData }) {
       <div style={{ textAlign: "center", padding: "40px 0", background: feedback ? (feedback === "correct" ? "#10B98112" : "#EF444412") : "var(--bg-card)", border: `1.5px solid ${feedback ? (feedback === "correct" ? "#10B981" : "#EF4444") : "var(--border)"}`, borderRadius: "var(--radius-xl)", marginBottom: 24, transition: "background 0.15s, border-color 0.15s" }}>
         <div style={{ fontSize: 52, letterSpacing: 12, fontFamily: "monospace" }}>
           {arrows.map((a, i) => (
-            <span key={i} style={{ color: i === 2 ? game.accent : "var(--text-2)" }}>{a}</span>
+            <span key={i} style={{ color: "var(--text-2)" }}>{a}</span>
           ))}
         </div>
         {feedback && (
