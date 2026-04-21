@@ -94,6 +94,16 @@ function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
     "temporal-pulse": { average: 130, unit: "ms avg", higherIsBetter: false, metric: "timing error" },
     "dont-blink": { average: 420, unit: "ms avg", higherIsBetter: false, metric: "change-detection latency" },
     "angle-precision": { average: 12, unit: "deg error", higherIsBetter: false, metric: "angle error" },
+    "boss-slapper": { average: 1900, unit: "ms", higherIsBetter: false, metric: "10-tap stress neutralization time" },
+    "report-or-favor": { average: 7, unit: "streak", higherIsBetter: true, metric: "boundary-decision streak" },
+    "boss-dodge": { average: 15, unit: "caught", higherIsBetter: true, metric: "selective response score" },
+    "raise-or-raise": { average: 62, unit: "% peak", higherIsBetter: true, metric: "negotiation timing capture" },
+    "corporate-climber": { average: 11, unit: "promotions", higherIsBetter: true, metric: "adaptive planning score" },
+    "attention-span": { average: 66, unit: "%", higherIsBetter: true, metric: "sustained attention score" },
+    "task-switching": { average: 58, unit: "%", higherIsBetter: true, metric: "cognitive flexibility score" },
+    "vocabulary-age": { average: 61, unit: "%", higherIsBetter: true, metric: "vocabulary precision score" },
+    "word-speed": { average: 57, unit: "%", higherIsBetter: true, metric: "lexical decision score" },
+    "word-association": { average: 60, unit: "%", higherIsBetter: true, metric: "semantic association score" },
   };
 
   const b = cfg[game.id];

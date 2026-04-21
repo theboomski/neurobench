@@ -2,11 +2,10 @@
 
 import { useState, useCallback, useRef, useMemo } from "react";
 import type { GameData } from "@/lib/types";
-import { dict } from "@/lib/i18n";
-import { saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
+import { saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
-
-const t = dict.en;
+import CommonResult from "@/components/CommonResult";
+import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
 // Each word: definition + 3 plausible wrong definitions (similar style, similar length)
 // Key rule: all 4 options must look equally plausible to someone who doesn't know the word
@@ -126,7 +125,6 @@ export default function VocabularyAge({ game }: { game: GameData }) {
   const [correct, setCorrect] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [showAd, setShowAd] = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
   const [finalScore, setFinalScore] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
   const [shuffleKey, setShuffleKey] = useState(0);
@@ -167,44 +165,33 @@ export default function VocabularyAge({ game }: { game: GameData }) {
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => {
     setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0);
-    correctRef.current = 0; setSelected(null); setShareImg(null);
+    correctRef.current = 0; setSelected(null);
     setIsNewBest(false); setShuffleKey(k => k + 1);
   };
 
-  const rank = getRank(finalScore, game);
-  const pct = getPercentile(finalScore, game);
+  const rank = phase === "done" ? getRank(finalScore, game) : null;
+  const pct = phase === "done" ? getPercentile(finalScore, game) : 0;
   const vAge = vocabAge(finalScore);
 
-  const handleShare = async () => {
-    const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "%", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
-    setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My vocabulary age is ${vAge}! 📚 Can you beat me? ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
-    window.open(url, "_blank");
-  };
-
-  if (phase === "done") return (
-    <>
-      {showAd && <InterstitialAd onDone={afterAd} />}
-      <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(24px,5vw,44px) clamp(20px,4vw,40px)", textAlign: "center" }}>
-        <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>Vocabulary Age Assessment</div>
-        <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>YOUR VOCABULARY AGE</div>
-        <div style={{ fontSize: "clamp(64px,16vw,96px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, color: rank.color, marginBottom: 4 }}>{vAge}</div>
-        <div style={{ width: 80, height: 80, borderRadius: "50%", background: `${rank.color}12`, border: `2px solid ${rank.color}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "16px auto" }}>
-          <span style={{ fontSize: 34, fontWeight: 900, color: rank.color, lineHeight: 1 }}>{rank.label}</span>
-        </div>
-        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>{correct} / {WORDS.length} correct</div>
-        <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
-        <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
-        <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
-        {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)" }}>◆ New Personal Record</div>}
-        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>▶ PLAY AGAIN</button>
-          <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>↗ SHARE</button>
-        </div>
-        {shareImg && <div style={{ marginTop: 24 }}><img src={shareImg} alt="Result" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /></div>}
-      </div>
-    </>
-  );
+  if (phase === "done" && rank) {
+    const normalized = normalizeTo100FromPercentile(pct, finalScore);
+    return (
+      <CommonResult
+        game={game}
+        rawScore={finalScore}
+        rawUnit="%"
+        normalizedScore={normalized}
+        percentile={pct}
+        rank={rank}
+        highScore={null}
+        isNewBest={isNewBest}
+        showAd={showAd}
+        onAdDone={afterAd}
+        onRetry={handleRetry}
+        tone={resolveResultTone(game)}
+      />
+    );
+  }
 
   if (phase === "idle") return (
     <div style={{ background: "var(--bg-card)", border: "1.5px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "48px 24px", textAlign: "center" }}>
