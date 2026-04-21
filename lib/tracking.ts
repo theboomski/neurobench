@@ -29,6 +29,12 @@ export type SaveLeaderboardResult =
  * Persist via same-origin API (server has URL + service role or anon key).
  * Avoids silent client failures when NEXT_PUBLIC_* is missing in the browser bundle.
  */
+type LeaderboardPostJson = {
+  id?: string;
+  error?: string;
+  errorFull?: { message?: string; code?: string; details?: string; hint?: string };
+};
+
 export async function saveToLeaderboard(
   gameId: string,
   nickname: string,
@@ -41,11 +47,40 @@ export async function saveToLeaderboard(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ gameId, nickname, score, countryCode }),
     });
-    const j = (await res.json()) as { id?: string; error?: string };
-    if (!res.ok) {
-      return { ok: false, message: j.error ?? `Request failed (${res.status})` };
+
+    const text = await res.text();
+    let j: LeaderboardPostJson = {};
+    try {
+      j = text ? (JSON.parse(text) as LeaderboardPostJson) : {};
+    } catch {
+      return {
+        ok: false,
+        message: text?.slice(0, 200) || `Invalid JSON from server (HTTP ${res.status})`,
+      };
     }
-    if (!j.id) return { ok: false, message: j.error ?? "No id returned" };
+
+    if (!res.ok) {
+      const parts = [
+        j.errorFull?.code ? `[${j.errorFull.code}]` : "",
+        j.error,
+        j.errorFull?.details,
+        j.errorFull?.hint,
+      ].filter(Boolean);
+      const message = parts.length ? parts.join(" — ") : `Request failed (${res.status})`;
+      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+        console.warn("[saveToLeaderboard] POST failed", res.status, j);
+      }
+      return { ok: false, message };
+    }
+
+    if (!j.id || typeof j.id !== "string") {
+      const message = j.error ?? "Server returned 200 but no id — insert may not have persisted.";
+      if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+        console.warn("[saveToLeaderboard] missing id in body", j);
+      }
+      return { ok: false, message };
+    }
+
     return { ok: true, id: j.id };
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Network error";

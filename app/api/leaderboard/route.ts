@@ -1,5 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type PostgrestError } from "@supabase/supabase-js";
+
+const LEADERBOARD_TABLE = "leaderboard" as const;
+
+function serializeSupabaseError(err: PostgrestError): Record<string, string | undefined | number> {
+  return {
+    message: err.message,
+    code: err.code,
+    details: err.details,
+    hint: err.hint,
+  };
+}
 
 function getServerSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
@@ -30,7 +41,7 @@ export async function GET(req: NextRequest) {
   }
   const asc = ASC_SCORE.has(gameId);
   const { data, error } = await sb
-    .from("leaderboard")
+    .from(LEADERBOARD_TABLE)
     .select("id, game_id, nickname, score, country_code, created_at")
     .eq("game_id", gameId)
     .order("score", { ascending: asc })
@@ -67,17 +78,47 @@ export async function POST(req: NextRequest) {
   }
 
   const row = { game_id: gameId, nickname, score, country_code };
-  const { data, error } = await sb.from("leaderboard").insert(row).select("id").maybeSingle();
+
+  console.log(`[leaderboard POST] inserting into "${LEADERBOARD_TABLE}"`, {
+    game_id: row.game_id,
+    nickname: row.nickname,
+    score: row.score,
+    country_code: row.country_code,
+  });
+
+  const { data, error } = await sb.from(LEADERBOARD_TABLE).insert(row).select("id");
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
-  }
-  const id = data?.id;
-  if (!id) {
+    const payload = serializeSupabaseError(error);
+    console.error("[leaderboard POST] Supabase insert error (full):", JSON.stringify(payload, null, 2));
     return NextResponse.json(
-      { error: "Insert did not return an id. Check RLS policies allow INSERT and SELECT on leaderboard." },
+      {
+        error: error.message,
+        errorFull: payload,
+      },
+      { status: 400 },
+    );
+  }
+
+  const inserted = Array.isArray(data) ? data : [];
+  const id = inserted[0]?.id;
+
+  if (!id) {
+    console.error("[leaderboard POST] insert returned no rows / no id", {
+      table: LEADERBOARD_TABLE,
+      rawData: data,
+      rowCount: inserted.length,
+    });
+    return NextResponse.json(
+      {
+        error:
+          "Insert reported success but no id was returned. Usually RLS blocks SELECT after INSERT, or the row was not written. Check policies on table \"leaderboard\".",
+        errorFull: { data, rowCount: inserted.length },
+      },
       { status: 500 },
     );
   }
+
+  console.log("[leaderboard POST] insert OK", { id, table: LEADERBOARD_TABLE });
   return NextResponse.json({ id });
 }
