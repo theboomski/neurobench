@@ -143,17 +143,17 @@ export default function CommonResult({
             WebkitBackdropFilter: "blur(10px)",
             boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 50px ${rank.color}33`,
             overflow: "hidden",
-            fontFamily: "var(--font-mono)",
+            fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
           }}
         >
         <div style={{ fontSize: 106, lineHeight: 1, marginTop: 2, marginBottom: 2 }}>
           {scoreEmoji}
         </div>
-        <div style={{ fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>
+        <div style={{ fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4, fontFamily: "var(--font-mono)" }}>
           ZAZAZA Result
         </div>
 
-        <div style={{ margin: "4px auto 6px", width: "100%", borderRadius: 18, padding: "16px 10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.2)", boxShadow: `0 0 36px ${rank.color}66 inset` }}>
+        <div style={{ margin: "12px auto 8px", width: "100%", borderRadius: 18, padding: "16px 10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.2)", boxShadow: `0 0 36px ${rank.color}66 inset` }}>
         <div style={{ fontSize: "clamp(72px,21vw,122px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1, color: "#fff", textShadow: `0 0 22px ${rank.color}, 0 10px 28px rgba(0,0,0,0.45)` }}>
           {normalizedScore}
           <span style={{ fontSize: "clamp(18px,3vw,24px)", fontWeight: 700, color: "rgba(255,255,255,0.95)", marginLeft: 10, letterSpacing: "0.04em" }}>/100</span>
@@ -169,13 +169,15 @@ export default function CommonResult({
         <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,0.95)", marginBottom: 6, lineHeight: 1.3 }}>
           Your score is higher than {higherThanPct.toFixed(1)}% of the world - about {peopleBillions} billion people.
         </div>
-        <div style={{ fontSize: 16, fontWeight: 800, color: "rgba(209,250,229,0.96)", marginBottom: 8, lineHeight: 1.3, textWrap: "balance" as never }}>{killerLine}</div>
+        <div style={{ fontSize: 20, fontWeight: 900, color: "rgba(209,250,229,0.98)", marginBottom: 10, lineHeight: 1.25, textWrap: "balance" as never, textShadow: `0 0 18px ${rank.color}66`, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 12, padding: "10px 12px" }}>
+          {killerLine}
+        </div>
 
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto" }}>
-          <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
+          <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
             ▶ PLAY AGAIN
           </button>
-          <button onClick={handleShare} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 900, cursor: "pointer", width: "50%", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
+          <button onClick={handleShare} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 900, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
             Share Result
           </button>
         </div>
