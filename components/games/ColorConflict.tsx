@@ -52,13 +52,13 @@ const COLORS = [
   { name: "BLUE",   hex: "#3B82F6" },
   { name: "YELLOW", hex: "#EAB308" },
   { name: "PURPLE", hex: "#A855F7" },
-  { name: "ORANGE", hex: "#F97316" },
+  { name: "PINK",   hex: "#F472B6" },
 ];
 
 type ColorDef = (typeof COLORS)[number];
 type AnswerButton = ColorDef & { chromeHex: string };
 
-/** Decorative fill/border only — never matches this option's semantic color (no "orange block = ORANGE" shortcut). */
+/** Decorative fill/border only — never matches this option's semantic color (no "pink tile = PINK" shortcut). */
 function randomChromeHex(avoidSemanticHex: string): string {
   const pool = COLORS.map((c) => c.hex);
   let h = pool[Math.floor(Math.random() * pool.length)];
