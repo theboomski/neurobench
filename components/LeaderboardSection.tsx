@@ -27,6 +27,8 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
   const [rows, setRows] = useState<LeaderboardEntry[]>([]);
   const [listOpen, setListOpen] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const countrySelectOptions = useMemo(() => {
     const s = new Set(COUNTRY_OPTIONS);
@@ -68,19 +70,30 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
 
   const handleSubmit = async () => {
     const name = nickname.trim().slice(0, 20);
-    if (!name) return;
-    try {
-      localStorage.setItem(NICK_KEY, name);
-    } catch {
-      /* ignore */
+    if (!name) {
+      setSubmitError("Enter a nickname (1–20 characters).");
+      return;
     }
-    const id = await saveToLeaderboard(gameId, name, rawScore, countryCode);
-    if (id) {
-      setSubmittedId(id);
-      setSubmitted(true);
-      setShowForm(false);
-      setListOpen(true);
-      void refreshList();
+    setSubmitError(null);
+    setSubmitting(true);
+    try {
+      try {
+        localStorage.setItem(NICK_KEY, name);
+      } catch {
+        /* ignore */
+      }
+      const result = await saveToLeaderboard(gameId, name, rawScore, countryCode);
+      if (result.ok) {
+        setSubmittedId(result.id);
+        setSubmitted(true);
+        setShowForm(false);
+        setListOpen(true);
+        void refreshList();
+      } else {
+        setSubmitError(result.message);
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -105,7 +118,10 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           {!submitted && (
             <button
               type="button"
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                setSubmitError(null);
+                setShowForm(true);
+              }}
               className="pressable"
               style={{
                 background: accent,
@@ -218,6 +234,23 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
             Submitting score: <strong style={{ color: "var(--text-1)" }}>{rawScore}</strong> {rawUnit}
           </div>
+          {submitError && (
+            <div
+              role="alert"
+              style={{
+                fontSize: 11,
+                color: "#fecaca",
+                background: "rgba(127,29,29,0.35)",
+                border: "1px solid rgba(248,113,113,0.45)",
+                borderRadius: 8,
+                padding: "8px 10px",
+                fontFamily: "var(--font-mono)",
+                lineHeight: 1.45,
+              }}
+            >
+              {submitError}
+            </div>
+          )}
           <div style={{ display: "flex", gap: 8 }}>
             <button
               type="button"
@@ -240,6 +273,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
             </button>
             <button
               type="button"
+              disabled={submitting}
               onClick={() => void handleSubmit()}
               className="pressable"
               style={{
@@ -251,11 +285,12 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
                 padding: "10px",
                 fontSize: 12,
                 fontWeight: 800,
-                cursor: "pointer",
+                cursor: submitting ? "wait" : "pointer",
                 fontFamily: "var(--font-mono)",
+                opacity: submitting ? 0.75 : 1,
               }}
             >
-              Submit
+              {submitting ? "Submitting…" : "Submit"}
             </button>
           </div>
         </div>

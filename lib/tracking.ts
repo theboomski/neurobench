@@ -9,19 +9,6 @@ export type LeaderboardEntry = {
   created_at: string;
 };
 
-/** Lower raw score = better rank (ms, timing, tap speed). */
-const LEADERBOARD_SCORE_ASC = new Set([
-  "reaction-time",
-  "temporal-pulse",
-  "dont-blink",
-  "angle-precision",
-  "boss-slapper",
-]);
-
-function leaderboardAscending(gameId: string): boolean {
-  return LEADERBOARD_SCORE_ASC.has(gameId);
-}
-
 /** Fire-and-forget play counter; never throws to caller. */
 export function trackPlay(gameId: string): void {
   const sb = getSupabaseBrowser();
@@ -34,54 +21,44 @@ export function trackPlay(gameId: string): void {
     });
 }
 
+export type SaveLeaderboardResult =
+  | { ok: true; id: string }
+  | { ok: false; message: string };
+
 /**
- * Persist a score row. Fails silently (returns null) if Supabase is down or misconfigured.
- * Optional countryCode defaults to "US" when omitted.
+ * Persist via same-origin API (server has URL + service role or anon key).
+ * Avoids silent client failures when NEXT_PUBLIC_* is missing in the browser bundle.
  */
 export async function saveToLeaderboard(
   gameId: string,
   nickname: string,
   score: number,
   countryCode: string = "US",
-): Promise<string | null> {
+): Promise<SaveLeaderboardResult> {
   try {
-    const sb = getSupabaseBrowser();
-    if (!sb) return null;
-    const row = {
-      game_id: gameId,
-      nickname: nickname.slice(0, 20),
-      score: Math.round(score),
-      country_code: countryCode.slice(0, 2).toUpperCase(),
-    };
-    const { data, error } = await sb.from("leaderboard").insert(row).select("id").single();
-    if (error) {
-      console.warn("[saveToLeaderboard]", error.message);
-      return null;
+    const res = await fetch("/api/leaderboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gameId, nickname, score, countryCode }),
+    });
+    const j = (await res.json()) as { id?: string; error?: string };
+    if (!res.ok) {
+      return { ok: false, message: j.error ?? `Request failed (${res.status})` };
     }
-    return (data as { id: string } | null)?.id ?? null;
-  } catch {
-    return null;
+    if (!j.id) return { ok: false, message: j.error ?? "No id returned" };
+    return { ok: true, id: j.id };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "Network error";
+    return { ok: false, message: msg };
   }
 }
 
 /** Top 10 global rows for a game (best scores first). */
 export async function getLeaderboard(gameId: string): Promise<LeaderboardEntry[]> {
   try {
-    const sb = getSupabaseBrowser();
-    if (!sb) return [];
-    const asc = leaderboardAscending(gameId);
-    const { data, error } = await sb
-      .from("leaderboard")
-      .select("id, game_id, nickname, score, country_code, created_at")
-      .eq("game_id", gameId)
-      .order("score", { ascending: asc })
-      .order("created_at", { ascending: true })
-      .limit(10);
-    if (error) {
-      console.warn("[getLeaderboard]", error.message);
-      return [];
-    }
-    return (data ?? []) as LeaderboardEntry[];
+    const res = await fetch(`/api/leaderboard?gameId=${encodeURIComponent(gameId)}`);
+    const j = (await res.json()) as { rows?: LeaderboardEntry[] };
+    return Array.isArray(j.rows) ? j.rows : [];
   } catch {
     return [];
   }
