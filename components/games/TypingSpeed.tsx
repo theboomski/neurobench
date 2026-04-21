@@ -2,11 +2,10 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
-import { dict } from "@/lib/i18n";
-import { getHighScore, saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
+import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
-
-const t = dict.en;
+import CommonResult from "@/components/CommonResult";
+import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 const DURATION = 60;
 
 function getRank(score: number, game: GameData) {
@@ -54,7 +53,6 @@ export default function TypingSpeed({ game }: { game: GameData }) {
   const [wpm, setWpm]           = useState(0);
   const [accuracy, setAccuracy] = useState(100);
   const [showAd, setShowAd]     = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
   const [highScore, setHS]      = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
   const [finalWpm, setFinalWpm] = useState(0);
@@ -127,52 +125,28 @@ export default function TypingSpeed({ game }: { game: GameData }) {
   useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setShareImg(null); setIsNewBest(false); };
+  const afterAd = () => { setShowAd(false); setPhase("idle"); setIsNewBest(false); };
 
-  const rank = finalWpm > 0 ? getRank(finalWpm, game) : null;
-  const pct  = finalWpm > 0 ? getPercentile(finalWpm, game) : 0;
-
-  const handleShare = async () => {
-    if (!rank) return;
-    const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalWpm, unit: "WPM", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
-    setShareImg(url);
-    if (navigator.share) {
-      try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "My ZAZAZA Report", text: t.share.text(game.title, rank.label, rank.subtitle, t.site.url), files: [new File([blob], "zazaza-report.png", { type: "image/png" })] }); return; } catch { /* fallback */ }
-    }
-    window.open(url, "_blank");
-  };
+  const rank = phase === "done" ? getRank(finalWpm, game) : null;
+  const pct  = phase === "done" ? getPercentile(finalWpm, game) : 0;
 
   if (phase === "done" && rank) {
+    const normalized = normalizeTo100FromPercentile(pct, finalWpm);
     return (
-      <>
-        {showAd && <InterstitialAd onDone={afterAd} />}
-        <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(28px,5vw,48px) clamp(20px,4vw,40px)", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 28 }}>ZAZAZA Assessment Complete · {game.clinicalTitle}</div>
-          <div style={{ width: 110, height: 110, borderRadius: "50%", background: `${rank.color}12`, border: `2px solid ${rank.color}`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", margin: "0 auto 20px", boxShadow: `0 0 48px ${rank.color}25` }}>
-            <span style={{ fontSize: 48, fontWeight: 900, color: rank.color, lineHeight: 1 }}>{rank.label}</span>
-            <span style={{ fontSize: 9, color: rank.color, opacity: 0.7, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 2, fontFamily: "var(--font-mono)" }}>{rank.percentileLabel}</span>
-          </div>
-          <div style={{ fontSize: "clamp(52px,13vw,80px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 1, marginBottom: 4 }}>
-            {finalWpm}<span style={{ fontSize: "clamp(16px,3vw,22px)", fontWeight: 400, color: "var(--text-3)", marginLeft: 6, fontFamily: "var(--font-mono)" }}>wpm</span>
-          </div>
-          <div style={{ fontSize: 13, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>
-            Accuracy: <span style={{ color: finalAcc >= 95 ? game.accent : finalAcc >= 80 ? "#F59E0B" : "#ef4444" }}>{finalAcc}%</span>
-          </div>
-          <div style={{ fontSize: 13, color: game.accent, fontWeight: 700, marginBottom: 6, fontFamily: "var(--font-mono)" }}>TOP {100 - pct}% GLOBALLY</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: rank.color, marginBottom: 4 }}>{rank.title}</div>
-          <div style={{ fontSize: 13, color: "var(--text-2)", fontStyle: "italic", marginBottom: 20 }}>&quot;{rank.subtitle}&quot;</div>
-          {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)", letterSpacing: "0.06em", textTransform: "uppercase" }}>◆ New Personal Record</div>}
-          {highScore !== null && !isNewBest && <div style={{ fontSize: 12, color: "var(--text-3)", marginBottom: 16, fontFamily: "var(--font-mono)" }}>Personal best: <span style={{ color: game.accent }}>{highScore} wpm</span></div>}
-          <div style={{ display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap", margin: "16px 0 24px" }}>
-            {game.stats.ranks.map(r => (<div key={r.label} style={{ padding: "4px 11px", borderRadius: 6, fontSize: 12, fontWeight: 800, fontFamily: "var(--font-mono)", background: r.label === rank.label ? `${r.color}18` : "var(--bg-elevated)", color: r.label === rank.label ? r.color : "var(--text-3)", border: `1px solid ${r.label === rank.label ? r.color + "40" : "transparent"}` }}>{r.label}</div>))}
-          </div>
-          <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-            <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>▶ PLAY AGAIN</button>
-            <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>↗ SHARE</button>
-          </div>
-          {shareImg && <div style={{ marginTop: 28 }}><img src={shareImg} alt="Report" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /><p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, fontFamily: "var(--font-mono)" }}>Long-press (mobile) · Right-click (desktop) to save</p></div>}
-        </div>
-      </>
+      <CommonResult
+        game={game}
+        rawScore={finalWpm}
+        rawUnit="wpm"
+        normalizedScore={normalized}
+        percentile={pct}
+        rank={rank}
+        highScore={highScore}
+        isNewBest={isNewBest}
+        showAd={showAd}
+        onAdDone={afterAd}
+        onRetry={handleRetry}
+        tone={resolveResultTone(game)}
+      />
     );
   }
 
