@@ -77,6 +77,46 @@ function getNeonByScore(normalized: number): string {
   return "radial-gradient(120% 90% at 25% 10%, rgba(71,85,105,0.35) 0%, rgba(30,41,59,0.25) 50%, rgba(2,6,23,0.98) 100%)";
 }
 
+function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
+  const cfg: Record<string, { average: number; unit: string; higherIsBetter: boolean; metric: string; decimals?: number }> = {
+    "number-memory": { average: 7, unit: "digits", higherIsBetter: true, metric: "working-memory span" },
+    "sequence-memory": { average: 6, unit: "steps", higherIsBetter: true, metric: "sequence span" },
+    "verbal-memory": { average: 22, unit: "words", higherIsBetter: true, metric: "recognition memory score" },
+    "visual-memory": { average: 8, unit: "levels", higherIsBetter: true, metric: "visual memory level" },
+    "chimp-test": { average: 7, unit: "numbers", higherIsBetter: true, metric: "sequence recall span" },
+    "typing-speed": { average: 40, unit: "wpm", higherIsBetter: true, metric: "typing speed" },
+    "color-conflict": { average: 10, unit: "correct", higherIsBetter: true, metric: "inhibition-control score" },
+    "instant-comparison": { average: 12, unit: "correct", higherIsBetter: true, metric: "magnitude-comparison score" },
+    "rapid-scan": { average: 8, unit: "rounds", higherIsBetter: true, metric: "visual search score" },
+    "count-master": { average: 72, unit: "% acc", higherIsBetter: true, metric: "numerosity accuracy" },
+    "distraction-shield": { average: 68, unit: "%", higherIsBetter: true, metric: "focus control score" },
+    "reaction-time": { average: 270, unit: "ms", higherIsBetter: false, metric: "reaction latency" },
+    "temporal-pulse": { average: 130, unit: "ms avg", higherIsBetter: false, metric: "timing error" },
+    "dont-blink": { average: 420, unit: "ms avg", higherIsBetter: false, metric: "change-detection latency" },
+    "angle-precision": { average: 12, unit: "deg error", higherIsBetter: false, metric: "angle error" },
+  };
+
+  const b = cfg[game.id];
+  if (!b) return null;
+
+  const decimals = b.decimals ?? 0;
+  const me = Number(rawScore.toFixed(decimals));
+  const avg = Number(b.average.toFixed(decimals));
+  const delta = Number(Math.abs(me - avg).toFixed(decimals));
+
+  if (b.higherIsBetter) {
+    if (me >= avg) {
+      return `Benchmark: ${b.metric} ${me} ${b.unit}; global average ${avg} ${b.unit}. You are +${delta} above average.`;
+    }
+    return `Benchmark: ${b.metric} ${me} ${b.unit}; global average ${avg} ${b.unit}. You are ${delta} below average.`;
+  }
+
+  if (me <= avg) {
+    return `Benchmark: ${b.metric} ${me} ${b.unit}; global average ${avg} ${b.unit}. You are ${delta} better (lower) than average.`;
+  }
+  return `Benchmark: ${b.metric} ${me} ${b.unit}; global average ${avg} ${b.unit}. You are ${delta} above average (higher error/latency).`;
+}
+
 export default function CommonResult({
   game,
   rawScore,
@@ -94,6 +134,7 @@ export default function CommonResult({
   const level = getLevel(normalizedScore);
   const scoreEmoji = getScoreEmoji(normalizedScore);
   const killerLine = getKillerLine(tone, normalizedScore);
+  const benchmarkNote = getGameBenchmarkNote(game, rawScore);
   const WORLD_POP = 8_200_000_000;
   const higherThanPct = Math.max(0, Math.min(99.9, percentile));
   const peopleCount = Math.round((higherThanPct / 100) * WORLD_POP);
@@ -172,6 +213,12 @@ export default function CommonResult({
         <div style={{ fontSize: 20, fontWeight: 900, color: "rgba(209,250,229,0.98)", marginBottom: 10, lineHeight: 1.25, textWrap: "balance" as never, textShadow: `0 0 18px ${rank.color}66`, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 12, padding: "10px 12px" }}>
           {killerLine}
         </div>
+
+        {benchmarkNote && (
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.62)", lineHeight: 1.4, marginBottom: 8, fontFamily: "var(--font-mono)" }}>
+            {benchmarkNote}
+          </div>
+        )}
 
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto" }}>
           <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
