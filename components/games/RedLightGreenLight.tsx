@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -253,6 +255,7 @@ export default function RedLightGreenLight({ game }: { game: GameData }) {
   }, [clearScheduled, finishGameWin, scheduleGreenWindow, setLight]);
 
   const beginGame = useCallback(() => {
+    trackPlay(game.id);
     clearScheduled();
     roundRef.current = 1;
     setCurrentRound(1);

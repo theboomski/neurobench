@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -230,7 +232,7 @@ export default function PuppetMaster({ game }: { game: GameData }) {
         Do you run the room — or does the room run you? 20 questions about how you actually influence people. Be honest.
       </p>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~4 minutes · Answers shuffle every time · Gaslighting section included</p>
-      <button onClick={() => { setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ FIND OUT</button>
+      <button onClick={() => { trackPlay(game.id); setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ FIND OUT</button>
     </div>
   );
 

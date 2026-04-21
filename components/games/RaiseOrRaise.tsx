@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -143,6 +145,7 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
   }, [phase, salary, finalize, startRound]);
 
   const startGame = () => {
+    trackPlay(game.id);
     acceptedRef.current = []; setAccepted([]); setRound(1); setLastAccepted(null);
     startRound(1, []);
   };

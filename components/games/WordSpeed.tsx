@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { GameData } from "@/lib/types";
 import { saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -148,6 +150,7 @@ export default function WordSpeed({ game }: { game: GameData }) {
   }, [feedback, advanceTrial]);
 
   const handleStart = () => {
+    trackPlay(game.id);
     correctRef.current = 0;
     rtsRef.current = [];
     currentRef.current = 0;

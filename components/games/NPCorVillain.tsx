@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -200,7 +202,7 @@ export default function NPCorVillain({ game }: { game: GameData }) {
         15 situations. Pick what you'd actually do. Answers shuffle every time — so retaking gives you a different experience.
       </p>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · Villain is not a bad result</p>
-      <button onClick={() => { setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ FIND OUT</button>
+      <button onClick={() => { trackPlay(game.id); setShuffleKey(k => k + 1); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ FIND OUT</button>
     </div>
   );
 

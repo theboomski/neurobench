@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getRank, getPercentile, getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -23,6 +25,7 @@ export default function BossSlapper({ game }: { game: GameData }) {
 
   const handleBossTap = useCallback(() => {
     if (phase === "idle") {
+      trackPlay(game.id);
       setPhase("active");
       setTaps(1);
       setBossActive(true);

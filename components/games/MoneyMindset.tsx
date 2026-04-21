@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -128,7 +130,7 @@ export default function MoneyMindset({ game }: { game: GameData }) {
         20 questions about your financial attitudes and behaviors. Based on behavioral economics research: delay discounting, loss aversion, locus of control, and scarcity vs abundance mindset.
       </p>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · Be brutally honest</p>
-      <button onClick={() => setPhase("playing")} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <button onClick={() => { trackPlay(game.id); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
     </div>
   );
 

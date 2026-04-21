@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -124,6 +126,7 @@ export default function DistractionShield({ game }: { game: GameData }) {
   }, [feedback, trial, correct, rts, trialStart, nextTrial]);
 
   const handleStart = () => {
+    trackPlay(game.id);
     activeRef.current = true;
     setRound(0);
     setCorrect(0);

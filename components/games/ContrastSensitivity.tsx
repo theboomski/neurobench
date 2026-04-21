@@ -1,4 +1,6 @@
 "use client";
+
+import { trackPlay } from "@/lib/tracking";
 import React from "react";
 
 import { useState, useCallback, useEffect } from "react";
@@ -114,6 +116,7 @@ export default function ContrastSensitivity({ game }: { game: GameData }) {
   };
 
   const startGame = () => {
+    trackPlay(game.id);
     setContrast(INITIAL_CONTRAST);
     setRound(0);
     setLastYesContrast(INITIAL_CONTRAST);

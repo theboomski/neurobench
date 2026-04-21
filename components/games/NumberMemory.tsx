@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -85,7 +87,7 @@ export default function NumberMemory({ game }: { game: GameData }) {
 
   useEffect(() => () => clearTimer(), []);
 
-  const handleBegin = () => { setLevel(1); startLevel(1); };
+  const handleBegin = () => { trackPlay(game.id); setLevel(1); startLevel(1); };
 
   const handleSubmit = useCallback(() => {
     if (input === sequence) {

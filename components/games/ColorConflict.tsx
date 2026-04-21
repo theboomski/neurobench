@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -141,6 +143,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
   }, [endGame]);
 
   const startGame = () => {
+    trackPlay(game.id);
     scoreRef.current = 0;
     setScore(0);
     setFeedback(null);

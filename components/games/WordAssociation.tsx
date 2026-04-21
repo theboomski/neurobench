@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useCallback, useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import { saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -112,6 +114,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
   }, [selected, q, correct, rts, current, trialStart, game.id]);
 
   const handleStart = () => {
+    trackPlay(game.id);
     setCurrent(0); setCorrect(0); setRts([]); setSelected(null);
     setTrialStart(Date.now()); setShuffleKey(k => k + 1);
     setPhase("playing");

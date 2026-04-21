@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getRank, getPercentile, getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -33,7 +35,7 @@ export default function ReactionGame({ game }: { game: GameData }) {
   }, []);
 
   const handleTap = useCallback(() => {
-    if (phase === "idle")    { beginWait(); return; }
+    if (phase === "idle")    { trackPlay(game.id); beginWait(); return; }
     if (phase === "waiting") { clearT(); playBeep("fail"); setPhase("toosoon"); return; }
     if (phase === "toosoon") { beginWait(); return; }
     if (phase === "done")    { return; }

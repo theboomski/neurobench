@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -75,6 +77,7 @@ export default function TemporalPulse({ game }: { game: GameData }) {
   }, []);
 
   const startGame = () => {
+    trackPlay(game.id);
     errorsRef.current = [];
     setErrors([]);
     setRound(1);

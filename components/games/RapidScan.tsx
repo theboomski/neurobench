@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -71,6 +73,7 @@ export default function RapidScan({ game }: { game: GameData }) {
   }, [game.id]);
 
   const startGame = () => {
+    trackPlay(game.id);
     scoreRef.current = 0;
     levelRef.current = 1;
     setScore(0);

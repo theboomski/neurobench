@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useEffect, useCallback } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -170,7 +172,7 @@ export default function HueOrdering({ game }: { game: GameData }) {
       <p style={{ color: "var(--text-3)", fontSize: 12, fontFamily: "var(--font-mono)", marginBottom: 28 }}>4 rounds · Takes ~90 seconds</p>
       {/* Preview gradient */}
       <div style={{ height: 24, borderRadius: 12, background: "linear-gradient(to right, hsl(0,85%,60%), hsl(90,85%,60%), hsl(180,85%,60%), hsl(270,85%,60%), hsl(360,85%,60%))", marginBottom: 28, maxWidth: 300, margin: "0 auto 28px" }} />
-      <button onClick={() => { setPhase("playing"); setRoundIdx(0); setTotalError(0); }} className="pressable"
+      <button onClick={() => { trackPlay(game.id); setPhase("playing"); setRoundIdx(0); setTotalError(0); }} className="pressable"
         style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>
         ▶ BEGIN TEST
       </button>

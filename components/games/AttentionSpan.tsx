@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore } from "@/lib/gameUtils";
@@ -99,6 +101,7 @@ export default function AttentionSpan({ game }: { game: GameData }) {
   }, []);
 
   const handleStart = () => {
+    trackPlay(game.id);
     hitsRef.current = 0;
     missesRef.current = 0;
     falseAlarmsRef.current = 0;

@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -258,7 +260,7 @@ export default function ManipulationDetector({ game }: { game: GameData }) {
         10 scenarios. Some test whether you can <strong style={{ color: "#06B6D4" }}>spot manipulation</strong> in others. Some reveal your own <strong style={{ color: "#F97316" }}>operator tendencies</strong>. Which side are you on?
       </p>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · Answer instinctively</p>
-      <button onClick={() => setPhase("playing")} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN</button>
+      <button onClick={() => { trackPlay(game.id); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN</button>
     </div>
   );
 

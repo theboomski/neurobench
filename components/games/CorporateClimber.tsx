@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -155,6 +157,7 @@ export default function CorporateClimber({ game }: { game: GameData }) {
   }, [endGame]);
 
   const startGame = () => {
+    trackPlay(game.id);
     const start: Pos[] = [{ x:8, y:9 },{ x:7, y:9 },{ x:6, y:9 }];
     const startItems = rebalanceItems(start, []);
     snakeRef.current = start; itemsRef.current = startItems;

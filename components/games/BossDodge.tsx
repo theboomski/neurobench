@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -126,6 +128,7 @@ export default function BossDodge({ game }: { game: GameData }) {
   }, [endGame]);
 
   const startGame = () => {
+    trackPlay(game.id);
     scoreRef.current = 0; livesRef.current = 3; objectsRef.current = [];
     setScore(0); setLives(3); setObjects([]); setTimeLeft(GAME_DURATION);
     setPhase("playing");

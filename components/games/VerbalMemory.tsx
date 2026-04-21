@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -73,6 +75,7 @@ export default function VerbalMemory({ game }: { game: GameData }) {
   }, []);
 
   const startGame = () => {
+    trackPlay(game.id);
     const firstWord = WORD_POOL[Math.floor(Math.random() * 20)];
     setPhase("playing");
     setScore(0);

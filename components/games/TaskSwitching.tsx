@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -173,6 +175,7 @@ export default function TaskSwitching({ game }: { game: GameData }) {
   }, [feedback, phase, advanceTrial]);
 
   const handleStart = () => {
+    trackPlay(game.id);
     trialIdxRef.current = 0;
     correctRef.current = 0;
     switchRTsRef.current = [];

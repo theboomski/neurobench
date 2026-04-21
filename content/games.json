@@ -172,7 +172,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "number-memory",
@@ -301,7 +302,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "sequence-memory",
@@ -422,7 +424,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "verbal-memory",
@@ -541,7 +544,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "visual-memory",
@@ -656,7 +660,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "chimp-test",
@@ -775,7 +780,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "typing-speed",
@@ -904,7 +910,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "color-conflict",
@@ -1025,7 +1032,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "instant-comparison",
@@ -1145,7 +1153,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "angle-precision",
@@ -1264,7 +1273,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "rapid-scan",
@@ -1384,7 +1394,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "temporal-pulse",
@@ -1504,7 +1515,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "dont-blink",
@@ -1623,7 +1635,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "count-master",
@@ -1742,7 +1755,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "reaction-time",
@@ -1873,7 +1887,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "report-or-favor",
@@ -1992,7 +2007,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "boss-dodge",
@@ -2112,7 +2128,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "raise-or-raise",
@@ -2231,7 +2248,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "corporate-climber",
@@ -2350,7 +2368,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "attention-span",
@@ -2467,7 +2486,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "distraction-shield",
@@ -2583,7 +2603,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "task-switching",
@@ -2699,7 +2720,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "dark-triad",
@@ -2816,7 +2838,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "empathy-score",
@@ -2933,7 +2956,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "manipulation-detector",
@@ -3050,7 +3074,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "vocabulary-age",
@@ -3167,7 +3192,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "word-speed",
@@ -3283,7 +3309,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "word-association",
@@ -3400,7 +3427,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     },
     {
       "id": "red-flag-detector",
@@ -3516,7 +3544,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "attachment-style",
@@ -3632,7 +3661,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "love-language",
@@ -3748,7 +3778,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "money-mindset",
@@ -3864,7 +3895,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "risk-tolerance",
@@ -3980,7 +4012,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "financial-iq",
@@ -4097,7 +4130,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "main-character",
@@ -4213,7 +4247,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "npc-or-villain",
@@ -4330,7 +4365,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "red-flag-green-flag",
@@ -4447,7 +4483,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "puppet-master",
@@ -4564,7 +4601,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "dark-empath",
@@ -4680,7 +4718,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "social-predator",
@@ -4797,7 +4836,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": false
     },
     {
       "id": "red-light-green-light",
@@ -4913,7 +4953,8 @@
             "percentileLabel": "Bottom 25%"
           }
         ]
-      }
+      },
+      "hasLeaderboard": true
     }
   ]
 }

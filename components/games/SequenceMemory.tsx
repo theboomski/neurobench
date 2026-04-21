@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { dict } from "@/lib/i18n";
@@ -75,6 +77,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
   }, []);
 
   const startGame = useCallback(() => {
+    trackPlay(game.id);
     const first = Math.floor(Math.random() * GRID_SIZE);
     const seq = [first];
     setSequence(seq);
