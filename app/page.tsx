@@ -49,8 +49,8 @@ export default function HomePage() {
           <span style={{ fontSize: 10, color: "var(--text-2)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>50+ FREE TESTS · NO SIGNUP · INSTANT RESULTS</span>
         </div>
         <h1 style={{ fontSize: "clamp(24px,6vw,62px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 14 }}>
-          You&apos;re probably not who you think you are.<br />
-          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>PROVE OUR TESTS WRONG.</span>
+          Think you know yourself?<br />
+          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Think again.</span>
         </h1>
         <p style={{ fontSize: "clamp(14px,2vw,17px)", color: "var(--text-2)", marginBottom: 28, lineHeight: 1.65, maxWidth: 480, margin: "0 auto 28px" }}>
           1-minute tests that reveal what you actually are.

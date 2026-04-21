@@ -14,7 +14,7 @@ export const dict = {
     },
     home: {
       badge: "Free · No Signup · Instant Results",
-      hero: "How Smart Is Your Brain?",
+      hero: "Think you know yourself?",
       heroSub: "Free tests. Zero signup. Instant results. Globally ranked.",
       categoryLabels: {
         clinical: "Brain Age Test",
