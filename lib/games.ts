@@ -50,14 +50,27 @@ function fillCategoriesIfMissing(games: GameData[], categories: CategoryMeta[]):
   return ordered;
 }
 
+const LEADERBOARD_TRUE_CATS = new Set<GameData["category"]>([
+  "brain-age",
+  "office-iq",
+  "focus-test",
+  "word-iq",
+  "korean-tv",
+]);
+
+function withLeaderboardFlag(g: GameData): GameData {
+  if (typeof g.hasLeaderboard === "boolean") return g;
+  return { ...g, hasLeaderboard: LEADERBOARD_TRUE_CATS.has(g.category) };
+}
+
 function loadGames(): { games: GameData[]; categories: CategoryMeta[] } {
   const raw = gamesJson as unknown as GameData[] | GamesBundle;
   if (Array.isArray(raw)) {
-    const games = raw as GameData[];
+    const games = (raw as GameData[]).map(withLeaderboardFlag);
     return { games, categories: fillCategoriesIfMissing(games, []) };
   }
   const b = raw as GamesBundle;
-  const games = (b.games ?? []) as GameData[];
+  const games = ((b.games ?? []) as GameData[]).map(withLeaderboardFlag);
   const categories = fillCategoriesIfMissing(games, b.categories ?? []);
   return { games, categories };
 }

@@ -17,6 +17,8 @@ export interface GameData {
   accent: string;
   accentDim: string;
   category: "brain-age" | "office-iq" | "focus-test" | "dark-personality" | "word-iq" | "relationship" | "money" | "korean-tv";
+  /** Global numeric leaderboard (see content/games.json). */
+  hasLeaderboard: boolean;
   categoryLabel: string;
   tags: string[];
   seo: {

@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -118,7 +120,7 @@ export default function DontBlink({ game }: { game: GameData }) {
     else { timerRef.current = setTimeout(() => { setRound(r => r+1); startRound(next.length+1, next); }, 800); }
   }, [phase, startRound, finalize]);
 
-  const startGame = () => { resultsRef.current = []; setResults([]); setRound(1); startRound(1, []); };
+  const startGame = () => { trackPlay(game.id); resultsRef.current = []; setResults([]); setRound(1); startRound(1, []); };
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => { setShowAd(false); setPhase("idle"); setIsNewBest(false); };
 

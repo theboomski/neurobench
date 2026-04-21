@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -84,7 +86,7 @@ export default function CountMaster({ game }: { game: GameData }) {
     }, FLASH_MS);
   }, []);
 
-  const startGame = () => { resultsRef.current = []; setResults([]); setRound(1); startRound(1); };
+  const startGame = () => { trackPlay(game.id); resultsRef.current = []; setResults([]); setRound(1); startRound(1); };
 
   const handleSubmit = useCallback(() => {
     if (phase !== "input" || guess === "") return;

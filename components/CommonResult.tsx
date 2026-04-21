@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import type { GameData } from "@/lib/types";
 import InterstitialAd from "@/components/InterstitialAd";
+import LeaderboardSection from "@/components/LeaderboardSection";
 
 type AnalysisTone = "brain" | "office" | "focus" | "vocab";
 
@@ -181,6 +182,7 @@ export default function CommonResult({
   return (
     <>
       {showAd && <InterstitialAd onDone={onAdDone} />}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div
           className="anim-scale-in"
@@ -246,6 +248,10 @@ export default function CommonResult({
           </button>
         </div>
         </div>
+      </div>
+      {game.hasLeaderboard && (
+        <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />
+      )}
       </div>
     </>
   );

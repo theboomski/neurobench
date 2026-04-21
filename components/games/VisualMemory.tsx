@@ -1,5 +1,7 @@
 "use client";
 
+import { trackPlay } from "@/lib/tracking";
+
 import { useState, useRef, useCallback, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -83,7 +85,7 @@ export default function VisualMemory({ game }: { game: GameData }) {
     }, showMs);
   }, []);
 
-  const startGame = () => { setLevel(1); startLevel(1); };
+  const startGame = () => { trackPlay(game.id); setLevel(1); startLevel(1); };
 
   const handleCellClick = useCallback((idx: number) => {
     // FIX 2: failed flag locks immediately — no recovery after wrong tap
