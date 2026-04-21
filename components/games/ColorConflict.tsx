@@ -6,7 +6,26 @@ import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
-const TIME_LIMIT = 2500; // ms per round
+
+/** Round 1 starts here; time shrinks with score (floor MIN_ROUND_MS). */
+const BASE_ROUND_MS = 2500;
+const MIN_ROUND_MS = 700;
+const MS_DECAY_PER_SCORE = 8;
+
+function getRoundTimeMs(scoreAtRoundStart: number): number {
+  return Math.max(MIN_ROUND_MS, Math.round(BASE_ROUND_MS - scoreAtRoundStart * MS_DECAY_PER_SCORE));
+}
+
+function getChoiceCount(scoreAtRoundStart: number): 4 | 5 | 6 {
+  if (scoreAtRoundStart >= 75) return 6;
+  if (scoreAtRoundStart >= 25) return 5;
+  return 4;
+}
+
+/** After a correct answer, pause before next stimulus (shrinks with streak). */
+function getCorrectDelayMs(scoreAfterCorrect: number): number {
+  return Math.max(120, Math.round(300 - scoreAfterCorrect * 1.15));
+}
 
 function getRank(score: number, game: GameData) {
   // Higher score = better: S has highest threshold
@@ -50,12 +69,13 @@ function randomChromeHex(avoidSemanticHex: string): string {
   return h;
 }
 
-function randomPair(): { word: ColorDef; ink: ColorDef; buttons: AnswerButton[] } {
+function randomPair(choiceCount: 4 | 5 | 6): { word: ColorDef; ink: ColorDef; buttons: AnswerButton[] } {
   const word = COLORS[Math.floor(Math.random() * COLORS.length)];
   let ink = COLORS[Math.floor(Math.random() * COLORS.length)];
   while (ink.name === word.name) ink = COLORS[Math.floor(Math.random() * COLORS.length)];
-  // 4 buttons including correct answer
-  const others = COLORS.filter(c => c.name !== ink.name).sort(() => Math.random() - 0.5).slice(0, 3);
+  const rest = COLORS.filter(c => c.name !== ink.name).sort(() => Math.random() - 0.5);
+  const wrongCount = choiceCount - 1;
+  const others = rest.slice(0, wrongCount);
   const shuffled = [...others, ink].sort(() => Math.random() - 0.5);
   const buttons: AnswerButton[] = shuffled.map((c) => ({
     ...c,
@@ -69,9 +89,10 @@ type Phase = "idle" | "playing" | "done";
 export default function ColorConflict({ game }: { game: GameData }) {
   const [phase, setPhase]         = useState<Phase>("idle");
   const [score, setScore]         = useState(0);
-  const [pair, setPair]           = useState(randomPair());
+  const [pair, setPair]           = useState(() => randomPair(4));
   const [feedback, setFeedback]   = useState<"correct" | "wrong" | "timeout" | null>(null);
-  const [timeLeft, setTimeLeft]   = useState(TIME_LIMIT);
+  const [timeLeft, setTimeLeft]   = useState(BASE_ROUND_MS);
+  const [roundTimeMs, setRoundTimeMs] = useState(BASE_ROUND_MS);
   const [showAd, setShowAd]       = useState(false);
   const [highScore, setHS]        = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
@@ -97,25 +118,26 @@ export default function ColorConflict({ game }: { game: GameData }) {
   }, [game.id]);
 
   const startRound = useCallback((currentScore: number) => {
-    setPair(randomPair());
+    const limit = getRoundTimeMs(currentScore);
+    const choices = getChoiceCount(currentScore);
+    setRoundTimeMs(limit);
+    setPair(randomPair(choices));
     setFeedback(null);
-    setTimeLeft(TIME_LIMIT);
+    setTimeLeft(limit);
 
-    // Countdown bar
     const startMs = performance.now();
     timerRef.current = setInterval(() => {
       const elapsed = performance.now() - startMs;
-      const remaining = Math.max(0, TIME_LIMIT - elapsed);
+      const remaining = Math.max(0, limit - elapsed);
       setTimeLeft(remaining);
     }, 50);
 
-    // Timeout
     roundRef.current = setTimeout(() => {
       clearTimers();
       playBeep("fail");
       setFeedback("timeout");
       setTimeout(() => endGame(currentScore), 800);
-    }, TIME_LIMIT);
+    }, limit);
   }, [endGame]);
 
   const startGame = () => {
@@ -135,7 +157,8 @@ export default function ColorConflict({ game }: { game: GameData }) {
       setFeedback("correct");
       scoreRef.current++;
       setScore(scoreRef.current);
-      setTimeout(() => startRound(scoreRef.current), 300);
+      const delay = getCorrectDelayMs(scoreRef.current);
+      setTimeout(() => startRound(scoreRef.current), delay);
     } else {
       playBeep("fail");
       setFeedback("wrong");
@@ -171,8 +194,10 @@ export default function ColorConflict({ game }: { game: GameData }) {
     );
   }
 
-  const timerPct = (timeLeft / TIME_LIMIT) * 100;
+  const timerPct = roundTimeMs > 0 ? (timeLeft / roundTimeMs) * 100 : 0;
   const timerColor = timerPct > 60 ? game.accent : timerPct > 30 ? "#F59E0B" : "#EF4444";
+  const choiceCount = pair.buttons.length;
+  const gridCols = choiceCount >= 5 ? 3 : 2;
 
   return (
     <>
@@ -187,7 +212,9 @@ export default function ColorConflict({ game }: { game: GameData }) {
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 10, lineHeight: 1.5, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
             Answer tiles use random colors on purpose; only the text on each button counts.
           </p>
-          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>2.5 seconds per round · wrong answer or timeout = game over</p>
+          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28, lineHeight: 1.45, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}>
+            Time per round shrinks as you score (down to {(MIN_ROUND_MS / 1000).toFixed(1)}s). After 25 / 75 correct, you get 5 then 6 choices. Wrong answer or timeout = game over.
+          </p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
       ) : (
@@ -197,8 +224,9 @@ export default function ColorConflict({ game }: { game: GameData }) {
             <div style={{ height: "100%", width: `${timerPct}%`, background: timerColor, borderRadius: 2, transition: "width 0.05s linear, background 0.3s" }} />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 14, flexWrap: "wrap", gap: 8 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>SCORE: <span style={{ color: game.accent, fontWeight: 700 }}>{score}</span></div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>{choiceCount} choices · {(roundTimeMs / 1000).toFixed(2)}s limit</div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: timerColor, fontWeight: 700 }}>{(timeLeft / 1000).toFixed(1)}s</div>
           </div>
 
@@ -210,7 +238,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
           </div>
 
           {/* Buttons */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: 10 }}>
             {pair.buttons.map(btn => (
               <button
                 key={btn.name}
