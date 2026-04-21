@@ -65,6 +65,39 @@ function computeScore(roundsCleared: number, roundDurationsMs: number[], closeCa
   return Math.max(0, Math.min(1000, s));
 }
 
+function TrafficLamp({ light }: { light: "green" | "red" }) {
+  const redOn = light === "red";
+  const greenOn = light === "green";
+  return (
+    <div
+      className="flex flex-col gap-1.5 rounded-lg border border-[var(--border)] bg-[#0f0f12] px-2 py-2 shadow-inner"
+      style={{ flexShrink: 0 }}
+    >
+      <div
+        className="h-[22px] w-[22px] rounded-full sm:h-[26px] sm:w-[26px]"
+        style={{
+          background: redOn ? "#ef4444" : "#3f1720",
+          boxShadow: redOn ? "0 0 16px rgba(239,68,68,0.85)" : "none",
+          opacity: redOn ? 1 : 0.45,
+        }}
+      />
+      <div
+        className="h-[22px] w-[22px] rounded-full sm:h-[26px] sm:w-[26px]"
+        style={{ background: "#2a2510", opacity: 0.35 }}
+        aria-hidden
+      />
+      <div
+        className="h-[22px] w-[22px] rounded-full sm:h-[26px] sm:w-[26px]"
+        style={{
+          background: greenOn ? "#22c55e" : "#14321e",
+          boxShadow: greenOn ? "0 0 16px rgba(34,197,94,0.85)" : "none",
+          opacity: greenOn ? 1 : 0.45,
+        }}
+      />
+    </div>
+  );
+}
+
 export default function RedLightGreenLight({ game }: { game: GameData }) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [currentRound, setCurrentRound] = useState(1);
@@ -323,76 +356,134 @@ export default function RedLightGreenLight({ game }: { game: GameData }) {
     );
   }
 
-  const dollTransform = dollFacingToward ? "scaleX(1)" : "scaleX(-1)";
+  /** Green = doll not watching (silhouette); red = facing player. */
+  const dollEmoji = dollFacingToward ? "👧" : "👤";
 
   return (
     <>
       {showAd && <InterstitialAd onDone={afterAd} />}
       {phase === "idle" && (
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-card)] p-8 text-center sm:p-10">
-          <div className="mb-4 text-5xl sm:text-6xl">🦑</div>
-          <h2 className="mb-2 text-lg font-extrabold tracking-tight sm:text-xl">{game.title}</h2>
-          <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-[var(--text-2)]">{game.shortDescription}</p>
-          <p className="mx-auto mb-6 max-w-md text-xs leading-relaxed text-[var(--text-3)] font-mono">
-            3 rounds. Tap to move up on <span className="font-bold text-emerald-400">green</span>. On <span className="font-bold text-red-400">red</span>, do not touch the screen. Fake turns in later rounds.
-          </p>
-          <button
-            type="button"
-            onClick={beginGame}
-            className="pressable rounded-md px-9 py-3.5 font-mono text-sm font-extrabold"
-            style={{ background: game.accent, color: "#000" }}
+        <>
+          <div
+            style={{
+              background: "var(--bg-card)",
+              border: "1.5px solid var(--border)",
+              borderRadius: "var(--radius-xl)",
+              minHeight: "clamp(280px, 48vw, 360px)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "32px 24px",
+              userSelect: "none",
+            }}
           >
-            ▶ BEGIN
-          </button>
-        </div>
+            <div className="anim-fade-up" style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "clamp(40px, 10vw, 60px)", marginBottom: 20 }}>{game.emoji}</div>
+              <p style={{ fontSize: "clamp(17px, 3.5vw, 20px)", fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 10 }}>Initiate Survival Protocol</p>
+              <p style={{ fontSize: "clamp(12px, 2.5vw, 14px)", color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 10, lineHeight: 1.55, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}>
+                {game.shortDescription}
+              </p>
+              <p style={{ fontSize: "clamp(11px, 2.2vw, 13px)", color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28, lineHeight: 1.55, maxWidth: 440, marginLeft: "auto", marginRight: "auto" }}>
+                3 rounds · tap the zone on <span style={{ color: "#22c55e", fontWeight: 700 }}>GREEN</span> only · hands off on{" "}
+                <span style={{ color: "#ef4444", fontWeight: 700 }}>RED</span> · fake turns later
+              </p>
+              <button
+                type="button"
+                onClick={beginGame}
+                className="pressable"
+                style={{
+                  background: game.accent,
+                  color: "#000",
+                  border: "none",
+                  borderRadius: "var(--radius-md)",
+                  padding: "14px 36px",
+                  fontSize: 14,
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  fontFamily: "var(--font-mono)",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                ▶ INITIATE
+              </button>
+            </div>
+          </div>
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: 10,
+              fontSize: 11,
+              color: "var(--text-3)",
+              fontFamily: "var(--font-mono)",
+              letterSpacing: "0.06em",
+            }}
+          >
+            TAP TO ADVANCE ON GREEN — FREEZE ON RED
+          </div>
+        </>
       )}
 
       {(phase === "playing" || phase === "eliminated_overlay") && (
-        <div className="relative mx-auto w-full max-w-md select-none">
-          <div
-            ref={playAreaRef}
-            role="application"
-            aria-label="Red light green light tap zone"
-            className="relative touch-manipulation overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]"
-            style={{ height: "min(72vh, 520px)", userSelect: "none" }}
-          >
+        <>
+          <div className="relative w-full max-w-full select-none" style={{ margin: "0 auto" }}>
             <div
-              className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-100"
-              style={{ background: "#7f1d1d", opacity: redFlash }}
-            />
-            {phase === "eliminated_overlay" && (
-              <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/80 px-4 text-center">
-                <div className="text-4xl font-black tracking-tight text-red-500 sm:text-5xl">ELIMINATED</div>
-                <div className="mt-3 font-mono text-sm text-[var(--text-2)]">Round {eliminationRound}</div>
+              ref={playAreaRef}
+              role="application"
+              aria-label="Red light green light tap zone"
+              className="relative touch-manipulation overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)]"
+              style={{ height: "min(72vh, 520px)", width: "100%", userSelect: "none", marginLeft: "auto", marginRight: "auto" }}
+            >
+              <div
+                className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-100"
+                style={{ background: "#7f1d1d", opacity: redFlash }}
+              />
+              {phase === "eliminated_overlay" && (
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/80 px-4 text-center">
+                  <div className="text-4xl font-black tracking-tight text-red-500 sm:text-5xl">ELIMINATED</div>
+                  <div className="mt-3 font-mono text-sm text-[var(--text-2)]">Round {eliminationRound}</div>
+                </div>
+              )}
+
+              <div
+                className="pointer-events-none absolute left-0 right-0 top-[4%] z-[6] flex justify-center gap-3 sm:gap-4"
+                style={{ alignItems: "flex-start" }}
+              >
+                <TrafficLamp light={lightUi} />
+                <div className="flex flex-col items-center">
+                  <div className="mb-1 font-mono text-[10px] uppercase tracking-widest text-[var(--text-3)]">🏁 Finish</div>
+                  <div className="text-3xl leading-none">🏁</div>
+                  <div className="mt-2 text-7xl leading-none transition-opacity duration-75 sm:mt-3 sm:text-8xl" style={{ opacity: phase === "eliminated_overlay" ? 0.35 : 1 }}>
+                    {dollEmoji}
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="absolute left-0 right-0 top-[6%] flex flex-col items-center">
-              <div className="mb-1 font-mono text-[10px] uppercase tracking-widest text-[var(--text-3)]">🏁 Finish</div>
-              <div className="text-3xl leading-none">🏁</div>
-            </div>
+              <div
+                className="absolute left-1/2 z-[4] text-5xl transition-[bottom] duration-150 ease-out sm:text-6xl"
+                style={{ bottom: `${playerPct}%`, transform: "translateX(-50%)" }}
+              >
+                🏃
+              </div>
 
-            <div
-              className="absolute left-1/2 top-[14%] z-[5] text-7xl leading-none transition-transform duration-75 sm:text-8xl"
-              style={{ transform: `translateX(-50%) ${dollTransform}` }}
-            >
-              👧
-            </div>
-
-            <div
-              className="absolute left-1/2 z-[4] text-5xl transition-[bottom] duration-150 ease-out sm:text-6xl"
-              style={{ bottom: `${playerPct}%`, transform: "translateX(-50%)" }}
-            >
-              🏃
-            </div>
-
-            <div className="pointer-events-none absolute bottom-3 left-0 right-0 flex justify-between px-3 font-mono text-[10px] text-[var(--text-3)]">
-              <span>ROUND {currentRound}/3</span>
-              <span className={lightUi === "green" ? "text-emerald-400" : "text-red-500"}>{lightUi === "green" ? "GREEN" : "RED"}</span>
+              <div className="pointer-events-none absolute bottom-3 left-0 right-0 px-3 text-center font-mono text-[10px] tracking-wide text-[var(--text-3)]">
+                ROUND {currentRound}/3
+              </div>
             </div>
           </div>
-          <p className="mt-2 text-center font-mono text-[10px] text-[var(--text-3)]">Tap the play area to move · mousedown / touchstart</p>
-        </div>
+          <div
+            style={{
+              textAlign: "center",
+              marginTop: 10,
+              fontSize: 11,
+              color: "var(--text-3)",
+              fontFamily: "var(--font-mono)",
+              letterSpacing: "0.06em",
+            }}
+          >
+            TAP THE ZONE ON GREEN — MOUSE / TOUCH
+          </div>
+        </>
       )}
     </>
   );

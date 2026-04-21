@@ -10,10 +10,18 @@ const faqSchema = {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Are these Korean TV games like Squid Game?",
+      "name": "What are Korean TV show challenges on ZAZAZA?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "They are short reaction and timing challenges inspired by the tension of survival-style variety and drama formats. They are for entertainment only and are not affiliated with any broadcast show.",
+        "text": "They are short browser mini-games built around timing, nerves, and reflexes — the same psychological pressure you see in survival-style variety and drama formats. They are for entertainment only and are not affiliated with any broadcaster or series.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Are these games like Squid Game?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They borrow the feeling of sudden rules and elimination-style tension, but they are original challenges with their own scoring. They are not official Squid Game products.",
       },
     },
     {
@@ -22,6 +30,14 @@ const faqSchema = {
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "You earn base points for each round cleared plus speed bonuses for reaching the finish quickly. Hesitation right before a real red light costs a small penalty. A perfect three-round run can reach 1000 points.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Are Korean TV challenges free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All ZAZAZA Korean TV show challenges are free with no account required.",
       },
     },
   ],
@@ -64,13 +80,31 @@ export default function Page() {
       </section>
       <section style={{ paddingBottom: 72 }}>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #E11D48", borderRadius: "var(--radius-lg)", padding: "36px 32px" }}>
-          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>Why these games hit different</h2>
+          <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>What Are Korean TV Show Challenges?</h2>
           <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 14 }}>
-            Korean survival and variety formats are built on sudden rule changes, social pressure, and split-second decisions. These mini-games strip that down to pure reflex and risk: you know the rules, but the timing is never fully yours to control.
+            Korean variety and survival-style formats often push contestants with unpredictable timing, social pressure, and high-stakes moments. ZAZAZA turns that energy into quick reaction games you can play in a browser — same nerves, no crew, no edits.
           </p>
-          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 0 }}>
-            Play for bragging rights, share your score, and see if your friends can survive the same round.
+          <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 24 }}>
+            Scores are designed for sharing: clear the rounds, move fast on safe windows, and avoid panicking on fake turns. Your friends get the same challenge — compare who actually survives.
           </p>
+          <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 12 }}>Frequently Asked Questions</h3>
+          <div style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.9 }}>
+            <p style={{ marginBottom: 12 }}>
+              <strong style={{ color: "var(--text-1)" }}>Are these official TV show games?</strong>
+              <br />
+              No. They are inspired by the tension and pacing of popular formats and are for entertainment only.
+            </p>
+            <p style={{ marginBottom: 12 }}>
+              <strong style={{ color: "var(--text-1)" }}>What skills do these games test?</strong>
+              <br />
+              Mostly inhibition control, timing under uncertainty, and fine motor response — the same ingredients that make survival-style scenes stressful to watch.
+            </p>
+            <p style={{ marginBottom: 0 }}>
+              <strong style={{ color: "var(--text-1)" }}>Are Korean TV challenges free?</strong>
+              <br />
+              Yes. Everything on this hub is free with no signup.
+            </p>
+          </div>
         </div>
       </section>
       <div style={{ paddingBottom: 24 }}>
