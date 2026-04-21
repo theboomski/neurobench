@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import gamesData from "@/content/games.json";
+import { ALL_GAMES } from "@/lib/games";
 import type { GameData } from "@/lib/types";
 import GameLayout from "@/components/GameLayout";
 import ReactionGame from "@/components/games/ReactionGame";
@@ -22,8 +22,9 @@ import ReportOrFavor from "@/components/games/ReportOrFavor";
 import BossDodge from "@/components/games/BossDodge";
 import RaiseOrRaise from "@/components/games/RaiseOrRaise";
 import CorporateClimber from "@/components/games/CorporateClimber";
+import RedLightGreenLight from "@/components/games/RedLightGreenLight";
 
-const games = gamesData as GameData[];
+const games = ALL_GAMES;
 type Props = { params: Promise<{ id: string }> };
 
 export function generateStaticParams() {
@@ -63,6 +64,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "boss-dodge":          return <BossDodge game={game} />;
     case "raise-or-raise":      return <RaiseOrRaise game={game} />;
     case "corporate-climber":   return <CorporateClimber game={game} />;
+    case "red-light-green-light": return <RedLightGreenLight game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }

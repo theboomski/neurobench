@@ -1,14 +1,13 @@
 import { MetadataRoute } from "next";
-import gamesData from "@/content/games.json";
-import type { GameData } from "@/lib/types";
+import { ALL_GAMES } from "@/lib/games";
 
-const games = gamesData as GameData[];
+const games = ALL_GAMES;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://zazaza.app";
 
   const categoryPages = [
-    "brain-age", "office-iq", "eye-age", "focus-test", "dark-personality", "word-iq", "relationship", "money"
+    "brain-age", "office-iq", "focus-test", "dark-personality", "word-iq", "relationship", "money", "korean-tv"
   ].map(cat => ({
     url: `${base}/${cat}`,
     lastModified: new Date(),

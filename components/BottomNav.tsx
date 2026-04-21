@@ -14,7 +14,7 @@ const MAIN_TABS = [
 const MORE_TABS = [
   { href: "/office-iq",       emoji: "💼", label: "Office IQ" },
   { href: "/money",           emoji: "💰", label: "Money IQ" },
-  { href: "/eye-age",         emoji: "👁️", label: "Eye Age" },
+  { href: "/korean-tv",       emoji: "🎮", label: "Korean TV" },
   { href: "/focus-test",      emoji: "🎯", label: "Focus" },
   { href: "/word-iq",         emoji: "📚", label: "Word IQ" },
   { href: "/about",           emoji: "ℹ️", label: "About" },

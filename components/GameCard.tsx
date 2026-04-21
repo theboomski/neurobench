@@ -11,7 +11,7 @@ function displayTitle(game: GameData): string {
   return game.title.replace(/\s*Test$/i, "").replace(/\s*Test\s*/i, " ").trim();
 }
 
-export function SortedGrid({ games, category }: { games: GameData[]; category: "brain-age" | "office-iq" | "eye-age" | "focus-test" | "dark-personality" | "word-iq" }) {
+export function SortedGrid({ games, category }: { games: GameData[]; category: GameData["category"] }) {
   const filtered = games.filter(g => g.category === category);
   const [sorted, setSorted] = useState(filtered);
 

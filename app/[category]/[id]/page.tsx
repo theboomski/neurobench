@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import gamesData from "@/content/games.json";
+import { ALL_GAMES } from "@/lib/games";
 import type { GameData } from "@/lib/types";
 import GameLayout from "@/components/GameLayout";
 import BossSlapper from "@/components/games/BossSlapper";
@@ -22,9 +22,6 @@ import ReportOrFavor from "@/components/games/ReportOrFavor";
 import BossDodge from "@/components/games/BossDodge";
 import RaiseOrRaise from "@/components/games/RaiseOrRaise";
 import CorporateClimber from "@/components/games/CorporateClimber";
-import ColorBlindTest from "@/components/games/ColorBlindTest";
-import ContrastSensitivity from "@/components/games/ContrastSensitivity";
-import HueOrdering from "@/components/games/HueOrdering";
 import AttentionSpan from "@/components/games/AttentionSpan";
 import DistractionShield from "@/components/games/DistractionShield";
 import TaskSwitching from "@/components/games/TaskSwitching";
@@ -46,13 +43,19 @@ import RedFlagGreenFlag from "@/components/games/RedFlagGreenFlag";
 import PuppetMaster from "@/components/games/PuppetMaster";
 import DarkEmpath from "@/components/games/DarkEmpath";
 import SocialPredator from "@/components/games/SocialPredator";
+import RedLightGreenLight from "@/components/games/RedLightGreenLight";
 
-const games = gamesData as GameData[];
+const games = ALL_GAMES;
 
 type Props = { params: Promise<{ category: string; id: string }> };
 
+/** Static segment at app/korean-tv/red-light-green-light owns this URL. */
+const DEDICATED_STATIC_GAME_KEYS = new Set(["korean-tv:red-light-green-light"]);
+
 export function generateStaticParams() {
-  return games.map(g => ({ category: g.category, id: g.id }));
+  return games
+    .filter(g => !DEDICATED_STATIC_GAME_KEYS.has(`${g.category}:${g.id}`))
+    .map(g => ({ category: g.category, id: g.id }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -93,9 +96,6 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "boss-dodge":        return <BossDodge game={game} />;
     case "raise-or-raise":    return <RaiseOrRaise game={game} />;
     case "corporate-climber": return <CorporateClimber game={game} />;
-    case "color-blind-test":    return <ColorBlindTest game={game} />;
-    case "contrast-sensitivity": return <ContrastSensitivity game={game} />;
-    case "hue-ordering":         return <HueOrdering game={game} />;
     case "attention-span":       return <AttentionSpan game={game} />;
     case "distraction-shield":   return <DistractionShield game={game} />;
     case "task-switching":       return <TaskSwitching game={game} />;
@@ -117,6 +117,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "puppet-master":      return <PuppetMaster game={game} />;
     case "dark-empath":        return <DarkEmpath game={game} />;
     case "social-predator":    return <SocialPredator game={game} />;
+    case "red-light-green-light": return <RedLightGreenLight game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }

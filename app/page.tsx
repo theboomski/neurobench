@@ -1,16 +1,35 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import gamesData from "@/content/games.json";
 import postsData from "@/content/blog/posts.json";
-import type { GameData } from "@/lib/types";
+import { ALL_GAMES, CATEGORY_META } from "@/lib/games";
 import { CategoryCard, TrendingCard } from "@/components/CategoryCards";
 import HeroActions from "@/components/HeroActions";
 
-const games = gamesData as GameData[];
+const games = ALL_GAMES;
+
+const CATEGORY_ACCENTS: Record<string, string> = {
+  "brain-age": "#00FF94",
+  "office-iq": "#FF6B6B",
+  "focus-test": "#F59E0B",
+  "dark-personality": "#A855F7",
+  "word-iq": "#F97316",
+  "relationship": "#EC4899",
+  "money": "#F59E0B",
+  "korean-tv": "#E11D48",
+};
+
+const CATEGORIES = CATEGORY_META.map(c => ({
+  slug: c.id,
+  emoji: c.emoji,
+  title: c.name,
+  desc: c.description,
+  accent: CATEGORY_ACCENTS[c.id] ?? "#00FF94",
+  count: games.filter(g => g.category === c.id).length,
+}));
 
 export const metadata: Metadata = {
   title: "ZAZAZA – Free Brain Age, IQ & Personality Tests. No Signup.",
-  description: "Free brain age tests, office IQ, eye age, focus, dark personality and vocab tests. No signup. Instant results. Globally ranked.",
+  description: "Free brain age tests, office IQ, Korean TV challenges, focus, dark personality and vocab tests. No signup. Instant results. Globally ranked.",
   openGraph: {
     title: "ZAZAZA – What's Your Brain Age?",
     description: "Free tests. Zero signup. Instant results. Can your friends beat you?",
@@ -23,17 +42,6 @@ const TRENDING = [
   { id: "instant-comparison", category: "brain-age",     emoji: "⚖️", title: "Instant Comparison", desc: "Which side has more? You have one second.",              accent: "#10B981" },
   { id: "report-or-favor",  category: "office-iq",       emoji: "📋", title: "Report or Favor",  desc: "Work task or personal favor? You have 1.5 seconds.",        accent: "#EF4444" },
   { id: "dark-triad",       category: "dark-personality", emoji: "🌑", title: "Dark Triad Score", desc: "How dark is your personality? Be brutally honest.",         accent: "#A855F7" },
-];
-
-const CATEGORIES = [
-  { slug: "brain-age",       emoji: "🧠", title: "Brain Age Test",      desc: "Memory, reaction time, attention & processing speed. Find your cognitive brain age.",       accent: "#00FF94", count: games.filter(g => g.category === "brain-age").length },
-  { slug: "office-iq",       emoji: "💼", title: "Office IQ Test",      desc: "Workplace survival instincts, negotiation timing & professional boundary recognition.",     accent: "#FF6B6B", count: games.filter(g => g.category === "office-iq").length },
-  { slug: "eye-age",         emoji: "👁️", title: "Eye Age Test",        desc: "Color vision, contrast sensitivity & visual reaction speed. How old are your eyes?",       accent: "#06B6D4", count: games.filter(g => g.category === "eye-age").length },
-  { slug: "focus-test",      emoji: "🎯", title: "Focus & Attention",   desc: "Attention span, distraction resistance & cognitive flexibility. ADHD insights included.",   accent: "#F59E0B", count: games.filter(g => g.category === "focus-test").length },
-  { slug: "dark-personality",emoji: "🌑", title: "Dark Personality",    desc: "Dark Triad score, empathy index & manipulation detection. Are you ready for the truth?",   accent: "#A855F7", count: games.filter(g => g.category === "dark-personality").length },
-  { slug: "word-iq",         emoji: "📚", title: "Vocab & Word IQ",     desc: "Vocabulary age, word recognition speed & semantic intelligence. How smart is your language?",accent: "#F97316", count: games.filter(g => g.category === "word-iq").length },
-  { slug: "relationship",    emoji: "💔", title: "Relationship IQ",     desc: "Red flags, attachment styles, love languages. What your relationships reveal about you.",         accent: "#EC4899", count: games.filter(g => g.category === "relationship").length },
-  { slug: "money",           emoji: "💰", title: "Money IQ",            desc: "Mindset, risk tolerance, financial literacy. Do you have a millionaire's psychology?",          accent: "#F59E0B", count: games.filter(g => g.category === "money").length },
 ];
 
 export default function HomePage() {

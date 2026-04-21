@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import gamesData from "@/content/games.json";
 import type { GameData } from "@/lib/types";
+import { ALL_GAMES } from "@/lib/games";
 import { GameCard } from "@/components/CategoryCards";
 
-const games = (gamesData as GameData[]).filter(g => g.category === "brain-age");
+const games = ALL_GAMES.filter(g => g.category === "brain-age");
 
 export const metadata: Metadata = {
   title: "Free Brain Age Test – Memory, Reaction & Attention | ZAZAZA",

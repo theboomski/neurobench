@@ -16,7 +16,7 @@ export interface GameData {
   emoji: string;
   accent: string;
   accentDim: string;
-  category: "brain-age" | "office-iq" | "eye-age" | "focus-test" | "dark-personality" | "word-iq" | "relationship" | "money";
+  category: "brain-age" | "office-iq" | "focus-test" | "dark-personality" | "word-iq" | "relationship" | "money" | "korean-tv";
   categoryLabel: string;
   tags: string[];
   seo: {

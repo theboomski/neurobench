@@ -15,5 +15,6 @@ export function resolveResultTone(game: GameData): "brain" | "office" | "focus" 
   if (game.category === "office-iq") return "office";
   if (game.category === "focus-test") return "focus";
   if (game.category === "word-iq") return "vocab";
+  if (game.category === "korean-tv") return "focus";
   return "brain";
 }

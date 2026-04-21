@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import gamesData from "@/content/games.json";
+import { ALL_GAMES } from "@/lib/games";
 import type { GameData } from "@/lib/types";
 import { GameCard } from "@/components/CategoryCards";
 
-const games = (gamesData as GameData[]).filter(g => g.category === "office-iq");
+const games = ALL_GAMES.filter(g => g.category === "office-iq");
 
 export const metadata: Metadata = {
   title: "Free You At Work? Test | ZAZAZA",

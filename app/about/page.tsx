@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const CATEGORIES = [
   { emoji: "🧠", name: "Brain Age", href: "/brain-age", desc: "Reaction time, working memory, attention, and processing speed." },
   { emoji: "💼", name: "Office IQ", href: "/office-iq", desc: "Workplace survival instincts and professional decision-making." },
-  { emoji: "👁️", name: "Eye Age", href: "/eye-age", desc: "Color vision, contrast sensitivity, and visual processing speed." },
+  { emoji: "🎮", name: "Korean TV Shows", href: "/korean-tv", desc: "Inspired by crazy Korean TV shows. Can you survive?" },
   { emoji: "🎯", name: "Focus & Attention", href: "/focus-test", desc: "Sustained attention, distraction resistance, and cognitive flexibility." },
   { emoji: "🌑", name: "Dark Personality", href: "/dark-personality", desc: "Dark Triad, empathy quotient, and manipulation pattern recognition." },
   { emoji: "📚", name: "Vocab & Word IQ", href: "/word-iq", desc: "Vocabulary age, lexical decision speed, and semantic intelligence." },

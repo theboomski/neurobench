@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { GameData } from "@/lib/types";
-import gamesData from "@/content/games.json";
+import { ALL_GAMES } from "@/lib/games";
 
-const allGames = gamesData as GameData[];
+const allGames = ALL_GAMES;
 
 const CATEGORY_LABELS: Record<string, string> = {
   "brain-age": "Brain Age Test",
   "office-iq": "Office IQ Test",
-  "eye-age": "Eye Age Test",
+  "korean-tv": "Korean TV Shows",
   "focus-test": "Focus & Attention",
   "dark-personality": "Dark Personality",
   "word-iq": "Vocab & Word IQ",

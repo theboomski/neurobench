@@ -19,6 +19,10 @@ interface Props {
   onAdDone: () => void;
   onRetry: () => void;
   tone: AnalysisTone;
+  /** When set, replaces the default tier-based killer line (e.g. game-specific viral copy). */
+  killerLineOverride?: string | null;
+  /** When set, replaces the default share challenge string. */
+  shareTextOverride?: string | null;
 }
 
 function getLevel(normalized: number) {
@@ -140,19 +144,22 @@ export default function CommonResult({
   onAdDone,
   onRetry,
   tone,
+  killerLineOverride,
+  shareTextOverride,
 }: Props) {
   const level = getLevel(normalizedScore);
   const scoreEmoji = getScoreEmoji(normalizedScore);
-  const killerLine = getKillerLine(tone, normalizedScore);
+  const killerLine = killerLineOverride ?? getKillerLine(tone, normalizedScore);
   const benchmarkNote = getGameBenchmarkNote(game, rawScore);
   const WORLD_POP = 8_200_000_000;
   const higherThanPct = Math.max(0, Math.min(99.9, percentile));
   const peopleCount = Math.round((higherThanPct / 100) * WORLD_POP);
   const peopleBillions = (peopleCount / 1_000_000_000).toFixed(2);
   const shareText = useMemo(() => {
+    if (shareTextOverride) return shareTextOverride;
     const link = `https://zazaza.app/${game.category}/${game.id}`;
     return `I scored ${normalizedScore} points in ${game.title}. Can you beat me? 🕹️ ${link}`;
-  }, [game.category, game.id, game.title, normalizedScore]);
+  }, [game.category, game.id, game.title, normalizedScore, shareTextOverride]);
 
   const handleShare = async () => {
     if (navigator.share) {
