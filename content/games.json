@@ -887,7 +887,7 @@
     "content": {
       "howToPlay": [
         "A color word will appear in a conflicting ink color (e.g., the word 'RED' printed in green).",
-        "Click the button matching the INK COLOR — not the word's meaning.",
+        "Tap the button whose label names the ink on the big word — ignore the letters of that word. The answer tiles use random colors on purpose; only each button's text counts.",
         "Respond as fast as possible — both speed and accuracy are measured.",
         "Each correct answer scores a point. One wrong answer ends the test.",
         "Your score is the number of correct answers before your first mistake."

@@ -36,13 +36,31 @@ const COLORS = [
   { name: "ORANGE", hex: "#F97316" },
 ];
 
-function randomPair() {
+type ColorDef = (typeof COLORS)[number];
+type AnswerButton = ColorDef & { chromeHex: string };
+
+/** Decorative fill/border only — never matches this option's semantic color (no "orange block = ORANGE" shortcut). */
+function randomChromeHex(avoidSemanticHex: string): string {
+  const pool = COLORS.map((c) => c.hex);
+  let h = pool[Math.floor(Math.random() * pool.length)];
+  let guard = 0;
+  while (h === avoidSemanticHex && pool.length > 1 && guard++ < 24) {
+    h = pool[Math.floor(Math.random() * pool.length)];
+  }
+  return h;
+}
+
+function randomPair(): { word: ColorDef; ink: ColorDef; buttons: AnswerButton[] } {
   const word = COLORS[Math.floor(Math.random() * COLORS.length)];
   let ink = COLORS[Math.floor(Math.random() * COLORS.length)];
   while (ink.name === word.name) ink = COLORS[Math.floor(Math.random() * COLORS.length)];
   // 4 buttons including correct answer
   const others = COLORS.filter(c => c.name !== ink.name).sort(() => Math.random() - 0.5).slice(0, 3);
-  const buttons = [...others, ink].sort(() => Math.random() - 0.5);
+  const shuffled = [...others, ink].sort(() => Math.random() - 0.5);
+  const buttons: AnswerButton[] = shuffled.map((c) => ({
+    ...c,
+    chromeHex: randomChromeHex(c.hex),
+  }));
   return { word, ink, buttons };
 }
 
@@ -163,7 +181,12 @@ export default function ColorConflict({ game }: { game: GameData }) {
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🎨</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Inhibitory Control Assessment</p>
-          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>Click the INK COLOR — not the word meaning</p>
+          <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 6, lineHeight: 1.55, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
+            The big word is printed in one ink color. Tap the button whose <strong style={{ color: "var(--text-1)" }}>label</strong> names that ink — ignore the letters of the big word.
+          </p>
+          <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 10, lineHeight: 1.5, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
+            Answer tiles use random colors on purpose; only the text on each button counts.
+          </p>
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>2.5 seconds per round · wrong answer or timeout = game over</p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
         </div>
@@ -189,7 +212,24 @@ export default function ColorConflict({ game }: { game: GameData }) {
           {/* Buttons */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
             {pair.buttons.map(btn => (
-              <button key={btn.name} onClick={() => handleAnswer(btn.name)} className="pressable" style={{ background: `${btn.hex}18`, color: btn.hex, border: `2px solid ${btn.hex}50`, borderRadius: "var(--radius-md)", padding: "16px 0", fontSize: 16, fontWeight: 800, fontFamily: "var(--font-mono)", cursor: "pointer", letterSpacing: "0.06em", WebkitTapHighlightColor: "transparent" }}>
+              <button
+                key={btn.name}
+                onClick={() => handleAnswer(btn.name)}
+                className="pressable"
+                style={{
+                  background: `${btn.chromeHex}18`,
+                  border: `2px solid ${btn.chromeHex}55`,
+                  color: "var(--text-1)",
+                  borderRadius: "var(--radius-md)",
+                  padding: "16px 0",
+                  fontSize: 16,
+                  fontWeight: 800,
+                  fontFamily: "var(--font-mono)",
+                  cursor: "pointer",
+                  letterSpacing: "0.06em",
+                  WebkitTapHighlightColor: "transparent",
+                }}
+              >
                 {btn.name}
               </button>
             ))}
