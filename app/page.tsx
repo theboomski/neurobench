@@ -59,12 +59,25 @@ export default function HomePage() {
 
   useEffect(() => {
     const refreshFromUrl = () => setQueryState(readInitialQuery());
+    const onQueryChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ category?: HomeTypeFilter; sort?: HomeSort }>).detail;
+      const nextCategory = detail?.category;
+      const nextSort = detail?.sort;
+      if (
+        (nextCategory === "all" || nextCategory === "brain" || nextCategory === "game" || nextCategory === "personality") &&
+        (nextSort === "popular" || nextSort === "latest")
+      ) {
+        setQueryState({ category: nextCategory, sort: nextSort });
+        return;
+      }
+      refreshFromUrl();
+    };
     refreshFromUrl();
     window.addEventListener("popstate", refreshFromUrl);
-    window.addEventListener("zazaza-home-query-change", refreshFromUrl);
+    window.addEventListener("zazaza-home-query-change", onQueryChange);
     return () => {
       window.removeEventListener("popstate", refreshFromUrl);
-      window.removeEventListener("zazaza-home-query-change", refreshFromUrl);
+      window.removeEventListener("zazaza-home-query-change", onQueryChange);
     };
   }, []);
 

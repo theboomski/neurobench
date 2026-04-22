@@ -33,7 +33,11 @@ export default function HomeHeaderControls() {
     const q = query.toString();
     router.replace(q ? `/?${q}` : "/", { scroll: false });
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new Event("zazaza-home-query-change"));
+      window.dispatchEvent(
+        new CustomEvent("zazaza-home-query-change", {
+          detail: { category: nextCategory, sort: nextSort },
+        }),
+      );
     }
   };
 
