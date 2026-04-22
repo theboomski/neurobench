@@ -9,16 +9,23 @@ export type LeaderboardEntry = {
   created_at: string;
 };
 
-/** Fire-and-forget play counter; never throws to caller. */
-export function trackPlay(gameId: string): void {
-  const sb = getSupabaseBrowser();
-  if (!sb) return;
-  void sb
-    .from("plays")
-    .insert({ game_id: gameId })
-    .then(({ error }) => {
-      if (error) console.warn("[trackPlay]", error.message);
-    });
+/**
+ * Fire-and-forget play log via same-origin API (server uses service role / anon).
+ * Never throws and never blocks gameplay.
+ */
+export function trackPlay(gameId: string, countryCode: string = "US"): void {
+  if (typeof window === "undefined") return;
+  void fetch("/api/plays", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ gameId, countryCode }),
+  }).then((res) => {
+    if (!res.ok && process.env.NODE_ENV === "development") {
+      void res.text().then((t) => console.warn("[trackPlay] POST failed", res.status, t?.slice(0, 200)));
+    }
+  }).catch(() => {
+    /* ignore */
+  });
 }
 
 export type SaveLeaderboardResult =
@@ -103,7 +110,10 @@ export async function getPlayCount(gameId: string): Promise<number> {
   try {
     const sb = getSupabaseBrowser();
     if (!sb) return 0;
-    const { count, error } = await sb.from("plays").select("*", { count: "exact", head: true }).eq("game_id", gameId);
+    const { count, error } = await sb
+      .from("game_plays")
+      .select("*", { count: "exact", head: true })
+      .eq("game_id", gameId);
     if (error) return 0;
     return count ?? 0;
   } catch {
