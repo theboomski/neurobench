@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               ))}
             </div>
           </div>
-          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "10px 24px", minHeight: 68, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "10px 24px", minHeight: 68, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
             <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ fontSize: 42, fontWeight: 900, letterSpacing: "-0.045em", color: "var(--text-1)", lineHeight: 1, flexShrink: 0 }}>
                 ZA<span style={{ color: "#00FF94" }}>ZA</span>ZA

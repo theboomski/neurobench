@@ -42,8 +42,9 @@ export default function HomeHeaderControls() {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, marginLeft: 18, minWidth: 0 }}>
-      <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2, flex: 1 }}>
+    <>
+    <div className="home-header-controls" style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, marginLeft: 18, minWidth: 0 }}>
+      <div className="home-header-tabs" style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2, flex: 1 }}>
         {([
           { id: "all", label: "All" },
           { id: "brain", label: "Brain Tests" },
@@ -98,7 +99,7 @@ export default function HomeHeaderControls() {
         </Link>
       </div>
 
-      <div style={{ display: "flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden", flexShrink: 0, marginLeft: "auto" }}>
+      <div className="home-header-sort" style={{ display: "flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden", flexShrink: 0, marginLeft: "auto" }}>
         <button
           type="button"
           onClick={() => setQuery(category, "popular")}
@@ -138,5 +139,24 @@ export default function HomeHeaderControls() {
         </button>
       </div>
     </div>
+    <style jsx>{`
+      @media (max-width: 900px) {
+        .home-header-controls {
+          width: 100%;
+          margin-left: 0 !important;
+          flex-direction: column;
+          align-items: stretch !important;
+          gap: 8px !important;
+        }
+        .home-header-tabs {
+          width: 100%;
+        }
+        .home-header-sort {
+          margin-left: 0 !important;
+          align-self: flex-end;
+        }
+      }
+    `}</style>
+    </>
   );
 }
