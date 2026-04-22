@@ -39,9 +39,9 @@ export const metadata: Metadata = {
 
 const TRENDING = [
   { id: "color-conflict",   category: "brain-age",        emoji: "🎨", title: "Color Conflict",   desc: "The word says RED. The color says GREEN. Which do you click?", accent: "#EC4899" },
+  { id: "sudoku",           category: "brain-age",        emoji: "🧩", title: "Speed Sudoku",     desc: "No time limit — but the faster you solve, the higher you score.", accent: "#60A5FA" },
   { id: "instant-comparison", category: "brain-age",     emoji: "⚖️", title: "Instant Comparison", desc: "Which side has more? You have one second.",              accent: "#10B981" },
-  { id: "report-or-favor",  category: "office-iq",       emoji: "📋", title: "Report or Favor",  desc: "Work task or personal favor? You have 1.5 seconds.",        accent: "#EF4444" },
-  { id: "dark-triad",       category: "dark-personality", emoji: "🌑", title: "Dark Triad Score", desc: "How dark is your personality? Be brutally honest.",         accent: "#A855F7" },
+  { id: "sequence-memory",  category: "brain-age",       emoji: "🔲", title: "Sequence Memory",  desc: "Memorize the pattern. Repeat it back. How long can you go?", accent: "#F59E0B" },
 ];
 
 export default function HomePage() {

@@ -44,13 +44,14 @@ import PuppetMaster from "@/components/games/PuppetMaster";
 import DarkEmpath from "@/components/games/DarkEmpath";
 import SocialPredator from "@/components/games/SocialPredator";
 import RedLightGreenLight from "@/components/games/RedLightGreenLight";
+import Sudoku from "@/components/games/Sudoku";
 
 const games = ALL_GAMES;
 
 type Props = { params: Promise<{ category: string; id: string }> };
 
 /** Static segment at app/korean-tv/red-light-green-light owns this URL. */
-const DEDICATED_STATIC_GAME_KEYS = new Set(["korean-tv:red-light-green-light"]);
+const DEDICATED_STATIC_GAME_KEYS = new Set(["korean-tv:red-light-green-light", "brain-age:sudoku"]);
 
 export function generateStaticParams() {
   return games
@@ -118,6 +119,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "dark-empath":        return <DarkEmpath game={game} />;
     case "social-predator":    return <SocialPredator game={game} />;
     case "red-light-green-light": return <RedLightGreenLight game={game} />;
+    case "sudoku": return <Sudoku game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }

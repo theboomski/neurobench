@@ -4840,6 +4840,128 @@
       "hasLeaderboard": false
     },
     {
+      "id": "sudoku",
+      "title": "Speed Sudoku",
+      "clinicalTitle": "Timed Logical Constraint Solving",
+      "shortDescription": "No time limit — but the faster you solve, the higher you score",
+      "description": "Classic 9x9 Sudoku with a twist — your score is based on how fast you solve it. Each puzzle gets harder as you level up. How high can you climb?",
+      "emoji": "🧩",
+      "accent": "#60A5FA",
+      "accentDim": "rgba(96,165,250,0.10)",
+      "category": "brain-age",
+      "categoryLabel": "Brain Age Test",
+      "tags": [
+        "sudoku online free",
+        "speed sudoku",
+        "sudoku no time limit",
+        "free sudoku puzzle",
+        "brain game"
+      ],
+      "seo": {
+        "metaTitle": "Speed Sudoku — Free Online Sudoku Game, No Time Limit",
+        "metaDescription": "Free online Sudoku with no time limit. Solve faster to score higher. Levels get harder automatically. No signup needed. Play now on ZAZAZA.app",
+        "keywords": [
+          "sudoku online free",
+          "speed sudoku",
+          "sudoku no time limit",
+          "free sudoku puzzle",
+          "brain game"
+        ]
+      },
+      "content": {
+        "howToPlay": [
+          "Fill the 9x9 grid so every row, column, and 3x3 box contains 1 through 9 exactly once.",
+          "Use tap/click to select a cell, then enter numbers from keyboard or the number pad below.",
+          "Given numbers are fixed. Your entries are editable. Conflicts are highlighted in red.",
+          "Timer counts up every puzzle. Faster clear time = more points (minimum 100 points each puzzle).",
+          "Complete a puzzle to level up; difficulty and clue count adjust automatically."
+        ],
+        "science": "Sudoku primarily targets working memory, constraint propagation, and executive control. Solvers continuously maintain candidate states while inhibiting invalid moves, a process linked to dorsolateral prefrontal cortex activation and cognitive flexibility. Time-pressure scoring adds a processing-speed component without imposing a hard fail timer.",
+        "tips": [
+          "Start with rows/columns that already have many givens, then scan 3x3 boxes for forced placements.",
+          "Use candidate elimination mentally: if a number is blocked in eight spots, the ninth is forced.",
+          "Fix red conflict highlights immediately — leaving contradictions compounds search complexity.",
+          "Avoid random guessing early; precise logic paths keep your timer-to-score ratio efficient.",
+          "As levels rise, focus on consistency over speed spikes to sustain long score climbs."
+        ]
+      },
+      "stats": {
+        "percentiles": [
+          {
+            "ms": 90000,
+            "percentile": 99
+          },
+          {
+            "ms": 60000,
+            "percentile": 92
+          },
+          {
+            "ms": 35000,
+            "percentile": 80
+          },
+          {
+            "ms": 20000,
+            "percentile": 60
+          },
+          {
+            "ms": 12000,
+            "percentile": 40
+          },
+          {
+            "ms": 7000,
+            "percentile": 20
+          },
+          {
+            "ms": 3000,
+            "percentile": 5
+          }
+        ],
+        "ranks": [
+          {
+            "label": "S",
+            "maxMs": 60000,
+            "color": "#FFD700",
+            "title": "Puzzle Oracle",
+            "subtitle": "You bend expert boards to your will.",
+            "percentileLabel": "Top 5%"
+          },
+          {
+            "label": "A",
+            "maxMs": 35000,
+            "color": "#22C55E",
+            "title": "Constraint Crusher",
+            "subtitle": "Logic first, panic never.",
+            "percentileLabel": "Top 20%"
+          },
+          {
+            "label": "B",
+            "maxMs": 18000,
+            "color": "#3B82F6",
+            "title": "Grid Tactician",
+            "subtitle": "Solid fundamentals and clean solves.",
+            "percentileLabel": "Top 45%"
+          },
+          {
+            "label": "C",
+            "maxMs": 9000,
+            "color": "#94A3B8",
+            "title": "Pattern Hunter",
+            "subtitle": "You are warming up into something dangerous.",
+            "percentileLabel": "Top 75%"
+          },
+          {
+            "label": "D",
+            "maxMs": 0,
+            "color": "#F97316",
+            "title": "Sudoku Rookie",
+            "subtitle": "Every finished board still levels your brain up.",
+            "percentileLabel": "Bottom 25%"
+          }
+        ]
+      },
+      "hasLeaderboard": true
+    },
+    {
       "id": "red-light-green-light",
       "title": "Red Light, Green Light",
       "clinicalTitle": "Stop-Go Inhibition Under Surveillance",

@@ -2,9 +2,9 @@
 
 const TRENDING_PATHS = [
   "/brain-age/color-conflict",
+  "/brain-age/sudoku",
   "/brain-age/instant-comparison",
-  "/office-iq/report-or-favor",
-  "/dark-personality/dark-triad",
+  "/brain-age/sequence-memory",
 ];
 
 export default function HeroActions() {
