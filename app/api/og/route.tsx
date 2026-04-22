@@ -1,5 +1,19 @@
 import { ImageResponse } from "@vercel/og";
 
+function sanitizeHex6(input: string | null): string {
+  const cleaned = (input ?? "").replace(/^#/, "").replace(/[^0-9a-fA-F]/g, "");
+  if (cleaned.length >= 6) return cleaned.slice(0, 6).toLowerCase();
+  return "ff6b6b";
+}
+
+function hex6ToRgb(hex6: string): { r: number; g: number; b: number } {
+  return {
+    r: Number.parseInt(hex6.slice(0, 2), 16),
+    g: Number.parseInt(hex6.slice(2, 4), 16),
+    b: Number.parseInt(hex6.slice(4, 6), 16),
+  };
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -7,8 +21,9 @@ export async function GET(request: Request) {
     const label = searchParams.get("label") ?? "ZAZAZA";
     const percentile = searchParams.get("percentile") ?? "";
     const testName = searchParams.get("testName") ?? "Test";
-    const primary_color = searchParams.get("primary_color") ?? "ff6b6b";
-    const primary = `#${primary_color.replace(/^#/, "").slice(0, 6) || "ff6b6b"}`;
+    const primaryHex = sanitizeHex6(searchParams.get("primary_color"));
+    const primary = `#${primaryHex}`;
+    const rgb = hex6ToRgb(primaryHex);
 
     return new ImageResponse(
       (
@@ -62,7 +77,7 @@ export async function GET(request: Request) {
                   width: 86,
                   height: 86,
                   borderRadius: "9999px",
-                  background: `${primary}33`,
+                  background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`,
                   border: `3px solid ${primary}`,
                   display: "flex",
                   alignItems: "center",
@@ -88,7 +103,7 @@ export async function GET(request: Request) {
                   padding: "20px 48px",
                   background: "rgba(255,255,255,0.06)",
                   border: "1px solid rgba(255,255,255,0.18)",
-                  boxShadow: `0 0 60px ${primary}55`,
+                  boxShadow: `0 0 60px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.33)`,
                 }}
               >
                 <span style={{ fontSize: 96, fontWeight: 900, letterSpacing: "-0.04em", color: "#fff" }}>{score || "—"}</span>
@@ -101,7 +116,7 @@ export async function GET(request: Request) {
                 textAlign: "center",
                 lineHeight: 1.1,
                 color: "#fff",
-                textShadow: `0 0 40px ${primary}99`,
+                textShadow: `0 0 40px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`,
                 marginBottom: 16,
                 maxWidth: 1040,
                 alignSelf: "center",
