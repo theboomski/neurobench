@@ -1,24 +1,13 @@
 import { ImageResponse } from "@vercel/og";
 
-function safe(s: string | null, max: number): string {
-  if (!s) return "";
-  const t = s.trim();
-  return t.length <= max ? t : `${t.slice(0, max - 1)}…`;
-}
-
-function hexAccent(raw: string | null): string {
-  const h = (raw ?? "00FF94").replace(/^#/, "").replace(/[^0-9a-fA-F]/g, "");
-  if (h.length < 6) return "#00FF94";
-  return `#${h.slice(0, 6)}`;
-}
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const score = safe(searchParams.get("score"), 40);
-  const label = safe(searchParams.get("label"), 100);
-  const percentile = safe(searchParams.get("percentile"), 320);
-  const testName = safe(searchParams.get("testName"), 80);
-  const primary = hexAccent(searchParams.get("primary_color"));
+  const score = searchParams.get("score") ?? "0";
+  const label = searchParams.get("label") ?? "ZAZAZA";
+  const percentile = searchParams.get("percentile") ?? "";
+  const testName = searchParams.get("testName") ?? "Test";
+  const primary_color = searchParams.get("primary_color") ?? "ff6b6b";
+  const primary = `#${primary_color.replace(/^#/, "").slice(0, 6) || "ff6b6b"}`;
 
   return new ImageResponse(
     (
