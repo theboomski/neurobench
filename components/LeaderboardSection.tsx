@@ -2,7 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
-import { getLeaderboard, saveToLeaderboard, type LeaderboardEntry } from "@/lib/tracking";
+import { TRASH_TALK_PRESETS } from "@/lib/leaderboardTrashTalk";
+import { getLeaderboard, getLeaderboardWithPreviewRank, saveToLeaderboard, type LeaderboardEntry } from "@/lib/tracking";
+
+function rankDisplay(rank: number): string {
+  if (rank === 1) return "🥇";
+  if (rank === 2) return "🥈";
+  if (rank === 3) return "🥉";
+  return String(rank);
+}
 
 const NICK_KEY = "zazaza_nickname";
 
@@ -29,6 +37,9 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
   const [loadingList, setLoadingList] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [selectedTrashTalk, setSelectedTrashTalk] = useState<string | null>(null);
+  const [podiumTrashTalk, setPodiumTrashTalk] = useState(false);
+  const [podiumCheckLoading, setPodiumCheckLoading] = useState(false);
 
   const countrySelectOptions = useMemo(() => {
     const s = new Set(COUNTRY_OPTIONS);
@@ -44,6 +55,26 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
       /* ignore */
     }
   }, []);
+
+  useEffect(() => {
+    if (!showForm || submitted) {
+      setPodiumTrashTalk(false);
+      setPodiumCheckLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setPodiumCheckLoading(true);
+    void getLeaderboardWithPreviewRank(gameId, rawScore).then(({ previewRank }) => {
+      if (cancelled) return;
+      const ok = typeof previewRank === "number" && previewRank <= 3;
+      setPodiumTrashTalk(ok);
+      if (!ok) setSelectedTrashTalk(null);
+      setPodiumCheckLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [showForm, submitted, gameId, rawScore]);
 
   useEffect(() => {
     void fetch("/api/geo")
@@ -82,7 +113,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
       } catch {
         /* ignore */
       }
-      const result = await saveToLeaderboard(gameId, name, rawScore, countryCode);
+      const result = await saveToLeaderboard(gameId, name, rawScore, countryCode, selectedTrashTalk);
       if (result.ok) {
         setSubmittedId(result.id);
         setSubmitted(true);
@@ -120,6 +151,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
               type="button"
               onClick={() => {
                 setSubmitError(null);
+                setSelectedTrashTalk(null);
                 setShowForm(true);
               }}
               className="pressable"
@@ -244,6 +276,50 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
             Submitting score: <strong style={{ color: "var(--text-1)" }}>{rawScore}</strong> {rawUnit}
           </div>
+          <div style={{ marginTop: 4 }}>
+            {podiumCheckLoading && (
+              <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Checking podium…</p>
+            )}
+            {!podiumCheckLoading && podiumTrashTalk && (
+              <>
+                <span style={{ display: "block", marginBottom: 8, fontSize: 11, color: "var(--text-2)", fontFamily: "var(--font-mono)" }}>Leave a message (top 3 only):</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {TRASH_TALK_PRESETS.map(preset => {
+                    const on = selectedTrashTalk === preset;
+                    return (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => setSelectedTrashTalk(on ? null : preset)}
+                        className="pressable"
+                        style={{
+                          textAlign: "left",
+                          padding: "8px 10px",
+                          borderRadius: 8,
+                          border: on ? `2px solid ${accent}` : "1px solid var(--border)",
+                          background: on ? `${accent}22` : "var(--bg-elevated)",
+                          color: "var(--text-1)",
+                          fontSize: 12,
+                          fontWeight: on ? 700 : 500,
+                          cursor: "pointer",
+                          fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        {preset}
+                      </button>
+                    );
+                  })}
+                </div>
+                <span style={{ display: "block", marginTop: 6, fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Optional — tap again to clear</span>
+              </>
+            )}
+            {!podiumCheckLoading && !podiumTrashTalk && (
+              <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", lineHeight: 1.5, margin: 0 }}>
+                Victory messages are only for global top 3 scores. Keep climbing — then you can talk trash. 😈
+              </p>
+            )}
+          </div>
           {submitError && (
             <div
               role="alert"
@@ -264,7 +340,10 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           <div style={{ display: "flex", gap: 8 }}>
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={() => {
+              setSelectedTrashTalk(null);
+              setShowForm(false);
+            }}
               className="pressable"
               style={{
                 flex: 1,
@@ -316,43 +395,89 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           {!loadingList &&
             rows.map((row, i) => {
               const mine = Boolean(submittedId && row.id === submittedId);
+              const rank = i + 1;
+              const countryName = countryCodeToRegionName(row.country_code);
+              const msg = row.trash_talk?.trim();
               return (
                 <div
                   key={row.id}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "8px 6px",
+                    marginBottom: 8,
                     borderRadius: 8,
-                    marginBottom: 4,
+                    padding: "8px 6px",
                     background: mine ? `${accent}18` : "var(--bg-elevated)",
                     border: mine ? `1px solid ${accent}55` : "1px solid var(--border)",
                   }}
                 >
-                  <span style={{ width: 22, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)", fontWeight: 700 }}>{i + 1}</span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: "var(--text-2)",
-                      minWidth: 48,
-                      maxWidth: 120,
-                      flexShrink: 0,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    title={countryCodeToRegionName(row.country_code)}
-                  >
-                    {countryCodeToFlag(row.country_code)} {countryCodeToRegionName(row.country_code)}
-                  </span>
-                  <span style={{ flex: 1, fontSize: 12, fontWeight: 700, color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {row.nickname}
-                  </span>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 800, color: mine ? accent : "var(--text-2)" }}>
-                    {row.score}
-                  </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span
+                      style={{
+                        width: 28,
+                        flexShrink: 0,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: rank <= 3 ? 14 : 11,
+                        color: "var(--text-3)",
+                        fontWeight: 700,
+                        textAlign: "center",
+                      }}
+                      aria-label={`Rank ${rank}`}
+                    >
+                      {rankDisplay(rank)}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 600,
+                        color: "var(--text-2)",
+                        minWidth: 0,
+                        flex: "1 1 38%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      title={countryName}
+                    >
+                      {countryCodeToFlag(row.country_code)} {countryName}
+                    </span>
+                    <span
+                      style={{
+                        flex: "1 1 32%",
+                        minWidth: 0,
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "var(--text-1)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.nickname}
+                    </span>
+                    <span style={{ flexShrink: 0, fontFamily: "var(--font-mono)", fontSize: 12, fontWeight: 800, color: mine ? accent : "var(--text-2)" }}>
+                      {row.score}
+                    </span>
+                  </div>
+                  {msg ? (
+                    <div
+                      style={{
+                        marginTop: 8,
+                        marginLeft: 36,
+                        marginRight: 4,
+                        padding: "8px 12px 10px",
+                        borderRadius: 12,
+                        background: "var(--bg-card)",
+                        border: "1px solid var(--border-md)",
+                        borderBottomLeftRadius: 4,
+                        fontSize: 11,
+                        fontStyle: "italic",
+                        color: "var(--text-2)",
+                        lineHeight: 1.45,
+                        boxShadow: "0 1px 0 rgba(0,0,0,0.06)",
+                      }}
+                    >
+                      💬 &quot;{msg}&quot;
+                    </div>
+                  ) : null}
                 </div>
               );
             })}

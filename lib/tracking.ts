@@ -7,6 +7,8 @@ export type LeaderboardEntry = {
   score: number;
   country_code: string;
   created_at: string;
+  /** Optional preset line shown under the row on the leaderboard. */
+  trash_talk?: string | null;
 };
 
 /**
@@ -47,12 +49,19 @@ export async function saveToLeaderboard(
   nickname: string,
   score: number,
   countryCode: string = "US",
+  trashTalk?: string | null,
 ): Promise<SaveLeaderboardResult> {
   try {
     const res = await fetch("/api/leaderboard", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ gameId, nickname, score, countryCode }),
+      body: JSON.stringify({
+        gameId,
+        nickname,
+        score,
+        countryCode,
+        ...(trashTalk != null && trashTalk !== "" ? { trashTalk } : {}),
+      }),
     });
 
     const text = await res.text();
@@ -103,6 +112,25 @@ export async function getLeaderboard(gameId: string): Promise<LeaderboardEntry[]
     return Array.isArray(j.rows) ? j.rows : [];
   } catch {
     return [];
+  }
+}
+
+/** Same as GET leaderboard plus `previewRank` for this score (1 = best), for podium-only UI. */
+export async function getLeaderboardWithPreviewRank(
+  gameId: string,
+  previewScore: number,
+): Promise<{ rows: LeaderboardEntry[]; previewRank?: number }> {
+  try {
+    const res = await fetch(
+      `/api/leaderboard?gameId=${encodeURIComponent(gameId)}&previewRankForScore=${encodeURIComponent(String(previewScore))}`,
+    );
+    const j = (await res.json()) as { rows?: LeaderboardEntry[]; previewRank?: number };
+    return {
+      rows: Array.isArray(j.rows) ? j.rows : [],
+      previewRank: typeof j.previewRank === "number" ? j.previewRank : undefined,
+    };
+  } catch {
+    return { rows: [] };
   }
 }
 

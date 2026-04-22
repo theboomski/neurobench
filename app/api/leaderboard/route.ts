@@ -1,7 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, type PostgrestError } from "@supabase/supabase-js";
+import { createClient, type PostgrestError, type SupabaseClient } from "@supabase/supabase-js";
+import { TRASH_TALK_ALLOWLIST } from "@/lib/leaderboardTrashTalk";
+import { leaderboardUsesAscendingScore } from "@/lib/leaderboardConfig";
 
 const LEADERBOARD_TABLE = "leaderboard" as const;
+
+/**
+ * Rank a new row would get (1 = best) before insert: all existing ties rank ahead of the newcomer
+ * (same as `.order(created_at, { ascending: true })` for equal scores).
+ */
+async function placementRankForNewScore(
+  supabase: SupabaseClient,
+  gameId: string,
+  score: number,
+  scoreAsc: boolean,
+): Promise<number> {
+  if (scoreAsc) {
+    const { count: cLt } = await supabase
+      .from(LEADERBOARD_TABLE)
+      .select("*", { head: true, count: "exact" })
+      .eq("game_id", gameId)
+      .lt("score", score);
+    const { count: cEq } = await supabase
+      .from(LEADERBOARD_TABLE)
+      .select("*", { head: true, count: "exact" })
+      .eq("game_id", gameId)
+      .eq("score", score);
+    return 1 + (cLt ?? 0) + (cEq ?? 0);
+  }
+  const { count: cGt } = await supabase
+    .from(LEADERBOARD_TABLE)
+    .select("*", { head: true, count: "exact" })
+    .eq("game_id", gameId)
+    .gt("score", score);
+  const { count: cEq } = await supabase
+    .from(LEADERBOARD_TABLE)
+    .select("*", { head: true, count: "exact" })
+    .eq("game_id", gameId)
+    .eq("score", score);
+  return 1 + (cGt ?? 0) + (cEq ?? 0);
+}
 
 /** Log every enumerable field + common PostgREST fields (no secrets). */
 function logSupabaseError(context: string, err: unknown) {
@@ -32,14 +70,6 @@ function serializePostgrestError(err: PostgrestError): Record<string, string | u
   };
 }
 
-const ASC_SCORE = new Set([
-  "reaction-time",
-  "temporal-pulse",
-  "dont-blink",
-  "angle-precision",
-  "boss-slapper",
-]);
-
 export async function GET(req: NextRequest) {
   const gameId = req.nextUrl.searchParams.get("gameId");
   if (!gameId || gameId.length > 64) {
@@ -68,10 +98,10 @@ export async function GET(req: NextRequest) {
 
   const supabase = createClient(url, key);
 
-  const asc = ASC_SCORE.has(gameId);
+  const asc = leaderboardUsesAscendingScore(gameId);
   const { data, error } = await supabase
     .from(LEADERBOARD_TABLE)
-    .select("id, game_id, nickname, score, country_code, created_at")
+    .select("id, game_id, nickname, score, country_code, created_at, trash_talk")
     .eq("game_id", gameId)
     .order("score", { ascending: asc })
     .order("created_at", { ascending: true })
@@ -87,7 +117,19 @@ export async function GET(req: NextRequest) {
       { status: 500 },
     );
   }
-  return NextResponse.json({ rows: data ?? [] });
+
+  const previewRaw = req.nextUrl.searchParams.get("previewRankForScore");
+  let previewRank: number | undefined;
+  if (previewRaw != null && previewRaw !== "") {
+    const pv = Number(previewRaw);
+    if (Number.isFinite(pv)) {
+      previewRank = await placementRankForNewScore(supabase, gameId, Math.round(pv), asc);
+    }
+  }
+
+  const payload: { rows: NonNullable<typeof data>; previewRank?: number } = { rows: data ?? [] };
+  if (previewRank !== undefined) payload.previewRank = previewRank;
+  return NextResponse.json(payload);
 }
 
 export async function POST(req: NextRequest) {
@@ -117,7 +159,7 @@ export async function POST(req: NextRequest) {
    */
   const supabase = createClient(url, key);
 
-  let body: { gameId?: string; nickname?: string; score?: number; countryCode?: string };
+  let body: { gameId?: string; nickname?: string; score?: number; countryCode?: string; trashTalk?: string | null };
   try {
     body = await req.json();
   } catch {
@@ -129,6 +171,15 @@ export async function POST(req: NextRequest) {
   const countryRaw = typeof body.countryCode === "string" ? body.countryCode : "US";
   const country_code = countryRaw.slice(0, 2).toUpperCase() || "US";
 
+  let trash_talk: string | null = null;
+  if (body.trashTalk != null && body.trashTalk !== "") {
+    const raw = typeof body.trashTalk === "string" ? body.trashTalk.trim() : "";
+    if (raw && !TRASH_TALK_ALLOWLIST.has(raw)) {
+      return NextResponse.json({ error: "Invalid trash talk selection" }, { status: 400 });
+    }
+    trash_talk = raw || null;
+  }
+
   if (!gameId || !nickname) {
     return NextResponse.json({ error: "gameId and nickname are required" }, { status: 400 });
   }
@@ -136,13 +187,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid score" }, { status: 400 });
   }
 
-  const row = { game_id: gameId, nickname, score, country_code };
+  if (trash_talk != null) {
+    const asc = leaderboardUsesAscendingScore(gameId);
+    const rank = await placementRankForNewScore(supabase, gameId, score, asc);
+    if (rank > 3) {
+      return NextResponse.json(
+        { error: "Trash talk is only allowed when your score reaches the global top 3." },
+        { status: 400 },
+      );
+    }
+  }
+
+  const row: { game_id: string; nickname: string; score: number; country_code: string; trash_talk?: string | null } = {
+    game_id: gameId,
+    nickname,
+    score,
+    country_code,
+  };
+  if (trash_talk != null) row.trash_talk = trash_talk;
 
   console.log(`[leaderboard POST] insert → "${LEADERBOARD_TABLE}"`, {
     game_id: row.game_id,
     nickname: row.nickname,
     score: row.score,
     country_code: row.country_code,
+    has_trash_talk: Boolean(trash_talk),
   });
 
   const { data, error } = await supabase.from(LEADERBOARD_TABLE).insert(row).select("id");
