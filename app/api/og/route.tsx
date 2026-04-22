@@ -15,124 +15,151 @@ function hexAccent(raw: string | null): string {
 }
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const score = safe(searchParams.get("score"), 40);
-  const label = safe(searchParams.get("label"), 100);
-  const emoji = safe(searchParams.get("emoji"), 12);
-  const percentile = safe(searchParams.get("percentile"), 320);
-  const testName = safe(searchParams.get("testName"), 80);
-  const primary = hexAccent(searchParams.get("primary_color"));
+  try {
+    const { searchParams } = new URL(request.url);
+    const score = safe(searchParams.get("score"), 40);
+    const label = safe(searchParams.get("label"), 100);
+    const emoji = safe(searchParams.get("emoji"), 12);
+    const percentile = safe(searchParams.get("percentile"), 320);
+    const testName = safe(searchParams.get("testName"), 80);
+    const primary = hexAccent(searchParams.get("primary_color"));
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: 1200,
-          height: 630,
-          display: "flex",
-          flexDirection: "column",
-          background: "#0a0a0a",
-          color: "#fafafa",
-          fontFamily:
-            'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-          position: "relative",
-          padding: 48,
-          boxSizing: "border-box",
-        }}
-      >
+    return new ImageResponse(
+      (
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(80% 60% at 20% 0%, rgba(255,255,255,0.06) 0%, transparent 55%), radial-gradient(70% 50% at 100% 100%, rgba(255,255,255,0.04) 0%, transparent 50%)",
+            width: 1200,
+            height: 630,
+            display: "flex",
+            flexDirection: "column",
+            background: "#0a0a0a",
+            color: "#fafafa",
+            fontFamily:
+              'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            position: "relative",
+            padding: 48,
+            boxSizing: "border-box",
           }}
-        />
-        <div style={{ display: "flex", flexDirection: "column", height: "100%", position: "relative", zIndex: 1 }}>
+        >
           <div
             style={{
-              fontSize: 22,
-              fontWeight: 700,
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.45)",
-              marginBottom: 8,
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(80% 60% at 20% 0%, rgba(255,255,255,0.06) 0%, transparent 55%), radial-gradient(70% 50% at 100% 100%, rgba(255,255,255,0.04) 0%, transparent 50%)",
             }}
-          >
-            {testName || "ZAZAZA"}
-          </div>
-          <div
-            style={{
-              fontSize: 140,
-              lineHeight: 1,
-              textAlign: "center",
-              marginTop: 8,
-              marginBottom: 16,
-            }}
-          >
-            {emoji || "🎮"}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 20,
-            }}
-          >
+          />
+          <div style={{ display: "flex", flexDirection: "column", height: "100%", position: "relative", zIndex: 1 }}>
             <div
               style={{
-                borderRadius: 24,
-                padding: "20px 48px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.18)",
-                boxShadow: `0 0 60px ${primary}55`,
+                fontSize: 22,
+                fontWeight: 700,
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.45)",
+                marginBottom: 8,
               }}
             >
-              <span style={{ fontSize: 96, fontWeight: 900, letterSpacing: "-0.04em", color: "#fff" }}>{score || "—"}</span>
+              {testName || "ZAZAZA"}
+            </div>
+            <div
+              style={{
+                fontSize: 140,
+                lineHeight: 1,
+                textAlign: "center",
+                marginTop: 8,
+                marginBottom: 16,
+              }}
+            >
+              {emoji || "🎮"}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 20,
+              }}
+            >
+              <div
+                style={{
+                  borderRadius: 24,
+                  padding: "20px 48px",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  boxShadow: `0 0 60px ${primary}55`,
+                }}
+              >
+                <span style={{ fontSize: 96, fontWeight: 900, letterSpacing: "-0.04em", color: "#fff" }}>{score || "—"}</span>
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: 44,
+                fontWeight: 900,
+                textAlign: "center",
+                lineHeight: 1.1,
+                color: "#fff",
+                textShadow: `0 0 40px ${primary}99`,
+                marginBottom: 16,
+                maxWidth: 1040,
+                alignSelf: "center",
+              }}
+            >
+              {label || "RESULT"}
+            </div>
+            <div
+              style={{
+                fontSize: 26,
+                fontWeight: 500,
+                textAlign: "center",
+                color: "rgba(255,255,255,0.65)",
+                lineHeight: 1.35,
+                maxWidth: 1000,
+                alignSelf: "center",
+                flex: 1,
+              }}
+            >
+              {percentile || "Share your score from ZAZAZA."}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+                marginTop: 12,
+              }}
+            >
+              <span style={{ fontSize: 28, fontWeight: 800, color: primary }}>zazaza.app</span>
             </div>
           </div>
-          <div
-            style={{
-              fontSize: 44,
-              fontWeight: 900,
-              textAlign: "center",
-              lineHeight: 1.1,
-              color: "#fff",
-              textShadow: `0 0 40px ${primary}99`,
-              marginBottom: 16,
-              maxWidth: 1040,
-              alignSelf: "center",
-            }}
-          >
-            {label || "RESULT"}
-          </div>
-          <div
-            style={{
-              fontSize: 26,
-              fontWeight: 500,
-              textAlign: "center",
-              color: "rgba(255,255,255,0.65)",
-              lineHeight: 1.35,
-              maxWidth: 1000,
-              alignSelf: "center",
-              flex: 1,
-            }}
-          >
-            {percentile || "Share your score from ZAZAZA."}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-              marginTop: 12,
-            }}
-          >
-            <span style={{ fontSize: 28, fontWeight: 800, color: primary }}>zazaza.app</span>
-          </div>
         </div>
-      </div>
-    ),
-    { width: 1200, height: 630 },
-  );
+      ),
+      { width: 1200, height: 630 },
+    );
+  } catch (error) {
+    console.error("[api/og] failed to render image", error);
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            width: 1200,
+            height: 630,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#0a0a0a",
+            color: "#fafafa",
+            fontFamily:
+              'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          }}
+        >
+          <div style={{ fontSize: 56, fontWeight: 900, marginBottom: 16 }}>ZAZAZA</div>
+          <div style={{ fontSize: 30, color: "rgba(255,255,255,0.8)" }}>Result Share</div>
+          <div style={{ fontSize: 24, color: "rgba(255,255,255,0.6)", marginTop: 20 }}>zazaza.app</div>
+        </div>
+      ),
+      { width: 1200, height: 630 },
+    );
+  }
 }
