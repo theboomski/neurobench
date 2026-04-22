@@ -36,11 +36,11 @@ export async function GET(request: Request) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
-            background: "linear-gradient(180deg, #0b0b0b 0%, #111111 100%)",
+            background: "#0a0a0a",
             color: "#fafafa",
             fontFamily:
               'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-            padding: "44px 52px",
+            padding: "42px 52px",
             boxSizing: "border-box",
           }}
         >
@@ -48,19 +48,25 @@ export async function GET(request: Request) {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "stretch",
-              gap: 18,
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: 20,
             }}
           >
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-start",
-                fontSize: 22,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 999,
+                background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.18)`,
+                border: `2px solid rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.85)`,
+                padding: "10px 22px",
+                fontSize: 28,
                 fontWeight: 700,
-                letterSpacing: "0.12em",
+                letterSpacing: "0.06em",
                 textTransform: "uppercase",
-                color: "rgba(255,255,255,0.45)",
+                color: primary,
               }}
             >
               {testName || "ZAZAZA"}
@@ -68,55 +74,32 @@ export async function GET(request: Request) {
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 16,
+                fontSize: 152,
+                  fontWeight: 900,
+                letterSpacing: "-0.05em",
+                lineHeight: 1,
+                color: "#ffffff",
+                textShadow: `0 0 38px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.45)`,
               }}
             >
-              <div
-                style={{
-                  width: 86,
-                  height: 86,
-                  borderRadius: "9999px",
-                  background: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`,
-                  border: `3px solid ${primary}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "#fff",
-                  fontSize: 26,
-                  fontWeight: 900,
-                }}
-              >
-                OG
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 24,
-                  padding: "18px 44px",
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                }}
-              >
-                <span style={{ fontSize: 96, fontWeight: 900, letterSpacing: "-0.03em", color: "#fff" }}>{score || "—"}</span>
-              </div>
+              {score || "0"}
             </div>
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: 44,
+                alignItems: "center",
+                maxWidth: 1080,
+                fontSize: 74,
                 fontWeight: 900,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.03,
+                color: "#ffffff",
+                textTransform: "uppercase",
                 textAlign: "center",
-                lineHeight: 1.1,
-                color: "#fff",
-                textShadow: `0 0 40px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.6)`,
-                maxWidth: 1040,
-                alignSelf: "center",
+                textShadow: `0 0 56px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.75)`,
               }}
             >
               {label || "RESULT"}
@@ -125,20 +108,56 @@ export async function GET(request: Request) {
               style={{
                 display: "flex",
                 justifyContent: "center",
-                fontSize: 26,
+                alignItems: "center",
+                maxWidth: 1020,
+                fontSize: 30,
                 fontWeight: 500,
-                textAlign: "center",
-                color: "rgba(255,255,255,0.65)",
                 lineHeight: 1.35,
-                maxWidth: 1000,
-                alignSelf: "center",
+                color: "rgba(255,255,255,0.68)",
+                textAlign: "center",
               }}
             >
-              {percentile || "Share your score from ZAZAZA."}
+              {percentile || "Top players only."}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: 54,
+                fontWeight: 900,
+                letterSpacing: "0.02em",
+                lineHeight: 1.05,
+                color: "#ffffff",
+                textAlign: "center",
+                textTransform: "uppercase",
+              }}
+            >
+              CAN YOU BEAT ME?
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-            <span style={{ fontSize: 28, fontWeight: 800, color: primary }}>zazaza.app</span>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              borderTop: "1px solid rgba(255,255,255,0.12)",
+              paddingTop: 14,
+            }}
+          >
+            <span
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: 30,
+                fontWeight: 900,
+                letterSpacing: "0.02em",
+                color: primary,
+                }}
+              >
+              zazaza.app
+            </span>
           </div>
         </div>
       ),
