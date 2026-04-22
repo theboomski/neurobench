@@ -9,6 +9,7 @@ const FILES = [
   "content/blog/dark/what-dark-personality-traits-actually-mean.md",
   "content/blog/relationship/does-your-boyfriend-or-girlfriend-sound-like-a-red-flag.md",
   "content/blog/brain-age/sleep-and-brain-age-circadian-rhythm-guide.md",
+  "content/blog/brain-age/red-light-green-light-game.md",
 ];
 
 function parseFrontmatter(content) {
