@@ -16,7 +16,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const score = safe(searchParams.get("score"), 40);
   const label = safe(searchParams.get("label"), 100);
-  const emoji = safe(searchParams.get("emoji"), 12);
   const percentile = safe(searchParams.get("percentile"), 320);
   const testName = safe(searchParams.get("testName"), 80);
   const primary = hexAccent(searchParams.get("primary_color"));
@@ -61,14 +60,30 @@ export async function GET(request: Request) {
           </div>
           <div
             style={{
-              fontSize: 140,
-              lineHeight: 1,
-              textAlign: "center",
-              marginTop: 8,
-              marginBottom: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 14,
+              marginBottom: 22,
             }}
           >
-            {emoji || "🎮"}
+            <div
+              style={{
+                width: 86,
+                height: 86,
+                borderRadius: "9999px",
+                background: `${primary}33`,
+                border: `3px solid ${primary}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontSize: 26,
+                fontWeight: 900,
+              }}
+            >
+              OG
+            </div>
           </div>
           <div
             style={{
