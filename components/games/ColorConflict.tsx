@@ -58,7 +58,7 @@ const COLORS = [
 ];
 
 type ColorDef = (typeof COLORS)[number];
-type AnswerButton = ColorDef & { chromeHex: string };
+type AnswerButton = ColorDef & { chromeHex: string; labelTextHex: string };
 
 /** Decorative fill/border only — never matches this option's semantic color (no "pink tile = PINK" shortcut). */
 function randomChromeHex(avoidSemanticHex: string): string {
@@ -66,6 +66,20 @@ function randomChromeHex(avoidSemanticHex: string): string {
   let h = pool[Math.floor(Math.random() * pool.length)];
   let guard = 0;
   while (h === avoidSemanticHex && pool.length > 1 && guard++ < 24) {
+    h = pool[Math.floor(Math.random() * pool.length)];
+  }
+  return h;
+}
+
+/**
+ * Random ink for the answer label each round.
+ * Avoids matching the option's semantic color (no "RED" in red) and the tile chrome (readability).
+ */
+function randomLabelTextHex(avoidSemanticHex: string, avoidChromeHex: string): string {
+  const pool = COLORS.map((c) => c.hex);
+  let h = pool[Math.floor(Math.random() * pool.length)];
+  let guard = 0;
+  while ((h === avoidSemanticHex || h === avoidChromeHex) && pool.length > 1 && guard++ < 32) {
     h = pool[Math.floor(Math.random() * pool.length)];
   }
   return h;
@@ -79,10 +93,14 @@ function randomPair(choiceCount: 4 | 5 | 6): { word: ColorDef; ink: ColorDef; bu
   const wrongCount = choiceCount - 1;
   const others = rest.slice(0, wrongCount);
   const shuffled = [...others, ink].sort(() => Math.random() - 0.5);
-  const buttons: AnswerButton[] = shuffled.map((c) => ({
-    ...c,
-    chromeHex: randomChromeHex(c.hex),
-  }));
+  const buttons: AnswerButton[] = shuffled.map((c) => {
+    const chromeHex = randomChromeHex(c.hex);
+    return {
+      ...c,
+      chromeHex,
+      labelTextHex: randomLabelTextHex(c.hex, chromeHex),
+    };
+  });
   return { word, ink, buttons };
 }
 
@@ -210,10 +228,10 @@ export default function ColorConflict({ game }: { game: GameData }) {
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🎨</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Inhibitory Control Assessment</p>
           <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 6, lineHeight: 1.55, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
-            The big word is printed in one ink color. Tap the button whose <strong style={{ color: "var(--text-1)" }}>label</strong> names that ink — ignore the letters of the big word.
+            The big word is printed in one ink color.             Tap the button whose <strong style={{ color: "var(--text-1)" }}>label</strong> names that ink — ignore the letters of the big word and the ink color of the small labels.
           </p>
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 10, lineHeight: 1.5, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
-            Answer tiles use random colors on purpose; only the text on each button counts.
+            Tile borders and label colors are decoys; only the spelled color name (RED, GREEN, …) counts.
           </p>
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28, lineHeight: 1.45, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}>
             Time per round shrinks as you score (down to {(MIN_ROUND_MS / 1000).toFixed(1)}s). After 25 / 75 correct, you get 5 then 6 choices. Wrong answer or timeout = game over.
@@ -250,7 +268,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
                 style={{
                   background: `${btn.chromeHex}18`,
                   border: `2px solid ${btn.chromeHex}55`,
-                  color: "var(--text-1)",
+                  color: btn.labelTextHex,
                   borderRadius: "var(--radius-md)",
                   padding: "16px 0",
                   fontSize: 16,
@@ -259,6 +277,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
                   cursor: "pointer",
                   letterSpacing: "0.06em",
                   WebkitTapHighlightColor: "transparent",
+                  textShadow: "0 0 3px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.75)",
                 }}
               >
                 {btn.name}
