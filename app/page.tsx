@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import postsData from "@/content/blog/posts.json";
 import { ALL_GAMES } from "@/lib/games";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
@@ -28,13 +27,21 @@ function mapGameType(category: GameData["category"]): Exclude<HomeTypeFilter, "a
   return "brain";
 }
 
-export default function HomePage() {
-  const searchParams = useSearchParams();
-  const categoryRaw = searchParams.get("category");
-  const sortRaw = searchParams.get("sort");
+function readInitialQuery(): { category: HomeTypeFilter; sort: HomeSort } {
+  if (typeof window === "undefined") return { category: "all", sort: "popular" };
+  const sp = new URLSearchParams(window.location.search);
+  const categoryRaw = sp.get("category");
+  const sortRaw = sp.get("sort");
   const category: HomeTypeFilter =
     categoryRaw === "brain" || categoryRaw === "game" || categoryRaw === "personality" ? categoryRaw : "all";
   const sort: HomeSort = sortRaw === "latest" ? "latest" : "popular";
+  return { category, sort };
+}
+
+export default function HomePage() {
+  const [queryState, setQueryState] = useState<{ category: HomeTypeFilter; sort: HomeSort }>(() => readInitialQuery());
+  const category = queryState.category;
+  const sort = queryState.sort;
   const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
   const [visibleCount, setVisibleCount] = useState(INITIAL_PAGE_SIZE);
   const loaderRef = useRef<HTMLDivElement | null>(null);
@@ -49,6 +56,17 @@ export default function HomePage() {
       })),
     [],
   );
+
+  useEffect(() => {
+    const refreshFromUrl = () => setQueryState(readInitialQuery());
+    refreshFromUrl();
+    window.addEventListener("popstate", refreshFromUrl);
+    window.addEventListener("zazaza-home-query-change", refreshFromUrl);
+    return () => {
+      window.removeEventListener("popstate", refreshFromUrl);
+      window.removeEventListener("zazaza-home-query-change", refreshFromUrl);
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;

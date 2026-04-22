@@ -32,6 +32,9 @@ export default function HomeHeaderControls() {
     if (nextSort !== "popular") query.set("sort", nextSort);
     const q = query.toString();
     router.replace(q ? `/?${q}` : "/", { scroll: false });
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("zazaza-home-query-change"));
+    }
   };
 
   return (

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
@@ -42,7 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 ZA<span style={{ color: "#00FF94" }}>ZA</span>ZA
               </div>
             </Link>
-            <HomeHeaderControls />
+            <Suspense fallback={null}>
+              <HomeHeaderControls />
+            </Suspense>
           </div>
         </nav>
 
