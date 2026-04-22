@@ -1,7 +1,7 @@
 "use client";
 
 const TRENDING_PATHS = [
-  "/brain-age/visual-memory",
+  "/brain-age/color-conflict",
   "/brain-age/instant-comparison",
   "/office-iq/report-or-favor",
   "/dark-personality/dark-triad",
