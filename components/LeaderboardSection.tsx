@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
+import { leaderboardUsesAscendingScore } from "@/lib/leaderboardConfig";
 import { TRASH_TALK_PRESETS } from "@/lib/leaderboardTrashTalk";
 import { getLeaderboard, getLeaderboardWithPreviewRank, saveToLeaderboard, type LeaderboardEntry } from "@/lib/tracking";
 
@@ -10,6 +11,13 @@ function rankDisplay(rank: number): string {
   if (rank === 2) return "🥈";
   if (rank === 3) return "🥉";
   return String(rank);
+}
+
+function rankMedal(rank: number): string {
+  if (rank === 1) return "🥇";
+  if (rank === 2) return "🥈";
+  if (rank === 3) return "🥉";
+  return "🌍";
 }
 
 const NICK_KEY = "zazaza_nickname";
@@ -36,10 +44,15 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
   const [listOpen, setListOpen] = useState(false);
   const [loadingList, setLoadingList] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [openingSubmitForm, setOpeningSubmitForm] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [selectedTrashTalk, setSelectedTrashTalk] = useState<string | null>(null);
+  const [previewRank, setPreviewRank] = useState<number | null>(null);
+  const [submittedRank, setSubmittedRank] = useState<number | null>(null);
+  const [cutoffScore, setCutoffScore] = useState<number | null>(null);
+  const [leaderboardHas10, setLeaderboardHas10] = useState(false);
+  const [qualifiesTop10, setQualifiesTop10] = useState(true);
   const [podiumTrashTalk, setPodiumTrashTalk] = useState(false);
-  const [podiumCheckLoading, setPodiumCheckLoading] = useState(false);
 
   const countrySelectOptions = useMemo(() => {
     const s = new Set(COUNTRY_OPTIONS);
@@ -55,26 +68,6 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
       /* ignore */
     }
   }, []);
-
-  useEffect(() => {
-    if (!showForm || submitted) {
-      setPodiumTrashTalk(false);
-      setPodiumCheckLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setPodiumCheckLoading(true);
-    void getLeaderboardWithPreviewRank(gameId, rawScore).then(({ previewRank }) => {
-      if (cancelled) return;
-      const ok = typeof previewRank === "number" && previewRank <= 3;
-      setPodiumTrashTalk(ok);
-      if (!ok) setSelectedTrashTalk(null);
-      setPodiumCheckLoading(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [showForm, submitted, gameId, rawScore]);
 
   useEffect(() => {
     void fetch("/api/geo")
@@ -99,6 +92,36 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
     void refreshList();
   }, [refreshList]);
 
+  const handleOpenSubmitForm = useCallback(async () => {
+    setSubmitError(null);
+    setSelectedTrashTalk(null);
+    setOpeningSubmitForm(true);
+    try {
+      const { rows: lbRows, previewRank: preview } = await getLeaderboardWithPreviewRank(gameId, rawScore);
+      const has10 = lbRows.length >= 10;
+      const cutoff = has10 ? lbRows[9]?.score ?? null : null;
+      const qualifies =
+        !has10 ||
+        (typeof preview === "number"
+          ? preview <= 10
+          : cutoff == null
+            ? true
+            : leaderboardUsesAscendingScore(gameId)
+              ? rawScore < cutoff
+              : rawScore > cutoff);
+
+      setPreviewRank(typeof preview === "number" ? preview : null);
+      setPodiumTrashTalk(typeof preview === "number" && preview <= 3);
+      setLeaderboardHas10(has10);
+      setCutoffScore(cutoff);
+      setQualifiesTop10(qualifies);
+      if (!qualifies) setSelectedTrashTalk(null);
+      setShowForm(true);
+    } finally {
+      setOpeningSubmitForm(false);
+    }
+  }, [gameId, rawScore]);
+
   const handleSubmit = async () => {
     const name = nickname.trim().slice(0, 20);
     if (!name) {
@@ -116,6 +139,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
       const result = await saveToLeaderboard(gameId, name, rawScore, countryCode, selectedTrashTalk);
       if (result.ok) {
         setSubmittedId(result.id);
+        setSubmittedRank(previewRank);
         setSubmitted(true);
         setShowForm(false);
         setListOpen(true);
@@ -149,11 +173,8 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           {!submitted && (
             <button
               type="button"
-              onClick={() => {
-                setSubmitError(null);
-                setSelectedTrashTalk(null);
-                setShowForm(true);
-              }}
+              onClick={() => void handleOpenSubmitForm()}
+              disabled={openingSubmitForm}
               className="pressable"
               style={{
                 background: accent,
@@ -163,17 +184,20 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
                 padding: "12px 14px",
                 fontSize: 13,
                 fontWeight: 800,
-                cursor: "pointer",
+                cursor: openingSubmitForm ? "wait" : "pointer",
                 fontFamily: "var(--font-mono)",
+                opacity: openingSubmitForm ? 0.8 : 1,
               }}
             >
-              🏆 Submit to Leaderboard
+              {openingSubmitForm ? "Checking cutoff…" : "🏆 Submit to Leaderboard"}
             </button>
           )}
           {submitted && (
             <>
               <div style={{ marginBottom: 4, fontSize: 13, fontWeight: 700, color: "var(--text-1)", textAlign: "center" }}>
-                You&apos;re on the global leaderboard! 🌍
+                {submittedRank != null
+                  ? `You're #${submittedRank} globally! ${rankMedal(submittedRank)}`
+                  : "Score submitted! Check the leaderboard below."}
               </div>
               <button
                 type="button"
@@ -276,11 +300,31 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
           <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
             Submitting score: <strong style={{ color: "var(--text-1)" }}>{rawScore}</strong> {rawUnit}
           </div>
+          <div
+            style={{
+              fontSize: 11,
+              lineHeight: 1.45,
+              borderRadius: 8,
+              padding: "8px 10px",
+              border: qualifiesTop10 ? "1px solid rgba(34,197,94,0.45)" : "1px solid rgba(244,63,94,0.45)",
+              background: qualifiesTop10 ? "rgba(34,197,94,0.12)" : "rgba(127,29,29,0.30)",
+              color: qualifiesTop10 ? "#bbf7d0" : "#fecaca",
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            {!leaderboardHas10
+              ? "You made the leaderboard! Be one of the first 10!"
+              : qualifiesTop10
+                ? "🔥 You made the top 10! Submit your score!"
+                : `You didn't make the top 10 this time 😔 Current cutoff: ${cutoffScore ?? "—"} pts`}
+            {!qualifiesTop10 ? (
+              <span style={{ display: "block", marginTop: 4, color: "var(--text-3)" }}>
+                You can still submit, but this score won&apos;t appear in the current top 10.
+              </span>
+            ) : null}
+          </div>
           <div style={{ marginTop: 4 }}>
-            {podiumCheckLoading && (
-              <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Checking podium…</p>
-            )}
-            {!podiumCheckLoading && podiumTrashTalk && (
+            {podiumTrashTalk && qualifiesTop10 && (
               <>
                 <span style={{ display: "block", marginBottom: 8, fontSize: 11, color: "var(--text-2)", fontFamily: "var(--font-mono)" }}>Leave a message (top 3 only):</span>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -314,7 +358,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
                 <span style={{ display: "block", marginTop: 6, fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Optional — tap again to clear</span>
               </>
             )}
-            {!podiumCheckLoading && !podiumTrashTalk && (
+            {!podiumTrashTalk && (
               <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", lineHeight: 1.5, margin: 0 }}>
                 Victory messages are only for global top 3 scores. Keep climbing — then you can talk trash. 😈
               </p>
@@ -379,7 +423,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
                 opacity: submitting ? 0.75 : 1,
               }}
             >
-              {submitting ? "Submitting…" : "Submit"}
+              {submitting ? "Submitting…" : qualifiesTop10 ? "Submit" : "Submit anyway"}
             </button>
           </div>
         </div>
