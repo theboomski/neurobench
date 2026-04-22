@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { countryCodeToFlag } from "@/lib/countryFlag";
+import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { getLeaderboard, saveToLeaderboard, type LeaderboardEntry } from "@/lib/tracking";
 
 const NICK_KEY = "zazaza_nickname";
@@ -33,7 +33,7 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
   const countrySelectOptions = useMemo(() => {
     const s = new Set(COUNTRY_OPTIONS);
     if (!s.has(countryCode)) s.add(countryCode);
-    return [...s].sort();
+    return [...s].sort((a, b) => countryCodeToRegionName(a).localeCompare(countryCodeToRegionName(b)));
   }, [countryCode]);
 
   useEffect(() => {
@@ -206,30 +206,40 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
               }}
             />
           </label>
-          <div style={{ fontSize: 11, color: "var(--text-2)", fontFamily: "var(--font-mono)" }}>
-            Country: {countryCodeToFlag(countryCode)} {geoLoaded ? countryCode : "…"}{" "}
-            <span style={{ color: "var(--text-3)" }}>·</span>{" "}
-            <select
-              value={countryCode}
-              onChange={e => setCountryCode(e.target.value)}
-              aria-label="Change country"
-              style={{
-                marginLeft: 4,
-                padding: "4px 8px",
-                borderRadius: 6,
-                border: "1px solid var(--border)",
-                background: "var(--bg-elevated)",
-                color: "var(--text-1)",
-                fontSize: 11,
-                fontFamily: "var(--font-mono)",
-              }}
-            >
-              {countrySelectOptions.map(c => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+          <div style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45 }}>
+            <span style={{ display: "block", marginBottom: 6, fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--text-3)" }}>Country</span>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 18 }} aria-hidden>{geoLoaded ? countryCodeToFlag(countryCode) : "…"}</span>
+              <span style={{ fontWeight: 600, color: "var(--text-1)" }}>
+                {geoLoaded ? countryCodeToRegionName(countryCode) : "Detecting…"}
+              </span>
+            </div>
+            <label style={{ display: "block", marginTop: 8, fontSize: 11, color: "var(--text-3)" }}>
+              Change
+              <select
+                value={countryCode}
+                onChange={e => setCountryCode(e.target.value)}
+                aria-label="Change country"
+                style={{
+                  display: "block",
+                  width: "100%",
+                  maxWidth: "100%",
+                  marginTop: 4,
+                  padding: "8px 10px",
+                  borderRadius: 8,
+                  border: "1px solid var(--border)",
+                  background: "var(--bg-elevated)",
+                  color: "var(--text-1)",
+                  fontSize: 13,
+                }}
+              >
+                {countrySelectOptions.map(c => (
+                  <option key={c} value={c}>
+                    {countryCodeToFlag(c)} {countryCodeToRegionName(c)}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
             Submitting score: <strong style={{ color: "var(--text-1)" }}>{rawScore}</strong> {rawUnit}
@@ -321,7 +331,22 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
                   }}
                 >
                   <span style={{ width: 22, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)", fontWeight: 700 }}>{i + 1}</span>
-                  <span style={{ fontSize: 16 }}>{countryCodeToFlag(row.country_code)}</span>
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: "var(--text-2)",
+                      minWidth: 48,
+                      maxWidth: 120,
+                      flexShrink: 0,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    title={countryCodeToRegionName(row.country_code)}
+                  >
+                    {countryCodeToFlag(row.country_code)} {countryCodeToRegionName(row.country_code)}
+                  </span>
                   <span style={{ flex: 1, fontSize: 12, fontWeight: 700, color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {row.nickname}
                   </span>
