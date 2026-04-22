@@ -3,7 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
 import { dict } from "@/lib/i18n";
-import BottomNav from "@/components/BottomNav";
+import HomeHeaderControls from "@/components/HomeHeaderControls";
 
 const t = dict.en;
 
@@ -26,33 +26,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5822666577768735" crossOrigin="anonymous" />
       </head>
-      <body style={{ paddingBottom: 64 }}>
+      <body>
         {/* TOP NAV */}
         <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,10,15,0.96)", backdropFilter: "blur(20px)", borderBottom: "1px solid var(--border)" }}>
           <div style={{ background: "#00FF9410", borderBottom: "1px solid #00FF9418", height: 24, overflow: "hidden", position: "relative" }}>
             <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 30s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
-              {["FREE BRAIN AGE TEST", "NO SIGNUP REQUIRED", "INSTANT RESULTS", "GLOBALLY RANKED", "OFFICE IQ TEST", "FREE FOREVER", "SHARE YOUR SCORE"].map(s => (
+              {["NO SIGN UP", "FREE BRAIN TESTS", "GAMES", "PERSONALITY TESTS", "INSTANT RESULTS", "GLOBAL LEADERBOARDS", "SHARE YOUR RESULTS"].map(s => (
                 <span key={s} style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.15em" }}>{s}</span>
               ))}
             </div>
           </div>
-          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", height: 52, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "10px 24px", minHeight: 68, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
             <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.04em", color: "var(--text-1)" }}>
+              <div style={{ fontSize: 42, fontWeight: 900, letterSpacing: "-0.045em", color: "var(--text-1)", lineHeight: 1, flexShrink: 0 }}>
                 ZA<span style={{ color: "#00FF94" }}>ZA</span>ZA
               </div>
-              <div style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", borderLeft: "1px solid var(--border)", paddingLeft: 10 }}>
-                Test Hub
-              </div>
             </Link>
-            <div style={{ display: "flex", alignItems: "center", gap: 5, background: "#00FF9410", border: "1px solid #00FF9425", borderRadius: 999, padding: "4px 12px" }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#00FF94", display: "inline-block", boxShadow: "0 0 6px #00FF94" }} />
-              <span style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>FREE · NO SIGNUP</span>
-            </div>
+            <HomeHeaderControls />
           </div>
         </nav>
 
-        <main style={{ minHeight: "calc(100dvh - 76px - 64px)" }}>{children}</main>
+        <main style={{ minHeight: "calc(100dvh - 92px)" }}>{children}</main>
 
         {/* FOOTER */}
         <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px" }}>
@@ -64,8 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/terms-of-service" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>Terms</Link>
           </div>
         </footer>
-
-        <BottomNav />
 
         <Script src="https://www.googletagmanager.com/gtag/js?id=G-CLBWMF1Y42" strategy="afterInteractive" />
         <Script id="ga4-init" strategy="afterInteractive">{`

@@ -1,95 +1,203 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import postsData from "@/content/blog/posts.json";
-import { ALL_GAMES, CATEGORY_META } from "@/lib/games";
-import { CategoryCard, TrendingCard } from "@/components/CategoryCards";
-import HeroActions from "@/components/HeroActions";
+import { ALL_GAMES } from "@/lib/games";
+import { canonicalGamePath } from "@/lib/canonicalGamePaths";
+import { getPlayCount } from "@/lib/tracking";
+import type { GameData } from "@/lib/types";
 
-const games = ALL_GAMES;
+const INITIAL_PAGE_SIZE = 12;
 
-const CATEGORY_ACCENTS: Record<string, string> = {
-  "brain-age": "#00FF94",
-  "office-iq": "#FF6B6B",
-  "focus-test": "#F59E0B",
-  "dark-personality": "#A855F7",
-  "word-iq": "#F97316",
-  "relationship": "#EC4899",
-  "money": "#F59E0B",
-  "korean-tv": "#E11D48",
+type HomeTypeFilter = "all" | "brain" | "game" | "personality";
+type HomeSort = "popular" | "latest";
+
+const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
+  brain: "#10b981",
+  game: "#f97316",
+  personality: "#8b5cf6",
 };
 
-const CATEGORIES = CATEGORY_META.map(c => ({
-  slug: c.id,
-  emoji: c.emoji,
-  title: c.name,
-  desc: c.description,
-  accent: CATEGORY_ACCENTS[c.id] ?? "#00FF94",
-  count: games.filter(g => g.category === c.id).length,
-}));
+const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
 
-export const metadata: Metadata = {
-  title: "ZAZAZA – Free Brain Age, IQ & Personality Tests. No Signup.",
-  description: "Free brain age tests, office IQ, Korean TV challenges, focus, dark personality and vocab tests. No signup. Instant results. Globally ranked.",
-  openGraph: {
-    title: "ZAZAZA – What's Your Brain Age?",
-    description: "Free tests. Zero signup. Instant results. Can your friends beat you?",
-    url: "https://zazaza.app",
-  },
-};
-
-const TRENDING = [
-  { id: "color-conflict",   category: "brain-age",        emoji: "🎨", title: "Color Conflict",   desc: "The word says RED. The color says GREEN. Which do you click?", accent: "#EC4899" },
-  { id: "sudoku",           category: "brain-age",        emoji: "🧩", title: "Speed Sudoku",     desc: "No time limit — but the faster you solve, the higher you score.", accent: "#60A5FA" },
-  { id: "instant-comparison", category: "brain-age",     emoji: "⚖️", title: "Instant Comparison", desc: "Which side has more? You have one second.",              accent: "#10B981" },
-  { id: "sequence-memory",  category: "brain-age",       emoji: "🔲", title: "Sequence Memory",  desc: "Memorize the pattern. Repeat it back. How long can you go?", accent: "#F59E0B" },
-];
+function mapGameType(category: GameData["category"]): Exclude<HomeTypeFilter, "all"> {
+  if (category === "office-iq" || category === "korean-tv") return "game";
+  if (category === "dark-personality" || category === "relationship" || category === "money") return "personality";
+  return "brain";
+}
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
+  const categoryRaw = searchParams.get("category");
+  const sortRaw = searchParams.get("sort");
+  const category: HomeTypeFilter =
+    categoryRaw === "brain" || categoryRaw === "game" || categoryRaw === "personality" ? categoryRaw : "all";
+  const sort: HomeSort = sortRaw === "latest" ? "latest" : "popular";
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>({});
+  const [visibleCount, setVisibleCount] = useState(INITIAL_PAGE_SIZE);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const loadingMoreRef = useRef(false);
+
+  const games = useMemo(
+    () =>
+      ALL_GAMES.map((g, idx) => ({
+        ...g,
+        type: mapGameType(g.category),
+        latestIndex: idx,
+      })),
+    [],
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      const pairs = await Promise.all(
+        games.map(async (g) => {
+          const count = await getPlayCount(g.id);
+          return [g.id, Number.isFinite(count) ? count : 0] as const;
+        }),
+      );
+      if (cancelled) return;
+      setPlayCounts(Object.fromEntries(pairs));
+    };
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [games]);
+
+  const filteredSortedGames = useMemo(() => {
+    const filtered = category === "all" ? games : games.filter((g) => g.type === category);
+    if (sort === "latest") {
+      return [...filtered].sort((a, b) => a.latestIndex - b.latestIndex);
+    }
+    return [...filtered].sort((a, b) => {
+      const aCount = playCounts[a.id] ?? 0;
+      const bCount = playCounts[b.id] ?? 0;
+      if (aCount === 0 && bCount > 0) return 1;
+      if (bCount === 0 && aCount > 0) return -1;
+      if (bCount !== aCount) return bCount - aCount;
+      return a.latestIndex - b.latestIndex;
+    });
+  }, [games, category, sort, playCounts]);
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_PAGE_SIZE);
+  }, [category, sort]);
+
+  useEffect(() => {
+    const node = loaderRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (!first?.isIntersecting || loadingMoreRef.current) return;
+        loadingMoreRef.current = true;
+        setVisibleCount((prev) => Math.min(prev + INITIAL_PAGE_SIZE, filteredSortedGames.length));
+        window.setTimeout(() => {
+          loadingMoreRef.current = false;
+        }, 80);
+      },
+      { rootMargin: "220px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [filteredSortedGames.length]);
+
+  const visibleGames = filteredSortedGames.slice(0, visibleCount);
+  const filterLabel = category === "all" ? "All" : category === "brain" ? "Brain Tests" : category === "game" ? "Games" : "Personality";
+  const sortLabel = sort === "popular" ? "Most Popular" : "Latest";
+
   return (
-    <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-      <div style={{ padding: "16px 0 0" }}>
+    <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>
+      <div style={{ marginBottom: 14 }}>
         <div className="ad-slot ad-banner">Advertisement</div>
       </div>
 
-      {/* Hero */}
-      <section style={{ padding: "44px 0 36px", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", background: "var(--bg-elevated)", border: "1px solid var(--border-md)", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
-          <span style={{ fontSize: 10, color: "var(--text-2)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>50+ FREE TESTS · NO SIGNUP · INSTANT RESULTS</span>
-        </div>
-        <h1 style={{ fontSize: "clamp(24px,6vw,62px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.08, marginBottom: 14 }}>
-          Think you know yourself?<br />
-          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Think again.</span>
-        </h1>
-        <p style={{ fontSize: "clamp(14px,2vw,17px)", color: "var(--text-2)", marginBottom: 28, lineHeight: 1.65, maxWidth: 480, margin: "0 auto 28px" }}>
-          1-minute tests that reveal what you actually are.
-        </p>
-        <HeroActions />
-        <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 20, fontFamily: "var(--font-mono)" }}>
-          For entertainment and self-reflection purposes. Not a substitute for professional psychological assessment.
-        </p>
-      </section>
-
-      {/* Trending */}
-      <section style={{ marginBottom: 56 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid var(--border)" }}>
-          <span style={{ fontSize: 14 }}>🔥</span>
-          <h2 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 800, letterSpacing: "-0.02em" }}>Trending Now</h2>
+      <section style={{ marginBottom: 48 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 10,
+            fontSize: 11,
+            color: "var(--text-3)",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          <span>
+            {filterLabel} · {sortLabel}
+          </span>
+          <span>{filteredSortedGames.length} games</span>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-          {TRENDING.map(t => <TrendingCard key={t.id} {...t} />)}
+          {visibleGames.map((game) => {
+            const plays = playCounts[game.id] ?? 0;
+            const border = BORDER_COLOR[game.type];
+            return (
+              <Link key={game.id} href={canonicalGamePath(game)} style={{ textDecoration: "none" }}>
+                <article
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    borderLeft: `4px solid ${border}`,
+                    borderRadius: "var(--radius-lg)",
+                    padding: "16px 12px",
+                    minHeight: 160,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <h3 style={{ fontSize: 18, color: "var(--text-1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+                      {game.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-2)",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {game.shortDescription}
+                    </p>
+                    <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
+                      🔥 {PLAY_FORMATTER.format(plays)} plays
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: border,
+                        fontWeight: 800,
+                        fontFamily: "var(--font-mono)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      PLAY →
+                    </span>
+                  </div>
+                </article>
+              </Link>
+            );
+          })}
         </div>
-      </section>
-
-      {/* Categories */}
-      <div id="categories" />
-      <section style={{ marginBottom: 56 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18, paddingBottom: 14, borderBottom: "1px solid var(--border)" }}>
-          <span style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>01</span>
-          <h2 style={{ fontSize: "clamp(16px,2.5vw,20px)", fontWeight: 800, letterSpacing: "-0.02em" }}>All Test Categories</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-          {CATEGORIES.map(cat => <CategoryCard key={cat.slug} {...cat} />)}
-        </div>
+        <div ref={loaderRef} style={{ height: 30 }} />
+        {visibleCount < filteredSortedGames.length && (
+          <p style={{ fontSize: 11, color: "var(--text-3)", textAlign: "center", fontFamily: "var(--font-mono)" }}>
+            Loading more games...
+          </p>
+        )}
+        {filteredSortedGames.length === 0 && (
+          <p style={{ fontSize: 12, color: "var(--text-3)", textAlign: "center", fontFamily: "var(--font-mono)" }}>
+            No games found in this filter.
+          </p>
+        )}
       </section>
 
       {/* Latest from the Blog */}
@@ -102,7 +210,7 @@ export default function HomePage() {
           <Link href="/blog" style={{ fontSize: 11, color: "#00FF94", fontFamily: "var(--font-mono)", fontWeight: 700, textDecoration: "none", flexShrink: 0 }}>SEE ALL →</Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-          {(postsData as typeof postsData).slice(0, 4).map(post => (
+          {(postsData as typeof postsData).slice(0, 12).map(post => (
             <Link key={post.slug} href={`/blog/${post.slug}`} style={{ textDecoration: "none" }}>
               <article style={{
                 background: "var(--bg-card)",
@@ -167,8 +275,13 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <div style={{ paddingBottom: 24 }}>
+      <footer style={{ borderTop: "1px solid var(--border)", paddingTop: 18 }}>
+        <p style={{ fontSize: 12, color: "var(--text-2)", marginBottom: 6 }}>© {new Date().getFullYear()} ZAZAZA. All rights reserved.</p>
+        <p style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", lineHeight: 1.6 }}>
+          Disclaimer: tests are for entertainment and self-reflection and are not medical or psychological diagnoses.
+        </p>
+      </footer>
+      <div style={{ marginTop: 16 }}>
         <div className="ad-slot ad-banner">Advertisement</div>
       </div>
     </div>
