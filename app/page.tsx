@@ -134,7 +134,7 @@ export default function HomePage() {
 
   const visibleGames = filteredSortedGames.slice(0, visibleCount);
   const filterLabel = category === "all" ? "All" : category === "brain" ? "Brain Tests" : category === "game" ? "Games" : "Personality";
-  const sortLabel = sort === "popular" ? "Most Popular" : "Latest";
+  const sortLabel = sort === "popular" ? "Popular" : "Latest";
 
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>

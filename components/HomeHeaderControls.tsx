@@ -58,7 +58,7 @@ export default function HomeHeaderControls() {
               key={tab.id}
               type="button"
               onClick={() => setQuery(tab.id, sort)}
-              className="pressable"
+              className="pressable home-tab-pill"
               style={{
                 border: active ? `2px solid ${accent}` : "1px solid var(--border)",
                 background: active ? `${accent}26` : "var(--bg-elevated)",
@@ -117,7 +117,7 @@ export default function HomeHeaderControls() {
             whiteSpace: "nowrap",
           }}
         >
-          Most Popular
+          Popular
         </button>
         <button
           type="button"
@@ -147,7 +147,12 @@ export default function HomeHeaderControls() {
           gap: 8px !important;
         }
         .home-header-tabs {
-          max-width: calc(100% - 178px);
+          max-width: calc(100% - 145px);
+          gap: 4px !important;
+        }
+        .home-tab-pill {
+          padding: 6px 8px !important;
+          font-size: 10px !important;
         }
         .home-header-sort {
           margin-left: auto !important;
