@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GameData } from "@/lib/types";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
-import { gzipJsonToBase64Url } from "@/lib/resultShareCodec";
+import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
@@ -387,8 +387,7 @@ export default function Sudoku({ game }: { game: GameData }) {
       ogPercentileLine: `${levelsCompleted} levels · avg ${mmss(avgSec)} / puzzle · peak ${diffLabel}.`,
       ogTestName: game.title,
     };
-    const z = await gzipJsonToBase64Url(payload);
-    const url = `https://zazaza.app/brain-age/sudoku/result?z=${encodeURIComponent(z)}`;
+    const url = await createSharedResultUrl(payload);
     const text = `🧩 I got ${diffLabel} in ${game.title}! Score: ${totalScore} pts. ${levelsCompleted} levels · avg ${mmss(avgSec)} / puzzle. Can you beat me? ${url}`;
     await shareZazazaChallenge({
       title: `🧩 ${game.title} | ZAZAZA`,

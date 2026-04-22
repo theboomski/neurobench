@@ -1,19 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import CommonResult from "@/components/CommonResult";
 import GameLayout from "@/components/GameLayout";
 import LeaderboardSection from "@/components/LeaderboardSection";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
+import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import { ALL_GAMES } from "@/lib/games";
 import { getHighScore } from "@/lib/gameUtils";
-import { gzipJsonToBase64Url, gunzipBase64UrlToJson } from "@/lib/resultShareCodec";
+import { gunzipBase64UrlToJson } from "@/lib/resultShareCodec";
 import { gameForPayload, isResultSharePayloadV1, payloadMatchesRoute, type ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { resolveResultTone } from "@/lib/resultUtils";
 import { shareReportStyleResult } from "@/lib/shareReportStyleResult";
-import { consumePendingShareForCurrentUrl, shareZazazaChallenge } from "@/lib/shareResultChallenge";
+import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import type { GameData } from "@/lib/types";
 
 function leaderboardUnitFromQuizPayload(p: Extract<ResultSharePayloadV1, { kind: "quiz" }>): string {
@@ -191,9 +192,7 @@ function SudokuResultBody({
   const [toast, setToast] = useState(false);
 
   const handleShare = async () => {
-    const path = "/brain-age/sudoku/result";
-    const z = await gzipJsonToBase64Url(payload);
-    const url = `https://zazaza.app${path}?z=${encodeURIComponent(z)}`;
+    const url = await createSharedResultUrl(payload);
     const text = `${payload.ogEmoji} I got ${payload.ogLabel} in ${payload.ogTestName}! Score: ${payload.ogScore}. ${payload.ogPercentileLine} Can you beat me? ${url}`;
     await shareZazazaChallenge({
       title: `${payload.ogEmoji} ${payload.ogLabel} — ${payload.ogTestName} | ZAZAZA`,
@@ -298,15 +297,24 @@ function SudokuResultBody({
   );
 }
 
-type Props = { category: string; id: string; zParam: string };
+type Props = {
+  category?: string;
+  id?: string;
+  zParam?: string;
+  payload?: ResultSharePayloadV1;
+};
 
-export default function ResultShareLanding({ category, id, zParam }: Props) {
+export default function ResultShareLanding({ category, id, zParam, payload: prefetchedPayload }: Props) {
   const router = useRouter();
-  const [payload, setPayload] = useState<ResultSharePayloadV1 | null>(null);
+  const [payload, setPayload] = useState<ResultSharePayloadV1 | null>(prefetchedPayload ?? null);
   const [bad, setBad] = useState(false);
-  const replayedShareRef = useRef(false);
 
   useEffect(() => {
+    if (prefetchedPayload) {
+      setPayload(prefetchedPayload);
+      setBad(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
       if (!zParam) {
@@ -315,7 +323,11 @@ export default function ResultShareLanding({ category, id, zParam }: Props) {
       }
       const decoded = await gunzipBase64UrlToJson<unknown>(decodeURIComponent(zParam));
       if (cancelled) return;
-      if (!isResultSharePayloadV1(decoded) || !payloadMatchesRoute(decoded, category, id)) {
+      if (!isResultSharePayloadV1(decoded)) {
+        setBad(true);
+        return;
+      }
+      if (category && id && !payloadMatchesRoute(decoded, category, id)) {
         setBad(true);
         return;
       }
@@ -324,7 +336,7 @@ export default function ResultShareLanding({ category, id, zParam }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [category, id, zParam]);
+  }, [category, id, zParam, prefetchedPayload]);
 
   const game = useMemo(() => {
     if (!payload) return undefined;
@@ -333,14 +345,9 @@ export default function ResultShareLanding({ category, id, zParam }: Props) {
 
   const onPlayAgain = useCallback(() => {
     if (game) router.push(canonicalGamePath(game));
-    else router.push(`/${category}/${id}`);
+    else if (category && id) router.push(`/${category}/${id}`);
+    else router.push("/");
   }, [router, game, category, id]);
-
-  useEffect(() => {
-    if (!payload || !game || replayedShareRef.current) return;
-    replayedShareRef.current = true;
-    void consumePendingShareForCurrentUrl();
-  }, [payload, game]);
 
   if (bad || (payload && !game)) {
     return (

@@ -1,5 +1,4 @@
-import { canonicalResultPath } from "@/lib/canonicalGamePaths";
-import { gzipJsonToBase64Url } from "@/lib/resultShareCodec";
+import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import type { GameData } from "@/lib/types";
@@ -56,9 +55,7 @@ export async function shareReportStyleResult(opts: ShareReportStyleInput): Promi
     ogPercentileLine,
     ogTestName: game.title,
   };
-  const z = await gzipJsonToBase64Url(payload);
-  const path = canonicalResultPath(game);
-  const url = `https://zazaza.app${path}?z=${encodeURIComponent(z)}`;
+  const url = await createSharedResultUrl(payload);
   const text = `${emoji} I got ${rank.title} in ${game.title}! Score: ${ogScore}. ${ogPercentileLine} Can you beat me? ${url}`;
   await shareZazazaChallenge({
     title: `${emoji} ${rank.title} — ${game.title} | ZAZAZA`,

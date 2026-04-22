@@ -4,8 +4,7 @@ import { useMemo, useState } from "react";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import InterstitialAd from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
-import { canonicalResultPath } from "@/lib/canonicalGamePaths";
-import { gzipJsonToBase64Url } from "@/lib/resultShareCodec";
+import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import type { GameData } from "@/lib/types";
@@ -170,7 +169,6 @@ export default function CommonResult({
 
   const handleShare = async () => {
     const percentileSentence = `Your score is higher than ${higherThanPct.toFixed(1)}% of the world - about ${peopleBillions} billion people.`;
-    const path = canonicalResultPath(game);
     const payload: ResultSharePayloadV1 = {
       v: 1,
       kind: "common",
@@ -190,8 +188,7 @@ export default function CommonResult({
       benchmarkNote,
       tone,
     };
-    const z = await gzipJsonToBase64Url(payload);
-    const url = `https://zazaza.app${path}?z=${encodeURIComponent(z)}`;
+    const url = await createSharedResultUrl(payload);
     const challenge = shareTextOverride
       ? `${shareTextOverride} ${url}`
       : `${scoreEmoji} I got ${level.label} in ${game.title}! Score: ${normalizedScore}/100. ${percentileSentence} Can you beat me? ${url}`;
