@@ -1,7 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
-
 function safe(s: string | null, max: number): string {
   if (!s) return "";
   const t = s.trim();
@@ -17,6 +15,33 @@ function hexAccent(raw: string | null): string {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
+    const debug = searchParams.get("debug");
+    if (debug === "1") {
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              width: 1200,
+              height: 630,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              background: "#ff2d55",
+              color: "#ffffff",
+              fontFamily:
+                'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+              fontSize: 96,
+              fontWeight: 900,
+              letterSpacing: "0.06em",
+            }}
+          >
+            OG WORKS
+          </div>
+        ),
+        { width: 1200, height: 630 },
+      );
+    }
+
     const score = safe(searchParams.get("score"), 40);
     const label = safe(searchParams.get("label"), 100);
     const emoji = safe(searchParams.get("emoji"), 12);
