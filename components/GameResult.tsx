@@ -1,12 +1,11 @@
 "use client";
 
-import { getBrainAge, generateReportCard } from "@/lib/gameUtils";
-import { dict } from "@/lib/i18n";
+import { getBrainAge } from "@/lib/gameUtils";
 import type { GameData } from "@/lib/types";
 import InterstitialAd from "@/components/InterstitialAd";
+import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { useState } from "react";
-
-const t = dict.en;
+import { shareReportStyleResult } from "@/lib/shareReportStyleResult";
 
 interface Props {
   game: GameData;
@@ -22,35 +21,30 @@ interface Props {
 
 export default function GameResult({ game, score, unit, rank, percentile, highScore, isNewBest, extraStats, onRetry }: Props) {
   const [showAd, setShowAd] = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
   const brainAge = getBrainAge(rank.label);
 
   const afterAd = () => { setShowAd(false); onRetry(); };
 
   const handleShare = async () => {
-    const url = generateReportCard({
-      gameTitle: game.title, clinicalTitle: game.clinicalTitle,
-      score, unit, rankLabel: rank.label, rankTitle: rank.title,
-      rankSubtitle: rank.subtitle, rankColor: rank.color,
-      percentile, accent: game.accent, siteUrl: t.site.url,
+    await shareReportStyleResult({
+      game,
+      clinicalHeader: "Your Brain Age",
+      scoreNum: brainAge.age,
+      scoreSuffix: "",
+      rank,
+      percentile,
+      emoji: "🧠",
+      onCopied: () => {
+        setShareCopied(true);
+        window.setTimeout(() => setShareCopied(false), 2200);
+      },
     });
-    setShareImg(url);
-    if (navigator.share) {
-      try {
-        const blob = await (await fetch(url)).blob();
-        await navigator.share({
-          title: "My Brain Age on ZAZAZA",
-          text: `My Brain Age is ${brainAge.age}! 🧠 Can you beat me? ${t.site.url}`,
-          files: [new File([blob], "brain-age.png", { type: "image/png" })],
-        });
-        return;
-      } catch { /* fallback */ }
-    }
-    window.open(url, "_blank");
   };
 
   return (
     <>
+      <ShareCopiedToast show={shareCopied} />
       {showAd && <InterstitialAd onDone={afterAd} />}
       <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(28px,5vw,48px) clamp(20px,4vw,40px)", textAlign: "center" }}>
 
@@ -105,17 +99,10 @@ export default function GameResult({ game, score, unit, rank, percentile, highSc
           <button onClick={() => setShowAd(true)} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>
             ▶ PLAY AGAIN
           </button>
-          <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>
+          <button onClick={() => void handleShare()} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>
             ↗ SHARE
           </button>
         </div>
-
-        {shareImg && (
-          <div style={{ marginTop: 24 }}>
-            <img src={shareImg} alt="Brain Age Report" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} />
-            <p style={{ fontSize: 11, color: "var(--text-3)", marginTop: 8, fontFamily: "var(--font-mono)" }}>Long-press (mobile) · Right-click (desktop) to save</p>
-          </div>
-        )}
       </div>
     </>
   );

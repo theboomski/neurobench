@@ -4,7 +4,11 @@ import { trackPlay } from "@/lib/tracking";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GameData } from "@/lib/types";
+import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
+import { gzipJsonToBase64Url } from "@/lib/resultShareCodec";
+import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
+import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
 
@@ -219,6 +223,7 @@ export default function Sudoku({ game }: { game: GameData }) {
   const [milestoneText, setMilestoneText] = useState<string | null>(null);
   const [highScore, setHighScore] = useState<number | null>(null);
   const [isNewBest, setIsNewBest] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const timerStartedAtRef = useRef<number | null>(null);
   const levelsCompleted = times.length;
@@ -362,27 +367,44 @@ export default function Sudoku({ game }: { game: GameData }) {
 
   const avgSec = levelsCompleted > 0 ? Math.round(times.reduce((a, b) => a + b, 0) / levelsCompleted) : 0;
 
-  const shareText = `I reached level ${levelsCompleted} with ${totalScore} points in ${game.title}. Can you beat me? https://zazaza.app/${game.category}/${game.id}`;
   const onShare = useCallback(async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${game.title} - ZAZAZA`, text: shareText });
-        return;
-      } catch {
-        // fallback
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(shareText);
-      alert("Copied challenge text to clipboard.");
-    } catch {
-      window.prompt("Copy this challenge text:", shareText);
-    }
-  }, [game.category, game.id, game.title, levelsCompleted, shareText, totalScore]);
+    const diffLabel = difficultyReached(levelsCompleted);
+    const outcome = levelOutcome(levelsCompleted);
+    const payload: ResultSharePayloadV1 = {
+      v: 1,
+      kind: "sudoku",
+      category: "brain-age",
+      id: "sudoku",
+      accent: game.accent,
+      totalScore,
+      levelsCompleted,
+      avgSec,
+      difficultyLabel: diffLabel,
+      outcomeLine: outcome,
+      ogScore: String(totalScore),
+      ogLabel: diffLabel,
+      ogEmoji: "🧩",
+      ogPercentileLine: `${levelsCompleted} levels · avg ${mmss(avgSec)} / puzzle · peak ${diffLabel}.`,
+      ogTestName: game.title,
+    };
+    const z = await gzipJsonToBase64Url(payload);
+    const url = `https://zazaza.app/brain-age/sudoku/result?z=${encodeURIComponent(z)}`;
+    const text = `🧩 I got ${diffLabel} in ${game.title}! Score: ${totalScore} pts. ${levelsCompleted} levels · avg ${mmss(avgSec)} / puzzle. Can you beat me? ${url}`;
+    await shareZazazaChallenge({
+      title: `🧩 ${game.title} | ZAZAZA`,
+      text,
+      url,
+      onCopied: () => {
+        setShareCopied(true);
+        window.setTimeout(() => setShareCopied(false), 2200);
+      },
+    });
+  }, [avgSec, game.accent, game.title, levelsCompleted, totalScore]);
 
   if (phase === "done") {
     return (
       <>
+        <ShareCopiedToast show={shareCopied} />
         {showAd && <InterstitialAd onDone={afterAd} />}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
           <div

@@ -1,9 +1,14 @@
 "use client";
 
-import { useMemo } from "react";
-import type { GameData } from "@/lib/types";
+import { useMemo, useState } from "react";
+import ShareCopiedToast from "@/components/ShareCopiedToast";
 import InterstitialAd from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
+import { canonicalResultPath } from "@/lib/canonicalGamePaths";
+import { gzipJsonToBase64Url } from "@/lib/resultShareCodec";
+import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
+import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
+import type { GameData } from "@/lib/types";
 
 type AnalysisTone = "brain" | "office" | "focus" | "vocab";
 
@@ -156,6 +161,7 @@ export default function CommonResult({
   const higherThanPct = Math.max(0, Math.min(99.9, percentile));
   const peopleCount = Math.round((higherThanPct / 100) * WORLD_POP);
   const peopleBillions = (peopleCount / 1_000_000_000).toFixed(2);
+  const [copiedToast, setCopiedToast] = useState(false);
   const shareText = useMemo(() => {
     if (shareTextOverride) return shareTextOverride;
     const link = `https://zazaza.app/${game.category}/${game.id}`;
@@ -163,24 +169,46 @@ export default function CommonResult({
   }, [game.category, game.id, game.title, normalizedScore, shareTextOverride]);
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${game.title} - ZAZAZA`, text: shareText });
-        return;
-      } catch {
-        // fallback to clipboard
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(shareText);
-      alert("Copied challenge text to clipboard.");
-    } catch {
-      window.prompt("Copy this challenge text:", shareText);
-    }
+    const percentileSentence = `Your score is higher than ${higherThanPct.toFixed(1)}% of the world - about ${peopleBillions} billion people.`;
+    const path = canonicalResultPath(game);
+    const payload: ResultSharePayloadV1 = {
+      v: 1,
+      kind: "common",
+      category: game.category,
+      id: game.id,
+      gameTitle: game.title,
+      primaryColor: game.accent,
+      normalizedScore,
+      rawScore,
+      rawUnit,
+      percentile,
+      rank,
+      levelLabel: level.label,
+      scoreEmoji,
+      percentileSentence,
+      killerLine,
+      benchmarkNote,
+      tone,
+    };
+    const z = await gzipJsonToBase64Url(payload);
+    const url = `https://zazaza.app${path}?z=${encodeURIComponent(z)}`;
+    const challenge = shareTextOverride
+      ? `${shareTextOverride} ${url}`
+      : `${scoreEmoji} I got ${level.label} in ${game.title}! Score: ${normalizedScore}/100. ${percentileSentence} Can you beat me? ${url}`;
+    await shareZazazaChallenge({
+      title: `${scoreEmoji} ${level.label} — ${game.title} | ZAZAZA`,
+      text: challenge,
+      url,
+      onCopied: () => {
+        setCopiedToast(true);
+        window.setTimeout(() => setCopiedToast(false), 2200);
+      },
+    });
   };
 
   return (
     <>
+      <ShareCopiedToast show={copiedToast} />
       {showAd && <InterstitialAd onDone={onAdDone} />}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
       <div style={{ display: "flex", justifyContent: "center" }}>

@@ -4,11 +4,10 @@ import { trackPlay } from "@/lib/tracking";
 
 import { useState, useCallback, useMemo } from "react";
 import type { GameData } from "@/lib/types";
-import { dict } from "@/lib/i18n";
-import { saveHighScore, generateReportCard, playBeep } from "@/lib/gameUtils";
+import { saveHighScore, playBeep } from "@/lib/gameUtils";
+import { shareReportStyleResult } from "@/lib/shareReportStyleResult";
+import { useShareCopiedToast } from "@/hooks/useShareCopiedToast";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
-
-const t = dict.en;
 
 
 function shuffleOpts(options: string[], correct: number) {
@@ -121,7 +120,7 @@ export default function FinancialIQ({ game }: { game: GameData }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [showAd, setShowAd] = useState(false);
-  const [shareImg, setShareImg] = useState<string | null>(null);
+  const shareToast = useShareCopiedToast();
   const [finalScore, setFinalScore] = useState(0);
   const [isNewBest, setIsNewBest] = useState(false);
 
@@ -159,20 +158,27 @@ export default function FinancialIQ({ game }: { game: GameData }) {
   }, [selected, q, correct, current, game.id]);
 
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
-  const afterAd = () => { setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0); setSelected(null); setShareImg(null); setIsNewBest(false); setShuffleKey(k => k + 1); };
+  const afterAd = () => { setShowAd(false); setPhase("idle"); setCurrent(0); setCorrect(0); setSelected(null); setIsNewBest(false); setShuffleKey(k => k + 1); };
 
   const rank = getRank(finalScore, game);
   const pct = getPercentile(finalScore, game);
 
   const handleShare = async () => {
-    const url = generateReportCard({ gameTitle: game.title, clinicalTitle: game.clinicalTitle, score: finalScore, unit: "%", rankLabel: rank.label, rankTitle: rank.title, rankSubtitle: rank.subtitle, rankColor: rank.color, percentile: pct, accent: game.accent, siteUrl: t.site.url });
-    setShareImg(url);
-    if (navigator.share) { try { const blob = await (await fetch(url)).blob(); await navigator.share({ title: "ZAZAZA", text: `My Financial IQ: ${finalScore}% 🏦 Can you beat me? ${t.site.url}`, files: [new File([blob], "result.png", { type: "image/png" })] }); return; } catch { } }
-    window.open(url, "_blank");
+    await shareReportStyleResult({
+      game,
+      clinicalHeader: "Financial Literacy Assessment",
+      scoreNum: finalScore,
+      scoreSuffix: "%",
+      rank,
+      percentile: pct,
+      emoji: "🏦",
+      onCopied: shareToast.onCopied,
+    });
   };
 
   if (phase === "done") return (
     <>
+      {shareToast.node}
       {showAd && <InterstitialAd onDone={afterAd} />}
       <div className="anim-scale-in" style={{ background: "var(--bg-card)", border: "1px solid var(--border-md)", borderTop: `2px solid ${rank.color}`, borderRadius: "var(--radius-xl)", padding: "clamp(24px,5vw,44px) clamp(20px,4vw,40px)", textAlign: "center" }}>
         <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>Financial Literacy Assessment</div>
@@ -190,9 +196,8 @@ export default function FinancialIQ({ game }: { game: GameData }) {
         {isNewBest && <div style={{ display: "inline-block", background: `${game.accent}12`, border: `1px solid ${game.accent}30`, color: game.accent, fontSize: 11, fontWeight: 700, padding: "3px 14px", borderRadius: 999, marginBottom: 16, fontFamily: "var(--font-mono)" }}>◆ New Personal Record</div>}
         <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
           <button onClick={handleRetry} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 800, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>▶ PLAY AGAIN</button>
-          <button onClick={handleShare} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>↗ SHARE</button>
+          <button onClick={() => void handleShare()} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "13px 28px", fontSize: 13, fontWeight: 700, cursor: "pointer", minWidth: 140, fontFamily: "var(--font-mono)" }}>↗ SHARE</button>
         </div>
-        {shareImg && <div style={{ marginTop: 24 }}><img src={shareImg} alt="Result" style={{ maxWidth: "100%", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }} /></div>}
       </div>
     </>
   );
