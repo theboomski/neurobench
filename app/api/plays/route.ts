@@ -31,6 +31,44 @@ function serializePostgrestError(err: PostgrestError): Record<string, string | u
   };
 }
 
+export async function GET() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
+  const key = serviceRoleKey ?? anonKey;
+
+  if (!url || !key) {
+    console.error("[plays GET] missing env", {
+      hasUrl: Boolean(url),
+      hasServiceRole: Boolean(serviceRoleKey),
+      hasAnon: Boolean(anonKey),
+    });
+    return NextResponse.json({ error: "Plays tracking is not configured on the server (missing Supabase URL/key)." }, { status: 503 });
+  }
+
+  const supabase = createClient(url, key);
+  const { data, error } = await supabase.from(GAME_PLAYS_TABLE).select("game_id");
+  if (error) {
+    logSupabaseError("[plays GET] Supabase select error", error);
+    return NextResponse.json(
+      {
+        error: error.message,
+        errorFull: serializePostgrestError(error),
+      },
+      { status: 500 },
+    );
+  }
+
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) {
+    const gameId = (row as { game_id?: string }).game_id;
+    if (!gameId) continue;
+    counts[gameId] = (counts[gameId] ?? 0) + 1;
+  }
+
+  return NextResponse.json({ counts });
+}
+
 export async function POST(req: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

@@ -148,3 +148,15 @@ export async function getPlayCount(gameId: string): Promise<number> {
     return 0;
   }
 }
+
+/** Bulk play counts keyed by game id, fetched from server API. */
+export async function getPlayCounts(): Promise<Record<string, number>> {
+  try {
+    const res = await fetch("/api/plays", { method: "GET" });
+    if (!res.ok) return {};
+    const j = (await res.json()) as { counts?: Record<string, number> };
+    return j.counts ?? {};
+  } catch {
+    return {};
+  }
+}

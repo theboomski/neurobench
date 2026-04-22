@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import postsData from "@/content/blog/posts.json";
 import { ALL_GAMES } from "@/lib/games";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
-import { getPlayCount } from "@/lib/tracking";
+import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 
 const INITIAL_PAGE_SIZE = 12;
@@ -71,14 +71,9 @@ export default function HomePage() {
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
-      const pairs = await Promise.all(
-        games.map(async (g) => {
-          const count = await getPlayCount(g.id);
-          return [g.id, Number.isFinite(count) ? count : 0] as const;
-        }),
-      );
+      const counts = await getPlayCounts();
       if (cancelled) return;
-      setPlayCounts(Object.fromEntries(pairs));
+      setPlayCounts(counts);
     };
     void run();
     return () => {
