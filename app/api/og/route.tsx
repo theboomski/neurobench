@@ -1,4 +1,6 @@
-import { ImageResponse } from "@vercel/og";
+import { ImageResponse } from "next/og";
+
+export const runtime = "edge";
 
 function sanitizeHex6(input: string | null): string {
   const cleaned = (input ?? "").replace(/^#/, "").replace(/[^0-9a-fA-F]/g, "");
