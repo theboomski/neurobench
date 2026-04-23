@@ -177,6 +177,8 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState("");
   const [shareMessage, setShareMessage] = useState("");
+  /** "Done!" / post-share UI only for this visit or `?resume=1` restore — resets on new entry so refresh/home→send shows Share. */
+  const [postShareUi, setPostShareUi] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [shareProgress, setShareProgress] = useState(0);
   const [error, setError] = useState("");
@@ -244,28 +246,54 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
           setShareUrl("");
           setShareMessage("");
           setShareProgress(0);
+          setPostShareUi(false);
           return;
         }
         const parsed = JSON.parse(raw) as { shareUrl?: unknown; shareMessage?: unknown };
-        setShareUrl(typeof parsed.shareUrl === "string" ? parsed.shareUrl : "");
+        const url = typeof parsed.shareUrl === "string" ? parsed.shareUrl : "";
+        setShareUrl(url);
         setShareMessage(typeof parsed.shareMessage === "string" ? parsed.shareMessage : "");
         setShareProgress(0);
+        setPostShareUi(Boolean(url));
       } catch {
         setShareUrl("");
         setShareMessage("");
         setShareProgress(0);
+        setPostShareUi(false);
       }
       return;
     }
     setShareUrl("");
     setShareMessage("");
     setShareProgress(0);
+    setPostShareUi(false);
     try {
       window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
     } catch {
       // ignore
     }
   }, [resumeQueryKey]);
+
+  /** bfcache restore can resurrect pre-navigation React state — snap back to Share unless `?resume=1`. */
+  useEffect(() => {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      if (typeof window === "undefined") return;
+      const resume = new URLSearchParams(window.location.search).get("resume") === "1";
+      if (resume) return;
+      setShareUrl("");
+      setShareMessage("");
+      setShareProgress(0);
+      setPostShareUi(false);
+      try {
+        window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
+      } catch {
+        // ignore
+      }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   /** Persist successful share only. Do not clear LS here — `useLayoutEffect` owns removal to avoid racing before restore reads draft. */
   useEffect(() => {
@@ -453,7 +481,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   };
 
   const onCreateShare = async () => {
-    if (!templateAvailable || shareUrl) return;
+    if (!templateAvailable || (shareUrl && postShareUi)) return;
     setIsSaving(true);
     setShareProgress(10);
     setError("");
@@ -478,6 +506,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       const message = `I made this for you 😂 ${url}`;
       setShareUrl(url);
       setShareMessage(message);
+      setPostShareUi(true);
       setShareProgress(100);
     } catch (e) {
       setError(readErrorMessage(e));
@@ -497,7 +526,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   };
 
   const onNativeShare = async () => {
-    if (!shareUrl || !navigator.share) return;
+    if (!shareUrl || !postShareUi || !navigator.share) return;
     try {
       // Keep URL in `text` only to avoid duplicate messages on some share targets.
       await navigator.share({ title: "Fun Send", text: shareMessage });
@@ -973,7 +1002,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                 <button
                   type="button"
                   onClick={() => void onCreateShare()}
-                  disabled={isSaving || Boolean(shareUrl)}
+                  disabled={isSaving || Boolean(shareUrl && postShareUi)}
                   className="pressable"
                   style={{
                     border: "none",
@@ -982,14 +1011,14 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                     background: ACCENT,
                     color: "#1a0510",
                     fontWeight: 900,
-                    cursor: isSaving || shareUrl ? "default" : "pointer",
+                    cursor: isSaving || (shareUrl && postShareUi) ? "default" : "pointer",
                     fontFamily: "var(--font-mono)",
                     fontSize: 12,
                     letterSpacing: "0.04em",
-                    opacity: shareUrl ? 0.8 : 1,
+                    opacity: shareUrl && postShareUi ? 0.8 : 1,
                   }}
                 >
-                  {isSaving ? "Almost Ready..." : shareUrl ? "Done!" : "Share"}
+                  {isSaving ? "Almost Ready..." : shareUrl && postShareUi ? "Done!" : "Share"}
                 </button>
                 {isSaving && (
                   <div
@@ -1016,14 +1045,14 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                 {isSaving && (
                   <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
                 )}
-                {shareUrl && (
+                {shareUrl && postShareUi && (
                   <Link href={`${shareUrl.replace("https://zazaza.app", "")}?from=send`} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
                     Open card ↗
                   </Link>
                 )}
               </div>
 
-              {shareUrl && (
+              {shareUrl && postShareUi && (
                 <>
                   <label style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
                     <span style={{ fontSize: 13, color: "var(--text-2)" }}>Share message (editable)</span>
