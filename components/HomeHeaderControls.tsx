@@ -69,7 +69,7 @@ export default function HomeHeaderControls() {
   return (
     <>
     <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
-      <div className="home-header-tabs home-header-tabs-desktop hidden flex-wrap items-center gap-1.5 xl:flex">
+      <div className="home-header-tabs home-header-tabs-desktop">
         {CATEGORY_TABS.map((tab) => {
           const active = category === tab.id;
           const accent = TAB_COLOR[tab.id];
@@ -140,10 +140,7 @@ export default function HomeHeaderControls() {
         </Link>
       </div>
 
-      <div
-        className="home-header-tabs home-header-tabs-mobile flex min-w-0 flex-1 flex-nowrap items-center gap-1.5 overflow-x-auto overscroll-x-contain xl:hidden"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
+      <div className="home-header-tabs home-header-tabs-mobile">
         <div ref={mobileToggleRef} style={{ position: "relative" }}>
           <button
             type="button"
