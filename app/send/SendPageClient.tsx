@@ -404,7 +404,6 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     },
     [faceObjectUrl],
   );
-
   useEffect(() => {
     if (!isSaving) return;
     setShareProgress((prev) => (prev > 0 ? prev : 10));
