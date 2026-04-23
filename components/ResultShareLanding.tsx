@@ -393,7 +393,7 @@ export default function ResultShareLanding({ category, id, zParam, payload: pref
   if (payload.kind === "quiz") {
     return (
       <GameLayout game={game}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingBottom: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}>
           <ReportQuizResultBody game={game} payload={payload} onPlayAgain={onPlayAgain} />
         </div>
       </GameLayout>
@@ -402,7 +402,7 @@ export default function ResultShareLanding({ category, id, zParam, payload: pref
 
   return (
     <GameLayout game={game}>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingBottom: 24 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, paddingBottom: "max(24px, env(safe-area-inset-bottom))" }}>
         <SudokuResultBody game={game} payload={payload} onPlayAgain={onPlayAgain} />
       </div>
     </GameLayout>
