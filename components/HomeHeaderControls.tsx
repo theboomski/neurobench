@@ -141,7 +141,7 @@ export default function HomeHeaderControls() {
         </Link>
       </div>
 
-      <div className="home-header-tabs home-header-tabs-mobile" style={{ display: "none", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+      <div className="home-header-tabs home-header-tabs-mobile" style={{ display: "none", gap: 6, flexWrap: "nowrap", alignItems: "center", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
         <div ref={mobileToggleRef} style={{ position: "relative" }}>
           <button
             type="button"

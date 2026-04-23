@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
@@ -163,6 +164,8 @@ function UploadIcon({ size = 18 }: { size?: number }) {
 
 export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+  const shouldRestoreDraft = searchParams.get("resume") === "1";
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -227,6 +230,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   }, []);
 
   useEffect(() => {
+    if (!shouldRestoreDraft) return;
     try {
       const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
       if (!raw) return;
@@ -236,7 +240,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     } catch {
       // ignore invalid localStorage payload
     }
-  }, []);
+  }, [shouldRestoreDraft]);
 
   useEffect(() => {
     try {

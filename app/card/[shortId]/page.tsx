@@ -78,7 +78,7 @@ export default async function SharedCardPage({ params, searchParams }: Props) {
         />
         {isSenderView ? (
           <Link
-            href="/send"
+            href="/send?resume=1"
             className="pressable"
             style={{
               textDecoration: "none",
