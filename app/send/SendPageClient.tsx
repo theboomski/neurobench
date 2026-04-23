@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
@@ -163,6 +164,8 @@ function UploadIcon({ size = 18 }: { size?: number }) {
 
 export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+  const shouldRestoreDraft = searchParams.get("resume") === "1";
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -226,21 +229,42 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     document.head.appendChild(link);
   }, []);
 
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { shareUrl?: string; shareMessage?: string };
-      if (parsed.shareUrl) setShareUrl(parsed.shareUrl);
-      if (parsed.shareMessage) setShareMessage(parsed.shareMessage);
-    } catch {
-      // ignore invalid localStorage payload
+  useLayoutEffect(() => {
+    if (shouldRestoreDraft) {
+      try {
+        const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
+        if (!raw) {
+          setShareUrl("");
+          setShareMessage("");
+          setShareProgress(0);
+          return;
+        }
+        const parsed = JSON.parse(raw) as { shareUrl?: string; shareMessage?: string };
+        setShareUrl(parsed.shareUrl ?? "");
+        setShareMessage(parsed.shareMessage ?? "");
+        setShareProgress(0);
+      } catch {
+        setShareUrl("");
+        setShareMessage("");
+        setShareProgress(0);
+      }
+      return;
     }
-  }, []);
+
+    // Plain /send should always start fresh.
+    setShareUrl("");
+    setShareMessage("");
+    setShareProgress(0);
+    try {
+      window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
+    } catch {
+      // localStorage unavailable (private mode, etc.)
+    }
+  }, [shouldRestoreDraft]);
 
   useEffect(() => {
     try {
-      if (!shareUrl && !shareMessage) {
+      if (!shareUrl) {
         window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
         return;
       }
@@ -950,11 +974,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                   disabled={isSaving || Boolean(shareUrl)}
                   className="pressable"
                   style={{
-                    border: "none",
+                    border: shareUrl ? "1px solid var(--border-md)" : "none",
                     borderRadius: 10,
                     padding: "12px 18px",
-                    background: ACCENT,
-                    color: "#1a0510",
+                    background: shareUrl ? "var(--bg-elevated)" : ACCENT,
+                    color: shareUrl ? "var(--text-1)" : "#1a0510",
                     fontWeight: 900,
                     cursor: isSaving || shareUrl ? "default" : "pointer",
                     fontFamily: "var(--font-mono)",
@@ -989,11 +1013,6 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                 )}
                 {isSaving && (
                   <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
-                )}
-                {shareUrl && (
-                  <Link href={`${shareUrl.replace("https://zazaza.app", "")}?from=send`} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
-                    Open card ↗
-                  </Link>
                 )}
               </div>
 
@@ -1043,13 +1062,13 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                         onClick={() => void onNativeShare()}
                         className="pressable"
                         style={{
-                          border: "1px solid var(--border-md)",
-                          background: "var(--bg-elevated)",
-                          color: "var(--text-1)",
+                          border: "none",
+                          background: ACCENT,
+                          color: "#1a0510",
                           borderRadius: 10,
                           padding: "10px 14px",
                           fontSize: 12,
-                          fontWeight: 700,
+                          fontWeight: 900,
                           cursor: "pointer",
                           fontFamily: "var(--font-mono)",
                         }}

@@ -213,7 +213,7 @@ export default function CommonResult({
           className="anim-scale-in"
           style={{
             width: "min(92vw, 420px)",
-            aspectRatio: "9 / 16",
+            minHeight: "min(88vh, 760px)",
             background: getNeonByScore(normalizedScore),
             border: "1px solid rgba(255,255,255,0.22)",
             borderTop: `2px solid ${rank.color}`,
@@ -227,7 +227,7 @@ export default function CommonResult({
             backdropFilter: "blur(10px)",
             WebkitBackdropFilter: "blur(10px)",
             boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 50px ${rank.color}33`,
-            overflow: "hidden",
+            overflow: "visible",
             fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
           }}
         >
@@ -264,7 +264,7 @@ export default function CommonResult({
           </div>
         )}
 
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto" }}>
+        <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto", paddingBottom: "max(6px, env(safe-area-inset-bottom))" }}>
           <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
             ▶ PLAY AGAIN
           </button>

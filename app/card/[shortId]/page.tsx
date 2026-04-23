@@ -78,7 +78,7 @@ export default async function SharedCardPage({ params, searchParams }: Props) {
         />
         {isSenderView ? (
           <Link
-            href="/send"
+            href="/send?resume=1"
             className="pressable"
             style={{
               textDecoration: "none",
@@ -109,9 +109,9 @@ export default async function SharedCardPage({ params, searchParams }: Props) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 999,
-                border: "1px solid #f472b6",
-                color: "#1a0510",
-                background: "#f472b6",
+                border: "1px solid var(--border-md)",
+                color: "var(--text-1)",
+                background: "var(--bg-elevated)",
                 fontWeight: 900,
                 padding: "12px 20px",
                 fontSize: 14,
@@ -129,9 +129,9 @@ export default async function SharedCardPage({ params, searchParams }: Props) {
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 999,
-                border: "1px solid var(--border-md)",
-                color: "var(--text-1)",
-                background: "var(--bg-elevated)",
+                border: "1px solid #f472b6",
+                color: "#1a0510",
+                background: "#f472b6",
                 fontWeight: 900,
                 padding: "12px 20px",
                 fontSize: 14,

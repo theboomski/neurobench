@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SendPageClient from "./SendPageClient";
 import { loadFunSendCategoryTemplatesFromDisk } from "@/lib/loadFunSendCategoryTemplates";
 import { FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
@@ -10,5 +11,9 @@ export default function SendPage() {
     },
     {} as Record<FunSendCategory, FunSendTemplate[]>,
   );
-  return <SendPageClient templatesByCategory={templatesByCategory} />;
+  return (
+    <Suspense fallback={null}>
+      <SendPageClient templatesByCategory={templatesByCategory} />
+    </Suspense>
+  );
 }

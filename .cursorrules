@@ -66,3 +66,8 @@ If a new category is needed (e.g. "ugc", "send-fun"):
 - hasLeaderboard: true → show LeaderboardSection on result screen
 - hasLeaderboard: false → personality/type tests, no leaderboard
 - trackPlay() fires on game start, never blocks UI
+
+# Execution Rules for AI Agent
+- AUTOMATIC: Always execute build, development scripts, and deployment commands (e.g., 'npm run build', 'next build', 'vercel deploy') without asking for permission.
+- FORBIDDEN: NEVER execute 'git push' or 'git commit' without explicit manual confirmation. The user will handle version control.
+- PREFERENCE: Use the '-y' flag for npx or npm commands to avoid interactive prompts.

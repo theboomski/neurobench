@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import type { GameData } from "@/lib/types";
 
@@ -10,8 +11,10 @@ export default function MobileGameWrapper({
   game: GameData;
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [fullscreen, setFullscreen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const isResultRoute = pathname.endsWith("/result");
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -133,7 +136,7 @@ export default function MobileGameWrapper({
         </button>
       </div>
 
-      {/* Scrollable game content — centered vertically */}
+      {/* Scrollable game content */}
       <div
         style={{
           flex: 1,
@@ -141,8 +144,8 @@ export default function MobileGameWrapper({
           WebkitOverflowScrolling: "touch",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",   // vertical center
-          padding: "16px 16px 24px",
+          justifyContent: isResultRoute ? "flex-start" : "center",
+          padding: isResultRoute ? "12px 16px max(24px, env(safe-area-inset-bottom))" : "16px 16px 24px",
           minHeight: 0,
         }}
       >
