@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import Link from "next/link";
@@ -7,6 +7,11 @@ import { dict } from "@/lib/i18n";
 import HomeHeaderControls from "@/components/HomeHeaderControls";
 
 const t = dict.en;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: { default: `ZAZAZA – Free Brain Tests. No Signup. Instant Results.`, template: `%s | ZAZAZA` },
@@ -29,7 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {/* TOP NAV */}
-        <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,10,15,0.96)", backdropFilter: "blur(20px)", borderBottom: "1px solid var(--border)" }}>
+        <nav
+          id="zazaza-site-nav"
+          style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,10,15,0.96)", backdropFilter: "blur(20px)", borderBottom: "1px solid var(--border)" }}
+        >
           <div style={{ background: "#00FF9410", borderBottom: "1px solid #00FF9418", height: 24, overflow: "hidden", position: "relative" }}>
             <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 30s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
               {["NO SIGN UP", "FREE BRAIN TESTS", "GAMES", "PERSONALITY TESTS", "INSTANT RESULTS", "GLOBAL LEADERBOARDS", "SHARE YOUR RESULTS"].map(s => (

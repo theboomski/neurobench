@@ -7,11 +7,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
-export type SendPageClientProps = {
-  templatesByCategory: Record<FunSendCategory, FunSendTemplate[]>;
-  /** From server URL: only then may we rehydrate share draft from localStorage. */
-  resumeDraft: boolean;
-};
+export type SendPageClientProps = { templatesByCategory: Record<FunSendCategory, FunSendTemplate[]> };
 
 function firstCategoryWithTemplatesList(by: Record<FunSendCategory, FunSendTemplate[]>): FunSendCategory {
   for (const { id } of FUN_SEND_TABS) {
@@ -166,22 +162,11 @@ function UploadIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-function shouldResumeFunSendDraft(resumeDraft: boolean, searchParams: ReturnType<typeof useSearchParams>): boolean {
-  if (resumeDraft) return true;
-  if (typeof window !== "undefined") {
-    try {
-      if (new URLSearchParams(window.location.search).get("resume") === "1") return true;
-    } catch {
-      // ignore
-    }
-  }
-  return searchParams.get("resume") === "1";
-}
-
-export default function SendPageClient({ templatesByCategory, resumeDraft }: SendPageClientProps) {
+export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
-  const resumeQueryKey = `${resumeDraft ? 1 : 0}|${searchParams.toString()}`;
+  /** Re-run draft sync when the real URL query changes (client navigation). */
+  const resumeQueryKey = searchParams.toString();
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -246,11 +231,12 @@ export default function SendPageClient({ templatesByCategory, resumeDraft }: Sen
   }, []);
 
   /**
-   * Single layout pass: either restore draft from LS (only when URL says resume=1) or clear share UI + LS.
-   * Avoids races between separate restore/clear effects that caused intermittent "Done!" on /send.
+   * Single layout pass: restore from LS only when the browser URL has `?resume=1` (never RSC/searchParams alone —
+   * those can disagree with `location` and showed "Done!" on desktop while mobile looked correct).
    */
   useLayoutEffect(() => {
-    const resume = shouldResumeFunSendDraft(resumeDraft, searchParams);
+    if (typeof window === "undefined") return;
+    const resume = new URLSearchParams(window.location.search).get("resume") === "1";
     if (resume) {
       try {
         const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
@@ -279,14 +265,12 @@ export default function SendPageClient({ templatesByCategory, resumeDraft }: Sen
     } catch {
       // ignore
     }
-  }, [resumeDraft, resumeQueryKey, searchParams]);
+  }, [resumeQueryKey]);
 
+  /** Persist successful share only. Do not clear LS here — `useLayoutEffect` owns removal to avoid racing before restore reads draft. */
   useEffect(() => {
     try {
-      if (!shareUrl) {
-        window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
-        return;
-      }
+      if (!shareUrl) return;
       window.localStorage.setItem(FUN_SEND_SHARE_DRAFT_KEY, JSON.stringify({ shareUrl, shareMessage }));
     } catch {
       // localStorage unavailable (private mode, etc.)

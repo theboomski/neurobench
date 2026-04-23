@@ -5,11 +5,7 @@ import { FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib
 
 export const dynamic = "force-dynamic";
 
-type SendPageProps = { searchParams: Promise<{ resume?: string }> };
-
-export default async function SendPage({ searchParams }: SendPageProps) {
-  const sp = await searchParams;
-  const resumeDraft = sp.resume === "1";
+export default function SendPage() {
   const templatesByCategory = FUN_SEND_TABS.reduce(
     (acc, { id }) => {
       acc[id] = loadFunSendCategoryTemplatesFromDisk(id);
@@ -19,7 +15,7 @@ export default async function SendPage({ searchParams }: SendPageProps) {
   );
   return (
     <Suspense fallback={null}>
-      <SendPageClient templatesByCategory={templatesByCategory} resumeDraft={resumeDraft} />
+      <SendPageClient templatesByCategory={templatesByCategory} />
     </Suspense>
   );
 }
