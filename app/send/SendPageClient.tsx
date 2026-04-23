@@ -37,6 +37,7 @@ const NAME_NUDGE_FINE = 2;
 const NAME_GROW_FACTOR = 1.07;
 const NAME_SHRINK_FACTOR = 1 / NAME_GROW_FACTOR;
 const NAME_ACCENT = "#22d3ee";
+const FUN_SEND_SHARE_DRAFT_KEY = "fun-send-share-draft";
 
 /** Burned into preview + upload PNG in `renderComposite`. */
 const FUN_SEND_WATERMARK_TEXT = "Make your own at Zazaza.app";
@@ -224,6 +225,30 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     link.href = "https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap";
     document.head.appendChild(link);
   }, []);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { shareUrl?: string; shareMessage?: string };
+      if (parsed.shareUrl) setShareUrl(parsed.shareUrl);
+      if (parsed.shareMessage) setShareMessage(parsed.shareMessage);
+    } catch {
+      // ignore invalid localStorage payload
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      if (!shareUrl && !shareMessage) {
+        window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
+        return;
+      }
+      window.localStorage.setItem(FUN_SEND_SHARE_DRAFT_KEY, JSON.stringify({ shareUrl, shareMessage }));
+    } catch {
+      // localStorage unavailable (private mode, etc.)
+    }
+  }, [shareUrl, shareMessage]);
 
   const renderComposite = useCallback(
     async (forUpload: boolean): Promise<{ blob: Blob; preview: string }> => {
@@ -966,7 +991,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                   <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
                 )}
                 {shareUrl && (
-                  <Link href={shareUrl.replace("https://zazaza.app", "")} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
+                  <Link href={`${shareUrl.replace("https://zazaza.app", "")}?from=send`} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
                     Open card ↗
                   </Link>
                 )}
