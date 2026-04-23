@@ -26,6 +26,7 @@ export default function HomeHeaderControls() {
   const router = useRouter();
   const sp = useSearchParams();
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+  const [isCompactHeader, setIsCompactHeader] = useState(false);
   const mobileToggleRef = useRef<HTMLDivElement | null>(null);
   const isHome = pathname === "/";
   const categoryRaw = sp.get("category");
@@ -49,6 +50,15 @@ export default function HomeHeaderControls() {
     setMobileCategoryOpen(false);
   }, [category, sort]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 900px)");
+    const sync = () => setIsCompactHeader(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   if (!isHome) return null;
 
   const setQuery = (nextCategory: HomeTypeFilter, nextSort: HomeSort) => {
@@ -68,88 +78,44 @@ export default function HomeHeaderControls() {
 
   return (
     <>
-    <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
-      <div className="home-header-tabs home-header-tabs-desktop">
-        {CATEGORY_TABS.map((tab) => {
-          const active = category === tab.id;
-          const accent = TAB_COLOR[tab.id];
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setQuery(tab.id, sort)}
-              className="pressable home-tab-pill"
-              style={{
-                border: active ? `2px solid ${accent}` : "1px solid var(--border)",
-                background: active ? `${accent}26` : "var(--bg-elevated)",
-                color: active ? accent : "var(--text-2)",
-                borderRadius: 999,
-                padding: "7px 10px",
-                fontSize: 11,
-                fontWeight: 700,
-                whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
-                cursor: "pointer",
-              }}
-            >
-              {tab.label}
-            </button>
-          );
-        })}
-        <Link
-          href="/blog"
-          className="pressable"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            border: "1px solid #38bdf8",
-            background: "rgba(56,189,248,0.14)",
-            color: "#38bdf8",
-            borderRadius: 999,
-            padding: "7px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-mono)",
-            cursor: "pointer",
-            textDecoration: "none",
-          }}
-        >
-          Blog
-        </Link>
-        <Link
-          href="/send"
-          className="pressable"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            border: "1px solid #f472b6",
-            background: "rgba(244,114,182,0.14)",
-            color: "#f472b6",
-            borderRadius: 999,
-            padding: "7px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-mono)",
-            cursor: "pointer",
-            textDecoration: "none",
-          }}
-        >
-          Fun Sends
-        </Link>
-      </div>
-
-      <div className="home-header-tabs home-header-tabs-mobile">
-        <div ref={mobileToggleRef} style={{ position: "relative" }}>
-          <button
-            type="button"
-            onClick={() => setMobileCategoryOpen((v) => !v)}
-            className="pressable home-tab-pill"
+      <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
+      {!isCompactHeader ? (
+        <div className="home-header-tabs home-header-tabs-desktop" style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+          {CATEGORY_TABS.map((tab) => {
+            const active = category === tab.id;
+            const accent = TAB_COLOR[tab.id];
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setQuery(tab.id, sort)}
+                className="pressable home-tab-pill"
+                style={{
+                  border: active ? `2px solid ${accent}` : "1px solid var(--border)",
+                  background: active ? `${accent}26` : "var(--bg-elevated)",
+                  color: active ? accent : "var(--text-2)",
+                  borderRadius: 999,
+                  padding: "7px 10px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  whiteSpace: "nowrap",
+                  fontFamily: "var(--font-mono)",
+                  cursor: "pointer",
+                }}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+          <Link
+            href="/blog"
+            className="pressable"
             style={{
-              border: `2px solid ${TAB_COLOR[category]}`,
-              background: `${TAB_COLOR[category]}26`,
-              color: TAB_COLOR[category],
+              display: "inline-flex",
+              alignItems: "center",
+              border: "1px solid #38bdf8",
+              background: "rgba(56,189,248,0.14)",
+              color: "#38bdf8",
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
@@ -157,105 +123,162 @@ export default function HomeHeaderControls() {
               whiteSpace: "nowrap",
               fontFamily: "var(--font-mono)",
               cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
+              textDecoration: "none",
             }}
           >
-            {selectedCategoryLabel}
-            <span aria-hidden style={{ fontSize: 10, opacity: 0.9 }}>{mobileCategoryOpen ? "▲" : "▼"}</span>
-          </button>
-          {mobileCategoryOpen && (
-            <div
+            Blog
+          </Link>
+          <Link
+            href="/send"
+            className="pressable"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              border: "1px solid #f472b6",
+              background: "rgba(244,114,182,0.14)",
+              color: "#f472b6",
+              borderRadius: 999,
+              padding: "7px 10px",
+              fontSize: 11,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-mono)",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Fun Sends
+          </Link>
+        </div>
+      ) : (
+        <div
+          className="home-header-tabs home-header-tabs-mobile"
+          style={{
+            display: "flex",
+            gap: 4,
+            flexWrap: "nowrap",
+            alignItems: "center",
+            maxWidth: "calc(100% - 175px)",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <div ref={mobileToggleRef} style={{ position: "relative" }}>
+            <button
+              type="button"
+              onClick={() => setMobileCategoryOpen((v) => !v)}
+              className="pressable home-tab-pill"
               style={{
-                position: "absolute",
-                top: "calc(100% + 6px)",
-                left: 0,
-                zIndex: 30,
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
-                minWidth: 156,
-                background: "var(--bg-card)",
-                border: "1px solid var(--border-md)",
-                borderRadius: 12,
-                padding: 6,
-                boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                border: `2px solid ${TAB_COLOR[category]}`,
+                background: `${TAB_COLOR[category]}26`,
+                color: TAB_COLOR[category],
+                borderRadius: 999,
+                padding: "6px 8px",
+                fontSize: 10,
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                fontFamily: "var(--font-mono)",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
-              {CATEGORY_TABS.map((tab) => {
-                const active = category === tab.id;
-                const accent = TAB_COLOR[tab.id];
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    onClick={() => setQuery(tab.id, sort)}
-                    className="pressable"
-                    style={{
-                      textAlign: "left",
-                      border: active ? `1px solid ${accent}` : "1px solid var(--border)",
-                      background: active ? `${accent}22` : "var(--bg-elevated)",
-                      color: active ? accent : "var(--text-2)",
-                      borderRadius: 9,
-                      padding: "7px 10px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      whiteSpace: "nowrap",
-                      fontFamily: "var(--font-mono)",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
+              {selectedCategoryLabel}
+              <span aria-hidden style={{ fontSize: 10, opacity: 0.9 }}>{mobileCategoryOpen ? "▲" : "▼"}</span>
+            </button>
+            {mobileCategoryOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 6px)",
+                  left: 0,
+                  zIndex: 30,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  minWidth: 156,
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-md)",
+                  borderRadius: 12,
+                  padding: 6,
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                }}
+              >
+                {CATEGORY_TABS.map((tab) => {
+                  const active = category === tab.id;
+                  const accent = TAB_COLOR[tab.id];
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setQuery(tab.id, sort)}
+                      className="pressable"
+                      style={{
+                        textAlign: "left",
+                        border: active ? `1px solid ${accent}` : "1px solid var(--border)",
+                        background: active ? `${accent}22` : "var(--bg-elevated)",
+                        color: active ? accent : "var(--text-2)",
+                        borderRadius: 9,
+                        padding: "7px 10px",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        whiteSpace: "nowrap",
+                        fontFamily: "var(--font-mono)",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+          <Link
+            href="/blog"
+            className="pressable"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              border: "1px solid #38bdf8",
+              background: "rgba(56,189,248,0.14)",
+              color: "#38bdf8",
+              borderRadius: 999,
+              padding: "6px 8px",
+              fontSize: 10,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-mono)",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Blog
+          </Link>
+          <Link
+            href="/send"
+            className="pressable"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              border: "1px solid #f472b6",
+              background: "rgba(244,114,182,0.14)",
+              color: "#f472b6",
+              borderRadius: 999,
+              padding: "6px 8px",
+              fontSize: 10,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-mono)",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Fun Sends
+          </Link>
         </div>
-        <Link
-          href="/blog"
-          className="pressable"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            border: "1px solid #38bdf8",
-            background: "rgba(56,189,248,0.14)",
-            color: "#38bdf8",
-            borderRadius: 999,
-            padding: "7px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-mono)",
-            cursor: "pointer",
-            textDecoration: "none",
-          }}
-        >
-          Blog
-        </Link>
-        <Link
-          href="/send"
-          className="pressable"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            border: "1px solid #f472b6",
-            background: "rgba(244,114,182,0.14)",
-            color: "#f472b6",
-            borderRadius: 999,
-            padding: "7px 10px",
-            fontSize: 11,
-            fontWeight: 700,
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-mono)",
-            cursor: "pointer",
-            textDecoration: "none",
-          }}
-        >
-          Fun Sends
-        </Link>
-      </div>
+      )}
 
       <div className="home-header-sort" style={{ display: "flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden", flexShrink: 0, marginLeft: "auto" }}>
         <button

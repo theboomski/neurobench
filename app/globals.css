@@ -114,36 +114,6 @@ body::before {
   }
 }
 
-/*
- * Home header — which category row is visible.
- * Fundamentals: do not rely on Tailwind `hidden`/`xl:flex` here (utilities may not apply as expected).
- * Mobile-first: compact row (dropdown) by default; from 1280px show pill row.
- */
-#zazaza-site-nav .home-header-tabs-desktop {
-  display: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-#zazaza-site-nav .home-header-tabs-mobile {
-  display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 6px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-@media (min-width: 1280px) {
-  #zazaza-site-nav .home-header-tabs-desktop {
-    display: flex !important;
-  }
-  #zazaza-site-nav .home-header-tabs-mobile {
-    display: none !important;
-  }
-}
-
 @media (max-width: 900px) {
   #zazaza-site-nav .home-header-controls {
     width: 100%;
