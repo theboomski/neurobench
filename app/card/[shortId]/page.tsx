@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase";
+import GoBackButton from "./GoBackButton";
 
 type Props = { params: Promise<{ shortId: string }> };
 
@@ -71,26 +71,7 @@ export default async function SharedCardPage({ params }: Props) {
             background: "#141414",
           }}
         />
-        <Link
-          href="/send"
-          className="pressable"
-          style={{
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 999,
-            border: "1px solid #f472b6",
-            color: "#1a0510",
-            background: "#f472b6",
-            fontWeight: 900,
-            padding: "12px 20px",
-            fontSize: 14,
-            fontFamily: "var(--font-mono)",
-          }}
-        >
-          Make one for your friend →
-        </Link>
+        <GoBackButton />
       </section>
       <div style={{ paddingBottom: 32 }}>
         <div className="ad-slot ad-banner">Advertisement</div>

@@ -173,6 +173,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   const [shareUrl, setShareUrl] = useState("");
   const [shareMessage, setShareMessage] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [shareProgress, setShareProgress] = useState(0);
   const [error, setError] = useState("");
   const [faceRect, setFaceRect] = useState(() => initialTemplates[0]?.faceDefault ?? FUN_SEND_DEFAULT_FACE_RECT);
   const [nameRect, setNameRect] = useState(() => ({ ...DEFAULT_NAME_RECT }));
@@ -379,6 +380,15 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     [faceObjectUrl],
   );
 
+  useEffect(() => {
+    if (!isSaving) return;
+    setShareProgress((prev) => (prev > 0 ? prev : 10));
+    const timer = window.setInterval(() => {
+      setShareProgress((prev) => Math.min(prev + 3, 94));
+    }, 220);
+    return () => window.clearInterval(timer);
+  }, [isSaving]);
+
   const onFaceChange = (file: File | null) => {
     if (faceObjectUrl) URL.revokeObjectURL(faceObjectUrl);
     if (!file) {
@@ -392,11 +402,13 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   };
 
   const onCreateShare = async () => {
-    if (!templateAvailable) return;
+    if (!templateAvailable || shareUrl) return;
     setIsSaving(true);
+    setShareProgress(10);
     setError("");
     try {
       const { blob } = await renderComposite(true);
+      setShareProgress((prev) => Math.max(prev, 32));
       const sb = getSupabaseBrowser();
       if (!sb) throw new Error("Supabase browser client is not configured.");
 
@@ -404,22 +416,21 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       const path = `${shortId}.png`;
       const upload = await sb.storage.from("cards").upload(path, blob, { contentType: "image/png", upsert: true });
       if (upload.error) throw new Error(upload.error.message);
+      setShareProgress((prev) => Math.max(prev, 72));
 
       const publicUrl = sb.storage.from("cards").getPublicUrl(path).data.publicUrl;
       const row = await sb.from("shared_cards").insert({ id: shortId, image_url: publicUrl });
-      if (row.error) {
-        // TEMP: remove after debugging — full Supabase insert response / error object
-        console.error("[Fun Send] shared_cards insert row.error:", row.error);
-        console.error("[Fun Send] shared_cards insert full response object:", row);
-        throw new Error(row.error.message);
-      }
+      if (row.error) throw new Error(row.error.message);
+      setShareProgress((prev) => Math.max(prev, 90));
 
       const url = `https://zazaza.app/card/${shortId}`;
       const message = `I made this for you 😂 ${url}`;
       setShareUrl(url);
       setShareMessage(message);
+      setShareProgress(100);
     } catch (e) {
       setError(readErrorMessage(e));
+      setShareProgress(0);
     } finally {
       setIsSaving(false);
     }
@@ -437,7 +448,8 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   const onNativeShare = async () => {
     if (!shareUrl || !navigator.share) return;
     try {
-      await navigator.share({ title: "Fun Send", text: shareMessage, url: shareUrl });
+      // Keep URL in `text` only to avoid duplicate messages on some share targets.
+      await navigator.share({ title: "Fun Send", text: shareMessage });
     } catch {
       // no-op
     }
@@ -904,13 +916,13 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
             </div>
           ))}
 
-          {stepCard("STEP 4", "Save & share", (
+          {stepCard("STEP 4", "Share", (
             <>
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginBottom: 12 }}>
                 <button
                   type="button"
                   onClick={() => void onCreateShare()}
-                  disabled={isSaving}
+                  disabled={isSaving || Boolean(shareUrl)}
                   className="pressable"
                   style={{
                     border: "none",
@@ -919,14 +931,40 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                     background: ACCENT,
                     color: "#1a0510",
                     fontWeight: 900,
-                    cursor: isSaving ? "default" : "pointer",
+                    cursor: isSaving || shareUrl ? "default" : "pointer",
                     fontFamily: "var(--font-mono)",
                     fontSize: 12,
                     letterSpacing: "0.04em",
+                    opacity: shareUrl ? 0.8 : 1,
                   }}
                 >
-                  {isSaving ? "SAVING..." : "CREATE & SHARE"}
+                  {isSaving ? "Almost Ready..." : shareUrl ? "Done!" : "Share"}
                 </button>
+                {isSaving && (
+                  <div
+                    aria-label={`Upload progress ${shareProgress}%`}
+                    style={{
+                      width: "min(56vw, 220px)",
+                      height: 10,
+                      borderRadius: 999,
+                      overflow: "hidden",
+                      border: "1px solid var(--border-md)",
+                      background: "var(--bg-elevated)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${shareProgress}%`,
+                        height: "100%",
+                        background: ACCENT,
+                        transition: "width 160ms linear",
+                      }}
+                    />
+                  </div>
+                )}
+                {isSaving && (
+                  <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
+                )}
                 {shareUrl && (
                   <Link href={shareUrl.replace("https://zazaza.app", "")} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
                     Open card ↗
