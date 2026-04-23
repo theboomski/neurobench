@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
@@ -165,7 +165,7 @@ function UploadIcon({ size = 18 }: { size?: number }) {
 export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
-  const shouldRestoreDraft = searchParams.get("resume") === "1";
+  const resumeQueryKey = searchParams.toString();
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -230,7 +230,10 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   }, []);
 
   useEffect(() => {
-    if (!shouldRestoreDraft) return;
+    const resume =
+      (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("resume") === "1") ||
+      searchParams.get("resume") === "1";
+    if (!resume) return;
     try {
       const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
       if (!raw) return;
@@ -240,11 +243,27 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     } catch {
       // ignore invalid localStorage payload
     }
-  }, [shouldRestoreDraft]);
+  }, [resumeQueryKey, searchParams]);
+
+  /** Avoid showing Done! / stale share UI unless returning from Open card (?resume=1). Uses `location` so this runs before paint even if `useSearchParams` lags behind the real URL on static routes. */
+  useLayoutEffect(() => {
+    const resume =
+      (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("resume") === "1") ||
+      searchParams.get("resume") === "1";
+    if (resume) return;
+    setShareUrl("");
+    setShareMessage("");
+    setShareProgress(0);
+    try {
+      window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
+    } catch {
+      // ignore
+    }
+  }, [resumeQueryKey, searchParams]);
 
   useEffect(() => {
     try {
-      if (!shareUrl && !shareMessage) {
+      if (!shareUrl) {
         window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
         return;
       }

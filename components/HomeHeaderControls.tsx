@@ -28,7 +28,6 @@ export default function HomeHeaderControls() {
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
   const mobileToggleRef = useRef<HTMLDivElement | null>(null);
   const isHome = pathname === "/";
-
   const categoryRaw = sp.get("category");
   const sortRaw = sp.get("sort");
   const category: HomeTypeFilter =
@@ -70,7 +69,10 @@ export default function HomeHeaderControls() {
   return (
     <>
     <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
-      <div className="home-header-tabs home-header-tabs-desktop" style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+      <div
+        className="home-header-tabs home-header-tabs-desktop"
+        style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}
+      >
         {CATEGORY_TABS.map((tab) => {
           const active = category === tab.id;
           const accent = TAB_COLOR[tab.id];
@@ -141,7 +143,17 @@ export default function HomeHeaderControls() {
         </Link>
       </div>
 
-      <div className="home-header-tabs home-header-tabs-mobile" style={{ display: "none", gap: 6, flexWrap: "nowrap", alignItems: "center", overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+      <div
+        className="home-header-tabs home-header-tabs-mobile"
+        style={{
+          display: "flex",
+          gap: 6,
+          flexWrap: "nowrap",
+          alignItems: "center",
+          overflowX: "auto",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
         <div ref={mobileToggleRef} style={{ position: "relative" }}>
           <button
             type="button"
@@ -299,17 +311,29 @@ export default function HomeHeaderControls() {
       </div>
     </div>
     <style jsx>{`
+      @media (max-width: 1024px) {
+        .home-header-tabs-desktop {
+          display: none !important;
+        }
+        .home-header-tabs-mobile {
+          display: flex !important;
+        }
+      }
+      @media (min-width: 1025px) {
+        .home-header-tabs-desktop {
+          display: flex !important;
+        }
+        .home-header-tabs-mobile {
+          display: none !important;
+        }
+      }
       @media (max-width: 900px) {
         .home-header-controls {
           width: 100%;
           justify-content: space-between;
           gap: 8px !important;
         }
-        .home-header-tabs-desktop {
-          display: none !important;
-        }
         .home-header-tabs-mobile {
-          display: flex !important;
           max-width: calc(100% - 175px);
           gap: 4px !important;
           align-items: center;

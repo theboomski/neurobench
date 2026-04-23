@@ -1,5 +1,7 @@
 import { Suspense } from "react";
 import SendPageClient from "./SendPageClient";
+
+export const dynamic = "force-dynamic";
 import { loadFunSendCategoryTemplatesFromDisk } from "@/lib/loadFunSendCategoryTemplates";
 import { FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 
