@@ -27,8 +27,7 @@ export default function HomeHeaderControls() {
   const sp = useSearchParams();
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
   const mobileToggleRef = useRef<HTMLDivElement | null>(null);
-
-  if (pathname !== "/") return null;
+  const isHome = pathname === "/";
 
   const categoryRaw = sp.get("category");
   const sortRaw = sp.get("sort");
@@ -50,6 +49,8 @@ export default function HomeHeaderControls() {
   useEffect(() => {
     setMobileCategoryOpen(false);
   }, [category, sort]);
+
+  if (!isHome) return null;
 
   const setQuery = (nextCategory: HomeTypeFilter, nextSort: HomeSort) => {
     const query = new URLSearchParams();
