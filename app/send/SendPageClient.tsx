@@ -292,7 +292,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
           0.95,
         );
       });
-      const preview = forUpload ? URL.createObjectURL(blob) : canvas.toDataURL("image/png");
+      const preview = forUpload ? "" : canvas.toDataURL("image/png");
       return { blob, preview };
     },
     [currentTemplate, displayName, faceObjectUrl, faceRect, nameRect],
@@ -372,12 +372,12 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     };
   }, [templateAvailable, renderComposite]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (faceObjectUrl) URL.revokeObjectURL(faceObjectUrl);
-      if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
-    };
-  }, [faceObjectUrl, previewUrl]);
+    },
+    [faceObjectUrl],
+  );
 
   const onFaceChange = (file: File | null) => {
     if (faceObjectUrl) URL.revokeObjectURL(faceObjectUrl);
