@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
@@ -164,8 +164,10 @@ function UploadIcon({ size = 18 }: { size?: number }) {
 
 export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const shouldRestoreDraft = searchParams.get("resume") === "1";
+  /** Re-sync draft whenever the /send URL (path + query) changes — same instance can see new `searchParams` after client navigation. */
+  const sendUrlKey = `${pathname}?${searchParams.toString()}`;
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -229,8 +231,19 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     document.head.appendChild(link);
   }, []);
 
+  /**
+   * Fun Send draft model (keep this simple):
+   * - `shareUrl` in React is the only driver for the primary button ("Share" vs "Done!") and post-share UI.
+   * - localStorage is only a handoff for "Open card → Go back" (`/send?resume=1`). It must not drive UI on plain `/send`.
+   * - We read `window.location` (not only `useSearchParams`) so we match the real address bar.
+   * - We write localStorage only inside `onCreateShare` after a successful upload — no separate persist effect (avoids effect ordering bugs).
+   */
   useLayoutEffect(() => {
-    if (shouldRestoreDraft) {
+    if (typeof window === "undefined") return;
+    if (pathname !== "/send") return;
+
+    const resume = new URLSearchParams(window.location.search).get("resume") === "1";
+    if (resume) {
       try {
         const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
         if (!raw) {
@@ -239,9 +252,10 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
           setShareProgress(0);
           return;
         }
-        const parsed = JSON.parse(raw) as { shareUrl?: string; shareMessage?: string };
-        setShareUrl(parsed.shareUrl ?? "");
-        setShareMessage(parsed.shareMessage ?? "");
+        const parsed = JSON.parse(raw) as { shareUrl?: unknown; shareMessage?: unknown };
+        const url = typeof parsed.shareUrl === "string" ? parsed.shareUrl : "";
+        setShareUrl(url);
+        setShareMessage(typeof parsed.shareMessage === "string" ? parsed.shareMessage : "");
         setShareProgress(0);
       } catch {
         setShareUrl("");
@@ -251,26 +265,42 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       return;
     }
 
-    // Plain /send should always start fresh.
     setShareUrl("");
     setShareMessage("");
     setShareProgress(0);
     try {
       window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
     } catch {
-      // localStorage unavailable (private mode, etc.)
+      // ignore
     }
-  }, [shouldRestoreDraft]);
+  }, [pathname, sendUrlKey]);
 
+  /** Back/forward cache can restore this page with old React state; align with URL + draft rules. */
   useEffect(() => {
-    try {
-      if (!shareUrl) {
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (!e.persisted || typeof window === "undefined") return;
+      if (pathname !== "/send") return;
+      if (new URLSearchParams(window.location.search).get("resume") === "1") return;
+      setShareUrl("");
+      setShareMessage("");
+      setShareProgress(0);
+      try {
         window.localStorage.removeItem(FUN_SEND_SHARE_DRAFT_KEY);
-        return;
+      } catch {
+        // ignore
       }
+    };
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, [pathname]);
+
+  /** Keep draft JSON in sync when the user edits the share message after a successful share (no `removeItem` here). */
+  useEffect(() => {
+    if (!shareUrl) return;
+    try {
       window.localStorage.setItem(FUN_SEND_SHARE_DRAFT_KEY, JSON.stringify({ shareUrl, shareMessage }));
     } catch {
-      // localStorage unavailable (private mode, etc.)
+      // ignore
     }
   }, [shareUrl, shareMessage]);
 
@@ -428,7 +458,6 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     },
     [faceObjectUrl],
   );
-
   useEffect(() => {
     if (!isSaving) return;
     setShareProgress((prev) => (prev > 0 ? prev : 10));
@@ -477,6 +506,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       setShareUrl(url);
       setShareMessage(message);
       setShareProgress(100);
+      try {
+        window.localStorage.setItem(FUN_SEND_SHARE_DRAFT_KEY, JSON.stringify({ shareUrl: url, shareMessage: message }));
+      } catch {
+        // private mode / quota — card "go back" resume may not work
+      }
     } catch (e) {
       setError(readErrorMessage(e));
       setShareProgress(0);
@@ -974,11 +1008,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                   disabled={isSaving || Boolean(shareUrl)}
                   className="pressable"
                   style={{
-                    border: shareUrl ? "1px solid var(--border-md)" : "none",
+                    border: "none",
                     borderRadius: 10,
                     padding: "12px 18px",
-                    background: shareUrl ? "var(--bg-elevated)" : ACCENT,
-                    color: shareUrl ? "var(--text-1)" : "#1a0510",
+                    background: ACCENT,
+                    color: "#1a0510",
                     fontWeight: 900,
                     cursor: isSaving || shareUrl ? "default" : "pointer",
                     fontFamily: "var(--font-mono)",
@@ -1013,6 +1047,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                 )}
                 {isSaving && (
                   <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
+                )}
+                {shareUrl && (
+                  <Link href={`${shareUrl.replace("https://zazaza.app", "")}?from=send`} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
+                    Open card ↗
+                  </Link>
                 )}
               </div>
 
@@ -1062,13 +1101,13 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                         onClick={() => void onNativeShare()}
                         className="pressable"
                         style={{
-                          border: "none",
-                          background: ACCENT,
-                          color: "#1a0510",
+                          border: "1px solid var(--border-md)",
+                          background: "var(--bg-elevated)",
+                          color: "var(--text-1)",
                           borderRadius: 10,
                           padding: "10px 14px",
                           fontSize: 12,
-                          fontWeight: 900,
+                          fontWeight: 700,
                           cursor: "pointer",
                           fontFamily: "var(--font-mono)",
                         }}
