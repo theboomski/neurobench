@@ -3,7 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase";
 
-type Props = { params: Promise<{ shortId: string }> };
+type Props = {
+  params: Promise<{ shortId: string }>;
+  searchParams: Promise<{ from?: string }>;
+};
 
 async function getSharedCard(shortId: string): Promise<{ id: string; image_url: string } | null> {
   const sb = getSupabaseServer();
@@ -45,8 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function SharedCardPage({ params }: Props) {
+export default async function SharedCardPage({ params, searchParams }: Props) {
   const { shortId } = await params;
+  const { from } = await searchParams;
+  const isSenderView = from === "send";
   const card = await getSharedCard(shortId);
   if (!card) notFound();
 
@@ -71,26 +76,72 @@ export default async function SharedCardPage({ params }: Props) {
             background: "#141414",
           }}
         />
-        <Link
-          href="/send"
-          className="pressable"
-          style={{
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 999,
-            border: "1px solid #f472b6",
-            color: "#1a0510",
-            background: "#f472b6",
-            fontWeight: 900,
-            padding: "12px 20px",
-            fontSize: 14,
-            fontFamily: "var(--font-mono)",
-          }}
-        >
-          Make one for your friend →
-        </Link>
+        {isSenderView ? (
+          <Link
+            href="/send"
+            className="pressable"
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 999,
+              border: "1px solid #f472b6",
+              color: "#1a0510",
+              background: "#f472b6",
+              fontWeight: 900,
+              padding: "12px 20px",
+              fontSize: 14,
+              fontFamily: "var(--font-mono)",
+            }}
+          >
+            Go Back
+          </Link>
+        ) : (
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center" }}>
+            <a
+              href={card.image_url}
+              download={`zazaza-fun-send-${shortId}.png`}
+              className="pressable"
+              style={{
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 999,
+                border: "1px solid #f472b6",
+                color: "#1a0510",
+                background: "#f472b6",
+                fontWeight: 900,
+                padding: "12px 20px",
+                fontSize: 14,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              Download
+            </a>
+            <Link
+              href="/send"
+              className="pressable"
+              style={{
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 999,
+                border: "1px solid var(--border-md)",
+                color: "var(--text-1)",
+                background: "var(--bg-elevated)",
+                fontWeight: 900,
+                padding: "12px 20px",
+                fontSize: 14,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              Make one for a friend
+            </Link>
+          </div>
+        )}
       </section>
       <div style={{ paddingBottom: 32 }}>
         <div className="ad-slot ad-banner">Advertisement</div>
