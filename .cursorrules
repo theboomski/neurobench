@@ -1,0 +1,68 @@
+# ZAZAZA.app Development Rules
+
+## Project Structure
+Games are organized by category folders under app/
+- app/brain-age/ → Brain Tests (type: "brain")
+- app/office-iq/ → Games (type: "game")
+- app/korean-tv/ → Games (type: "game")
+- app/dark-personality/ → Personality (type: "personality")
+- app/relationship/ → Personality (type: "personality")
+- app/money/ → Personality (type: "personality")
+- app/focus-test/ → Brain Tests (type: "brain")
+- app/word-iq/ → Brain Tests (type: "brain")
+
+## Adding a New Game
+1. Create game file at app/[category]/[game-id]/page.tsx
+2. Add entry to content/games.json with ALL these fields:
+   - id, category, type, title, subtitle, description
+   - hasLeaderboard: true/false
+3. category must match the folder name exactly
+4. type must be: "brain", "game", or "personality"
+
+## Adding a New Category
+If a new category is needed (e.g. "ugc", "send-fun"):
+1. Create folder under app/[new-category]/
+2. Add category metadata to games.json categories array
+3. Add type mapping in app/page.tsx filter logic
+4. Use a new color accent (do not reuse existing colors)
+
+## Existing Patterns - Always Follow
+- Use existing hooks: getRank, saveHighScore, generateResultCard
+- Use InterstitialAd component for ad placement
+- Use trackPlay(gameId) when game starts (fire and forget)
+- Use LeaderboardSection component if hasLeaderboard: true
+- Match existing Tailwind styling and component structure
+- Never invent new patterns — always check existing games first
+
+## Tech Stack
+- Next.js 16 App Router, TypeScript, Tailwind CSS
+- Supabase for leaderboard and play tracking (lib/supabase.ts, lib/tracking.ts)
+- Deployed on Vercel via GitHub
+- Single source of truth for games: content/games.json
+
+## Fun Sends (`/send`)
+- Card art lives in `public/cards/<category>/` (e.g. `i-love-you/`, `birthday/`, `roast/`, `etc/`). Images are auto-discovered at build time.
+- Optional per-file labels/face defaults: `FUN_SEND_CARD_OVERRIDES` in `lib/funSendTemplates.ts` (keys: `category/filename`).
+- Loader: `lib/loadFunSendCategoryTemplates.ts`
+
+## Key Files
+- content/games.json → all game metadata
+- app/page.tsx → main page only
+- lib/tracking.ts → trackPlay, saveToLeaderboard, getLeaderboard
+- lib/supabase.ts → Supabase client
+- components/LeaderboardSection.tsx → reusable leaderboard UI
+
+## Never Touch Without Good Reason
+- app/layout.tsx
+- lib/supabase.ts
+- Any game page when working on main page or vice versa
+
+## Score Direction
+- Higher score = better (default)
+- If lower = better (e.g. time-based), store as (maxTime - timeTaken)
+  so getRank logic stays consistent
+
+## Leaderboard
+- hasLeaderboard: true → show LeaderboardSection on result screen
+- hasLeaderboard: false → personality/type tests, no leaderboard
+- trackPlay() fires on game start, never blocks UI

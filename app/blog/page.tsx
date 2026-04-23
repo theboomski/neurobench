@@ -48,21 +48,11 @@ export default function BlogPage() {
 
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-      <section style={{ padding: "48px 0 40px", textAlign: "center" }}>
-        <div style={{ display: "inline-flex", background: "#00FF9410", border: "1px solid #00FF9425", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
-          <span style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>THE SCIENCE BLOG</span>
-        </div>
-        <h1 style={{ fontSize: "clamp(28px,5vw,48px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.1, marginBottom: 14 }}>
-          The Science Behind<br />
-          <span style={{ background: "linear-gradient(135deg, #00FF94 0%, #00B4DB 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Every Test
-          </span>
-        </h1>
-        <p style={{ fontSize: "clamp(13px,1.8vw,16px)", color: "var(--text-2)", maxWidth: 480, margin: "0 auto", lineHeight: 1.65 }}>
-          Deep dives into cognitive science, personality psychology, and behavioral economics. Evidence-based. No fluff.
-        </p>
-      </section>
+      <div style={{ padding: "16px 0 0" }}>
+        <div className="ad-slot ad-banner">Advertisement</div>
+      </div>
 
+      <div style={{ paddingTop: 16 }}>
       {BLOG_CATEGORIES.map(cat => {
         const catPosts = posts.filter((p: typeof posts[0]) => p.blogCategory === cat.key);
         if (catPosts.length === 0) return null;
@@ -107,6 +97,11 @@ export default function BlogPage() {
           </section>
         );
       })}
+      </div>
+
+      <div style={{ paddingBottom: 32 }}>
+        <div className="ad-slot ad-banner">Advertisement</div>
+      </div>
     </div>
   );
 }

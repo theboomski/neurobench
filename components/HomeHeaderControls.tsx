@@ -97,6 +97,27 @@ export default function HomeHeaderControls() {
         >
           Blog
         </Link>
+        <Link
+          href="/send"
+          className="pressable"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            border: "1px solid #f472b6",
+            background: "rgba(244,114,182,0.14)",
+            color: "#f472b6",
+            borderRadius: 999,
+            padding: "7px 10px",
+            fontSize: 11,
+            fontWeight: 700,
+            whiteSpace: "nowrap",
+            fontFamily: "var(--font-mono)",
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+        >
+          Fun Sends
+        </Link>
       </div>
 
       <div className="home-header-sort" style={{ display: "flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden", flexShrink: 0, marginLeft: "auto" }}>
@@ -147,7 +168,7 @@ export default function HomeHeaderControls() {
           gap: 8px !important;
         }
         .home-header-tabs {
-          max-width: calc(100% - 145px);
+          max-width: calc(100% - 175px);
           gap: 4px !important;
         }
         .home-tab-pill {
