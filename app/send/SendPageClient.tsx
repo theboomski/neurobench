@@ -7,7 +7,11 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
-export type SendPageClientProps = { templatesByCategory: Record<FunSendCategory, FunSendTemplate[]> };
+export type SendPageClientProps = {
+  templatesByCategory: Record<FunSendCategory, FunSendTemplate[]>;
+  /** From server URL: only then may we rehydrate share draft from localStorage. */
+  resumeDraft: boolean;
+};
 
 function firstCategoryWithTemplatesList(by: Record<FunSendCategory, FunSendTemplate[]>): FunSendCategory {
   for (const { id } of FUN_SEND_TABS) {
@@ -162,10 +166,22 @@ function UploadIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-export default function SendPageClient({ templatesByCategory }: SendPageClientProps) {
+function shouldResumeFunSendDraft(resumeDraft: boolean, searchParams: ReturnType<typeof useSearchParams>): boolean {
+  if (resumeDraft) return true;
+  if (typeof window !== "undefined") {
+    try {
+      if (new URLSearchParams(window.location.search).get("resume") === "1") return true;
+    } catch {
+      // ignore
+    }
+  }
+  return searchParams.get("resume") === "1";
+}
+
+export default function SendPageClient({ templatesByCategory, resumeDraft }: SendPageClientProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
-  const resumeQueryKey = searchParams.toString();
+  const resumeQueryKey = `${resumeDraft ? 1 : 0}|${searchParams.toString()}`;
   const initialCategory = firstCategoryWithTemplatesList(templatesByCategory);
   const initialTemplates = templatesByCategory[initialCategory] ?? [];
   const [category, setCategory] = useState<FunSendCategory>(() => initialCategory);
@@ -229,28 +245,32 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     document.head.appendChild(link);
   }, []);
 
-  useEffect(() => {
-    const resume =
-      (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("resume") === "1") ||
-      searchParams.get("resume") === "1";
-    if (!resume) return;
-    try {
-      const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { shareUrl?: string; shareMessage?: string };
-      if (parsed.shareUrl) setShareUrl(parsed.shareUrl);
-      if (parsed.shareMessage) setShareMessage(parsed.shareMessage);
-    } catch {
-      // ignore invalid localStorage payload
-    }
-  }, [resumeQueryKey, searchParams]);
-
-  /** Avoid showing Done! / stale share UI unless returning from Open card (?resume=1). Uses `location` so this runs before paint even if `useSearchParams` lags behind the real URL on static routes. */
+  /**
+   * Single layout pass: either restore draft from LS (only when URL says resume=1) or clear share UI + LS.
+   * Avoids races between separate restore/clear effects that caused intermittent "Done!" on /send.
+   */
   useLayoutEffect(() => {
-    const resume =
-      (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("resume") === "1") ||
-      searchParams.get("resume") === "1";
-    if (resume) return;
+    const resume = shouldResumeFunSendDraft(resumeDraft, searchParams);
+    if (resume) {
+      try {
+        const raw = window.localStorage.getItem(FUN_SEND_SHARE_DRAFT_KEY);
+        if (!raw) {
+          setShareUrl("");
+          setShareMessage("");
+          setShareProgress(0);
+          return;
+        }
+        const parsed = JSON.parse(raw) as { shareUrl?: unknown; shareMessage?: unknown };
+        setShareUrl(typeof parsed.shareUrl === "string" ? parsed.shareUrl : "");
+        setShareMessage(typeof parsed.shareMessage === "string" ? parsed.shareMessage : "");
+        setShareProgress(0);
+      } catch {
+        setShareUrl("");
+        setShareMessage("");
+        setShareProgress(0);
+      }
+      return;
+    }
     setShareUrl("");
     setShareMessage("");
     setShareProgress(0);
@@ -259,7 +279,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     } catch {
       // ignore
     }
-  }, [resumeQueryKey, searchParams]);
+  }, [resumeDraft, resumeQueryKey, searchParams]);
 
   useEffect(() => {
     try {

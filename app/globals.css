@@ -113,3 +113,47 @@ body::before {
     aspect-ratio: 0.9;
   }
 }
+
+/* Site nav — home category row: desktop pills vs mobile dropdown.
+   Global rules (not styled-jsx): scoped styles were not reliably applying, so mobile saw no dropdown. */
+@media (max-width: 1024px) {
+  nav .home-header-tabs-desktop {
+    display: none !important;
+  }
+  nav .home-header-tabs-mobile {
+    display: flex !important;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+@media (min-width: 1025px) {
+  nav .home-header-tabs-desktop {
+    display: flex !important;
+  }
+  nav .home-header-tabs-mobile {
+    display: none !important;
+  }
+}
+@media (max-width: 900px) {
+  nav .home-header-controls {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px !important;
+  }
+  nav .home-header-tabs-mobile {
+    max-width: calc(100% - 175px);
+    gap: 4px !important;
+  }
+  nav .home-header-tabs-mobile .home-tab-pill {
+    padding: 6px 8px !important;
+    font-size: 10px !important;
+  }
+  nav .home-header-sort {
+    margin-left: auto !important;
+  }
+}

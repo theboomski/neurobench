@@ -310,43 +310,6 @@ export default function HomeHeaderControls() {
         </button>
       </div>
     </div>
-    <style jsx>{`
-      @media (max-width: 1024px) {
-        .home-header-tabs-desktop {
-          display: none !important;
-        }
-        .home-header-tabs-mobile {
-          display: flex !important;
-        }
-      }
-      @media (min-width: 1025px) {
-        .home-header-tabs-desktop {
-          display: flex !important;
-        }
-        .home-header-tabs-mobile {
-          display: none !important;
-        }
-      }
-      @media (max-width: 900px) {
-        .home-header-controls {
-          width: 100%;
-          justify-content: space-between;
-          gap: 8px !important;
-        }
-        .home-header-tabs-mobile {
-          max-width: calc(100% - 175px);
-          gap: 4px !important;
-          align-items: center;
-        }
-        .home-tab-pill {
-          padding: 6px 8px !important;
-          font-size: 10px !important;
-        }
-        .home-header-sort {
-          margin-left: auto !important;
-        }
-      }
-    `}</style>
     </>
   );
 }
