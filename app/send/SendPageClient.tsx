@@ -40,6 +40,13 @@ const NAME_SHRINK_FACTOR = 1 / NAME_GROW_FACTOR;
 const NAME_ACCENT = "#22d3ee";
 const FUN_SEND_SHARE_DRAFT_KEY = "fun-send-share-draft";
 
+/** `/send` and `/send/` must both count as Fun Send (router/path variants). */
+function normalizeAppPathname(pathname: string): string {
+  if (!pathname) return "/";
+  const trimmed = pathname.replace(/\/+$/, "");
+  return trimmed === "" ? "/" : trimmed;
+}
+
 /** Burned into preview + upload PNG in `renderComposite`. */
 const FUN_SEND_WATERMARK_TEXT = "Make your own at Zazaza.app";
 
@@ -240,7 +247,8 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
    */
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
-    if (pathname !== "/send") return;
+    // Gate on the real URL so we never skip clear/restore when `usePathname()` lags or uses a trailing slash.
+    if (normalizeAppPathname(window.location.pathname) !== "/send") return;
 
     const resume = new URLSearchParams(window.location.search).get("resume") === "1";
     if (resume) {
@@ -279,7 +287,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
   useEffect(() => {
     const onPageShow = (e: PageTransitionEvent) => {
       if (!e.persisted || typeof window === "undefined") return;
-      if (pathname !== "/send") return;
+      if (normalizeAppPathname(window.location.pathname) !== "/send") return;
       if (new URLSearchParams(window.location.search).get("resume") === "1") return;
       setShareUrl("");
       setShareMessage("");
@@ -292,7 +300,7 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
     };
     window.addEventListener("pageshow", onPageShow);
     return () => window.removeEventListener("pageshow", onPageShow);
-  }, [pathname]);
+  }, []);
 
   /** Keep draft JSON in sync when the user edits the share message after a successful share (no `removeItem` here). */
   useEffect(() => {

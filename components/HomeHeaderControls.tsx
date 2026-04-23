@@ -37,13 +37,13 @@ export default function HomeHeaderControls() {
   const selectedCategoryLabel = CATEGORY_TABS.find((x) => x.id === category)?.label ?? "All";
 
   useEffect(() => {
-    const onDocClick = (e: MouseEvent) => {
+    const onDocPointerDown = (e: PointerEvent) => {
       if (!mobileToggleRef.current) return;
       if (mobileToggleRef.current.contains(e.target as Node)) return;
       setMobileCategoryOpen(false);
     };
-    document.addEventListener("mousedown", onDocClick);
-    return () => document.removeEventListener("mousedown", onDocClick);
+    document.addEventListener("pointerdown", onDocPointerDown);
+    return () => document.removeEventListener("pointerdown", onDocPointerDown);
   }, []);
 
   useEffect(() => {
@@ -155,15 +155,16 @@ export default function HomeHeaderControls() {
           className="home-header-tabs home-header-tabs-mobile"
           style={{
             display: "flex",
+            flex: 1,
+            minWidth: 0,
+            maxWidth: "calc(100% - 175px)",
             gap: 4,
             flexWrap: "nowrap",
             alignItems: "center",
-            maxWidth: "calc(100% - 175px)",
-            overflowX: "auto",
-            WebkitOverflowScrolling: "touch",
           }}
         >
-          <div ref={mobileToggleRef} style={{ position: "relative" }}>
+          {/* Toggle + menu must NOT sit inside an overflow-x container — it clips `position:absolute` dropdowns. */}
+          <div ref={mobileToggleRef} style={{ position: "relative", flexShrink: 0, zIndex: 50 }}>
             <button
               type="button"
               onClick={() => setMobileCategoryOpen((v) => !v)}
@@ -193,7 +194,7 @@ export default function HomeHeaderControls() {
                   position: "absolute",
                   top: "calc(100% + 6px)",
                   left: 0,
-                  zIndex: 30,
+                  zIndex: 60,
                   display: "flex",
                   flexDirection: "column",
                   gap: 4,
@@ -235,48 +236,63 @@ export default function HomeHeaderControls() {
               </div>
             )}
           </div>
-          <Link
-            href="/blog"
-            className="pressable"
+          <div
+            className="home-header-tabs-mobile-scroll"
             style={{
-              display: "inline-flex",
+              display: "flex",
+              gap: 4,
+              flex: 1,
+              minWidth: 0,
               alignItems: "center",
-              border: "1px solid #38bdf8",
-              background: "rgba(56,189,248,0.14)",
-              color: "#38bdf8",
-              borderRadius: 999,
-              padding: "6px 8px",
-              fontSize: 10,
-              fontWeight: 700,
-              whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
-              cursor: "pointer",
-              textDecoration: "none",
+              overflowX: "auto",
+              WebkitOverflowScrolling: "touch",
             }}
           >
-            Blog
-          </Link>
-          <Link
-            href="/send"
-            className="pressable"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              border: "1px solid #f472b6",
-              background: "rgba(244,114,182,0.14)",
-              color: "#f472b6",
-              borderRadius: 999,
-              padding: "6px 8px",
-              fontSize: 10,
-              fontWeight: 700,
-              whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-          >
-            Fun Sends
-          </Link>
+            <Link
+              href="/blog"
+              className="pressable"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                border: "1px solid #38bdf8",
+                background: "rgba(56,189,248,0.14)",
+                color: "#38bdf8",
+                borderRadius: 999,
+                padding: "6px 8px",
+                fontSize: 10,
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                fontFamily: "var(--font-mono)",
+                cursor: "pointer",
+                textDecoration: "none",
+                flexShrink: 0,
+              }}
+            >
+              Blog
+            </Link>
+            <Link
+              href="/send"
+              className="pressable"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                border: "1px solid #f472b6",
+                background: "rgba(244,114,182,0.14)",
+                color: "#f472b6",
+                borderRadius: 999,
+                padding: "6px 8px",
+                fontSize: 10,
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                fontFamily: "var(--font-mono)",
+                cursor: "pointer",
+                textDecoration: "none",
+                flexShrink: 0,
+              }}
+            >
+              Fun Sends
+            </Link>
+          </div>
         </div>
       )}
 
