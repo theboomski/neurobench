@@ -24,6 +24,7 @@ import RaiseOrRaise from "@/components/games/RaiseOrRaise";
 import CorporateClimber from "@/components/games/CorporateClimber";
 import RedLightGreenLight from "@/components/games/RedLightGreenLight";
 import Sudoku from "@/components/games/Sudoku";
+import MiniSpeedSudoku from "@/components/games/MiniSpeedSudoku";
 
 const games = ALL_GAMES;
 type Props = { params: Promise<{ id: string }> };
@@ -67,6 +68,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "corporate-climber":   return <CorporateClimber game={game} />;
     case "red-light-green-light": return <RedLightGreenLight game={game} />;
     case "sudoku": return <Sudoku game={game} />;
+    case "mini-speed-sudoku": return <MiniSpeedSudoku game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }

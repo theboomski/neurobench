@@ -4962,6 +4962,128 @@
       "hasLeaderboard": true
     },
     {
+      "id": "mini-speed-sudoku",
+      "title": "Mini Speed Sudoku",
+      "clinicalTitle": "Multi-Scale Sudoku Speed Protocol",
+      "shortDescription": "3 rounds: 4x4, 6x6, 9x9. Fastest total time wins.",
+      "description": "A mini speed run across three Sudoku formats. Complete 4x4, 6x6, and 9x9 back-to-back. Your leaderboard score is total completion time — lower is better.",
+      "emoji": "⏱️",
+      "accent": "#22D3EE",
+      "accentDim": "rgba(34,211,238,0.12)",
+      "category": "brain-age",
+      "categoryLabel": "Brain Age Test",
+      "tags": [
+        "mini sudoku",
+        "speed sudoku",
+        "timed sudoku",
+        "brain game",
+        "logic game"
+      ],
+      "seo": {
+        "metaTitle": "Mini Speed Sudoku — 4x4, 6x6, 9x9 Time Attack | ZAZAZA",
+        "metaDescription": "Play Mini Speed Sudoku: clear 4x4, 6x6, and 9x9 in one run. Fastest total time tops the leaderboard. Free, no signup.",
+        "keywords": [
+          "mini speed sudoku",
+          "4x4 sudoku",
+          "6x6 sudoku",
+          "9x9 sudoku",
+          "sudoku time attack"
+        ]
+      },
+      "content": {
+        "howToPlay": [
+          "Complete three rounds in order: 4x4, then 6x6, then 9x9.",
+          "Each grid follows standard Sudoku rules for its size and box layout.",
+          "Round timer runs while solving each board; your final score is total time.",
+          "Conflicts are highlighted in red so you can fix invalid entries quickly.",
+          "Lower total time ranks higher on the global leaderboard."
+        ],
+        "science": "This mode combines working-memory constraint solving with sustained processing speed across escalating problem scales. Switching from 4x4 to 6x6 to 9x9 increases search space and executive load while preserving the same core rule set.",
+        "tips": [
+          "Use 4x4 as a warm-up and bank time early.",
+          "In 6x6, scan by 2x3 boxes to spot forced placements quickly.",
+          "Before entering 9x9, reset your pace and avoid panic guessing.",
+          "Clear highlighted conflicts immediately to prevent cascading errors.",
+          "Aim for consistent clean solves over risky speed spikes."
+        ]
+      },
+      "stats": {
+        "percentiles": [
+          {
+            "ms": 420000,
+            "percentile": 99
+          },
+          {
+            "ms": 300000,
+            "percentile": 92
+          },
+          {
+            "ms": 240000,
+            "percentile": 80
+          },
+          {
+            "ms": 190000,
+            "percentile": 60
+          },
+          {
+            "ms": 150000,
+            "percentile": 40
+          },
+          {
+            "ms": 120000,
+            "percentile": 20
+          },
+          {
+            "ms": 90000,
+            "percentile": 5
+          }
+        ],
+        "ranks": [
+          {
+            "label": "S",
+            "maxMs": 120000,
+            "color": "#FFD700",
+            "title": "Sudoku Sprinter",
+            "subtitle": "Fast, clean, and locked in across all rounds.",
+            "percentileLabel": "Top 5%"
+          },
+          {
+            "label": "A",
+            "maxMs": 180000,
+            "color": "#22C55E",
+            "title": "Grid Climber",
+            "subtitle": "Strong pacing with sharp logic transitions.",
+            "percentileLabel": "Top 20%"
+          },
+          {
+            "label": "B",
+            "maxMs": 240000,
+            "color": "#3B82F6",
+            "title": "Steady Solver",
+            "subtitle": "Solid fundamentals and reliable clears.",
+            "percentileLabel": "Top 45%"
+          },
+          {
+            "label": "C",
+            "maxMs": 300000,
+            "color": "#94A3B8",
+            "title": "Pattern Builder",
+            "subtitle": "You finish what you start and improve run to run.",
+            "percentileLabel": "Top 75%"
+          },
+          {
+            "label": "D",
+            "maxMs": 999999,
+            "color": "#F97316",
+            "title": "Run Rookie",
+            "subtitle": "Every completed run levels up your Sudoku speed.",
+            "percentileLabel": "Bottom 25%"
+          }
+        ]
+      },
+      "hasLeaderboard": true
+    },
+    {
       "id": "red-light-green-light",
       "title": "Red Light, Green Light",
       "clinicalTitle": "Stop-Go Inhibition Under Surveillance",

@@ -28,6 +28,8 @@ interface Props {
   killerLineOverride?: string | null;
   /** When set, replaces the default share challenge string. */
   shareTextOverride?: string | null;
+  /** When set, replaces auto-generated benchmark note line. */
+  benchmarkNoteOverride?: string | null;
 }
 
 function getLevel(normalized: number) {
@@ -86,6 +88,13 @@ function getNeonByScore(normalized: number): string {
   return "radial-gradient(120% 90% at 25% 10%, rgba(71,85,105,0.35) 0%, rgba(30,41,59,0.25) 50%, rgba(2,6,23,0.98) 100%)";
 }
 
+function formatMsAsMinSec(ms: number): string {
+  const totalSec = Math.max(0, Math.round(ms / 1000));
+  const min = Math.floor(totalSec / 60);
+  const sec = totalSec % 60;
+  return `${min} min ${String(sec).padStart(2, "0")} sec`;
+}
+
 function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
   const cfg: Record<string, { average: number; unit: string; higherIsBetter: boolean; metric: string; decimals?: number }> = {
     "number-memory": { average: 7, unit: "digits", higherIsBetter: true, metric: "working-memory span" },
@@ -113,10 +122,21 @@ function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
     "vocabulary-age": { average: 61, unit: "%", higherIsBetter: true, metric: "vocabulary precision score" },
     "word-speed": { average: 57, unit: "%", higherIsBetter: true, metric: "lexical decision score" },
     "word-association": { average: 60, unit: "%", higherIsBetter: true, metric: "semantic association score" },
+    "mini-speed-sudoku": { average: 320000, unit: "ms", higherIsBetter: false, metric: "3-round total completion time" },
   };
 
   const b = cfg[game.id];
   if (!b) return null;
+
+  if (game.id === "mini-speed-sudoku") {
+    const meMs = Math.max(0, Math.round(rawScore));
+    const avgMs = Math.max(0, Math.round(b.average));
+    const deltaMs = Math.abs(meMs - avgMs);
+    if (meMs <= avgMs) {
+      return `Benchmark: ${b.metric} ${formatMsAsMinSec(meMs)}; global average ${formatMsAsMinSec(avgMs)}. You are ${formatMsAsMinSec(deltaMs)} faster than average.`;
+    }
+    return `Benchmark: ${b.metric} ${formatMsAsMinSec(meMs)}; global average ${formatMsAsMinSec(avgMs)}. You are ${formatMsAsMinSec(deltaMs)} slower than average.`;
+  }
 
   const decimals = b.decimals ?? 0;
   const me = Number(rawScore.toFixed(decimals));
@@ -151,11 +171,12 @@ export default function CommonResult({
   tone,
   killerLineOverride,
   shareTextOverride,
+  benchmarkNoteOverride,
 }: Props) {
   const level = getLevel(normalizedScore);
   const scoreEmoji = getScoreEmoji(normalizedScore);
   const killerLine = killerLineOverride ?? getKillerLine(tone, normalizedScore);
-  const benchmarkNote = getGameBenchmarkNote(game, rawScore);
+  const benchmarkNote = benchmarkNoteOverride ?? getGameBenchmarkNote(game, rawScore);
   const WORLD_POP = 8_200_000_000;
   const higherThanPct = Math.max(0, Math.min(99.9, percentile));
   const peopleCount = Math.round((higherThanPct / 100) * WORLD_POP);

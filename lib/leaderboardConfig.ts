@@ -8,6 +8,7 @@ export const LEADERBOARD_SCORE_ASC_GAME_IDS = new Set([
   "dont-blink",
   "angle-precision",
   "boss-slapper",
+  "mini-speed-sudoku",
 ]);
 
 export function leaderboardUsesAscendingScore(gameId: string): boolean {
