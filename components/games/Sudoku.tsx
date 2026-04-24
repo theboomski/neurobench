@@ -556,7 +556,7 @@ export default function Sudoku({ game }: { game: GameData }) {
                   aspectRatio: "1 / 1",
                   maxWidth: 460,
                   margin: "0 auto",
-                  border: "2px solid var(--border-md)",
+                  border: "3px solid var(--border-md)",
                   borderRadius: 8,
                   overflow: "hidden",
                   background: "var(--bg-elevated)",
@@ -567,10 +567,10 @@ export default function Sudoku({ game }: { game: GameData }) {
                     const key = cellKey(r, c);
                     const isSelected = selected?.r === r && selected?.c === c;
                     const hasConflict = conflicts.has(key);
-                    const borderTop = r % 3 === 0 ? 2 : 1;
-                    const borderLeft = c % 3 === 0 ? 2 : 1;
-                    const borderRight = c === 8 ? 2 : 1;
-                    const borderBottom = r === 8 ? 2 : 1;
+                    const borderTop = r % 3 === 0 ? 3 : 1;
+                    const borderLeft = c % 3 === 0 ? 3 : 1;
+                    const borderRight = c === 8 ? 3 : 1;
+                    const borderBottom = r === 8 ? 3 : 1;
                     return (
                       <button
                         key={key}
@@ -586,7 +586,7 @@ export default function Sudoku({ game }: { game: GameData }) {
                             : hasConflict
                               ? "rgba(239,68,68,0.22)"
                               : "transparent",
-                          color: cell.given ? "var(--text-1)" : game.accent,
+                          color: cell.given ? "#d1d5db" : "#cbd5e1",
                           fontSize: "clamp(14px, 3.2vw, 24px)",
                           fontWeight: cell.given ? 800 : 700,
                           cursor: "pointer",
