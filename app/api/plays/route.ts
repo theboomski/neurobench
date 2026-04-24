@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type PostgrestError } from "@supabase/supabase-js";
+import { fetchGamePlayCountsFromDb } from "@/lib/serverGamePlayCounts";
 
 const GAME_PLAYS_TABLE = "game_plays" as const;
-const BATCH_SIZE = 1000;
 
 function logSupabaseError(context: string, err: unknown) {
   if (!err || typeof err !== "object") {
@@ -33,50 +33,16 @@ function serializePostgrestError(err: PostgrestError): Record<string, string | u
 }
 
 export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
-  const key = serviceRoleKey ?? anonKey;
-
-  if (!url || !key) {
-    console.error("[plays GET] missing env", {
-      hasUrl: Boolean(url),
-      hasServiceRole: Boolean(serviceRoleKey),
-      hasAnon: Boolean(anonKey),
-    });
-    return NextResponse.json({ error: "Plays tracking is not configured on the server (missing Supabase URL/key)." }, { status: 503 });
-  }
-
-  const counts: Record<string, number> = {};
-  const supabase = createClient(url, key);
-  let from = 0;
-  while (true) {
-    const to = from + BATCH_SIZE - 1;
-    const { data, error } = await supabase
-      .from(GAME_PLAYS_TABLE)
-      .select("game_id")
-      .order("played_at", { ascending: true })
-      .range(from, to);
-    if (error) {
-      logSupabaseError("[plays GET] Supabase select error", error);
-      return NextResponse.json(
-        {
-          error: error.message,
-          errorFull: serializePostgrestError(error),
-        },
-        { status: 500 },
-      );
+  const result = await fetchGamePlayCountsFromDb();
+  if (!result.ok) {
+    if (result.httpStatus === 503) {
+      console.error("[plays GET] missing env");
+    } else {
+      console.error("[plays GET] Supabase select error", JSON.stringify(result.body));
     }
-    for (const row of data ?? []) {
-      const gameId = (row as { game_id?: string }).game_id;
-      if (!gameId) continue;
-      counts[gameId] = (counts[gameId] ?? 0) + 1;
-    }
-    if (!data || data.length < BATCH_SIZE) break;
-    from += BATCH_SIZE;
+    return NextResponse.json(result.body, { status: result.httpStatus });
   }
-
-  return NextResponse.json({ counts });
+  return NextResponse.json({ counts: result.counts });
 }
 
 export async function POST(req: NextRequest) {
