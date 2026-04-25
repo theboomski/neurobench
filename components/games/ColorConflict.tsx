@@ -226,7 +226,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
       {phase === "idle" ? (
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-xl)", padding: "clamp(32px,6vw,56px) clamp(20px,4vw,40px)", textAlign: "center" }}>
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🎨</div>
-          <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Inhibitory Control Assessment</p>
+          <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Color Conflict</p>
           <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 6, lineHeight: 1.55, maxWidth: 400, marginLeft: "auto", marginRight: "auto" }}>
             The big word is printed in one ink color.             Tap the button whose <strong style={{ color: "var(--text-1)" }}>label</strong> names that ink — ignore the letters of the big word and the ink color of the small labels.
           </p>
