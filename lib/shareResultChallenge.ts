@@ -43,7 +43,9 @@ export async function shareZazazaChallenge({
 
   if (typeof navigator !== "undefined" && navigator.share) {
     try {
-      await navigator.share({ title, text, url: absolute });
+      // Some share targets duplicate content when both `text` and `url` contain the same link.
+      const textHasUrl = text.includes(absolute);
+      await navigator.share(textHasUrl ? { title, text } : { title, text, url: absolute });
       return;
     } catch (e) {
       if ((e as Error)?.name === "AbortError") return;
