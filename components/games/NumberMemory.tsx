@@ -182,7 +182,7 @@ export default function NumberMemory({ game }: { game: GameData }) {
             <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8, letterSpacing: "-0.01em" }}>Working Memory Capacity Assessment</p>
             <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Memorize the sequence · Type it back · Go as long as you can</p>
             <button onClick={handleBegin} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
-              ▶ BEGIN PROTOCOL
+              ▶ PLAY
             </button>
           </div>
         )}

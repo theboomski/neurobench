@@ -184,7 +184,7 @@ export default function AttentionSpan({ game }: { game: GameData }) {
         <div style={{ background: "#EF444420", border: "1px solid #EF4444", borderRadius: 8, padding: "8px 16px", fontSize: 13, color: "#EF4444", fontFamily: "var(--font-mono)" }}>MISS {TARGET} = -1</div>
         <div style={{ background: "#F59E0B20", border: "1px solid #F59E0B", borderRadius: 8, padding: "8px 16px", fontSize: 13, color: "#F59E0B", fontFamily: "var(--font-mono)" }}>TAP ■▲◆ = FALSE ALARM</div>
       </div>
-      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", marginTop: 12 }}>▶ BEGIN TEST</button>
+      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", marginTop: 12 }}>▶ PLAY</button>
     </div>
   );
 

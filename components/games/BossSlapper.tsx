@@ -103,7 +103,7 @@ export default function BossSlapper({ game }: { game: GameData }) {
             <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, letterSpacing: "-0.01em", marginBottom: 10 }}>Begin Stress-Relief Protocol</p>
             <p style={{ fontSize: "clamp(12px,2.5vw,14px)", color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Tap the stressor {TOTAL_TAPS}× · maximum velocity</p>
             <button onClick={handleBossTap} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
-              ▶ INITIATE
+              ▶ PLAY
             </button>
           </div>
         )}

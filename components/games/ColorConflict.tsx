@@ -236,7 +236,7 @@ export default function ColorConflict({ game }: { game: GameData }) {
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28, lineHeight: 1.45, maxWidth: 420, marginLeft: "auto", marginRight: "auto" }}>
             Time per round shrinks as you score (down to {(MIN_ROUND_MS / 1000).toFixed(1)}s). After 25 / 75 correct, you get 5 then 6 choices. Wrong answer or timeout = game over.
           </p>
-          <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN PROTOCOL</button>
+          <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ PLAY</button>
         </div>
       ) : (
         <div>

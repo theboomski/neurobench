@@ -243,7 +243,7 @@ export default function TypingSpeed({ game }: { game: GameData }) {
             <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>⌨️</div>
             <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Motor Sequence Automaticity Assessment</p>
             <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>60 seconds · Type the words · Timer starts on first keystroke</p>
-            <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>▶ BEGIN PROTOCOL</button>
+            <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>▶ PLAY</button>
           </div>
         ) : (
           <div>

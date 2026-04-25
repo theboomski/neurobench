@@ -408,7 +408,7 @@ export default function RedLightGreenLight({ game }: { game: GameData }) {
                   letterSpacing: "0.06em",
                 }}
               >
-                ▶ INITIATE
+                ▶ PLAY
               </button>
             </div>
           </div>

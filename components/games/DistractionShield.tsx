@@ -179,7 +179,7 @@ export default function DistractionShield({ game }: { game: GameData }) {
         <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>INCONGRUENT → harder</div>
       </div>
       <br />
-      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ PLAY</button>
     </div>
   );
 

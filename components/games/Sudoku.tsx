@@ -505,7 +505,7 @@ export default function Sudoku({ game }: { game: GameData }) {
             9x9 Sudoku · auto-level progression · unique-solution generated puzzles.
           </p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>
-            ▶ START SPEED SUDOKU
+            ▶ PLAY
           </button>
         </div>
       )}

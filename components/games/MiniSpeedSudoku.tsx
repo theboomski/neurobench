@@ -450,7 +450,7 @@ export default function MiniSpeedSudoku({ game }: { game: GameData }) {
             Fastest total completion time wins the leaderboard.
           </p>
           <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>
-            ▶ START RUN
+            ▶ PLAY
           </button>
         </div>
       )}

@@ -176,7 +176,7 @@ export default function ContrastSensitivity({ game }: { game: GameData }) {
       <p style={{ color: "var(--text-2)", fontSize: 14, marginBottom: 8, lineHeight: 1.7 }}>A striped pattern will appear and gradually fade. Tell us when you can still see it — and when it disappears. Your threshold is your score.</p>
       <p style={{ color: "var(--text-3)", fontSize: 12, fontFamily: "var(--font-mono)", marginBottom: 12 }}>💡 Set screen brightness to maximum for best results</p>
       <p style={{ color: "var(--text-3)", fontSize: 12, fontFamily: "var(--font-mono)", marginBottom: 28 }}>Takes ~60 seconds</p>
-      <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#fff", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#fff", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ PLAY</button>
     </div>
   );
 

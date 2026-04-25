@@ -162,7 +162,7 @@ export default function EmpathyScore({ game }: { game: GameData }) {
         <div style={{ background: "#EC489920", border: "1px solid #EC4899", borderRadius: 999, padding: "4px 12px", fontSize: 11, color: "#EC4899", fontFamily: "var(--font-mono)" }}>🫀 Affective</div>
       </div>
       <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>~3 minutes · No right answers</p>
-      <button onClick={() => { trackPlay(game.id); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN ASSESSMENT</button>
+      <button onClick={() => { trackPlay(game.id); setPhase("playing"); }} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ PLAY</button>
     </div>
   );
 

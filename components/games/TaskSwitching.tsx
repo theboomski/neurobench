@@ -234,7 +234,7 @@ export default function TaskSwitching({ game }: { game: GameData }) {
         <div style={{ background: "#EF444420", border: "1px solid #EF4444", borderRadius: 8, padding: "10px", fontSize: 12, fontFamily: "var(--font-mono)", color: "#EF4444" }}>COLOR RULE<br />RED → A<br />BLUE → B</div>
         <div style={{ background: "#06B6D420", border: "1px solid #06B6D4", borderRadius: 8, padding: "10px", fontSize: 12, fontFamily: "var(--font-mono)", color: "#06B6D4" }}>SIZE RULE<br />BIG → A<br />SMALL → B</div>
       </div>
-      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ BEGIN TEST</button>
+      <button onClick={handleStart} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)" }}>▶ PLAY</button>
     </div>
   );
 
