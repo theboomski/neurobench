@@ -267,6 +267,10 @@ export default async function ArenaPage() {
           </p>
         </div>
       </section>
+
+      <div style={{ paddingBottom: 32 }}>
+        <div className="ad-slot ad-banner">Advertisement</div>
+      </div>
     </div>
   );
 }
