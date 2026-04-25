@@ -1104,13 +1104,13 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                         onClick={() => void onNativeShare()}
                         className="pressable"
                         style={{
-                          border: "1px solid var(--border-md)",
-                          background: "var(--bg-elevated)",
-                          color: "var(--text-1)",
+                          border: `1px solid ${ACCENT}`,
+                          background: ACCENT,
+                          color: "#1a0510",
                           borderRadius: 10,
                           padding: "10px 14px",
                           fontSize: 12,
-                          fontWeight: 700,
+                          fontWeight: 900,
                           cursor: "pointer",
                           fontFamily: "var(--font-mono)",
                         }}
