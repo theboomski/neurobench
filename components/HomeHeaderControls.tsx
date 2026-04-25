@@ -26,8 +26,10 @@ export default function HomeHeaderControls() {
   const router = useRouter();
   const sp = useSearchParams();
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+  const [mobileInfoOpen, setMobileInfoOpen] = useState(false);
   const [isCompactHeader, setIsCompactHeader] = useState(false);
   const mobileToggleRef = useRef<HTMLDivElement | null>(null);
+  const mobileInfoToggleRef = useRef<HTMLDivElement | null>(null);
   const isHome = pathname === "/";
   const categoryRaw = sp.get("category");
   const sortRaw = sp.get("sort");
@@ -38,9 +40,11 @@ export default function HomeHeaderControls() {
 
   useEffect(() => {
     const onDocPointerDown = (e: PointerEvent) => {
-      if (!mobileToggleRef.current) return;
-      if (mobileToggleRef.current.contains(e.target as Node)) return;
+      const target = e.target as Node;
+      if (mobileToggleRef.current?.contains(target)) return;
+      if (mobileInfoToggleRef.current?.contains(target)) return;
       setMobileCategoryOpen(false);
+      setMobileInfoOpen(false);
     };
     document.addEventListener("pointerdown", onDocPointerDown);
     return () => document.removeEventListener("pointerdown", onDocPointerDown);
@@ -48,6 +52,7 @@ export default function HomeHeaderControls() {
 
   useEffect(() => {
     setMobileCategoryOpen(false);
+    setMobileInfoOpen(false);
   }, [category, sort]);
 
   useEffect(() => {
@@ -108,6 +113,27 @@ export default function HomeHeaderControls() {
             );
           })}
           <Link
+            href="/arena"
+            className="pressable"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              border: "1px solid #00FF94",
+              background: "rgba(0,255,148,0.12)",
+              color: "#00FF94",
+              borderRadius: 999,
+              padding: "7px 10px",
+              fontSize: 11,
+              fontWeight: 700,
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-mono)",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            Arena
+          </Link>
+          <Link
             href="/blog"
             className="pressable"
             style={{
@@ -157,7 +183,7 @@ export default function HomeHeaderControls() {
             display: "flex",
             flex: 1,
             minWidth: 0,
-            maxWidth: "calc(100% - 175px)",
+            maxWidth: "calc(100% - 168px)",
             gap: 4,
             flexWrap: "nowrap",
             alignItems: "center",
@@ -236,6 +262,89 @@ export default function HomeHeaderControls() {
               </div>
             )}
           </div>
+          <div ref={mobileInfoToggleRef} style={{ position: "relative", flexShrink: 0, zIndex: 50 }}>
+            <button
+              type="button"
+              onClick={() => setMobileInfoOpen((v) => !v)}
+              className="pressable home-tab-pill"
+              style={{
+                border: "2px solid #00FF94",
+                background: "rgba(0,255,148,0.14)",
+                color: "#00FF94",
+                borderRadius: 999,
+                padding: "6px 8px",
+                fontSize: 10,
+                fontWeight: 700,
+                whiteSpace: "nowrap",
+                fontFamily: "var(--font-mono)",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              Arena
+              <span aria-hidden style={{ fontSize: 10, opacity: 0.9 }}>{mobileInfoOpen ? "▲" : "▼"}</span>
+            </button>
+            {mobileInfoOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "calc(100% + 6px)",
+                  left: 0,
+                  zIndex: 60,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  minWidth: 112,
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-md)",
+                  borderRadius: 12,
+                  padding: 6,
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                }}
+              >
+                <Link
+                  href="/arena"
+                  className="pressable"
+                  style={{
+                    textAlign: "left",
+                    border: "1px solid #00FF94",
+                    background: "rgba(0,255,148,0.14)",
+                    color: "#00FF94",
+                    borderRadius: 9,
+                    padding: "7px 10px",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                    fontFamily: "var(--font-mono)",
+                    textDecoration: "none",
+                  }}
+                >
+                  Arena
+                </Link>
+                <Link
+                  href="/blog"
+                  className="pressable"
+                  style={{
+                    textAlign: "left",
+                    border: "1px solid #38bdf8",
+                    background: "rgba(56,189,248,0.14)",
+                    color: "#38bdf8",
+                    borderRadius: 9,
+                    padding: "7px 10px",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    whiteSpace: "nowrap",
+                    fontFamily: "var(--font-mono)",
+                    textDecoration: "none",
+                  }}
+                >
+                  Blog
+                </Link>
+              </div>
+            )}
+          </div>
           <div
             className="home-header-tabs-mobile-scroll"
             style={{
@@ -248,28 +357,6 @@ export default function HomeHeaderControls() {
               WebkitOverflowScrolling: "touch",
             }}
           >
-            <Link
-              href="/blog"
-              className="pressable"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                border: "1px solid #38bdf8",
-                background: "rgba(56,189,248,0.14)",
-                color: "#38bdf8",
-                borderRadius: 999,
-                padding: "6px 8px",
-                fontSize: 10,
-                fontWeight: 700,
-                whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
-                cursor: "pointer",
-                textDecoration: "none",
-                flexShrink: 0,
-              }}
-            >
-              Blog
-            </Link>
             <Link
               href="/send"
               className="pressable"
