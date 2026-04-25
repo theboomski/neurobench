@@ -1019,14 +1019,14 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                     border: "none",
                     borderRadius: 10,
                     padding: "12px 18px",
-                    background: ACCENT,
-                    color: "#1a0510",
+                    background: shareUrl ? "#111111" : ACCENT,
+                    color: shareUrl ? "#ffffff" : "#1a0510",
                     fontWeight: 900,
                     cursor: isSaving || shareUrl ? "default" : "pointer",
                     fontFamily: "var(--font-mono)",
                     fontSize: 12,
                     letterSpacing: "0.04em",
-                    opacity: shareUrl ? 0.8 : 1,
+                    opacity: 1,
                   }}
                 >
                   {isSaving ? "Almost Ready..." : shareUrl ? "Done!" : "Share"}
@@ -1055,11 +1055,6 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
                 )}
                 {isSaving && (
                   <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", minWidth: 40 }}>{shareProgress}%</span>
-                )}
-                {shareUrl && (
-                  <Link href={`${shareUrl.replace("https://zazaza.app", "")}?from=send`} style={{ color: ACCENT, fontSize: 13, fontWeight: 700 }}>
-                    Open card ↗
-                  </Link>
                 )}
               </div>
 
