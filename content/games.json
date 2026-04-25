@@ -1036,6 +1036,128 @@
       "hasLeaderboard": true
     },
     {
+      "id": "color-conflict-2",
+      "title": "Color Conflict 2",
+      "clinicalTitle": "Meaning-Ink Match Inhibitory Control Assessment",
+      "shortDescription": "Does the top word's meaning match the bottom word's ink color? Yes or No.",
+      "description": "Does the top word's meaning match the bottom word's ink color? Yes or No. One mistake ends it.",
+      "emoji": "🎯",
+      "accent": "#F97316",
+      "accentDim": "rgba(249,115,22,0.10)",
+      "category": "brain-age",
+      "categoryLabel": "Brain Age Test",
+      "tags": [
+        "stroop variant",
+        "inhibitory control",
+        "color meaning test",
+        "reaction accuracy test",
+        "yes no brain test"
+      ],
+      "seo": {
+        "metaTitle": "Color Conflict 2 – Match the Meaning to the Ink Color | ZAZAZA",
+        "metaDescription": "Does the word's meaning match the ink color? Infinite rounds, shrinking timer, one strike and you're out. Free brain test, instant results, no signup.",
+        "keywords": [
+          "color conflict 2",
+          "meaning vs ink color test",
+          "stroop style game",
+          "yes no cognitive test",
+          "free brain test"
+        ]
+      },
+      "content": {
+        "howToPlay": [
+          "Read the top word as the target meaning.",
+          "Look at the ink color of the bottom word.",
+          "Tap YES if top meaning matches bottom ink color; tap NO if it does not.",
+          "Each correct answer gives +1 score.",
+          "Wrong answer or timeout ends the run immediately."
+        ],
+        "science": "This task combines classic Stroop-style cognitive interference with binary decision pressure. You must suppress automatic reading responses and rapidly compare semantic meaning against visual color input under shrinking time limits. The design targets inhibitory control, selective attention, and response accuracy under stress.",
+        "tips": [
+          "Lock onto the top word first, then glance only at the bottom ink color.",
+          "Do not read the lower word's letters; they are decoys.",
+          "Expect more NO rounds than YES rounds.",
+          "Stay rhythmic ? hesitation is often worse than committing.",
+          "On white ink rounds, trust the color cue and avoid overthinking."
+        ]
+      },
+      "stats": {
+        "percentiles": [
+          {
+            "ms": 51,
+            "percentile": 99
+          },
+          {
+            "ms": 40,
+            "percentile": 90
+          },
+          {
+            "ms": 30,
+            "percentile": 75
+          },
+          {
+            "ms": 20,
+            "percentile": 55
+          },
+          {
+            "ms": 10,
+            "percentile": 30
+          },
+          {
+            "ms": 4,
+            "percentile": 10
+          },
+          {
+            "ms": 0,
+            "percentile": 1
+          }
+        ],
+        "ranks": [
+          {
+            "label": "S",
+            "maxMs": 45,
+            "color": "#FFD700",
+            "title": "Match Master",
+            "subtitle": "Main Character processing under pressure.",
+            "percentileLabel": "Top 5%"
+          },
+          {
+            "label": "A",
+            "maxMs": 34,
+            "color": "#F97316",
+            "title": "Cognitive Sprinter",
+            "subtitle": "Fast reads, sharp inhibition.",
+            "percentileLabel": "Top 20%"
+          },
+          {
+            "label": "B",
+            "maxMs": 24,
+            "color": "#58A6FF",
+            "title": "Steady Decoder",
+            "subtitle": "Reliable pattern matcher with room to climb.",
+            "percentileLabel": "Top 45%"
+          },
+          {
+            "label": "C",
+            "maxMs": 14,
+            "color": "#94A3B8",
+            "title": "Warm-Up Phase",
+            "subtitle": "Getting the rhythm, still loading speed.",
+            "percentileLabel": "Top 75%"
+          },
+          {
+            "label": "D",
+            "maxMs": 9999,
+            "color": "#EF4444",
+            "title": "Color Confused",
+            "subtitle": "One more run and the comeback arc starts.",
+            "percentileLabel": "Bottom 25%"
+          }
+        ]
+      },
+      "hasLeaderboard": true
+    },
+    {
       "id": "instant-comparison",
       "title": "Instant Comparison",
       "clinicalTitle": "Numerical Magnitude Processing Speed Assessment",

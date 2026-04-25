@@ -104,6 +104,7 @@ function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
     "chimp-test": { average: 7, unit: "numbers", higherIsBetter: true, metric: "sequence recall span" },
     "typing-speed": { average: 40, unit: "wpm", higherIsBetter: true, metric: "typing speed" },
     "color-conflict": { average: 10, unit: "correct", higherIsBetter: true, metric: "inhibition-control score" },
+    "color-conflict-2": { average: 24, unit: "correct", higherIsBetter: true, metric: "meaning-ink match score" },
     "instant-comparison": { average: 12, unit: "correct", higherIsBetter: true, metric: "magnitude-comparison score" },
     "rapid-scan": { average: 8, unit: "rounds", higherIsBetter: true, metric: "visual search score" },
     "count-master": { average: 72, unit: "% acc", higherIsBetter: true, metric: "numerosity accuracy" },
