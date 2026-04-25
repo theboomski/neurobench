@@ -213,7 +213,7 @@ export default function CommonResult({
     const url = await createSharedResultUrl(payload);
     const challenge = shareTextOverride
       ? `${shareTextOverride} ${url}`
-      : `${scoreEmoji} I got ${level.label} in ${game.title}! Score: ${normalizedScore}/100. ${percentileSentence} Can you beat me? ${url}`;
+      : `${scoreEmoji} I got ${level.label} in ${game.title}! Score: ${normalizedScore}/100. Can you beat me? ${url}`;
     await shareZazazaChallenge({
       title: `${scoreEmoji} ${level.label} — ${game.title} | ZAZAZA`,
       text: challenge,
