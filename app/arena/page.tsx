@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ArenaRefreshButton from "./ArenaRefreshButton";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { ALL_GAMES } from "@/lib/games";
@@ -21,6 +22,7 @@ type CountryRankRow = {
 type HallOfFameRow = {
   gameId: string;
   gameTitle: string;
+  gamePath: string;
   nickname: string;
   score: number;
   countryCode: string;
@@ -87,6 +89,7 @@ function buildHallOfFame(rows: LeaderboardRow[], playCounts: Record<string, numb
     hallRows.push({
       gameId: game.id,
       gameTitle: game.title,
+      gamePath: `/${game.category}/${game.id}`,
       nickname: best.nickname,
       score: best.score,
       countryCode: (best.country_code || "US").toUpperCase(),
@@ -174,13 +177,12 @@ export default async function ArenaPage() {
       <section style={{ marginBottom: 48 }}>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #38bdf8", borderRadius: "var(--radius-lg)", padding: "16px 14px" }}>
           <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Hall of Fame</h2>
-          <div style={{ overflowX: "auto" }}>
-          <div style={{ display: "grid", gap: 6, minWidth: 420 }}>
+          <div style={{ display: "grid", gap: 6 }}>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(110px,1.2fr) minmax(90px,1fr) 70px 84px",
-                gap: 8,
+                gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
+                gap: 6,
                 fontSize: 10,
                 color: "var(--text-3)",
                 fontFamily: "var(--font-mono)",
@@ -197,21 +199,63 @@ export default async function ArenaPage() {
                 key={row.gameId}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "minmax(110px,1.2fr) minmax(90px,1fr) 70px 84px",
-                  gap: 8,
+                  gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
+                  gap: 6,
                   alignItems: "center",
                   padding: "7px 0",
                   borderTop: "1px solid var(--border)",
                 }}
               >
-                <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700 }}>{row.gameTitle}</span>
-                <span style={{ fontSize: 12, color: "var(--text-2)" }}>{row.nickname}</span>
+                <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700, lineHeight: 1.2 }}>{row.gameTitle}</span>
+                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname}</span>
                 <span style={{ fontSize: 18 }}>{countryCodeToFlag(row.countryCode)}</span>
-                <span style={{ fontSize: 13, color: "#38bdf8", textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 800, whiteSpace: "nowrap" }}>{row.score}</span>
+                <details style={{ justifySelf: "end" }}>
+                  <summary
+                    style={{
+                      listStyle: "none",
+                      cursor: "pointer",
+                      fontSize: 13,
+                      color: "#38bdf8",
+                      textAlign: "right",
+                      fontFamily: "var(--font-mono)",
+                      fontWeight: 800,
+                      whiteSpace: "nowrap",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
+                      border: "1px solid rgba(56,189,248,0.35)",
+                      borderRadius: 8,
+                      padding: "3px 6px",
+                      background: "rgba(56,189,248,0.08)",
+                    }}
+                  >
+                    {row.score}
+                    <span aria-hidden style={{ fontSize: 10, lineHeight: 1 }}>
+                      ▾
+                    </span>
+                  </summary>
+                  <div style={{ marginTop: 6, display: "flex", justifyContent: "flex-end" }}>
+                    <Link
+                      href={row.gamePath}
+                      className="pressable"
+                      style={{
+                        textDecoration: "none",
+                        border: "1px solid #38bdf8",
+                        borderRadius: 8,
+                        padding: "4px 8px",
+                        fontSize: 11,
+                        fontFamily: "var(--font-mono)",
+                        fontWeight: 700,
+                        color: "#38bdf8",
+                      }}
+                    >
+                      Play
+                    </Link>
+                  </div>
+                </details>
               </div>
             ))}
             {hallOfFame.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No leaderboard data yet.</p>}
-          </div>
           </div>
           <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
             Hall of Fame shows the current all-time #1 score for each game. Rankings update in real time - anyone can claim the top spot.
