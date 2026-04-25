@@ -13,6 +13,7 @@ import ChimpTest from "@/components/games/ChimpTest";
 import TypingSpeed from "@/components/games/TypingSpeed";
 import ColorConflict from "@/components/games/ColorConflict";
 import ColorConflict2 from "@/components/games/ColorConflict2";
+import FishFrenzy from "@/components/games/FishFrenzy";
 import InstantComparison from "@/components/games/InstantComparison";
 import AnglePrecision from "@/components/games/AnglePrecision";
 import RapidScan from "@/components/games/RapidScan";
@@ -58,6 +59,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "typing-speed":        return <TypingSpeed game={game} />;
     case "color-conflict":      return <ColorConflict game={game} />;
     case "color-conflict-2":    return <ColorConflict2 game={game} />;
+    case "fish-frenzy":         return <FishFrenzy game={game} />;
     case "instant-comparison":  return <InstantComparison game={game} />;
     case "angle-precision":     return <AnglePrecision game={game} />;
     case "rapid-scan":          return <RapidScan game={game} />;

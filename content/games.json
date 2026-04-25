@@ -1158,6 +1158,128 @@
       "hasLeaderboard": true
     },
     {
+      "id": "fish-frenzy",
+      "title": "Fish Frenzy",
+      "clinicalTitle": "Directional Conflict Cognitive Flexibility Test",
+      "shortDescription": "Blue fish: swipe where they swim. Purple fish: swipe where they point. 30 seconds. Go.",
+      "description": "Blue fish: swipe where they swim. Purple fish: swipe where they point. 30 seconds. Go.",
+      "emoji": "🐟",
+      "accent": "#38bdf8",
+      "accentDim": "rgba(56,189,248,0.10)",
+      "category": "brain-age",
+      "categoryLabel": "Brain Age Test",
+      "tags": [
+        "cognitive flexibility",
+        "direction switching",
+        "swipe reflex game",
+        "brain training",
+        "inhibitory control"
+      ],
+      "seo": {
+        "metaTitle": "Fish Frenzy – Swipe the Right Direction | ZAZAZA",
+        "metaDescription": "Blue fish: follow the movement. Purple fish: follow the head. 30 seconds, as many as you can. Free brain flexibility test, instant results, no signup.",
+        "keywords": [
+          "fish frenzy game",
+          "swipe direction test",
+          "cognitive flexibility game",
+          "brain reflex test",
+          "free brain game"
+        ]
+      },
+      "content": {
+        "howToPlay": [
+          "Every round shows 10 fish of the same color.",
+          "Blue fish: swipe in the direction they move.",
+          "Purple fish: swipe in the direction their heads point.",
+          "You can use swipe gestures on mobile or arrow keys on desktop.",
+          "You have 30 seconds. Correct swipe = +1. Wrong swipe has no penalty."
+        ],
+        "science": "Fish Frenzy targets cognitive flexibility and interference control. The brain must rapidly switch decision rules (movement-based vs orientation-based) while filtering conflicting visual signals. This engages executive control systems associated with task switching, inhibitory control, and rapid sensorimotor mapping.",
+        "tips": [
+          "Read fish color first before deciding your rule.",
+          "Blue means movement rule, purple means head rule.",
+          "Do not hesitate after spotting the rule ? speed compounds score.",
+          "Use short, confident swipes instead of long drags.",
+          "Arrow keys are often faster than trackpad swipes on desktop."
+        ]
+      },
+      "stats": {
+        "percentiles": [
+          {
+            "ms": 40,
+            "percentile": 99
+          },
+          {
+            "ms": 34,
+            "percentile": 92
+          },
+          {
+            "ms": 28,
+            "percentile": 80
+          },
+          {
+            "ms": 22,
+            "percentile": 62
+          },
+          {
+            "ms": 16,
+            "percentile": 40
+          },
+          {
+            "ms": 10,
+            "percentile": 18
+          },
+          {
+            "ms": 4,
+            "percentile": 5
+          }
+        ],
+        "ranks": [
+          {
+            "label": "S",
+            "maxMs": 35,
+            "color": "#FFD700",
+            "title": "Ocean Apex",
+            "subtitle": "Rule-switching at elite speed.",
+            "percentileLabel": "Top 5%"
+          },
+          {
+            "label": "A",
+            "maxMs": 27,
+            "color": "#38bdf8",
+            "title": "Current Surfer",
+            "subtitle": "Fast adaptations under pressure.",
+            "percentileLabel": "Top 20%"
+          },
+          {
+            "label": "B",
+            "maxMs": 19,
+            "color": "#58A6FF",
+            "title": "Tide Reader",
+            "subtitle": "Solid reads, occasional drift.",
+            "percentileLabel": "Top 45%"
+          },
+          {
+            "label": "C",
+            "maxMs": 12,
+            "color": "#94A3B8",
+            "title": "Reef Starter",
+            "subtitle": "Still syncing color and direction.",
+            "percentileLabel": "Top 75%"
+          },
+          {
+            "label": "D",
+            "maxMs": 9999,
+            "color": "#EF4444",
+            "title": "Lost at Sea",
+            "subtitle": "One more run and the comeback starts.",
+            "percentileLabel": "Bottom 25%"
+          }
+        ]
+      },
+      "hasLeaderboard": true
+    },
+    {
       "id": "instant-comparison",
       "title": "Instant Comparison",
       "clinicalTitle": "Numerical Magnitude Processing Speed Assessment",
