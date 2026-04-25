@@ -32,6 +32,7 @@ function getSeqPercentile(score: number, game: GameData): number {
 }
 
 type Phase = "idle" | "showing" | "input" | "correct" | "wrong" | "done";
+type CorrectPulse = { idx: number; key: number } | null;
 
 export default function SequenceMemory({ game }: { game: GameData }) {
   const [phase, setPhase]           = useState<Phase>("idle");
@@ -39,16 +40,26 @@ export default function SequenceMemory({ game }: { game: GameData }) {
   const [userSeq, setUserSeq]       = useState<number[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
   const [wrongCell, setWrongCell]   = useState<number | null>(null);
-  const [correctCells, setCorrectCells] = useState<number[]>([]);
+  const [correctPulse, setCorrectPulse] = useState<CorrectPulse>(null);
+  const [tapFlashCells, setTapFlashCells] = useState<number[]>([]);
   const [finalScore, setFinalScore] = useState(0);
   const [showAd, setShowAd]         = useState(false);
   const [highScore, setHS]          = useState<number | null>(null);
   const [isNewBest, setIsNewBest]   = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const tapFlashTimeoutsRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
 
   useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
   const clearT = () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  useEffect(() => () => clearT(), []);
+  const clearPulse = () => { if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current); };
+  const clearTapFlashTimers = () => {
+    for (const key of Object.keys(tapFlashTimeoutsRef.current)) {
+      clearTimeout(tapFlashTimeoutsRef.current[Number(key)]);
+    }
+    tapFlashTimeoutsRef.current = {};
+  };
+  useEffect(() => () => { clearT(); clearPulse(); clearTapFlashTimers(); }, []);
 
   // 2x faster than previous sequence playback
   const getFlashMs = (level: number) => Math.max(150, 350 - level * 15);
@@ -57,7 +68,8 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     setPhase("showing");
     setUserSeq([]);
     setWrongCell(null);
-    setCorrectCells([]);
+    setCorrectPulse(null);
+    setTapFlashCells([]);
     let i = 0;
     const flashNext = () => {
       if (i >= seq.length) {
@@ -103,10 +115,11 @@ export default function SequenceMemory({ game }: { game: GameData }) {
       return;
     }
 
-    // Correct so far — flash briefly then clear
+    // Correct so far — pulse tapped cell (always retriggers, even same index).
     playBeep("tap");
-    setCorrectCells([idx]);
-    timeoutRef.current = setTimeout(() => setCorrectCells([]), 400);
+    setCorrectPulse({ idx, key: performance.now() });
+    clearPulse();
+    pulseTimeoutRef.current = setTimeout(() => setCorrectPulse(null), 220);
     setUserSeq(next);
 
     if (next.length === sequence.length) {
@@ -120,7 +133,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
       setPhase("correct");
       // Keep the last tap visibly confirmed before the next round starts.
       timeoutRef.current = setTimeout(() => {
-        setCorrectCells([]);
+        setCorrectPulse(null);
         playSequence(newSeq);
       }, 325);
     }
@@ -129,7 +142,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
   const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
   const afterAd = () => {
     setShowAd(false); setPhase("idle"); setSequence([]); setUserSeq([]);
-    setHighlighted(null); setWrongCell(null); setCorrectCells([]);
+    setHighlighted(null); setWrongCell(null); setCorrectPulse(null); setTapFlashCells([]);
     setFinalScore(0); setIsNewBest(false);
   };
 
@@ -160,7 +173,7 @@ export default function SequenceMemory({ game }: { game: GameData }) {
   const getCellStyle = (idx: number) => {
     const isHighlighted = highlighted === idx;
     const isWrong       = wrongCell === idx;
-    const isCorrect     = correctCells.includes(idx);
+    const isCorrect     = correctPulse?.idx === idx || tapFlashCells.includes(idx);
     let bg = "var(--bg-elevated)";
     let border = "var(--border)";
     let shadow = "none";
@@ -230,6 +243,17 @@ export default function SequenceMemory({ game }: { game: GameData }) {
                 key={idx}
                 style={getCellStyle(idx)}
                 onClick={() => handleCellClick(idx)}
+                onPointerDown={() => {
+                  // Immediate visual touch response on mobile.
+                  if (phase !== "input") return;
+                  setTapFlashCells((prev) => (prev.includes(idx) ? prev : [...prev, idx]));
+                  const existing = tapFlashTimeoutsRef.current[idx];
+                  if (existing) clearTimeout(existing);
+                  tapFlashTimeoutsRef.current[idx] = setTimeout(() => {
+                    setTapFlashCells((prev) => prev.filter((v) => v !== idx));
+                    delete tapFlashTimeoutsRef.current[idx];
+                  }, 170);
+                }}
               />
             ))}
           </div>
