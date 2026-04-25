@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import ArenaRefreshButton from "./ArenaRefreshButton";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { ALL_GAMES } from "@/lib/games";
@@ -32,7 +33,20 @@ type HallOfFameRow = {
 
 const RANK_POINTS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
-export const dynamic = "force-dynamic";
+// Cache the heavy leaderboard aggregation briefly so Arena navigation feels snappy.
+const getArenaData = unstable_cache(
+  async () => {
+    const [allRows, playCountsResult] = await Promise.all([fetchAllLeaderboardRows(), fetchGamePlayCountsFromDb()]);
+    const playCounts = playCountsResult.ok ? playCountsResult.counts : {};
+    return {
+      countryRankings: buildCountryRankings(allRows),
+      hallOfFame: buildHallOfFame(allRows, playCounts),
+    };
+  },
+  ["arena-data-v1"],
+  { revalidate: 60 },
+);
+
 export const metadata: Metadata = {
   title: "ZAZAZA Arena – Global Brain Rankings & Hall of Fame",
   description: "See how your country ranks against the world. Country leaderboards, Hall of Fame, and live rankings across all ZAZAZA games.",
@@ -132,10 +146,7 @@ async function fetchAllLeaderboardRows(): Promise<LeaderboardRow[]> {
 }
 
 export default async function ArenaPage() {
-  const [allRows, playCountsResult] = await Promise.all([fetchAllLeaderboardRows(), fetchGamePlayCountsFromDb()]);
-  const playCounts = playCountsResult.ok ? playCountsResult.counts : {};
-  const countryRankings = buildCountryRankings(allRows);
-  const hallOfFame = buildHallOfFame(allRows, playCounts);
+  const { countryRankings, hallOfFame } = await getArenaData();
 
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>
