@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About ZAZAZA – Free Brain Age Tests & Self-Discovery Platform",
-  description: "ZAZAZA is a free global test hub for brain age, personality, relationships, and financial psychology. No signup. No payment. Instant results. Play the Test, Discover the World.",
+  description: "ZAZAZA is a free global test hub for brain age, personality, relationships, and financial psychology. No signup. No payment. Instant results.",
   openGraph: {
     title: "About ZAZAZA – Play the Test, Discover the World",
     description: "Free cognitive tests, personality assessments, and financial IQ tools. No signup ever. Built on peer-reviewed science.",

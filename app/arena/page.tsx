@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import ArenaRefreshButton from "./ArenaRefreshButton";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { ALL_GAMES } from "@/lib/games";
@@ -32,6 +33,10 @@ type HallOfFameRow = {
 const RANK_POINTS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "ZAZAZA Arena – Global Brain Rankings & Hall of Fame",
+  description: "See how your country ranks against the world. Country leaderboards, Hall of Fame, and live rankings across all ZAZAZA games.",
+};
 
 function compareRowsByGameRules(a: LeaderboardRow, b: LeaderboardRow): number {
   const asc = leaderboardUsesAscendingScore(a.game_id);

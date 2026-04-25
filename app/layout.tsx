@@ -15,7 +15,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: { default: `ZAZAZA – Free Brain Tests. No Signup. Instant Results.`, template: `%s | ZAZAZA` },
-  description: t.site.description,
+  description: "Free cognitive tests, brain age assessments, and IQ challenges. No signup. No payment. Instant results. Globally ranked.",
   verification: { google: "r0k7rf80dAHrGhKKwocnpCajshQfOvssDm2RdWRh2O4" },
   metadataBase: new URL("https://zazaza.app"),
   openGraph: {

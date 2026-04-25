@@ -3,8 +3,8 @@ import Link from "next/link";
 import postsData from "@/content/blog/posts.json";
 
 export const metadata: Metadata = {
-  title: "Blog – Brain Age, Personality & Cognitive Science | ZAZAZA",
-  description: "Science-backed articles on brain age, cognitive performance, personality psychology, relationship science, and financial decision-making. Free, no signup.",
+  title: "ZAZAZA Blog – Brain Science, Personality & Cognitive Research",
+  description: "Explore the science behind ZAZAZA tests. Articles on brain age, cognitive psychology, personality research, and more.",
   openGraph: {
     title: "ZAZAZA Blog – The Science Behind the Tests",
     description: "Deep dives into cognitive science, personality psychology, and behavioral economics.",
