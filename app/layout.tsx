@@ -5,6 +5,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { dict } from "@/lib/i18n";
 import HomeHeaderControls from "@/components/HomeHeaderControls";
+import UserMenu from "@/components/UserMenu";
 
 const t = dict.en;
 
@@ -53,10 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </div>
               </Link>
             </div>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
               <Suspense fallback={null}>
                 <HomeHeaderControls />
               </Suspense>
+              <UserMenu />
             </div>
           </div>
         </nav>
