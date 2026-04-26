@@ -287,7 +287,7 @@ function SudokuResultBody({
                 fontFamily: "var(--font-mono)",
               }}
             >
-              Share Result
+              Share to Challenge a Friend
             </button>
           </div>
         </div>

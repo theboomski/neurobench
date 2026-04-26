@@ -295,7 +295,7 @@ export default function CommonResult({
             {retryLabel}
           </button>
           <button onClick={handleShare} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 900, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
-            Share Result
+            Share to Challenge a Friend
           </button>
         </div>
         </div>

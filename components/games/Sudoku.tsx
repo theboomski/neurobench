@@ -481,7 +481,7 @@ export default function Sudoku({ game }: { game: GameData }) {
                   fontFamily: "var(--font-mono)",
                 }}
               >
-                Share Result
+                Share to Challenge a Friend
               </button>
             </div>
           </div>
