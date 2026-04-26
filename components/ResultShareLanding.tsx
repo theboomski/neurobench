@@ -145,7 +145,7 @@ function ReportQuizResultBody({
               fontFamily: "var(--font-mono)",
             }}
           >
-            ▶ PLAY AGAIN
+            ▶ PLAY
           </button>
           <button
             type="button"
@@ -268,7 +268,7 @@ function SudokuResultBody({
                 fontFamily: "var(--font-mono)",
               }}
             >
-              ▶ PLAY AGAIN
+            ▶ PLAY
             </button>
             <button
               type="button"
@@ -385,6 +385,7 @@ export default function ResultShareLanding({ category, id, zParam, payload: pref
           tone={tone}
           killerLineOverride={payload.killerLine}
           shareTextOverride={null}
+          retryLabel="▶ PLAY"
         />
       </GameLayout>
     );

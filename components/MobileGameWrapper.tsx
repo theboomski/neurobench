@@ -15,6 +15,7 @@ export default function MobileGameWrapper({
   const [fullscreen, setFullscreen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const isResultRoute = pathname.endsWith("/result");
+  const isSharedResultRoute = pathname.startsWith("/s/");
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -43,6 +44,9 @@ export default function MobileGameWrapper({
 
   // Desktop: render normally
   if (!isMobile) return <>{children}</>;
+
+  // Shared/result links should open directly without "Tap to Play" gate.
+  if (isSharedResultRoute || isResultRoute) return <>{children}</>;
 
   // Mobile idle: show tap-to-play button
   if (!fullscreen) {

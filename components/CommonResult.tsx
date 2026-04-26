@@ -30,6 +30,8 @@ interface Props {
   shareTextOverride?: string | null;
   /** When set, replaces auto-generated benchmark note line. */
   benchmarkNoteOverride?: string | null;
+  /** Override retry CTA label (default: ▶ PLAY AGAIN). */
+  retryLabel?: string;
 }
 
 function getLevel(normalized: number) {
@@ -174,6 +176,7 @@ export default function CommonResult({
   killerLineOverride,
   shareTextOverride,
   benchmarkNoteOverride,
+  retryLabel = "▶ PLAY AGAIN",
 }: Props) {
   const level = getLevel(normalizedScore);
   const scoreEmoji = getScoreEmoji(normalizedScore);
@@ -289,7 +292,7 @@ export default function CommonResult({
 
         <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto", paddingBottom: "max(6px, env(safe-area-inset-bottom))" }}>
           <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
-            ▶ PLAY AGAIN
+            {retryLabel}
           </button>
           <button onClick={handleShare} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 900, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
             Share Result
