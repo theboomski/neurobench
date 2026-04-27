@@ -4,6 +4,15 @@ import { getSupabaseServer } from "@/lib/supabase";
 export async function GET(req: NextRequest) {
   const supabase = getSupabaseServer();
   if (!supabase) return NextResponse.json({ games: [] });
+  let viewerId: string | null = null;
+  const authHeader = req.headers.get("authorization");
+  if (authHeader?.toLowerCase().startsWith("bearer ")) {
+    const token = authHeader.slice(7).trim();
+    if (token) {
+      const { data } = await supabase.auth.getUser(token);
+      viewerId = data.user?.id ?? null;
+    }
+  }
 
   const qp = req.nextUrl.searchParams;
   const type = qp.get("type");
@@ -19,8 +28,8 @@ export async function GET(req: NextRequest) {
     .from("ugc_games")
     .select("id,user_id,type,title,description,cover_image_url,category_id,language,visibility,is_nsfw,is_approved,play_count,slug,created_at")
     .eq("visibility", "public")
-    .eq("is_approved", true)
     .range(offset, offset + fetchSize - 1);
+  query = viewerId ? query.or(`is_approved.eq.true,user_id.eq.${viewerId}`) : query.eq("is_approved", true);
 
   if (type === "brackets" || type === "balance") query = query.eq("type", type);
   if (category && category !== "all") query = query.eq("category_id", Number(category));

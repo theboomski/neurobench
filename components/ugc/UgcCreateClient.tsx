@@ -119,7 +119,7 @@ export default function UgcCreateClient() {
         display_name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
         avatar_url: user.user_metadata?.avatar_url ?? null,
       };
-      await supabase.from("profiles").upsert(profilePayload);
+      await supabase.from("profiles").upsert(profilePayload, { onConflict: "id", ignoreDuplicates: true });
 
       let coverUrl: string | null = null;
       if (cover) {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
+import { getSupabaseBrowser } from "@/lib/supabase";
 import { toUgcPath } from "@/lib/ugc";
 
 type HubGame = {
@@ -33,6 +34,7 @@ export default function BracketHubClient({
   initialCategories = [],
   initialLanguages = [],
 }: BracketHubClientProps) {
+  const supabase = getSupabaseBrowser();
   const [games, setGames] = useState<HubGame[]>(initialGames);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -53,6 +55,17 @@ export default function BracketHubClient({
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const requestIdRef = useRef(0);
   const didSkipInitialRef = useRef(false);
+
+  const fetchFeed = async (sp: URLSearchParams) => {
+    const headers: HeadersInit = {};
+    if (supabase) {
+      const { data } = await supabase.auth.getSession();
+      const token = data.session?.access_token;
+      if (token) headers.Authorization = `Bearer ${token}`;
+    }
+    const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store", headers });
+    return res.json();
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -88,8 +101,7 @@ export default function BracketHubClient({
       });
       if (categoryFilter !== "all") sp.set("category", categoryFilter);
       if (languageFilter !== "all") sp.set("language", languageFilter);
-      const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store" });
-      const json = await res.json();
+      const json = await fetchFeed(sp);
       if (cancelled || requestId !== requestIdRef.current) return;
       const nextGames = (json.games ?? []) as HubGame[];
       setGames(nextGames);
@@ -122,8 +134,7 @@ export default function BracketHubClient({
           });
           if (categoryFilter !== "all") sp.set("category", categoryFilter);
           if (languageFilter !== "all") sp.set("language", languageFilter);
-          const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store" });
-          const json = await res.json();
+          const json = await fetchFeed(sp);
           if (currentRequestId !== requestIdRef.current) {
             setLoadingMore(false);
             return;
