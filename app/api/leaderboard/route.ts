@@ -30,31 +30,31 @@ async function placementRankForNewScore(
   gameId: string,
   score: number,
   scoreAsc: boolean,
+  sinceIso?: string,
 ): Promise<number> {
+  const scopedCountQuery = () => {
+    const base = supabase
+      .from(LEADERBOARD_TABLE)
+      .select("*", { head: true, count: "exact" })
+      .eq("game_id", gameId);
+    return sinceIso ? base.gte("created_at", sinceIso) : base;
+  };
+
   if (scoreAsc) {
-    const { count: cLt } = await supabase
-      .from(LEADERBOARD_TABLE)
-      .select("*", { head: true, count: "exact" })
-      .eq("game_id", gameId)
-      .lt("score", score);
-    const { count: cEq } = await supabase
-      .from(LEADERBOARD_TABLE)
-      .select("*", { head: true, count: "exact" })
-      .eq("game_id", gameId)
-      .eq("score", score);
+    const { count: cLt } = await scopedCountQuery().lt("score", score);
+    const { count: cEq } = await scopedCountQuery().eq("score", score);
     return 1 + (cLt ?? 0) + (cEq ?? 0);
   }
-  const { count: cGt } = await supabase
-    .from(LEADERBOARD_TABLE)
-    .select("*", { head: true, count: "exact" })
-    .eq("game_id", gameId)
-    .gt("score", score);
-  const { count: cEq } = await supabase
-    .from(LEADERBOARD_TABLE)
-    .select("*", { head: true, count: "exact" })
-    .eq("game_id", gameId)
-    .eq("score", score);
+  const { count: cGt } = await scopedCountQuery().gt("score", score);
+  const { count: cEq } = await scopedCountQuery().eq("score", score);
   return 1 + (cGt ?? 0) + (cEq ?? 0);
+}
+
+function getUtcWeekStartIso(now = new Date()): string {
+  const day = now.getUTCDay(); // 0 = Sunday, 1 = Monday
+  const daysSinceMonday = day === 0 ? 6 : day - 1;
+  const weekStartUtc = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysSinceMonday, 0, 0, 0, 0));
+  return weekStartUtc.toISOString();
 }
 
 /** Log every enumerable field + common PostgREST fields (no secrets). */
@@ -128,12 +128,14 @@ export async function GET(req: NextRequest) {
   });
 
   const supabase = createClient(url, key);
+  const weekStartIso = getUtcWeekStartIso();
 
   const asc = leaderboardUsesAscendingScore(gameId);
   const { data, error } = await supabase
     .from(LEADERBOARD_TABLE)
     .select("id, game_id, nickname, score, country_code, created_at, trash_talk")
     .eq("game_id", gameId)
+    .gte("created_at", weekStartIso)
     .order("score", { ascending: asc })
     .order("created_at", { ascending: true })
     .limit(10);
@@ -154,7 +156,7 @@ export async function GET(req: NextRequest) {
   if (previewRaw != null && previewRaw !== "") {
     const pv = Number(previewRaw);
     if (Number.isFinite(pv)) {
-      previewRank = await placementRankForNewScore(supabase, gameId, Math.round(pv), asc);
+      previewRank = await placementRankForNewScore(supabase, gameId, Math.round(pv), asc, weekStartIso);
     }
   }
 
@@ -189,6 +191,7 @@ export async function POST(req: NextRequest) {
    * Prefer SUPABASE_SERVICE_ROLE_KEY on the server so RLS does not block inserts.
    */
   const supabase = createClient(url, key);
+  const weekStartIso = getUtcWeekStartIso();
 
   let body: {
     gameId?: string;
@@ -261,7 +264,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (trash_talk != null) {
-    const rank = await placementRankForNewScore(supabase, gameId, score, asc);
+    const rank = await placementRankForNewScore(supabase, gameId, score, asc, weekStartIso);
     if (rank > 3) {
       return NextResponse.json(
         { error: "Trash talk is only allowed when your score reaches the global top 3." },

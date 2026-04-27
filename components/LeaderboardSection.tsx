@@ -431,7 +431,12 @@ export default function LeaderboardSection({ gameId, rawScore, rawUnit, accent }
 
       {listOpen && (
         <div style={{ marginTop: 12 }}>
-          <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>TOP 10</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>TOP 10</div>
+            <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
+              Leaderboard is reset every Monday UTC 00:00
+            </div>
+          </div>
           {loadingList && <div style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Loading…</div>}
           {!loadingList && rows.length === 0 && (
             <div style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>No entries yet. Be the first.</div>

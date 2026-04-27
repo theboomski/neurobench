@@ -35,10 +35,11 @@ type WeeklyLeaderRow = {
   gameId: string;
   gameTitle: string;
   gamePath: string;
-  nickname: string;
-  score: number;
-  countryCode: string;
+  nickname: string | null;
+  score: number | null;
+  countryCode: string | null;
   playCount: number;
+  hasWeeklyScore: boolean;
 };
 
 const RANK_POINTS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
@@ -156,17 +157,30 @@ function buildWeeklyLeaders(rows: LeaderboardRow[], playCounts: Record<string, n
   const weeklyRows: WeeklyLeaderRow[] = [];
   for (const game of leaderboardGames) {
     const entries = grouped.get(game.id) ?? [];
-    if (entries.length === 0) continue;
-    const best = [...entries].sort(compareRowsByGameRules)[0];
-    weeklyRows.push({
-      gameId: game.id,
-      gameTitle: game.title,
-      gamePath: `/${game.category}/${game.id}`,
-      nickname: best.nickname,
-      score: best.score,
-      countryCode: (best.country_code || "US").toUpperCase(),
-      playCount: playCounts[game.id] ?? 0,
-    });
+    if (entries.length === 0) {
+      weeklyRows.push({
+        gameId: game.id,
+        gameTitle: game.title,
+        gamePath: `/${game.category}/${game.id}`,
+        nickname: null,
+        score: null,
+        countryCode: null,
+        playCount: playCounts[game.id] ?? 0,
+        hasWeeklyScore: false,
+      });
+    } else {
+      const best = [...entries].sort(compareRowsByGameRules)[0];
+      weeklyRows.push({
+        gameId: game.id,
+        gameTitle: game.title,
+        gamePath: `/${game.category}/${game.id}`,
+        nickname: best.nickname,
+        score: best.score,
+        countryCode: (best.country_code || "US").toUpperCase(),
+        playCount: playCounts[game.id] ?? 0,
+        hasWeeklyScore: true,
+      });
+    }
   }
 
   return weeklyRows.sort((a, b) => {
@@ -279,8 +293,8 @@ export default async function ArenaPage() {
                 }}
               >
                 <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700, lineHeight: 1.2 }}>{row.gameTitle}</span>
-                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname}</span>
-                <span style={{ fontSize: 18 }}>{countryCodeToFlag(row.countryCode)}</span>
+                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname ?? "-"}</span>
+                <span style={{ fontSize: 18 }}>{row.countryCode ? countryCodeToFlag(row.countryCode) : "-"}</span>
                 <details style={{ justifySelf: "end" }}>
                   <summary
                     style={{
@@ -301,7 +315,7 @@ export default async function ArenaPage() {
                       background: "rgba(34,211,238,0.08)",
                     }}
                   >
-                    {row.score}
+                    {row.score ?? "-"}
                     <span aria-hidden style={{ fontSize: 10, lineHeight: 1 }}>
                       ▾
                     </span>
@@ -327,7 +341,7 @@ export default async function ArenaPage() {
                 </details>
               </div>
             ))}
-            {weeklyLeaders.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No scores yet this week</p>}
+            {!weeklyLeaders.some((row) => row.hasWeeklyScore) && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No scores yet this week</p>}
           </div>
           <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
             Weekly Leaders resets every Monday at 00:00 UTC and tracks this week&apos;s #1 player for each game.
