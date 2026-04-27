@@ -8,18 +8,8 @@ const LEADERBOARD_TABLE = "leaderboard" as const;
 const SESSION_TABLE = "leaderboard_sessions" as const;
 const NICKNAME_HAS_LETTER_OR_NUMBER = /[\p{L}\p{N}]/u;
 
-type ScoreRange = { min: number; max: number };
-const SCORE_LIMITS_BY_GAME_ID: Record<string, ScoreRange> = {
-  // Reported abuse targets (quick hard guardrails).
-  "color-conflict": { min: 0, max: 300 },
-  "color-conflict-2": { min: 0, max: 300 },
-  "sequence-memory": { min: 0, max: 100 },
-  "number-memory": { min: 1, max: 100 },
-  "instant-comparison": { min: 0, max: 300 },
-  "visual-memory": { min: 0, max: 100 },
-  "typing-speed": { min: 1, max: 300 },
-  "angle-precision": { min: 0, max: 180 },
-};
+/** Postgres INT4-safe ceiling only (prevents overflow); not a gameplay cap. */
+const SCORE_DB_MAX = 2_147_483_647;
 
 /**
  * Rank a new row would get (1 = best) before insert: all existing ties rank ahead of the newcomer
@@ -250,17 +240,15 @@ export async function POST(req: NextRequest) {
   }
 
   const asc = leaderboardUsesAscendingScore(gameId);
-  const fallbackRange: ScoreRange = asc
-    ? { min: 1, max: 3_600_000 } // timing-based leaderboards (ms). 1h cap.
-    : { min: 0, max: 10_000 }; // score-based leaderboards.
-  const allowedRange = SCORE_LIMITS_BY_GAME_ID[gameId] ?? fallbackRange;
-  if (score < allowedRange.min || score > allowedRange.max) {
-    return NextResponse.json(
-      {
-        error: `Score out of allowed range for this game (${allowedRange.min}..${allowedRange.max})`,
-      },
-      { status: 400 },
-    );
+  if (score > SCORE_DB_MAX) {
+    return NextResponse.json({ error: "Invalid score" }, { status: 400 });
+  }
+  if (asc) {
+    if (score < 1) {
+      return NextResponse.json({ error: "Invalid score for time-based leaderboard" }, { status: 400 });
+    }
+  } else if (score < 0) {
+    return NextResponse.json({ error: "Invalid score" }, { status: 400 });
   }
 
   if (trash_talk != null) {
