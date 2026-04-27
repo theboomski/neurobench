@@ -25,6 +25,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: base, lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 },
     { url: `${base}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
+    { url: `${base}/arena`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
+    { url: `${base}/bracket`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
+    { url: `${base}/ugc`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 },
+    { url: `${base}/ugc/create`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.6 },
+    { url: `${base}/ugc/cockpit`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
+    { url: `${base}/ugc/history`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
+    { url: `${base}/ugc/my-games`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
+    { url: `${base}/ugc/profile`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
     { url: `${base}/blog`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
     ...require("../content/blog/posts.json").map((p: {slug: string}) => ({
       url: `${base}/blog/${p.slug}`,
