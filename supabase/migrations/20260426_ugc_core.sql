@@ -45,6 +45,8 @@ create table if not exists public.ugc_games (
   is_nsfw boolean not null default false,
   is_approved boolean not null default true,
   play_count int not null default 0,
+  balance_a_pick_count int not null default 0,
+  balance_b_pick_count int not null default 0,
   slug text not null unique,
   created_at timestamptz not null default now()
 );
@@ -94,7 +96,8 @@ values
   ('Sports', 'sports', 5),
   ('Anime', 'anime', 6),
   ('Food', 'food', 7),
-  ('Gaming', 'gaming', 8)
+  ('Gaming', 'gaming', 8),
+  ('Etc', 'etc', 9)
 on conflict (slug) do update
 set name = excluded.name, "order" = excluded."order";
 

@@ -7,8 +7,6 @@ import { ALL_GAMES } from "@/lib/games";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
 import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
-import { toUgcPath } from "@/lib/ugc";
-import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
 
 const INITIAL_PAGE_SIZE = 12;
 
@@ -22,7 +20,6 @@ const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
 };
 
 const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
-const ISO_NAME_BY_CODE = new Map(ISO_LANGUAGE_OPTIONS.map((x) => [x.code, x.name]));
 
 function mapGameType(category: GameData["category"]): Exclude<HomeTypeFilter, "all"> {
   if (category === "office-iq" || category === "korean-tv") return "game";
@@ -46,31 +43,12 @@ export type HomePageClientProps = {
   initialPlayCounts: Record<string, number>;
 };
 
-type HomeUgcGame = {
-  id: string;
-  type: "brackets" | "balance";
-  title: string;
-  cover_image_url: string | null;
-  play_count: number;
-  language: string;
-  slug: string;
-  category: { name: string } | null;
-  creator: { display_name: string | null } | null;
-};
-
 export default function HomePageClient({ initialPlayCounts }: HomePageClientProps) {
   const [queryState, setQueryState] = useState<{ category: HomeTypeFilter; sort: HomeSort }>(() => readInitialQuery());
   const category = queryState.category;
   const sort = queryState.sort;
   const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => ({ ...initialPlayCounts }));
   const [visibleCount, setVisibleCount] = useState(INITIAL_PAGE_SIZE);
-  const [ugcGames, setUgcGames] = useState<HomeUgcGame[]>([]);
-  const [includeUgc, setIncludeUgc] = useState(true);
-  const [includeNsfwUgc, setIncludeNsfwUgc] = useState(false);
-  const [ugcCategoryFilter, setUgcCategoryFilter] = useState<string>("all");
-  const [ugcLanguageFilter, setUgcLanguageFilter] = useState<string>("all");
-  const [ugcCategories, setUgcCategories] = useState<Array<{ id: number; name: string }>>([]);
-  const [ugcLanguages, setUgcLanguages] = useState<Array<{ code: string; count: number }>>([]);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const loadingMoreRef = useRef(false);
 
@@ -80,6 +58,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         ...g,
         type: mapGameType(g.category),
         latestIndex: idx,
+        releasedAtMs: g.releasedAt ? Date.parse(g.releasedAt) : Number.NaN,
       })),
     [],
   );
@@ -121,49 +100,20 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
     };
   }, [games]);
 
-  useEffect(() => {
-    let cancelled = false;
-    const run = async () => {
-      const res = await fetch("/api/ugc/filters", { cache: "no-store" });
-      const json = await res.json();
-      if (cancelled) return;
-      setUgcCategories((json.categories ?? []).map((c: { id: number; name: string }) => ({ id: c.id, name: c.name })));
-      setUgcLanguages(json.languages ?? []);
-    };
-    void run();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!includeUgc) {
-      setUgcGames([]);
-      return;
-    }
-    let cancelled = false;
-    const run = async () => {
-      const sp = new URLSearchParams({
-        sort: sort === "popular" ? "popular" : "latest",
-        includeNsfw: includeNsfwUgc ? "1" : "0",
-        limit: "20",
-      });
-      if (ugcCategoryFilter !== "all") sp.set("category", ugcCategoryFilter);
-      if (ugcLanguageFilter !== "all") sp.set("language", ugcLanguageFilter);
-      const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store" });
-      const json = await res.json();
-      if (!cancelled) setUgcGames(json.games ?? []);
-    };
-    void run();
-    return () => {
-      cancelled = true;
-    };
-  }, [includeUgc, includeNsfwUgc, sort, ugcCategoryFilter, ugcLanguageFilter]);
-
   const filteredSortedGames = useMemo(() => {
     const filtered = category === "all" ? games : games.filter((g) => g.type === category);
     if (sort === "latest") {
-      return [...filtered].sort((a, b) => a.latestIndex - b.latestIndex);
+      return [...filtered].sort((a, b) => {
+        const aHasDate = Number.isFinite(a.releasedAtMs);
+        const bHasDate = Number.isFinite(b.releasedAtMs);
+        if (aHasDate || bHasDate) {
+          if (!aHasDate) return 1;
+          if (!bHasDate) return -1;
+          if (b.releasedAtMs !== a.releasedAtMs) return b.releasedAtMs - a.releasedAtMs;
+        }
+        // Fallback for legacy games without releasedAt.
+        return b.latestIndex - a.latestIndex;
+      });
     }
     return [...filtered].sort((a, b) => {
       const aCount = playCounts[a.id] ?? 0;
@@ -291,76 +241,6 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
           </p>
         )}
       </section>
-
-      {includeUgc && (
-        <section style={{ marginBottom: 52 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.02em" }}>UGC Games</h2>
-            <Link href="/ugc" style={{ fontSize: 11, color: "#00FF94", textDecoration: "none", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
-              OPEN HUB →
-            </Link>
-          </div>
-          <div style={{ display: "flex", gap: 8, marginBottom: 10, flexWrap: "wrap" }}>
-            <button onClick={() => setIncludeUgc((v) => !v)} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "6px 10px", background: includeUgc ? "#00FF9422" : "transparent" }}>
-              Include UGC: {includeUgc ? "On" : "Off"}
-            </button>
-            <button onClick={() => setIncludeNsfwUgc((v) => !v)} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "6px 10px", background: includeNsfwUgc ? "#f472b622" : "transparent" }}>
-              Include NSFW: {includeNsfwUgc ? "On" : "Off"}
-            </button>
-          </div>
-          <div style={{ display: "flex", gap: 6, marginBottom: 8, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-            <button onClick={() => setUgcCategoryFilter("all")} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "5px 9px", background: ugcCategoryFilter === "all" ? "#00FF9422" : "transparent", whiteSpace: "nowrap" }}>
-              All categories
-            </button>
-            {ugcCategories.map((cat) => (
-              <button key={cat.id} onClick={() => setUgcCategoryFilter(String(cat.id))} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "5px 9px", background: ugcCategoryFilter === String(cat.id) ? "#00FF9422" : "transparent", whiteSpace: "nowrap" }}>
-                {cat.name}
-              </button>
-            ))}
-          </div>
-          <div style={{ display: "flex", gap: 6, marginBottom: 10, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 2 }}>
-            <button onClick={() => setUgcLanguageFilter("all")} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "5px 9px", background: ugcLanguageFilter === "all" ? "#00FF9422" : "transparent", whiteSpace: "nowrap" }}>
-              All languages
-            </button>
-            {ugcLanguages.map((lang) => (
-              <button key={lang.code} onClick={() => setUgcLanguageFilter(lang.code)} style={{ fontSize: 11, border: "1px solid var(--border)", borderRadius: 999, padding: "5px 9px", background: ugcLanguageFilter === lang.code ? "#00FF9422" : "transparent", whiteSpace: "nowrap" }}>
-                {(ISO_NAME_BY_CODE.get(lang.code) ?? lang.code.toUpperCase())} ({lang.count})
-              </button>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-            {ugcGames.map((game) => (
-              <Link key={game.id} href={toUgcPath(game)} style={{ textDecoration: "none" }}>
-                <article
-                  style={{
-                    position: "relative",
-                    borderRadius: 12,
-                    border: "1px solid var(--border)",
-                    overflow: "hidden",
-                    aspectRatio: "4 / 3",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    background: game.cover_image_url
-                      ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${game.cover_image_url}) center/cover`
-                      : "linear-gradient(160deg, #202028, #101015)",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
-                    <span style={{ fontSize: 10, fontFamily: "var(--font-mono)", background: "#00000070", padding: "3px 6px", borderRadius: 999 }}>UGC</span>
-                    <span style={{ fontSize: 10, fontFamily: "var(--font-mono)", background: "#00000070", padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
-                  </div>
-                  <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
-                    <div style={{ fontSize: 10, color: "#9fffd2", fontFamily: "var(--font-mono)" }}>{game.category?.name ?? "Uncategorized"} · {game.language?.toUpperCase?.() ?? "EN"}</div>
-                    <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
-                    <div style={{ marginTop: 4, fontSize: 10, color: "#d7d7db" }}>by {game.creator?.display_name ?? "Anonymous"}</div>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* Latest from the Blog */}
       <section style={{ marginBottom: 56 }}>

@@ -5,7 +5,8 @@ type Body = {
   gameId?: string;
   winnerItemId?: string | null;
   winnerOption?: "a" | "b" | null;
-  itemMatchStats?: { id: string; won: boolean }[];
+  itemMatchStats?: { id: string; matchInc: number; winInc: number }[];
+  balanceRoundStats?: { aCount: number; bCount: number };
 };
 
 export async function POST(req: NextRequest) {
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   const { data: gameRow } = await admin
     .from("ugc_games")
-    .select("id,visibility,play_count")
+    .select("id,visibility,play_count,balance_a_pick_count,balance_b_pick_count")
     .eq("id", body.gameId)
     .single();
   if (!gameRow?.id) return NextResponse.json({ error: "Game not found" }, { status: 404 });
@@ -34,7 +35,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Game is closed" }, { status: 403 });
   }
   const currentPlayCount = Number(gameRow?.play_count ?? 0);
-  await admin.from("ugc_games").update({ play_count: currentPlayCount + 1 }).eq("id", body.gameId);
+  const nextGameUpdate: Record<string, number> = { play_count: currentPlayCount + 1 };
+  if (body.balanceRoundStats) {
+    nextGameUpdate.balance_a_pick_count = Number(gameRow?.balance_a_pick_count ?? 0) + Math.max(0, Number(body.balanceRoundStats.aCount ?? 0));
+    nextGameUpdate.balance_b_pick_count = Number(gameRow?.balance_b_pick_count ?? 0) + Math.max(0, Number(body.balanceRoundStats.bCount ?? 0));
+  }
+  await admin.from("ugc_games").update(nextGameUpdate).eq("id", body.gameId);
 
   if (body.itemMatchStats?.length) {
     for (const stat of body.itemMatchStats) {
@@ -43,8 +49,8 @@ export async function POST(req: NextRequest) {
         .select("match_count,win_count")
         .eq("id", stat.id)
         .single();
-      const matchCount = Number(data?.match_count ?? 0) + 1;
-      const winCount = Number(data?.win_count ?? 0) + (stat.won ? 1 : 0);
+      const matchCount = Number(data?.match_count ?? 0) + Math.max(0, Number(stat.matchInc ?? 0));
+      const winCount = Number(data?.win_count ?? 0) + Math.max(0, Number(stat.winInc ?? 0));
       await admin.from("ugc_brackets_items").update({ match_count: matchCount, win_count: winCount }).eq("id", stat.id);
     }
   }

@@ -22,6 +22,22 @@ export function deriveItemNameFromFilename(fileName: string): string {
   return base.replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
+export function sanitizeStorageFileName(fileName: string): string {
+  const lastDot = fileName.lastIndexOf(".");
+  const hasExt = lastDot > 0;
+  const rawBase = hasExt ? fileName.slice(0, lastDot) : fileName;
+  const rawExt = hasExt ? fileName.slice(lastDot + 1).toLowerCase() : "bin";
+  const safeBase = rawBase
+    .normalize("NFKD")
+    .replace(/[^\x00-\x7F]/g, "")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "")
+    .toLowerCase();
+  const safeExt = rawExt.replace(/[^a-z0-9]+/g, "");
+  return `${safeBase || "file"}.${safeExt || "bin"}`;
+}
+
 export function toUgcPath(game: Pick<UgcGame, "type" | "slug">): string {
   return game.type === "brackets" ? `/ugc/brackets/${game.slug}` : `/ugc/balance/${game.slug}`;
 }

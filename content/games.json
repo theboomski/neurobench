@@ -1037,6 +1037,7 @@
     },
     {
       "id": "color-conflict-2",
+      "releasedAt": "2026-04-20",
       "title": "Color Conflict 2",
       "clinicalTitle": "Meaning-Ink Match Inhibitory Control Assessment",
       "shortDescription": "Does the top word's meaning match the bottom word's ink color? Yes or No.",
@@ -1159,6 +1160,7 @@
     },
     {
       "id": "fish-frenzy",
+      "releasedAt": "2026-04-24",
       "title": "Fish Frenzy",
       "clinicalTitle": "Directional Conflict Cognitive Flexibility Test",
       "shortDescription": "Blue fish: swipe where they swim. Purple fish: swipe where they point. 30 seconds. Go.",

@@ -1,66 +1,96 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
-
-function initialsFromUser(user: User) {
-  const source = user.user_metadata?.full_name || user.email || "U";
-  return String(source).trim().slice(0, 1).toUpperCase();
-}
 
 export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const supabase = useMemo(() => getSupabaseBrowser(), []);
 
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
+    supabase.auth.getSession().then(async ({ data }) => {
+      const sessionUser = data.session?.user ?? null;
+      setUser(sessionUser);
+      if (!sessionUser) {
+        setAvatarUrl(null);
+        return;
+      }
+      const { data: profile } = await supabase.from("profiles").select("avatar_url").eq("id", sessionUser.id).single();
+      setAvatarUrl(profile?.avatar_url ?? null);
+    });
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (!session?.user) setAvatarUrl(null);
     });
     return () => sub.subscription.unsubscribe();
   }, [supabase]);
 
   useEffect(() => {
     if (!supabase || !user) return;
-    void supabase.from("profiles").upsert({
+    void supabase.from("profiles").insert({
       id: user.id,
       email: user.email ?? null,
-      display_name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User",
-      avatar_url: user.user_metadata?.avatar_url ?? null,
-    });
+      display_name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User"
+    }, { ignoreDuplicates: true });
   }, [supabase, user]);
 
-  if (!user) {
-    return (
-      <Link href="/ugc/create" style={{ marginLeft: "auto", fontSize: 11, fontWeight: 800, color: "#00FF94", textDecoration: "none", fontFamily: "var(--font-mono)" }}>
-        LOGIN / SIGNUP
-      </Link>
-    );
-  }
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [open]);
 
   return (
-    <div style={{ marginLeft: "auto", position: "relative" }}>
-      <button onClick={() => setOpen((v) => !v)} style={{ width: 34, height: 34, borderRadius: "999px", border: "1px solid var(--border)", background: "var(--bg-card)", color: "var(--text-1)", fontWeight: 900 }}>
-        {initialsFromUser(user)}
+    <div ref={rootRef} style={{ marginLeft: "auto", position: "relative" }}>
+      <button onClick={() => setOpen((v) => !v)} style={{ width: 34, height: 34, borderRadius: "999px", border: "1px solid var(--border)", background: "var(--bg-card)", color: "var(--text-1)", fontWeight: 900, overflow: "hidden", cursor: "pointer" }}>
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="Profile avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          <span style={{ display: "grid", placeItems: "center", width: "100%", height: "100%", fontSize: 14 }}>
+            👤
+          </span>
+        )}
       </button>
       {open && (
         <div style={{ position: "absolute", right: 0, top: 42, minWidth: 180, border: "1px solid var(--border)", background: "var(--bg-card)", borderRadius: 10, overflow: "hidden", zIndex: 50 }}>
-          <Link href="/ugc/profile" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Profile</Link>
-          <Link href="/ugc/history" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Play History</Link>
-          <Link href="/ugc/my-games" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>My Games</Link>
-          <button
-            onClick={() => {
-              setOpen(false);
-              void supabase?.auth.signOut();
-            }}
-            style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 12px", background: "transparent", color: "#f87171", border: "none" }}
-          >
-            Logout
-          </button>
+          {user ? (
+            <>
+              <Link onClick={() => setOpen(false)} href="/ugc/cockpit" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Cockpit</Link>
+              <Link onClick={() => setOpen(false)} href="/ugc/profile" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Profile</Link>
+              <Link onClick={() => setOpen(false)} href="/ugc/create" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Create Game</Link>
+              <Link onClick={() => setOpen(false)} href="/ugc/history" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Play History</Link>
+              <Link onClick={() => setOpen(false)} href="/ugc/my-games" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>My Games</Link>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  void supabase?.auth.signOut();
+                }}
+                style={{ display: "block", width: "100%", textAlign: "left", padding: "10px 12px", background: "transparent", color: "#f87171", border: "none" }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link onClick={() => setOpen(false)} href="/ugc/cockpit" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>
+                Log in
+              </Link>
+              <Link onClick={() => setOpen(false)} href="/ugc/cockpit" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)" }}>
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>

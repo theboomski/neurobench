@@ -9,6 +9,8 @@ export interface GameRank {
 
 export interface GameData {
   id: string;
+  /** ISO date (YYYY-MM-DD). Used for Latest sort; add this for new games. */
+  releasedAt?: string;
   title: string;
   clinicalTitle: string;
   shortDescription: string;
