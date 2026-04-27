@@ -12,13 +12,15 @@ export async function GET(req: NextRequest) {
   const language = qp.get("language");
   const includeNsfw = qp.get("includeNsfw") === "1";
   const limit = Math.min(Number(qp.get("limit") ?? "60"), 120);
+  const offset = Math.max(Number(qp.get("offset") ?? "0"), 0);
+  const fetchSize = limit + 1;
 
   let query = supabase
     .from("ugc_games")
     .select("id,user_id,type,title,description,cover_image_url,category_id,language,visibility,is_nsfw,is_approved,play_count,slug,created_at")
     .eq("visibility", "public")
     .eq("is_approved", true)
-    .limit(limit);
+    .range(offset, offset + fetchSize - 1);
 
   if (type === "brackets" || type === "balance") query = query.eq("type", type);
   if (category && category !== "all") query = query.eq("category_id", Number(category));
@@ -27,10 +29,13 @@ export async function GET(req: NextRequest) {
   query = sort === "popular" ? query.order("play_count", { ascending: false }) : query.order("created_at", { ascending: false });
 
   const { data: games, error } = await query;
-  if (error || !games?.length) return NextResponse.json({ games: [] });
+  if (error || !games?.length) return NextResponse.json({ games: [], hasMore: false, nextOffset: offset });
 
-  const userIds = [...new Set(games.map((g) => g.user_id))];
-  const categoryIds = [...new Set(games.map((g) => g.category_id).filter(Boolean))];
+  const hasMore = games.length > limit;
+  const pageGames = hasMore ? games.slice(0, limit) : games;
+
+  const userIds = [...new Set(pageGames.map((g) => g.user_id))];
+  const categoryIds = [...new Set(pageGames.map((g) => g.category_id).filter(Boolean))];
 
   const [{ data: profiles }, { data: categories }] = await Promise.all([
     supabase.from("profiles").select("id,display_name,avatar_url").in("id", userIds),
@@ -43,10 +48,12 @@ export async function GET(req: NextRequest) {
   const categoryMap = new Map((categories ?? []).map((c) => [c.id, c]));
 
   return NextResponse.json({
-    games: games.map((g) => ({
+    games: pageGames.map((g) => ({
       ...g,
       creator: profileMap.get(g.user_id) ?? null,
       category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
     })),
+    hasMore,
+    nextOffset: offset + pageGames.length,
   });
 }

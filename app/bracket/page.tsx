@@ -34,7 +34,7 @@ async function getBracketBootstrap() {
       .eq("is_approved", true)
       .eq("is_nsfw", false)
       .order("created_at", { ascending: false })
-      .limit(80),
+      .limit(16),
     supabase.from("ugc_categories").select("id,name").eq("is_active", true).order("order", { ascending: true }),
     supabase.from("ugc_games").select("language").eq("visibility", "public").eq("is_approved", true).limit(5000),
   ]);

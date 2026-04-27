@@ -20,6 +20,7 @@ type HubGame = {
 
 const MUSTARD = "#b8860b";
 const ISO_NAME_BY_CODE = new Map(ISO_LANGUAGE_OPTIONS.map((x) => [x.code, x.name]));
+const PAGE_SIZE = 16;
 
 type BracketHubClientProps = {
   initialGames?: HubGame[];
@@ -34,6 +35,9 @@ export default function BracketHubClient({
 }: BracketHubClientProps) {
   const [games, setGames] = useState<HubGame[]>(initialGames);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [offset, setOffset] = useState(initialGames.length);
+  const [hasMore, setHasMore] = useState(initialGames.length === PAGE_SIZE);
   const [sort, setSort] = useState<"popular" | "latest">("latest");
   const [includeNsfw, setIncludeNsfw] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -46,7 +50,9 @@ export default function BracketHubClient({
   const sortRef = useRef<HTMLDivElement | null>(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const languageRef = useRef<HTMLDivElement | null>(null);
-  const hydratedRef = useRef(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const requestIdRef = useRef(0);
+  const didSkipInitialRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -65,23 +71,30 @@ export default function BracketHubClient({
 
   useEffect(() => {
     let cancelled = false;
+    if (!didSkipInitialRef.current && initialGames.length > 0 && sort === "latest" && !includeNsfw && categoryFilter === "all" && languageFilter === "all") {
+      didSkipInitialRef.current = true;
+      return () => {
+        cancelled = true;
+      };
+    }
+    const requestId = ++requestIdRef.current;
     const run = async () => {
-      if (!hydratedRef.current) {
-        hydratedRef.current = true;
-        return;
-      }
       setLoading(true);
       const sp = new URLSearchParams({
         sort,
         includeNsfw: includeNsfw ? "1" : "0",
-        limit: "80",
+        limit: String(PAGE_SIZE),
+        offset: "0",
       });
       if (categoryFilter !== "all") sp.set("category", categoryFilter);
       if (languageFilter !== "all") sp.set("language", languageFilter);
       const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store" });
       const json = await res.json();
-      if (cancelled) return;
-      setGames(json.games ?? []);
+      if (cancelled || requestId !== requestIdRef.current) return;
+      const nextGames = (json.games ?? []) as HubGame[];
+      setGames(nextGames);
+      setOffset(Number(json.nextOffset ?? nextGames.length));
+      setHasMore(Boolean(json.hasMore));
       setLoading(false);
     };
     void run();
@@ -89,6 +102,45 @@ export default function BracketHubClient({
       cancelled = true;
     };
   }, [sort, includeNsfw, categoryFilter, languageFilter]);
+
+  useEffect(() => {
+    const node = loaderRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (!first?.isIntersecting) return;
+        if (loading || loadingMore || !hasMore) return;
+        setLoadingMore(true);
+        const currentRequestId = requestIdRef.current;
+        const run = async () => {
+          const sp = new URLSearchParams({
+            sort,
+            includeNsfw: includeNsfw ? "1" : "0",
+            limit: String(PAGE_SIZE),
+            offset: String(offset),
+          });
+          if (categoryFilter !== "all") sp.set("category", categoryFilter);
+          if (languageFilter !== "all") sp.set("language", languageFilter);
+          const res = await fetch(`/api/ugc/feed?${sp.toString()}`, { cache: "no-store" });
+          const json = await res.json();
+          if (currentRequestId !== requestIdRef.current) {
+            setLoadingMore(false);
+            return;
+          }
+          const nextGames = (json.games ?? []) as HubGame[];
+          setGames((prev) => [...prev, ...nextGames]);
+          setOffset(Number(json.nextOffset ?? offset + nextGames.length));
+          setHasMore(Boolean(json.hasMore));
+          setLoadingMore(false);
+        };
+        void run();
+      },
+      { rootMargin: "240px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [sort, includeNsfw, categoryFilter, languageFilter, offset, hasMore, loading, loadingMore]);
 
   useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -222,7 +274,7 @@ export default function BracketHubClient({
                 <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
                 <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 10, color: "#e7d9b8" }}>
                   {game.creator?.avatar_url ? (
-                    <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
+                    <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} loading="lazy" decoding="async" style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
                   ) : (
                     <span style={{ width: 18, height: 18, borderRadius: "999px", border: "1px solid rgba(255,255,255,0.22)", display: "grid", placeItems: "center", fontSize: 10 }}>👤</span>
                   )}
@@ -233,6 +285,11 @@ export default function BracketHubClient({
           </Link>
         ))}
       </div>
+      {hasMore && (
+        <div ref={loaderRef} style={{ marginTop: 12, minHeight: 24, display: "grid", placeItems: "center" }}>
+          <span style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{loadingMore ? "Loading more..." : "Scroll for more"}</span>
+        </div>
+      )}
     </div>
   );
 }
