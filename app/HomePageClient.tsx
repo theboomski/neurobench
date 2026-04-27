@@ -58,6 +58,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         ...g,
         type: mapGameType(g.category),
         latestIndex: idx,
+        releasedAtMs: g.releasedAt ? Date.parse(g.releasedAt) : Number.NaN,
       })),
     [],
   );
@@ -102,7 +103,17 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
   const filteredSortedGames = useMemo(() => {
     const filtered = category === "all" ? games : games.filter((g) => g.type === category);
     if (sort === "latest") {
-      return [...filtered].sort((a, b) => a.latestIndex - b.latestIndex);
+      return [...filtered].sort((a, b) => {
+        const aHasDate = Number.isFinite(a.releasedAtMs);
+        const bHasDate = Number.isFinite(b.releasedAtMs);
+        if (aHasDate || bHasDate) {
+          if (!aHasDate) return 1;
+          if (!bHasDate) return -1;
+          if (b.releasedAtMs !== a.releasedAtMs) return b.releasedAtMs - a.releasedAtMs;
+        }
+        // Fallback for legacy games without releasedAt.
+        return b.latestIndex - a.latestIndex;
+      });
     }
     return [...filtered].sort((a, b) => {
       const aCount = playCounts[a.id] ?? 0;
