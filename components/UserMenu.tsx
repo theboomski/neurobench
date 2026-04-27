@@ -9,6 +9,7 @@ export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [isCompact, setIsCompact] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const supabase = useMemo(() => getSupabaseBrowser(), []);
 
@@ -51,8 +52,17 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, [open]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 900px)");
+    const sync = () => setIsCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   return (
-    <div ref={rootRef} style={{ marginLeft: "auto", position: "relative" }}>
+    <div ref={rootRef} style={{ position: "relative", flexShrink: 0, marginRight: isCompact ? 20 : 0 }}>
       <button onClick={() => setOpen((v) => !v)} style={{ width: 34, height: 34, borderRadius: "999px", border: "1px solid var(--border)", background: "var(--bg-card)", color: "var(--text-1)", fontWeight: 900, overflow: "hidden", cursor: "pointer" }}>
         {avatarUrl ? (
           <img src={avatarUrl} alt="Profile avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />

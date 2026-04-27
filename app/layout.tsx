@@ -58,6 +58,39 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Suspense fallback={null}>
                 <HomeHeaderControls />
               </Suspense>
+              <a
+                href="https://discord.gg/D3x4VbtNn5"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Join ZAZAZA Discord"
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 999,
+                  border: "1px solid var(--border)",
+                  background: "var(--bg-card)",
+                  color: "var(--text-1)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                  flexShrink: 0,
+                }}
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M20.317 4.369A19.791 19.791 0 0 0 15.379 3c-.213.387-.463.907-.634 1.314a18.27 18.27 0 0 0-5.49 0A13.607 13.607 0 0 0 8.62 3a19.736 19.736 0 0 0-4.94 1.37C.553 9.09-.286 13.694.134 18.233a19.922 19.922 0 0 0 6.067 3.066c.49-.665.927-1.37 1.301-2.115a12.965 12.965 0 0 1-2.045-.979c.172-.123.34-.251.503-.384 3.94 1.85 8.214 1.85 12.108 0 .164.133.332.261.503.384-.654.386-1.338.714-2.045.979.374.746.81 1.45 1.301 2.115a19.89 19.89 0 0 0 6.067-3.066c.493-5.263-.842-9.827-3.577-13.864ZM8.02 15.43c-1.181 0-2.154-1.085-2.154-2.419 0-1.333.95-2.418 2.154-2.418 1.214 0 2.173 1.095 2.154 2.418 0 1.334-.95 2.419-2.154 2.419Zm7.96 0c-1.182 0-2.154-1.085-2.154-2.419 0-1.333.95-2.418 2.154-2.418 1.214 0 2.173 1.095 2.154 2.418 0 1.334-.95 2.419-2.154 2.419Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </a>
               <UserMenu />
             </div>
           </div>

@@ -215,7 +215,7 @@ export default function HomeHeaderControls() {
             display: "flex",
             flex: 1,
             minWidth: 0,
-            maxWidth: "calc(100% - 168px)",
+            maxWidth: "calc(100% - 220px)",
             gap: 4,
             flexWrap: "nowrap",
             alignItems: "center",
@@ -463,7 +463,7 @@ export default function HomeHeaderControls() {
         </div>
       )}
 
-      <div ref={sortToggleRef} style={{ position: "relative", flexShrink: 0, marginLeft: "auto", zIndex: 50 }}>
+      <div ref={sortToggleRef} style={{ position: "relative", flexShrink: 0, marginLeft: isCompactHeader ? 0 : "auto", zIndex: 50 }}>
         <button
           type="button"
           onClick={() => setSortOpen((v) => !v)}
