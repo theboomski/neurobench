@@ -75,8 +75,6 @@ export default function HomeHeaderControls() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  if (!isHome) return null;
-
   const setQuery = (nextCategory: HomeTypeFilter, nextSort: HomeSort) => {
     const query = new URLSearchParams();
     if (nextCategory !== "all") query.set("category", nextCategory);
