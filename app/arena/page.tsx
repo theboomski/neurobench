@@ -105,8 +105,7 @@ function buildCountryRankings(rows: LeaderboardRow[]): CountryRankRow[] {
     .sort((a, b) => {
       if (b.points !== a.points) return b.points - a.points;
       return a.countryCode.localeCompare(b.countryCode);
-    })
-    .slice(0, 10);
+    });
 }
 
 function buildHallOfFame(rows: LeaderboardRow[], playCounts: Record<string, number>): HallOfFameRow[] {
