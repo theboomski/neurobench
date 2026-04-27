@@ -25,10 +25,11 @@ type HallOfFameRow = {
   gameId: string;
   gameTitle: string;
   gamePath: string;
-  nickname: string;
-  score: number;
-  countryCode: string;
+  nickname: string | null;
+  score: number | null;
+  countryCode: string | null;
   playCount: number;
+  hasAllTimeScore: boolean;
 };
 
 type WeeklyLeaderRow = {
@@ -123,16 +124,16 @@ function buildHallOfFame(rows: LeaderboardRow[], playCounts: Record<string, numb
   const hallRows: HallOfFameRow[] = [];
   for (const game of leaderboardGames) {
     const entries = grouped.get(game.id) ?? [];
-    if (entries.length === 0) continue;
-    const best = [...entries].sort(compareRowsByGameRules)[0];
+    const best = entries.length > 0 ? [...entries].sort(compareRowsByGameRules)[0] : null;
     hallRows.push({
       gameId: game.id,
       gameTitle: game.title,
       gamePath: `/${game.category}/${game.id}`,
-      nickname: best.nickname,
-      score: best.score,
-      countryCode: (best.country_code || "US").toUpperCase(),
+      nickname: best?.nickname ?? null,
+      score: best?.score ?? null,
+      countryCode: best ? (best.country_code || "US").toUpperCase() : null,
       playCount: playCounts[game.id] ?? 0,
+      hasAllTimeScore: !!best,
     });
   }
 
@@ -380,8 +381,8 @@ export default async function ArenaPage() {
                 }}
               >
                 <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700, lineHeight: 1.2 }}>{row.gameTitle}</span>
-                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname}</span>
-                <span style={{ fontSize: 18 }}>{countryCodeToFlag(row.countryCode)}</span>
+                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname ?? "-"}</span>
+                <span style={{ fontSize: 18 }}>{row.countryCode ? countryCodeToFlag(row.countryCode) : "-"}</span>
                 <details style={{ justifySelf: "end" }}>
                   <summary
                     style={{
@@ -402,7 +403,7 @@ export default async function ArenaPage() {
                       background: "rgba(56,189,248,0.08)",
                     }}
                   >
-                    {row.score}
+                    {row.score ?? "-"}
                     <span aria-hidden style={{ fontSize: 10, lineHeight: 1 }}>
                       ▾
                     </span>
@@ -428,7 +429,7 @@ export default async function ArenaPage() {
                 </details>
               </div>
             ))}
-            {hallOfFame.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No leaderboard data yet.</p>}
+            {!hallOfFame.some((row) => row.hasAllTimeScore) && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No leaderboard data yet.</p>}
           </div>
           <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
             Hall of Fame shows the current all-time #1 score for each game. Rankings update in real time - anyone can claim the top spot.
