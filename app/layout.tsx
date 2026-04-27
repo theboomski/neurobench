@@ -67,12 +67,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* FOOTER */}
         <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px" }}>
-          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 24, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 10, flexWrap: "nowrap", alignItems: "center", whiteSpace: "nowrap", overflowX: "auto", scrollbarWidth: "none" }}>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>ZAZAZA</span>
-            <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>© {new Date().getFullYear()}</span>
+            <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginLeft: -4 }}>© {new Date().getFullYear()}</span>
             <Link href="/about" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>About</Link>
             <Link href="/privacy-policy" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>Privacy</Link>
             <Link href="/terms-of-service" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>Terms</Link>
+            <Link href="/guidelines" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>Guidelines</Link>
           </div>
         </footer>
 
