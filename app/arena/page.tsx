@@ -236,7 +236,7 @@ export default async function ArenaPage() {
 
       <section style={{ marginBottom: 28 }}>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #00FF94", borderRadius: "var(--radius-lg)", padding: "16px 14px" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Global Country Rankings</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Global Weekly Country Rankings</h2>
           <div style={{ display: "grid", gap: 6 }}>
             <div style={{ display: "grid", gridTemplateColumns: "44px 1fr 78px", gap: 8, fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", textTransform: "uppercase" }}>
               <span>Rank</span>
@@ -262,7 +262,7 @@ export default async function ArenaPage() {
 
       <section style={{ marginBottom: 48 }}>
         <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #22d3ee", borderRadius: "var(--radius-lg)", padding: "16px 14px", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>Weekly Leaders</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Weekly Leaders</h2>
           <div style={{ display: "grid", gap: 6 }}>
             <div
               style={{
