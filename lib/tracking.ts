@@ -44,6 +44,13 @@ type LeaderboardPostJson = {
   errorFull?: { message?: string; code?: string; details?: string; hint?: string };
 };
 
+type LeaderboardSessionJson = {
+  nonce?: string;
+  expiresAt?: string;
+  signature?: string;
+  error?: string;
+};
+
 export async function saveToLeaderboard(
   gameId: string,
   nickname: string,
@@ -52,6 +59,16 @@ export async function saveToLeaderboard(
   trashTalk?: string | null,
 ): Promise<SaveLeaderboardResult> {
   try {
+    const sessionRes = await fetch("/api/leaderboard/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gameId }),
+    });
+    const sessionJson = (await sessionRes.json().catch(() => ({}))) as LeaderboardSessionJson;
+    if (!sessionRes.ok || !sessionJson.nonce || !sessionJson.expiresAt || !sessionJson.signature) {
+      return { ok: false, message: sessionJson.error ?? "Failed to create leaderboard session." };
+    }
+
     const res = await fetch("/api/leaderboard", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -60,6 +77,9 @@ export async function saveToLeaderboard(
         nickname,
         score,
         countryCode,
+        nonce: sessionJson.nonce,
+        expiresAt: sessionJson.expiresAt,
+        signature: sessionJson.signature,
         ...(trashTalk != null && trashTalk !== "" ? { trashTalk } : {}),
       }),
     });

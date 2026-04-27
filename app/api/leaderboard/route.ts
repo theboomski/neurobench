@@ -1,9 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient, type PostgrestError, type SupabaseClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 import { TRASH_TALK_ALLOWLIST } from "@/lib/leaderboardTrashTalk";
 import { leaderboardUsesAscendingScore } from "@/lib/leaderboardConfig";
 
 const LEADERBOARD_TABLE = "leaderboard" as const;
+const SESSION_TABLE = "leaderboard_sessions" as const;
+const NICKNAME_HAS_LETTER_OR_NUMBER = /[\p{L}\p{N}]/u;
+
+type ScoreRange = { min: number; max: number };
+const SCORE_LIMITS_BY_GAME_ID: Record<string, ScoreRange> = {
+  // Reported abuse targets (quick hard guardrails).
+  "color-conflict": { min: 0, max: 300 },
+  "color-conflict-2": { min: 0, max: 300 },
+  "sequence-memory": { min: 0, max: 100 },
+  "number-memory": { min: 1, max: 100 },
+  "instant-comparison": { min: 0, max: 300 },
+  "visual-memory": { min: 0, max: 100 },
+  "typing-speed": { min: 1, max: 300 },
+  "angle-precision": { min: 0, max: 180 },
+};
 
 /**
  * Rank a new row would get (1 = best) before insert: all existing ties rank ahead of the newcomer
@@ -68,6 +84,21 @@ function serializePostgrestError(err: PostgrestError): Record<string, string | u
     details: err.details,
     hint: err.hint,
   };
+}
+
+function getSigningSecret() {
+  return process.env.LEADERBOARD_SIGNING_SECRET ?? process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+}
+
+function signPayload(secret: string, payload: string) {
+  return crypto.createHmac("sha256", secret).update(payload).digest("hex");
+}
+
+function safeEqualHex(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a, "hex");
+  const bBuf = Buffer.from(b, "hex");
+  if (aBuf.length !== bBuf.length) return false;
+  return crypto.timingSafeEqual(aBuf, bBuf);
 }
 
 export async function GET(req: NextRequest) {
@@ -159,7 +190,16 @@ export async function POST(req: NextRequest) {
    */
   const supabase = createClient(url, key);
 
-  let body: { gameId?: string; nickname?: string; score?: number; countryCode?: string; trashTalk?: string | null };
+  let body: {
+    gameId?: string;
+    nickname?: string;
+    score?: number;
+    countryCode?: string;
+    trashTalk?: string | null;
+    nonce?: string;
+    expiresAt?: string;
+    signature?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -170,6 +210,9 @@ export async function POST(req: NextRequest) {
   const score = typeof body.score === "number" && Number.isFinite(body.score) ? Math.round(body.score) : NaN;
   const countryRaw = typeof body.countryCode === "string" ? body.countryCode : "US";
   const country_code = countryRaw.slice(0, 2).toUpperCase() || "US";
+  const nonce = typeof body.nonce === "string" ? body.nonce.trim() : "";
+  const expiresAt = typeof body.expiresAt === "string" ? body.expiresAt.trim() : "";
+  const signature = typeof body.signature === "string" ? body.signature.trim().toLowerCase() : "";
 
   let trash_talk: string | null = null;
   if (body.trashTalk != null && body.trashTalk !== "") {
@@ -186,9 +229,38 @@ export async function POST(req: NextRequest) {
   if (!Number.isFinite(score)) {
     return NextResponse.json({ error: "Invalid score" }, { status: 400 });
   }
+  if (!nonce || !expiresAt || !signature) {
+    return NextResponse.json({ error: "Missing leaderboard session proof" }, { status: 400 });
+  }
+  const expiresMs = Date.parse(expiresAt);
+  if (!Number.isFinite(expiresMs) || expiresMs <= Date.now()) {
+    return NextResponse.json({ error: "Leaderboard session expired" }, { status: 400 });
+  }
+  const secret = getSigningSecret();
+  if (!secret) return NextResponse.json({ error: "missing_signing_secret" }, { status: 503 });
+  const expectedSignature = signPayload(secret, `${nonce}.${gameId}.${expiresAt}`);
+  if (!safeEqualHex(signature, expectedSignature)) {
+    return NextResponse.json({ error: "Invalid leaderboard session signature" }, { status: 400 });
+  }
+  if (!NICKNAME_HAS_LETTER_OR_NUMBER.test(nickname)) {
+    return NextResponse.json({ error: "Nickname must contain at least one letter or number" }, { status: 400 });
+  }
+
+  const asc = leaderboardUsesAscendingScore(gameId);
+  const fallbackRange: ScoreRange = asc
+    ? { min: 1, max: 3_600_000 } // timing-based leaderboards (ms). 1h cap.
+    : { min: 0, max: 10_000 }; // score-based leaderboards.
+  const allowedRange = SCORE_LIMITS_BY_GAME_ID[gameId] ?? fallbackRange;
+  if (score < allowedRange.min || score > allowedRange.max) {
+    return NextResponse.json(
+      {
+        error: `Score out of allowed range for this game (${allowedRange.min}..${allowedRange.max})`,
+      },
+      { status: 400 },
+    );
+  }
 
   if (trash_talk != null) {
-    const asc = leaderboardUsesAscendingScore(gameId);
     const rank = await placementRankForNewScore(supabase, gameId, score, asc);
     if (rank > 3) {
       return NextResponse.json(
@@ -205,6 +277,23 @@ export async function POST(req: NextRequest) {
     country_code,
   };
   if (trash_talk != null) row.trash_talk = trash_talk;
+
+  const { data: sessionClaim, error: sessionClaimError } = await supabase
+    .from(SESSION_TABLE)
+    .update({ used: true })
+    .eq("nonce", nonce)
+    .eq("game_id", gameId)
+    .eq("expires_at", expiresAt)
+    .eq("used", false)
+    .gt("expires_at", new Date().toISOString())
+    .select("nonce")
+    .limit(1);
+  if (sessionClaimError) {
+    return NextResponse.json({ error: "Failed to verify leaderboard session" }, { status: 500 });
+  }
+  if (!sessionClaim?.length) {
+    return NextResponse.json({ error: "Leaderboard session is invalid or already used" }, { status: 400 });
+  }
 
   console.log(`[leaderboard POST] insert → "${LEADERBOARD_TABLE}"`, {
     game_id: row.game_id,
