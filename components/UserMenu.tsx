@@ -33,11 +33,11 @@ export default function UserMenu() {
 
   useEffect(() => {
     if (!supabase || !user) return;
-    void supabase.from("profiles").insert({
+    void supabase.from("profiles").upsert({
       id: user.id,
       email: user.email ?? null,
       display_name: user.user_metadata?.full_name ?? user.email?.split("@")[0] ?? "User"
-    }, { ignoreDuplicates: true });
+    }, { onConflict: "id", ignoreDuplicates: true });
   }, [supabase, user]);
 
   useEffect(() => {

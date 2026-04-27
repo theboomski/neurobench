@@ -13,6 +13,15 @@ type Row = {
   winner_option: "a" | "b" | null;
   ugc_games: { title: string; slug: string; type: "brackets" | "balance" } | null;
 };
+type RawRow = {
+  id: string;
+  played_at: string;
+  winner_option: "a" | "b" | null;
+  ugc_games:
+    | { title: string; slug: string; type: "brackets" | "balance" }
+    | Array<{ title: string; slug: string; type: "brackets" | "balance" }>
+    | null;
+};
 
 export default function UgcHistoryClient() {
   const supabase = useMemo(() => getSupabaseBrowser(), []);
@@ -31,7 +40,11 @@ export default function UgcHistoryClient() {
         .eq("user_id", u.id)
         .order("played_at", { ascending: false })
         .limit(100);
-      setRows((history as Row[]) ?? []);
+      const normalized = ((history as RawRow[] | null) ?? []).map((entry) => ({
+        ...entry,
+        ugc_games: Array.isArray(entry.ugc_games) ? (entry.ugc_games[0] ?? null) : entry.ugc_games,
+      }));
+      setRows(normalized);
     });
   }, [supabase]);
 
