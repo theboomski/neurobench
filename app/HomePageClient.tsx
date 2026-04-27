@@ -293,7 +293,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
             We aren&apos;t just here to give you a score. We&apos;re here to spark that "Aha!" moment — where you learn something new about yourself, the fascinating science behind a simple reaction time test, or the psychology woven into a color perception puzzle. Every test on ZAZAZA is a window into how the world actually works.
           </p>
           <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 24 }}>
-            ZAZAZA is a bridge. Between complex neuroscience and daily curiosity. Between your score and your friend&apos;s score. Compare your results, challenge the people around you, and grow your world — one test at a time. Unlike Lumosity or BrainHQ, we never charge you, never make you sign up, and never stand between you and the insight.
+            ZAZAZA is a bridge. Between complex neuroscience and daily curiosity. Between your score and your friend&apos;s score. Compare your results, challenge the people around you, and grow your world — one test at a time. Unlike Lumosity or BrainHQ, we never charge you.
           </p>
           <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginBottom: 28 }}>
             {[
