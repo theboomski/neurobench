@@ -21,21 +21,32 @@ type HubGame = {
 const MUSTARD = "#b8860b";
 const ISO_NAME_BY_CODE = new Map(ISO_LANGUAGE_OPTIONS.map((x) => [x.code, x.name]));
 
-export default function BracketHubClient() {
-  const [games, setGames] = useState<HubGame[]>([]);
-  const [loading, setLoading] = useState(true);
+type BracketHubClientProps = {
+  initialGames?: HubGame[];
+  initialCategories?: Array<{ id: number; name: string }>;
+  initialLanguages?: Array<{ code: string; count: number }>;
+};
+
+export default function BracketHubClient({
+  initialGames = [],
+  initialCategories = [],
+  initialLanguages = [],
+}: BracketHubClientProps) {
+  const [games, setGames] = useState<HubGame[]>(initialGames);
+  const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState<"popular" | "latest">("latest");
   const [includeNsfw, setIncludeNsfw] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [languageFilter, setLanguageFilter] = useState<string>("all");
-  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>([]);
-  const [languages, setLanguages] = useState<Array<{ code: string; count: number }>>([]);
+  const [categories, setCategories] = useState<Array<{ id: number; name: string }>>(initialCategories);
+  const [languages, setLanguages] = useState<Array<{ code: string; count: number }>>(initialLanguages);
   const [sortOpen, setSortOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement | null>(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const languageRef = useRef<HTMLDivElement | null>(null);
+  const hydratedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -55,6 +66,10 @@ export default function BracketHubClient() {
   useEffect(() => {
     let cancelled = false;
     const run = async () => {
+      if (!hydratedRef.current) {
+        hydratedRef.current = true;
+        return;
+      }
       setLoading(true);
       const sp = new URLSearchParams({
         sort,
@@ -176,50 +191,48 @@ export default function BracketHubClient() {
         </div>
       </div>
 
-      {loading ? (
-        <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Loading bracket games...</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-          {games.map((game) => (
-            <Link key={game.id} href={toUgcPath(game)} style={{ textDecoration: "none" }}>
-              <article
-                style={{
-                  position: "relative",
-                  borderRadius: 12,
-                  border: "none",
-                  overflow: "hidden",
-                  aspectRatio: "4 / 3",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  background: game.cover_image_url
-                    ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${game.cover_image_url}) center/cover`
-                    : "linear-gradient(160deg, #2b220f, #171107)",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
-                  <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>
-                    {game.type === "brackets" ? "BRACKET" : "BALANCE GAME"}
-                  </span>
-                  <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
+      {loading && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Updating games...</p>}
+      {!loading && games.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>No bracket games yet.</p>}
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
+        {games.map((game) => (
+          <Link key={game.id} href={toUgcPath(game)} style={{ textDecoration: "none" }}>
+            <article
+              style={{
+                position: "relative",
+                borderRadius: 12,
+                border: "none",
+                overflow: "hidden",
+                aspectRatio: "4 / 3",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                background: game.cover_image_url
+                  ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${game.cover_image_url}) center/cover`
+                  : "linear-gradient(160deg, #2b220f, #171107)",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
+                <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>
+                  {game.type === "brackets" ? "BRACKET" : "BALANCE GAME"}
+                </span>
+                <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
+              </div>
+              <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
+                <div style={{ fontSize: 10, color: "#f2d08a", fontFamily: "var(--font-mono)" }}>{game.category?.name ?? "Uncategorized"} · {game.language?.toUpperCase?.() ?? "EN"}</div>
+                <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
+                <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 10, color: "#e7d9b8" }}>
+                  {game.creator?.avatar_url ? (
+                    <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
+                  ) : (
+                    <span style={{ width: 18, height: 18, borderRadius: "999px", border: "1px solid rgba(255,255,255,0.22)", display: "grid", placeItems: "center", fontSize: 10 }}>👤</span>
+                  )}
+                  <span>by {game.creator?.display_name ?? "Anonymous"}</span>
                 </div>
-                <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
-                  <div style={{ fontSize: 10, color: "#f2d08a", fontFamily: "var(--font-mono)" }}>{game.category?.name ?? "Uncategorized"} · {game.language?.toUpperCase?.() ?? "EN"}</div>
-                  <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
-                  <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 10, color: "#e7d9b8" }}>
-                    {game.creator?.avatar_url ? (
-                      <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
-                    ) : (
-                      <span style={{ width: 18, height: 18, borderRadius: "999px", border: "1px solid rgba(255,255,255,0.22)", display: "grid", placeItems: "center", fontSize: 10 }}>👤</span>
-                    )}
-                    <span>by {game.creator?.display_name ?? "Anonymous"}</span>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      )}
+              </div>
+            </article>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
