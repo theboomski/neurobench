@@ -87,17 +87,13 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
     .order("order", { ascending: true });
   if (!items?.length) notFound();
 
-  const { data: winners } = await supabase
-    .from("ugc_play_history")
-    .select("winner_item_id")
-    .eq("game_id", game.id)
-    .not("winner_item_id", "is", null);
-
   const finalWins = new Map<string, number>();
-  for (const row of winners ?? []) {
-    const id = row.winner_item_id as string | null;
+  const { data: finalRows } = await supabase.rpc("ugc_bracket_final_wins", { p_game_id: game.id });
+  for (const row of finalRows ?? []) {
+    const id = (row as { winner_item_id?: string | null }).winner_item_id ?? null;
     if (!id) continue;
-    finalWins.set(id, (finalWins.get(id) ?? 0) + 1);
+    const count = Number((row as { final_wins?: number | string }).final_wins ?? 0);
+    finalWins.set(id, count);
   }
 
   const scoreboard = items.map((item) => {

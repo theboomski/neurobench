@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
 import { getSupabaseBrowser } from "@/lib/supabase";
@@ -34,6 +35,7 @@ export default function BracketHubClient({
   initialCategories = [],
   initialLanguages = [],
 }: BracketHubClientProps) {
+  const router = useRouter();
   const supabase = getSupabaseBrowser();
   const [games, setGames] = useState<HubGame[]>(initialGames);
   const [loading, setLoading] = useState(false);
@@ -54,6 +56,7 @@ export default function BracketHubClient({
   const languageRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const requestIdRef = useRef(0);
+  const hydratedInitialRef = useRef(false);
 
   const fetchFeed = async (sp: URLSearchParams) => {
     const headers: HeadersInit = {};
@@ -85,6 +88,11 @@ export default function BracketHubClient({
     let cancelled = false;
     const requestId = ++requestIdRef.current;
     const run = async () => {
+      if (!hydratedInitialRef.current && initialGames.length > 0 && sort === "latest" && !includeNsfw && categoryFilter === "all" && languageFilter === "all") {
+        hydratedInitialRef.current = true;
+        return;
+      }
+      hydratedInitialRef.current = true;
       setLoading(true);
       const sp = new URLSearchParams({
         sort,
@@ -251,7 +259,14 @@ export default function BracketHubClient({
       {!loading && games.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>No bracket games yet.</p>}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
         {games.map((game) => (
-          <Link key={game.id} href={toUgcPath(game)} style={{ textDecoration: "none" }}>
+          <Link
+            key={game.id}
+            href={toUgcPath(game)}
+            prefetch
+            onMouseEnter={() => router.prefetch(toUgcPath(game))}
+            onTouchStart={() => router.prefetch(toUgcPath(game))}
+            style={{ textDecoration: "none" }}
+          >
             <article
               style={{
                 position: "relative",
