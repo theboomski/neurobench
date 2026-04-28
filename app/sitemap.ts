@@ -4,6 +4,7 @@ import { ALL_GAMES } from "@/lib/games";
 import { getSupabaseServer } from "@/lib/supabase";
 
 const base = "https://zazaza.app";
+export const revalidate = 300;
 
 type BlogPost = { slug: string };
 
@@ -54,11 +55,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const supabase = getSupabaseServer();
   const ugcEntries: MetadataRoute.Sitemap = [];
   if (supabase) {
-    const { data: ugcGames } = await supabase
+    const { data: ugcGames, error } = await supabase
       .from("ugc_games")
       .select("slug,type,created_at,category:ugc_categories(slug)")
       .eq("visibility", "public")
-      .eq("is_approved", true);
+      .eq("is_approved", true)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return staticEntries;
+    }
 
     for (const g of ugcGames ?? []) {
       const lastModified = g.created_at ? new Date(g.created_at as string) : new Date();
