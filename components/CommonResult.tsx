@@ -124,7 +124,7 @@ function getGameBenchmarkNote(game: GameData, rawScore: number): string | null {
     "task-switching": { average: 58, unit: "%", higherIsBetter: true, metric: "cognitive flexibility score" },
     "vocabulary-age": { average: 61, unit: "%", higherIsBetter: true, metric: "vocabulary precision score" },
     "word-speed": { average: 57, unit: "%", higherIsBetter: true, metric: "lexical decision score" },
-    "word-association": { average: 60, unit: "%", higherIsBetter: true, metric: "semantic association score" },
+    "word-association": { average: 14, unit: "correct", higherIsBetter: true, metric: "correct associations in 30s" },
     "fish-frenzy": { average: 18, unit: "correct", higherIsBetter: true, metric: "directional-flexibility score" },
     "mini-speed-sudoku": { average: 320000, unit: "ms", higherIsBetter: false, metric: "3-round total completion time" },
   };

@@ -3562,7 +3562,7 @@
       "id": "word-association",
       "title": "Word Association IQ",
       "clinicalTitle": "Semantic Network & Associative Intelligence Assessment",
-      "shortDescription": "What comes to mind? The speed and quality of your word associations reveals your semantic intelligence.",
+      "shortDescription": "30-second sprint: pick the strongest association for as many random prompts as you can. Leaderboard counts total correct.",
       "description": "Measures the richness and speed of your semantic network — the web of word meanings and associations your brain maintains. Strong associative intelligence predicts creative thinking, verbal fluency, and problem-solving flexibility.",
       "emoji": "🕸️",
       "accent": "#6366F1",
@@ -3589,11 +3589,11 @@
       },
       "content": {
         "howToPlay": [
-          "A word will appear on screen.",
-          "Type or select the first related word that comes to mind as fast as possible.",
-          "There are no wrong answers — speed and semantic distance are both measured.",
-          "10 rounds covering different semantic categories.",
-          "Your associative speed and semantic network breadth determine your score."
+          "You have 30 seconds on the clock.",
+          "Each round shows one cue word and four choices — tap the strongest semantic associate.",
+          "Questions are drawn in random order from a bank of 50 pairs.",
+          "Your score is how many you get right before time runs out.",
+          "If you clear the full bank before 30 seconds end, the deck shuffles and loops so you can keep adding correct answers."
         ],
         "science": "Semantic network theory (Collins & Loftus, 1975) models the mental lexicon as a network of nodes (concepts) connected by weighted edges (associations). Faster and more distant associations indicate a richer, more densely interconnected semantic network. Verbal fluency tasks — a related measure — are among the most sensitive neuropsychological tests for detecting early cognitive decline, as semantic network degradation is an early sign of neurodegenerative disease. High associative intelligence predicts creative problem-solving, metaphor comprehension, and verbal IQ.",
         "tips": [
@@ -3607,34 +3607,34 @@
       "stats": {
         "percentiles": [
           {
-            "ms": 90,
+            "ms": 38,
             "percentile": 99
           },
           {
-            "ms": 78,
+            "ms": 30,
             "percentile": 90
           },
           {
-            "ms": 65,
+            "ms": 22,
             "percentile": 72
           },
           {
-            "ms": 52,
+            "ms": 16,
             "percentile": 50
           },
           {
-            "ms": 38,
+            "ms": 10,
             "percentile": 25
           },
           {
-            "ms": 24,
+            "ms": 4,
             "percentile": 5
           }
         ],
         "ranks": [
           {
             "label": "S",
-            "maxMs": 88,
+            "maxMs": 34,
             "color": "#FFD700",
             "title": "Semantic Genius",
             "subtitle": "Connects ideas three degrees apart. Instantly.",
@@ -3642,7 +3642,7 @@
           },
           {
             "label": "A",
-            "maxMs": 72,
+            "maxMs": 26,
             "color": "#6366F1",
             "title": "Rich Associator",
             "subtitle": "Makes unexpected connections that turn out to be obvious",
@@ -3650,7 +3650,7 @@
           },
           {
             "label": "B",
-            "maxMs": 52,
+            "maxMs": 18,
             "color": "#58A6FF",
             "title": "Solid Network",
             "subtitle": "Good at word games. Better than average.",
@@ -3658,7 +3658,7 @@
           },
           {
             "label": "C",
-            "maxMs": 30,
+            "maxMs": 11,
             "color": "#94A3B8",
             "title": "Linear Thinker",
             "subtitle": "Associations are reliable but predictable",
