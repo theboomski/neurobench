@@ -69,7 +69,7 @@ export default async function UgcBracketsTierPage({ params }: { params: Promise<
       <p style={{ marginTop: 8, color: "var(--text-3)", fontSize: 12 }}>Tiers based on current votes.</p>
 
       <div style={{ display: "flex", gap: 10, marginTop: 14, marginBottom: 12 }}>
-        <UgcTierShareButton title={game.title} slug={game.slug} style={{ background: "#b8860b", border: "none", color: "#231600", fontWeight: 900 }} />
+        <UgcTierShareButton title={game.title} slug={game.slug} playCount={totalPlays} style={{ background: "#b8860b", border: "none", color: "#231600", fontWeight: 900 }} />
         <Link
           href={`/ugc/brackets/${game.slug}`}
           style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", background: "#000", color: "#fff", fontWeight: 800, textDecoration: "none" }}

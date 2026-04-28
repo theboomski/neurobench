@@ -50,15 +50,28 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   const rankedScoreboard = useMemo(() => rankScoreboard(scoreboard, Number(game.play_count ?? 0)), [scoreboard, game.play_count]);
   const mobileRows = useMemo(() => (mobileMode === "top" ? rankedScoreboard.slice(0, 5) : rankedScoreboard), [mobileMode, rankedScoreboard]);
 
-  const shareBracket = async () => {
-    const canonicalUrl = `https://zazaza.app/ugc/brackets/${game.slug}`;
-    const shareText = game.title;
+  const canonicalUrl = `https://zazaza.app/ugc/brackets/${game.slug}`;
+
+  const sharePrePlay = async () => {
+    const shareText = `Everyone's voting on "${game.title}"\nWhat's your pick? → ${canonicalUrl}`;
     if (typeof navigator !== "undefined" && navigator.share) {
       await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
       return;
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
-      await navigator.clipboard.writeText(`${shareText}\n${canonicalUrl}`);
+      await navigator.clipboard.writeText(shareText);
+    }
+  };
+
+  const sharePostPlay = async (winnerName: string) => {
+    const votes = Number(game.play_count ?? 0);
+    const shareText = `I voted ${winnerName} in "${game.title}" (${votes} votes so far)\nYou agree? → ${canonicalUrl}`;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
+      return;
+    }
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(shareText);
     }
   };
 
@@ -146,7 +159,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
         <p style={{ color: "var(--text-2)", marginTop: 8, fontSize: 14 }}>Your #1 choice is {finalWinner.name}!</p>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 14 }}>
           <button
-            onClick={shareBracket}
+            onClick={() => sharePostPlay(finalWinner.name)}
             style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}
           >
             Share
@@ -194,7 +207,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             <button onClick={() => setStarted(true)} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
               ▶ PLAY
             </button>
-            <button onClick={shareBracket} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer" }}>
+            <button onClick={sharePrePlay} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer" }}>
               Share
             </button>
           </div>
