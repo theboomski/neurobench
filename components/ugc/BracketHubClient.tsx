@@ -56,7 +56,6 @@ export default function BracketHubClient({
   const languageRef = useRef<HTMLDivElement | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const requestIdRef = useRef(0);
-  const hydratedInitialRef = useRef(false);
 
   const fetchFeed = async (sp: URLSearchParams) => {
     const headers: HeadersInit = {};
@@ -88,11 +87,6 @@ export default function BracketHubClient({
     let cancelled = false;
     const requestId = ++requestIdRef.current;
     const run = async () => {
-      if (!hydratedInitialRef.current && initialGames.length > 0 && sort === "latest" && !includeNsfw && categoryFilter === "all" && languageFilter === "all") {
-        hydratedInitialRef.current = true;
-        return;
-      }
-      hydratedInitialRef.current = true;
       setLoading(true);
       const sp = new URLSearchParams({
         sort,
