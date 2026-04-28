@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "@/components/ugc/AuthModal";
 import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
-import { deriveItemNameFromFilename, sanitizeStorageFileName, slugifyTitle, withUniqueSuffix } from "@/lib/ugc";
+import { deriveItemNameFromFilename, sanitizeStorageFileName } from "@/lib/ugc";
 import { getSupabaseBrowser } from "@/lib/supabase";
 import type { UgcCategory, UgcGameType, UgcVisibility } from "@/lib/ugcTypes";
 
@@ -130,7 +130,11 @@ export default function UgcCreateClient() {
         coverUrl = supabase.storage.from("ugc-covers").getPublicUrl(key).data.publicUrl;
       }
 
-      const slug = withUniqueSuffix(slugifyTitle(title));
+      const slugRes = await fetch(`/api/ugc/next-slug?title=${encodeURIComponent(title.trim())}`);
+      const slugJson = (await slugRes.json()) as { slug?: string; error?: string };
+      if (!slugRes.ok) throw new Error(slugJson.error ?? "Could not allocate URL slug.");
+      const slug = slugJson.slug;
+      if (!slug) throw new Error("Could not allocate URL slug.");
       setStatus("Creating game...");
       const { data: game, error: gameErr } = await supabase
         .from("ugc_games")

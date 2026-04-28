@@ -12,11 +12,6 @@ export function slugifyTitle(input: string): string {
   return base || "untitled";
 }
 
-export function withUniqueSuffix(slug: string): string {
-  const suffix = Math.random().toString(36).slice(2, 7);
-  return `${slug}-${suffix}`;
-}
-
 export function deriveItemNameFromFilename(fileName: string): string {
   const base = fileName.replace(/\.[^/.]+$/, "");
   return base.replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();

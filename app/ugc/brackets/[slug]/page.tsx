@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import UgcBracketsClient from "@/components/ugc/UgcBracketsClient";
+import {
+  UGC_SITE_BASE,
+  bracketsPlayMetadata,
+  countUgcBracketItems,
+  fetchUgcGameForSeo,
+  nsfwLabel,
+  ugcGameJsonLdParts,
+} from "@/lib/ugcSeo";
 import { getSupabaseServer } from "@/lib/supabase";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = getSupabaseServer();
+  if (!supabase) return {};
+  const row = await fetchUgcGameForSeo(supabase, slug, "brackets");
+  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  const itemCount = await countUgcBracketItems(supabase, row.id);
+  return bracketsPlayMetadata(row, itemCount);
+}
 
 export default async function UgcBracketsPlayPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -10,21 +29,54 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
 
   const { data: game } = await supabase
     .from("ugc_games")
-    .select("id,type,title,description,slug,visibility,is_approved,play_count")
+    .select("id,type,title,description,slug,visibility,is_approved,play_count,is_nsfw,cover_image_url,category:ugc_categories(name,slug)")
     .eq("slug", slug)
     .eq("type", "brackets")
     .single();
   if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
 
+  const cat = Array.isArray(game.category) ? game.category[0] ?? null : game.category;
+  const gameUrl = `${UGC_SITE_BASE}/ugc/brackets/${game.slug}`;
+  const gameTitleSeo = nsfwLabel(game.title, game.is_nsfw);
+  const gameDesc = game.description?.trim() || `Vote in ${game.title} on ZAZAZA.`;
+  const crumbs = [
+    { name: "Home", url: `${UGC_SITE_BASE}/` },
+    { name: "Brackets", url: `${UGC_SITE_BASE}/bracket` },
+    ...(cat ? [{ name: cat.name, url: `${UGC_SITE_BASE}/ugc/brackets/category/${cat.slug}` }] : []),
+    { name: gameTitleSeo, url: gameUrl },
+  ];
+  const { gameJsonLd, breadcrumbJsonLd } = ugcGameJsonLdParts({
+    name: gameTitleSeo,
+    description: gameDesc,
+    url: gameUrl,
+    breadcrumbs: crumbs,
+  });
+
   if (game.visibility === "closed") {
     return (
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "24px 16px 56px" }}>
-        <h1 style={{ fontSize: 28, fontWeight: 900 }}>{game.title}</h1>
-        <p style={{ color: "var(--text-2)", marginTop: 8 }}>This game is closed and not accepting new plays.</p>
-        <Link href="/bracket" style={{ display: "inline-block", marginTop: 14, textDecoration: "none", borderRadius: 10, padding: "10px 12px", background: "#00FF94", color: "#06311d", fontWeight: 800 }}>
-          Back to Brackets
-        </Link>
-      </div>
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: gameJsonLd }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }} />
+        <div style={{ maxWidth: 700, margin: "0 auto", padding: "24px 16px 56px" }}>
+          <h1 style={{ fontSize: 28, fontWeight: 900 }}>{game.title}</h1>
+          <p style={{ color: "var(--text-2)", marginTop: 8 }}>This game is closed and not accepting new plays.</p>
+          <Link
+            href="/bracket"
+            style={{
+              display: "inline-block",
+              marginTop: 14,
+              textDecoration: "none",
+              borderRadius: 10,
+              padding: "10px 12px",
+              background: "#00FF94",
+              color: "#06311d",
+              fontWeight: 800,
+            }}
+          >
+            Back to Brackets
+          </Link>
+        </div>
+      </>
     );
   }
 
@@ -60,5 +112,13 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
     };
   });
 
-  return <UgcBracketsClient game={game} items={items} scoreboard={scoreboard} />;
+  const { category: _c, cover_image_url: _cover, is_nsfw: _n, ...gameForClient } = game;
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: gameJsonLd }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }} />
+      <UgcBracketsClient game={gameForClient} items={items} scoreboard={scoreboard} />
+    </>
+  );
 }

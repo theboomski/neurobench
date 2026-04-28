@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
 type BalanceGame = { id: string; title: string; slug: string; description?: string | null };
@@ -9,6 +10,7 @@ type BalanceSummary = { aFinalWins: number; bFinalWins: number; totalPlays: numb
 const MUSTARD = "#b8860b";
 
 export default function UgcBalanceClient({ game, options, summary }: { game: BalanceGame; options: BalanceOption[]; summary: BalanceSummary }) {
+  const router = useRouter();
   const [started, setStarted] = useState(false);
   const [index, setIndex] = useState(0);
   const [picked, setPicked] = useState<{ id: string; pick: "a" | "b" }[]>([]);
@@ -92,6 +94,13 @@ export default function UgcBalanceClient({ game, options, summary }: { game: Bal
           </button>
           <button onClick={() => window.location.reload()} style={{ border: "none", borderRadius: 10, padding: "10px 12px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
             Play Again
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push(`/ugc/balance/${game.slug}/results`)}
+            style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer", fontWeight: 800 }}
+          >
+            Full results
           </button>
         </div>
       </div>
