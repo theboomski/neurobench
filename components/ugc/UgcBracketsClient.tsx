@@ -115,7 +115,8 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   };
 
   if (finalWinner) {
-    const shareText = `${game.title}\nWinner: ${finalWinner.name}\nCan you beat me?`;
+    const canonicalUrl = `https://zazaza.app/ugc/brackets/${game.slug}`;
+    const shareText = game.title;
     return (
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
@@ -126,9 +127,9 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
           <button
             onClick={async () => {
               if (typeof navigator !== "undefined" && navigator.share) {
-                await navigator.share({ title: game.title, text: shareText });
+                await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
               } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-                await navigator.clipboard.writeText(shareText);
+                await navigator.clipboard.writeText(`${shareText}\n${canonicalUrl}`);
               }
             }}
             style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}
@@ -136,7 +137,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             Share
           </button>
           <button onClick={() => window.location.reload()} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}>Play Again</button>
-          <button onClick={() => router.push(`/ugc/brackets/${game.slug}/results`)} style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: MUSTARD, color: "#231600", fontWeight: 800, cursor: "pointer" }}>Results</button>
+          <button onClick={() => router.push(`/ugc/brackets/${game.slug}/tier`)} style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: MUSTARD, color: "#231600", fontWeight: 800, cursor: "pointer" }}>Tier</button>
         </div>
       </div>
     );

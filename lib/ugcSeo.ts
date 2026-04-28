@@ -71,12 +71,15 @@ export function balancePlayMetadata(row: UgcGameSeoRow, optionCount: number): Me
   };
 }
 
-export function bracketsResultsMetadata(row: Pick<UgcGameSeoRow, "title" | "slug" | "is_nsfw" | "visibility" | "is_approved">): Metadata {
+export function bracketsTierMetadata(
+  row: Pick<UgcGameSeoRow, "title" | "slug" | "is_nsfw" | "visibility" | "is_approved" | "cover_image_url">,
+): Metadata {
   const title = nsfwLabel(row.title, row.is_nsfw);
-  const descBase = `See the full results and win rates for ${row.title}. Who came out on top? Updated in real time.`;
+  const descBase = `See the tier ranking for ${row.title}. Tiers are based on current votes and update in real time.`;
   const description = row.is_nsfw ? `[NSFW] ${descBase}` : descBase;
-  const pageTitle = `${title} Results & Rankings | ZAZAZA Brackets`;
-  const url = `${UGC_SITE_BASE}/ugc/brackets/${row.slug}/results`;
+  const pageTitle = `${title} Tier List | ZAZAZA Brackets`;
+  const url = `${UGC_SITE_BASE}/ugc/brackets/${row.slug}/tier`;
+  const ogImage = row.cover_image_url || UGC_DEFAULT_OG_IMAGE;
   return {
     title: pageTitle,
     description,
@@ -87,10 +90,10 @@ export function bracketsResultsMetadata(row: Pick<UgcGameSeoRow, "title" | "slug
       url,
       title: pageTitle,
       description,
-      images: [{ url: UGC_DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: ogImage, width: 1200, height: 630 }],
       siteName: "ZAZAZA",
     },
-    twitter: { card: "summary_large_image", title: pageTitle, description, images: [UGC_DEFAULT_OG_IMAGE] },
+    twitter: { card: "summary_large_image", title: pageTitle, description, images: [ogImage] },
   };
 }
 

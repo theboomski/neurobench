@@ -146,7 +146,7 @@ export default function UgcCreateClient() {
       if (cover) {
         setStatus("Uploading cover image...");
         const key = `${user.id}/${Date.now()}-${sanitizeStorageFileName(cover.name)}`;
-        const { error: uploadErr } = await supabase.storage.from("ugc-covers").upload(key, cover, { upsert: false });
+        const { error: uploadErr } = await supabase.storage.from("ugc-covers").upload(key, cover, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
         if (uploadErr) throw uploadErr;
         coverUrl = supabase.storage.from("ugc-covers").getPublicUrl(key).data.publicUrl;
       }
@@ -181,7 +181,7 @@ export default function UgcCreateClient() {
         for (let i = 0; i < bracketItems.length; i += 1) {
           const item = bracketItems[i];
           const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
-          const { error: itemUploadErr } = await supabase.storage.from("brackets").upload(key, item.file, { upsert: false });
+          const { error: itemUploadErr } = await supabase.storage.from("brackets").upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
           if (itemUploadErr) throw itemUploadErr;
           const imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
           payload.push({ game_id: game.id, name: item.name.trim() || `Item ${i + 1}`, image_url: imageUrl, order: i });

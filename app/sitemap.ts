@@ -76,7 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: 0.8,
         });
         ugcEntries.push({
-          url: `${base}/ugc/brackets/${g.slug}/results`,
+          url: `${base}/ugc/brackets/${g.slug}/tier`,
           lastModified,
           changeFrequency: "daily",
           priority: 0.8,
