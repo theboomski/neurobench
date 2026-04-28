@@ -197,7 +197,6 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             <button onClick={shareBracket} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer" }}>
               Share
             </button>
-            <ReportLink gameId={game.id} slug={game.slug} gameType="brackets" label="Report This" />
           </div>
         </div>
         {isMobile ? (
@@ -215,6 +214,9 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
         ) : (
           <ResultsTable rows={rankedScoreboard} />
         )}
+        <div style={{ marginTop: 10, display: "flex", justifyContent: "flex-start" }}>
+          <ReportLink gameId={game.id} slug={game.slug} gameType="brackets" label="Report This" />
+        </div>
       </div>
     );
   }

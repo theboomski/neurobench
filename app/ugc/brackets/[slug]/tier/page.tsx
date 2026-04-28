@@ -68,6 +68,16 @@ export default async function UgcBracketsTierPage({ params }: { params: Promise<
       {game.description && <p style={{ marginTop: 8, color: "var(--text-2)", fontSize: 14, maxWidth: 760 }}>{game.description}</p>}
       <p style={{ marginTop: 8, color: "var(--text-3)", fontSize: 12 }}>Tiers based on current votes.</p>
 
+      <div style={{ display: "flex", gap: 10, marginTop: 14, marginBottom: 12 }}>
+        <UgcTierShareButton title={game.title} slug={game.slug} style={{ background: "#b8860b", border: "none", color: "#231600", fontWeight: 900 }} />
+        <Link
+          href={`/ugc/brackets/${game.slug}`}
+          style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", background: "#000", color: "#fff", fontWeight: 800, textDecoration: "none" }}
+        >
+          Play Again
+        </Link>
+      </div>
+
       <div style={{ marginTop: 16, border: "1px solid var(--border)", borderRadius: 14, overflow: "hidden", background: "var(--bg-card)" }}>
         {(["S", "A", "B", "C", "D"] as TierKey[]).map((tier, idx, all) => (
           <div
@@ -100,16 +110,6 @@ export default async function UgcBracketsTierPage({ params }: { params: Promise<
             </div>
           </div>
         ))}
-      </div>
-
-      <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-        <UgcTierShareButton title={game.title} slug={game.slug} />
-        <Link
-          href={`/ugc/brackets/${game.slug}`}
-          style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: "#00FF94", color: "#05291a", fontWeight: 800, textDecoration: "none" }}
-        >
-          Play Again
-        </Link>
       </div>
     </div>
   );
