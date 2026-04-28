@@ -55,7 +55,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   const sharePrePlay = async () => {
     const shareText = `Everyone's voting on "${game.title}"\nWhat's your pick? → ${canonicalUrl}`;
     if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
+      await navigator.share({ title: game.title, text: shareText });
       return;
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -67,7 +67,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
     const votes = Number(game.play_count ?? 0);
     const shareText = `I voted ${winnerName} in "${game.title}" (${votes} votes so far)\nYou agree? → ${canonicalUrl}`;
     if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
+      await navigator.share({ title: game.title, text: shareText });
       return;
     }
     if (typeof navigator !== "undefined" && navigator.clipboard) {

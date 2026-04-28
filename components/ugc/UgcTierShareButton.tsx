@@ -10,7 +10,7 @@ export default function UgcTierShareButton({ title, slug, playCount, style }: { 
       type="button"
       onClick={async () => {
         if (typeof navigator !== "undefined" && navigator.share) {
-          await navigator.share({ title: `${title} Tier`, text, url: tierUrl });
+          await navigator.share({ title: `${title} Tier`, text });
           return;
         }
         if (typeof navigator !== "undefined" && navigator.clipboard) {
