@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabase";
 import { shuffleArray } from "@/lib/ugc";
+import UgcImageCard from "@/components/ugc/UgcImageCard";
 
 type BracketGame = { id: string; title: string; slug: string; description?: string | null; play_count?: number };
 type BracketItem = { id: string; name: string; image_url: string; order: number; win_count?: number; match_count?: number };
@@ -48,6 +49,26 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
     autoAdvanceGuardRef.current = current.a.id;
     void pick(current.a);
   }, [started, current, finalWinner]);
+
+  useEffect(() => {
+    if (!started) return;
+    const urls = new Set<string>();
+    if (current) {
+      urls.add(current.a.image_url);
+      if (current.b) urls.add(current.b.image_url);
+    }
+    const next = queue[1];
+    if (next) {
+      urls.add(next.a.image_url);
+      if (next.b) urls.add(next.b.image_url);
+    }
+    for (const src of urls) {
+      const img = new window.Image();
+      img.decoding = "async";
+      img.loading = "eager";
+      img.src = src;
+    }
+  }, [started, current, queue]);
 
   const pick = async (winner: BracketItem) => {
     if (!current) return;
@@ -177,7 +198,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             onMouseLeave={() => setHoveredId(null)}
           >
             <div style={{ position: "relative" }}>
-              <img src={item.image_url} alt={item.name} style={{ width: "100%", aspectRatio: "1 / 1", borderRadius: 10, objectFit: "cover", transition: "transform 160ms ease" }} />
+              <UgcImageCard src={item.image_url} alt={item.name} priority={idx === 0} borderRadius={10} />
               {winFlashId === item.id && (
                 <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: MUSTARD, fontWeight: 900, fontSize: 40, textShadow: "0 0 20px rgba(0,0,0,0.7)" }}>
                   WIN
@@ -260,7 +281,7 @@ function ResultsTable({ rows }: { rows: Array<BracketScoreRow & { oneVsOneRatio:
           }}
         >
           <div style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "var(--text-2)", fontWeight: 800 }}>#{idx + 1}</div>
-          <img src={row.image_url} alt={row.name} style={{ width: 126, height: 126, borderRadius: 12, objectFit: "cover" }} />
+          <UgcImageCard src={row.image_url} alt={row.name} size={126} borderRadius={12} style={{ width: 126 }} />
           <div style={{ fontSize: 14, fontWeight: 700 }}>{row.name}</div>
           <RatioBar value={row.oneVsOneRatio} color="#22c55e" />
           <RatioBar value={row.finalWinRatio} color="#3b82f6" />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import UgcImageCard from "@/components/ugc/UgcImageCard";
 import { bracketsResultsMetadata, fetchUgcGameForSeo } from "@/lib/ugcSeo";
 import { getSupabaseServer } from "@/lib/supabase";
 
@@ -45,7 +46,7 @@ export default async function UgcBracketsResultsPage({ params }: { params: Promi
                 background: "var(--bg-card)",
               }}
             >
-              <img src={item.image_url} alt={item.name} style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 8 }} />
+              <UgcImageCard src={item.image_url} alt={item.name} size={56} borderRadius={8} style={{ width: 56 }} />
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700 }}>{item.name}</div>
                 <div style={{ fontSize: 12, color: "var(--text-2)" }}>

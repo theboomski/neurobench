@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "@/components/ugc/AuthModal";
+import { normalizeImageToWebp, UGC_ACCEPT_IMAGE_INPUT } from "@/lib/imageUpload";
 import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
 import { deriveItemNameFromFilename, sanitizeStorageFileName } from "@/lib/ugc";
 import { getSupabaseBrowser } from "@/lib/supabase";
@@ -79,19 +80,39 @@ export default function UgcCreateClient() {
   const emailVerified = Boolean(user?.email_confirmed_at || (user?.app_metadata?.provider === "google"));
   const blockedByVerification = Boolean(user && !emailVerified);
 
-  const onUploadBracketFiles = (files: FileList | null) => {
+  const onUploadBracketFiles = async (files: FileList | null) => {
     if (!files?.length) return;
-    const next = Array.from(files).map((f) => ({
-      file: f,
-      name: deriveItemNameFromFilename(f.name) || "Untitled",
-      preview: URL.createObjectURL(f),
-    }));
-    setBracketItems((prev) => [...prev, ...next]);
+    setStatus("Optimizing bracket images...");
+    try {
+      const next = await Promise.all(
+        Array.from(files).map(async (f) => {
+          const webp = await normalizeImageToWebp(f);
+          return {
+            file: webp,
+            name: deriveItemNameFromFilename(f.name) || "Untitled",
+            preview: URL.createObjectURL(webp),
+          };
+        }),
+      );
+      setBracketItems((prev) => [...prev, ...next]);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Image conversion failed.");
+    } finally {
+      setStatus(null);
+    }
   };
 
-  const onUploadCover = (file: File | null) => {
+  const onUploadCover = async (file: File | null) => {
     if (!file) return;
-    setCover(file);
+    setStatus("Optimizing cover image...");
+    try {
+      const webp = await normalizeImageToWebp(file);
+      setCover(webp);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Cover conversion failed.");
+    } finally {
+      setStatus(null);
+    }
   };
 
   const removeBracketItem = (targetIndex: number) => {
@@ -260,7 +281,7 @@ export default function UgcCreateClient() {
             onDrop={(e) => {
               e.preventDefault();
               setIsCoverDropOver(false);
-              onUploadCover(e.dataTransfer.files?.[0] ?? null);
+              void onUploadCover(e.dataTransfer.files?.[0] ?? null);
             }}
             style={{
               border: `2px dashed ${isCoverDropOver ? MUSTARD : "var(--border)"}`,
@@ -272,7 +293,7 @@ export default function UgcCreateClient() {
             <div style={{ fontSize: 12, color: "var(--text-2)", marginBottom: 8 }}>Drop cover image here, or choose a file.</div>
             <label style={{ display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
               Choose cover file
-              <input type="file" accept="image/png,image/jpeg" style={{ display: "none" }} onChange={(e) => onUploadCover(e.target.files?.[0] ?? null)} />
+              <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} style={{ display: "none" }} onChange={(e) => void onUploadCover(e.target.files?.[0] ?? null)} />
             </label>
             {cover && (
               <div style={{ marginTop: 10 }}>
@@ -295,7 +316,7 @@ export default function UgcCreateClient() {
             onDrop={(e) => {
               e.preventDefault();
               setIsDropOver(false);
-              onUploadBracketFiles(e.dataTransfer.files);
+              void onUploadBracketFiles(e.dataTransfer.files);
             }}
             style={{
               border: `1px dashed ${isDropOver ? MUSTARD : "var(--border)"}`,
@@ -308,7 +329,7 @@ export default function UgcCreateClient() {
             <div style={{ fontSize: 12, color: "var(--text-2)", marginBottom: 8 }}>Drop bracket images here. Minimum 2 images.</div>
             <label style={{ display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
               Choose multiple files
-              <input type="file" accept="image/png,image/jpeg" multiple style={{ display: "none" }} onChange={(e) => onUploadBracketFiles(e.target.files)} />
+              <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} multiple style={{ display: "none" }} onChange={(e) => void onUploadBracketFiles(e.target.files)} />
             </label>
           </div>
           <div style={{ marginTop: 10, display: "grid", gap: 8 }}>
