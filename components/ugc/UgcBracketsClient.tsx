@@ -137,12 +137,13 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   };
 
   if (finalWinner) {
+    const finalRows = rankScoreboardWithRun(scoreboard, stats, finalWinner.id, Number(game.play_count ?? 0));
+    const finalMobileRows = mobileMode === "top" ? finalRows.slice(0, 5) : finalRows;
     return (
-      <div style={{ maxWidth: 760, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
         {game.description && <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 14 }}>{game.description}</p>}
-        <p style={{ color: "var(--text-2)", marginTop: 8 }}>Run complete. Updated-style results view.</p>
-        <ResultsTable rows={rankScoreboardWithRun(scoreboard, stats, finalWinner.id, Number(game.play_count ?? 0))} />
+        <p style={{ color: "var(--text-2)", marginTop: 8, fontSize: 14 }}>Your #1 choice is {finalWinner.name}!</p>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 14 }}>
           <button
             onClick={shareBracket}
@@ -153,6 +154,21 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
           <button onClick={() => window.location.reload()} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}>Play Again</button>
           <button onClick={() => router.push(`/ugc/brackets/${game.slug}/tier`)} style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: MUSTARD, color: "#231600", fontWeight: 800, cursor: "pointer" }}>Tier</button>
         </div>
+        {isMobile ? (
+          <>
+            <div style={{ marginTop: 12, display: "inline-flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden" }}>
+              <button onClick={() => setMobileMode("top")} style={{ border: "none", background: mobileMode === "top" ? "rgba(184,134,11,0.24)" : "transparent", color: mobileMode === "top" ? MUSTARD : "var(--text-2)", padding: "8px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>
+                Top 5
+              </button>
+              <button onClick={() => setMobileMode("all")} style={{ border: "none", background: mobileMode === "all" ? "rgba(184,134,11,0.24)" : "transparent", color: mobileMode === "all" ? MUSTARD : "var(--text-2)", padding: "8px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>
+                All
+              </button>
+            </div>
+            <MobileResultsList rows={finalMobileRows} />
+          </>
+        ) : (
+          <ResultsTable rows={finalRows} />
+        )}
       </div>
     );
   }
@@ -170,17 +186,15 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   if (!started) {
     return (
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "20px 16px 56px" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
-          <div>
-            <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
-            {game.description && <p style={{ marginTop: 6, color: "var(--text-1)", fontSize: 14, fontWeight: 600 }}>{game.description}</p>}
-            <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 13 }}>Current Standings</p>
-          </div>
-          <div style={{ display: "grid", justifyItems: "end", gap: 8 }}>
-            <button onClick={() => setStarted(true)} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer", width: isMobile ? "100%" : undefined }}>
+        <div>
+          <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
+          {game.description && <p style={{ marginTop: 6, color: "var(--text-1)", fontSize: 14, fontWeight: 600 }}>{game.description}</p>}
+          <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 13 }}>Current Standings</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
+            <button onClick={() => setStarted(true)} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
               ▶ PLAY
             </button>
-            <button onClick={shareBracket} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer", width: isMobile ? "100%" : undefined }}>
+            <button onClick={shareBracket} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer" }}>
               Share
             </button>
             <ReportLink gameId={game.id} slug={game.slug} gameType="brackets" label="Report This" />
@@ -374,12 +388,12 @@ function ReportLink({ gameId, slug, gameType, label }: { gameId: string; slug: s
   };
 
   return (
-    <div style={{ textAlign: "right" }}>
-      <button onClick={() => setOpen((v) => !v)} style={{ border: "none", background: "transparent", color: "var(--text-3)", fontSize: 12, textDecoration: "underline", cursor: "pointer", padding: 0 }}>
+    <div style={{ position: "relative" }}>
+      <button onClick={() => setOpen((v) => !v)} style={{ border: "1px solid var(--border)", borderRadius: 10, padding: "9px 12px", background: "var(--bg-card)", color: "var(--text-1)", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
         {label}
       </button>
       {open && (
-        <div style={{ marginTop: 8, border: "1px solid var(--border)", borderRadius: 10, background: "var(--bg-card)", padding: 10, width: 260, marginLeft: "auto", textAlign: "left" }}>
+        <div style={{ marginTop: 8, border: "1px solid var(--border)", borderRadius: 10, background: "var(--bg-card)", padding: 10, width: 260, textAlign: "left", position: "absolute", zIndex: 20 }}>
           <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 6 }}>Report</div>
           <select value={reason} onChange={(e) => setReason(e.target.value)} style={{ width: "100%", border: "1px solid var(--border)", borderRadius: 8, padding: "6px 8px", background: "#111827", color: "#e5e7eb" }}>
             <option value="inappropriate content">Inappropriate content</option>
