@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import UgcBracketsClient from "@/components/ugc/UgcBracketsClient";
 import {
   UGC_SITE_BASE,
+  bracketsPlayDescription,
   bracketsPlayMetadata,
   countUgcBracketItems,
   fetchUgcGameForSeo,
@@ -38,7 +39,8 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
   const cat = Array.isArray(game.category) ? game.category[0] ?? null : game.category;
   const gameUrl = `${UGC_SITE_BASE}/ugc/brackets/${game.slug}`;
   const gameTitleSeo = nsfwLabel(game.title, game.is_nsfw);
-  const gameDesc = game.description?.trim() || `Vote in ${game.title} on ZAZAZA.`;
+  const { count: itemCount } = await supabase.from("ugc_brackets_items").select("*", { count: "exact", head: true }).eq("game_id", game.id);
+  const gameDesc = bracketsPlayDescription(game.title, Number(game.play_count ?? 0), Number(itemCount ?? 0));
   const crumbs = [
     { name: "Home", url: `${UGC_SITE_BASE}/` },
     { name: "Brackets", url: `${UGC_SITE_BASE}/bracket` },

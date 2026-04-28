@@ -15,6 +15,7 @@ export type UgcGameSeoRow = {
   visibility: "public" | "private" | "closed";
   is_approved: boolean;
   is_nsfw: boolean;
+  play_count: number;
   cover_image_url: string | null;
   category: { name: string; slug: string } | null;
 };
@@ -23,9 +24,13 @@ export function nsfwLabel(title: string, isNsfw: boolean) {
   return isNsfw ? `[NSFW] ${title}` : title;
 }
 
+export function bracketsPlayDescription(title: string, playCount: number, itemCount: number): string {
+  return `Vote in the ${title} bracket. ${playCount} players have voted — ${itemCount} contenders battle it out. Who wins? Play free on ZAZAZA — no signup needed.`;
+}
+
 export function bracketsPlayMetadata(row: UgcGameSeoRow, itemCount: number): Metadata {
   const title = nsfwLabel(row.title, row.is_nsfw);
-  const descBase = `Vote in the ${row.title} bracket tournament. ${itemCount} contenders battle it out. Who's the GOAT? Play free on ZAZAZA — no signup needed.`;
+  const descBase = bracketsPlayDescription(row.title, Number(row.play_count ?? 0), itemCount);
   const description = row.is_nsfw ? `[NSFW] ${descBase}` : descBase;
   const pageTitle = `${title} – Who Wins? | ZAZAZA Brackets`;
   const url = `${UGC_SITE_BASE}/ugc/brackets/${row.slug}`;
@@ -173,7 +178,7 @@ export async function fetchUgcGameForSeo(
 ): Promise<UgcGameSeoRow | null> {
   const { data, error } = await supabase
     .from("ugc_games")
-    .select("id,title,description,slug,type,visibility,is_approved,is_nsfw,cover_image_url,category:ugc_categories(name,slug)")
+    .select("id,title,description,slug,type,visibility,is_approved,is_nsfw,play_count,cover_image_url,category:ugc_categories(name,slug)")
     .eq("slug", slug)
     .eq("type", type)
     .maybeSingle();
@@ -187,6 +192,7 @@ export async function fetchUgcGameForSeo(
     visibility: "public" | "private" | "closed";
     is_approved: boolean;
     is_nsfw: boolean;
+    play_count: number;
     cover_image_url: string | null;
     category: { name: string; slug: string } | null | { name: string; slug: string }[];
   };
@@ -200,6 +206,7 @@ export async function fetchUgcGameForSeo(
     visibility: row.visibility,
     is_approved: row.is_approved,
     is_nsfw: row.is_nsfw,
+    play_count: Number(row.play_count ?? 0),
     cover_image_url: row.cover_image_url,
     category: cat ?? null,
   };
