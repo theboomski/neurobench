@@ -23,7 +23,9 @@ const MUSTARD = "#b8860b";
 
 export default function UgcBracketsClient({ game, items, scoreboard }: { game: BracketGame; items: BracketItem[]; scoreboard: BracketScoreRow[] }) {
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
   const [started, setStarted] = useState(false);
+  const [mobileMode, setMobileMode] = useState<"top" | "all">("top");
   const [round, setRound] = useState(() => 1);
   const [queue, setQueue] = useState<Match[]>(() => makeMatches(shuffleArray(items)));
   const [winners, setWinners] = useState<BracketItem[]>([]);
@@ -38,7 +40,27 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
   const rankedScoreboard = useMemo(() => rankScoreboard(scoreboard, Number(game.play_count ?? 0)), [scoreboard, game.play_count]);
+  const mobileRows = useMemo(() => (mobileMode === "top" ? rankedScoreboard.slice(0, 5) : rankedScoreboard), [mobileMode, rankedScoreboard]);
+
+  const shareBracket = async () => {
+    const canonicalUrl = `https://zazaza.app/ugc/brackets/${game.slug}`;
+    const shareText = game.title;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
+      return;
+    }
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      await navigator.clipboard.writeText(`${shareText}\n${canonicalUrl}`);
+    }
+  };
 
   useEffect(() => {
     if (!started || !current || current.b || finalWinner) {
@@ -115,8 +137,6 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
   };
 
   if (finalWinner) {
-    const canonicalUrl = `https://zazaza.app/ugc/brackets/${game.slug}`;
-    const shareText = game.title;
     return (
       <div style={{ maxWidth: 760, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
@@ -125,13 +145,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
         <ResultsTable rows={rankScoreboardWithRun(scoreboard, stats, finalWinner.id, Number(game.play_count ?? 0))} />
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 14 }}>
           <button
-            onClick={async () => {
-              if (typeof navigator !== "undefined" && navigator.share) {
-                await navigator.share({ title: game.title, text: shareText, url: canonicalUrl });
-              } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-                await navigator.clipboard.writeText(`${shareText}\n${canonicalUrl}`);
-              }
-            }}
+            onClick={shareBracket}
             style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}
           >
             Share
@@ -163,13 +177,30 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 13 }}>Current Standings</p>
           </div>
           <div style={{ display: "grid", justifyItems: "end", gap: 8 }}>
-            <button onClick={() => setStarted(true)} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
+            <button onClick={() => setStarted(true)} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer", width: isMobile ? "100%" : undefined }}>
               ▶ PLAY
+            </button>
+            <button onClick={shareBracket} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "9px 12px", cursor: "pointer", width: isMobile ? "100%" : undefined }}>
+              Share
             </button>
             <ReportLink gameId={game.id} slug={game.slug} gameType="brackets" label="Report This" />
           </div>
         </div>
-        <ResultsTable rows={rankedScoreboard} />
+        {isMobile ? (
+          <>
+            <div style={{ marginTop: 12, display: "inline-flex", border: "1px solid var(--border)", borderRadius: 999, overflow: "hidden" }}>
+              <button onClick={() => setMobileMode("top")} style={{ border: "none", background: mobileMode === "top" ? "rgba(184,134,11,0.24)" : "transparent", color: mobileMode === "top" ? MUSTARD : "var(--text-2)", padding: "8px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>
+                Top 5
+              </button>
+              <button onClick={() => setMobileMode("all")} style={{ border: "none", background: mobileMode === "all" ? "rgba(184,134,11,0.24)" : "transparent", color: mobileMode === "all" ? MUSTARD : "var(--text-2)", padding: "8px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer" }}>
+                All
+              </button>
+            </div>
+            <MobileResultsList rows={mobileRows} />
+          </>
+        ) : (
+          <ResultsTable rows={rankedScoreboard} />
+        )}
       </div>
     );
   }
@@ -210,6 +241,36 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
           </button>
         )).flatMap((node, idx) => (idx === 0 ? [node, <div key="vs" style={{ fontSize: 34, fontWeight: 900, color: "var(--text-2)", textAlign: "center" }}>VS</div>] : [node]))}
       </div>
+    </div>
+  );
+}
+
+function MobileResultsList({ rows }: { rows: Array<BracketScoreRow & { oneVsOneRatio: number; finalWinRatio: number }> }) {
+  return (
+    <div style={{ marginTop: 10, display: "grid", gap: 8 }}>
+      {rows.map((row, idx) => (
+        <div key={row.id} style={{ border: "1px solid var(--border)", borderRadius: 12, background: "var(--bg-card)", padding: 10, display: "grid", gridTemplateColumns: "28px 84px 1fr", gap: 10, alignItems: "center" }}>
+          <div style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "var(--text-2)", fontWeight: 900 }}>#{idx + 1}</div>
+          <UgcImageCard src={row.image_url} alt={row.name} size={84} borderRadius={10} style={{ width: 84 }} />
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 800, lineHeight: 1.2 }}>{row.name}</div>
+            <div style={{ marginTop: 6, display: "grid", gap: 5 }}>
+              <div style={{ display: "grid", gap: 3 }}>
+                <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Final Win {row.finalWinRatio.toFixed(1)}%</div>
+                <div style={{ height: 6, borderRadius: 999, background: "rgba(148,163,184,0.22)", overflow: "hidden" }}>
+                  <div style={{ width: `${Math.max(0, Math.min(100, row.finalWinRatio))}%`, height: "100%", background: "#3b82f6" }} />
+                </div>
+              </div>
+              <div style={{ display: "grid", gap: 3 }}>
+                <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>Round Win {row.oneVsOneRatio.toFixed(1)}%</div>
+                <div style={{ height: 6, borderRadius: 999, background: "rgba(148,163,184,0.22)", overflow: "hidden" }}>
+                  <div style={{ width: `${Math.max(0, Math.min(100, row.oneVsOneRatio))}%`, height: "100%", background: "#22c55e" }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
