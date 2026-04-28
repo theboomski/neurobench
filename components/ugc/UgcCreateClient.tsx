@@ -8,41 +8,78 @@ import { normalizeImageToWebp, UGC_ACCEPT_IMAGE_INPUT } from "@/lib/imageUpload"
 import { ISO_LANGUAGE_OPTIONS } from "@/lib/isoLanguages";
 import { deriveItemNameFromFilename, sanitizeStorageFileName } from "@/lib/ugc";
 import { getSupabaseBrowser } from "@/lib/supabase";
-import type { UgcCategory, UgcGameType, UgcVisibility } from "@/lib/ugcTypes";
+import type { UgcCategory, UgcVisibility } from "@/lib/ugcTypes";
 
-type BracketDraftItem = { file: File; name: string; preview: string };
+type BracketDraftItem = {
+  name: string;
+  preview: string;
+  file?: File;
+  externalUrl?: string;
+  source: "upload" | "url" | "youtube";
+};
+
 type BalanceDraftItem = { optionA: string; optionB: string };
+type TextEntry = { text: string; font: string; size: "small" | "medium" | "large"; color: string; background: string };
 
-const ROUND_OPTIONS = [2, 4, 8, 16, 32];
+type ContentTab = "bracket-image" | "bracket-video" | "balance-text";
+type VideoTab = "single" | "bulk";
+type TextTab = "single" | "bulk";
+
 const MUSTARD = "#b8860b";
 const MUSTARD_BG = "rgba(184,134,11,0.18)";
+const TITLE_MAX = 64;
+const DESC_MAX = 256;
+const MAX_PARTICIPANTS = 64;
+const MAX_TEXT_ENTRIES = 1024;
+const DRAFT_KEY = "ugc-create-draft-v2";
+const FONT_OPTIONS = ["Inter", "Pretendard", "Noto Sans", "Arial", "Georgia"];
 
 export default function UgcCreateClient() {
   const router = useRouter();
   const supabase = useMemo(() => getSupabaseBrowser(), []);
   const [user, setUser] = useState<User | null>(null);
   const [needsAuth, setNeedsAuth] = useState(true);
-  const [step, setStep] = useState(1);
-  const [type, setType] = useState<UgcGameType>("brackets");
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [cover, setCover] = useState<File | null>(null);
-  const [bracketItems, setBracketItems] = useState<BracketDraftItem[]>([]);
-  const [balanceRounds, setBalanceRounds] = useState(2);
-  const [balanceItems, setBalanceItems] = useState<BalanceDraftItem[]>([{ optionA: "", optionB: "" }]);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [categories, setCategories] = useState<UgcCategory[]>([]);
   const [categoryId, setCategoryId] = useState<number | "">("");
   const [language, setLanguage] = useState("en");
   const [visibility, setVisibility] = useState<UgcVisibility>("public");
-  const [isNsfw, setIsNsfw] = useState(false);
+
+  const [contentTab, setContentTab] = useState<ContentTab>("bracket-image");
+  const [videoTab, setVideoTab] = useState<VideoTab>("single");
+  const [textTab, setTextTab] = useState<TextTab>("single");
+
+  const [bracketItems, setBracketItems] = useState<BracketDraftItem[]>([]);
+  const [imageUrlInput, setImageUrlInput] = useState("");
+
+  const [videoSingleUrl, setVideoSingleUrl] = useState("");
+  const [videoStart, setVideoStart] = useState("");
+  const [videoEnd, setVideoEnd] = useState("");
+  const [videoBulk, setVideoBulk] = useState("");
+
+  const [textEntries, setTextEntries] = useState<TextEntry[]>([]);
+  const [textSingle, setTextSingle] = useState("");
+  const [textBulk, setTextBulk] = useState("");
+  const [textFont, setTextFont] = useState(FONT_OPTIONS[0]);
+  const [textSize, setTextSize] = useState<"small" | "medium" | "large">("medium");
+  const [textColor, setTextColor] = useState("#FFFFFF");
+  const [textBgColor, setTextBgColor] = useState("#1a1a2e");
+
+  const [isDropOver, setIsDropOver] = useState(false);
+  const [isCoverDropOver, setIsCoverDropOver] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
-  const [isDropOver, setIsDropOver] = useState(false);
-  const [isCoverDropOver, setIsCoverDropOver] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
 
   useEffect(() => {
-    void fetch("/api/ugc/categories").then((r) => r.json()).then((json) => setCategories(json.categories ?? []));
+    void fetch("/api/ugc/categories")
+      .then((r) => r.json())
+      .then((json) => setCategories(json.categories ?? []));
   }, []);
 
   useEffect(() => {
@@ -73,24 +110,115 @@ export default function UgcCreateClient() {
   }, [supabase]);
 
   useEffect(() => {
-    setBalanceItems(Array.from({ length: balanceRounds / 2 }, (_, i) => balanceItems[i] ?? { optionA: "", optionB: "" }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [balanceRounds]);
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw) as {
+        title?: string;
+        description?: string;
+        categoryId?: number | "";
+        language?: string;
+        visibility?: UgcVisibility;
+        contentTab?: ContentTab;
+        bracketItems?: Array<{ name: string; preview: string; externalUrl?: string; source: "upload" | "url" | "youtube" }>;
+        textEntries?: TextEntry[];
+      };
+      if (draft.title) setTitle(draft.title);
+      if (draft.description) setDescription(draft.description);
+      if (typeof draft.categoryId !== "undefined") setCategoryId(draft.categoryId);
+      if (draft.language) setLanguage(draft.language);
+      if (draft.visibility) setVisibility(draft.visibility);
+      if (draft.contentTab) setContentTab(draft.contentTab);
+      if (draft.bracketItems?.length) setBracketItems(draft.bracketItems.map((x) => ({ ...x })));
+      if (draft.textEntries?.length) setTextEntries(draft.textEntries);
+    } catch {
+      // ignore malformed drafts
+    }
+  }, []);
 
-  const emailVerified = Boolean(user?.email_confirmed_at || (user?.app_metadata?.provider === "google"));
+  useEffect(() => {
+    const id = window.setTimeout(() => {
+      const draft = {
+        title: title.trim(),
+        description: description.trim(),
+        categoryId,
+        language,
+        visibility,
+        contentTab,
+        bracketItems: bracketItems.map((x) => ({ name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
+        textEntries,
+      };
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+      setLastSavedAt(new Date());
+    }, 500);
+    return () => window.clearTimeout(id);
+  }, [title, description, categoryId, language, visibility, contentTab, bracketItems, textEntries]);
+
+  const emailVerified = Boolean(user?.email_confirmed_at || user?.app_metadata?.provider === "google");
   const blockedByVerification = Boolean(user && !emailVerified);
+  const participantsRemaining = Math.max(0, MAX_PARTICIPANTS - bracketItems.length);
+  const textRemaining = Math.max(0, MAX_TEXT_ENTRIES - textEntries.length);
+
+  const deriveNameFromUrl = (rawUrl: string) => {
+    try {
+      const url = new URL(rawUrl);
+      const leaf = url.pathname.split("/").filter(Boolean).pop() ?? "Untitled";
+      return deriveItemNameFromFilename(decodeURIComponent(leaf)) || "Untitled";
+    } catch {
+      return "Untitled";
+    }
+  };
+
+  const parseYouTubeUrl = (url: string): string | null => {
+    try {
+      const u = new URL(url.trim());
+      if (u.hostname.includes("youtu.be")) return u.pathname.replace("/", "") || null;
+      if (u.hostname.includes("youtube.com")) return u.searchParams.get("v");
+      return null;
+    } catch {
+      return null;
+    }
+  };
+
+  const fetchYouTubeMeta = async (url: string): Promise<{ title: string; thumbnail: string }> => {
+    const oembed = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
+    if (!oembed.ok) throw new Error("Could not fetch YouTube title.");
+    const json = (await oembed.json()) as { title?: string; thumbnail_url?: string };
+    return { title: json.title?.trim() || "Untitled Video", thumbnail: json.thumbnail_url ?? "" };
+  };
+
+  const onUploadCover = async (file: File | null) => {
+    if (!file) return;
+    setStatus("Optimizing thumbnail...");
+    setError(null);
+    try {
+      const webp = await normalizeImageToWebp(file);
+      setCover(webp);
+      if (coverPreview) URL.revokeObjectURL(coverPreview);
+      setCoverPreview(URL.createObjectURL(webp));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to process thumbnail.");
+    } finally {
+      setStatus(null);
+    }
+  };
 
   const onUploadBracketFiles = async (files: FileList | null) => {
     if (!files?.length) return;
-    setStatus("Optimizing bracket images...");
+    setError(null);
+    setStatus("Optimizing participant images...");
     try {
+      const freeSlots = Math.max(0, MAX_PARTICIPANTS - bracketItems.length);
+      const picked = Array.from(files).slice(0, freeSlots);
       const next = await Promise.all(
-        Array.from(files).map(async (f) => {
+        picked.map(async (f) => {
           const webp = await normalizeImageToWebp(f);
           return {
             file: webp,
             name: deriveItemNameFromFilename(f.name) || "Untitled",
             preview: URL.createObjectURL(webp),
+            source: "upload" as const,
           };
         }),
       );
@@ -102,37 +230,147 @@ export default function UgcCreateClient() {
     }
   };
 
-  const onUploadCover = async (file: File | null) => {
-    if (!file) return;
-    setStatus("Optimizing cover image...");
+  const addImageUrls = () => {
+    const urls = imageUrlInput
+      .split("\n")
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .slice(0, participantsRemaining);
+    if (!urls.length) return;
+    const next = urls.map((url) => ({
+      name: deriveNameFromUrl(url),
+      preview: url,
+      externalUrl: url,
+      source: "url" as const,
+    }));
+    setBracketItems((prev) => [...prev, ...next]);
+    setImageUrlInput("");
+  };
+
+  const addVideoSingle = async () => {
+    const url = videoSingleUrl.trim();
+    if (!url || !participantsRemaining) return;
+    const videoId = parseYouTubeUrl(url);
+    if (!videoId) {
+      setError("Please enter a valid YouTube URL.");
+      return;
+    }
+    setError(null);
+    setStatus("Fetching video info...");
     try {
-      const webp = await normalizeImageToWebp(file);
-      setCover(webp);
+      const meta = await fetchYouTubeMeta(url);
+      const label = [meta.title, videoStart.trim() ? `@${videoStart.trim()}s` : "", videoEnd.trim() ? `-${videoEnd.trim()}s` : ""]
+        .filter(Boolean)
+        .join(" ");
+      setBracketItems((prev) => [
+        ...prev,
+        {
+          name: label,
+          preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          externalUrl: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          source: "youtube",
+        },
+      ]);
+      setVideoSingleUrl("");
+      setVideoStart("");
+      setVideoEnd("");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Cover conversion failed.");
+      setError(e instanceof Error ? e.message : "Could not add video.");
     } finally {
       setStatus(null);
     }
   };
 
-  const removeBracketItem = (targetIndex: number) => {
+  const addVideoBulk = async () => {
+    const urls = videoBulk
+      .split("\n")
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .slice(0, participantsRemaining);
+    if (!urls.length) return;
+    setError(null);
+    setStatus("Fetching video titles...");
+    try {
+      const next: BracketDraftItem[] = [];
+      for (const url of urls) {
+        const videoId = parseYouTubeUrl(url);
+        if (!videoId) continue;
+        const meta = await fetchYouTubeMeta(url);
+        next.push({
+          name: meta.title,
+          preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          externalUrl: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          source: "youtube",
+        });
+      }
+      setBracketItems((prev) => [...prev, ...next].slice(0, MAX_PARTICIPANTS));
+      setVideoBulk("");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Could not add some videos.");
+    } finally {
+      setStatus(null);
+    }
+  };
+
+  const addTextSingle = () => {
+    const text = textSingle.trim();
+    if (!text || !textRemaining) return;
+    setTextEntries((prev) => [...prev, { text, font: textFont, size: textSize, color: textColor, background: textBgColor }]);
+    setTextSingle("");
+  };
+
+  const addTextBulk = () => {
+    const lines = textBulk
+      .split("\n")
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .slice(0, textRemaining);
+    if (!lines.length) return;
+    setTextEntries((prev) => [...prev, ...lines.map((text) => ({ text, font: textFont, size: textSize, color: textColor, background: textBgColor }))]);
+    setTextBulk("");
+  };
+
+  const removeBracketItem = (idx: number) => {
     setBracketItems((prev) => {
-      const target = prev[targetIndex];
-      if (target) URL.revokeObjectURL(target.preview);
-      return prev.filter((_, idx) => idx !== targetIndex);
+      const target = prev[idx];
+      if (target?.source === "upload") URL.revokeObjectURL(target.preview);
+      return prev.filter((_, i) => i !== idx);
     });
+  };
+
+  const saveDraftNow = () => {
+    const draft = {
+      title: title.trim(),
+      description: description.trim(),
+      categoryId,
+      language,
+      visibility,
+      contentTab,
+      bracketItems: bracketItems.map((x) => ({ name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
+      textEntries,
+    };
+    window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    setLastSavedAt(new Date());
+    setStatus("Draft saved.");
+    window.setTimeout(() => setStatus(null), 1500);
   };
 
   const publish = async () => {
     if (!supabase || !user) return;
     setBusy(true);
     setError(null);
-    setStatus("Preparing draft...");
+    setStatus("Preparing...");
     try {
       if (!title.trim()) throw new Error("Title is required.");
-      if (type === "brackets" && !cover) throw new Error("Cover image is required for brackets.");
-      if (type === "brackets" && bracketItems.length < 2) throw new Error("Brackets needs at least 2 images.");
-      if (type === "balance" && balanceItems.some((it) => !it.optionA.trim() || !it.optionB.trim())) throw new Error("Fill all balance options.");
+      if (!categoryId) throw new Error("Please select a category.");
+
+      if ((contentTab === "bracket-image" || contentTab === "bracket-video") && bracketItems.length < 2) {
+        throw new Error("Brackets needs at least 2 participants.");
+      }
+
+      if (contentTab === "balance-text" && textEntries.length < 2) {
+        throw new Error("Balance text needs at least 2 entries.");
+      }
 
       const profilePayload = {
         id: user.id,
@@ -144,11 +382,15 @@ export default function UgcCreateClient() {
 
       let coverUrl: string | null = null;
       if (cover) {
-        setStatus("Uploading cover image...");
+        setStatus("Uploading thumbnail...");
         const key = `${user.id}/${Date.now()}-${sanitizeStorageFileName(cover.name)}`;
-        const { error: uploadErr } = await supabase.storage.from("ugc-covers").upload(key, cover, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
+        const { error: uploadErr } = await supabase.storage
+          .from("ugc-covers")
+          .upload(key, cover, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
         if (uploadErr) throw uploadErr;
         coverUrl = supabase.storage.from("ugc-covers").getPublicUrl(key).data.publicUrl;
+      } else if ((contentTab === "bracket-image" || contentTab === "bracket-video") && bracketItems[0]) {
+        coverUrl = bracketItems[0].preview;
       }
 
       const slugRes = await fetch(`/api/ugc/next-slug?title=${encodeURIComponent(title.trim())}`);
@@ -156,51 +398,65 @@ export default function UgcCreateClient() {
       if (!slugRes.ok) throw new Error(slugJson.error ?? "Could not allocate URL slug.");
       const slug = slugJson.slug;
       if (!slug) throw new Error("Could not allocate URL slug.");
+
+      const gameType = contentTab === "balance-text" ? "balance" : "brackets";
+      const gameVisibility = visibility === "closed" ? "closed" : "public";
+
       setStatus("Creating game...");
       const { data: game, error: gameErr } = await supabase
         .from("ugc_games")
         .insert({
           user_id: user.id,
-          type,
+          type: gameType,
           title: title.trim(),
           description: description.trim() || null,
           cover_image_url: coverUrl,
-          category_id: categoryId || null,
+          category_id: categoryId,
           language,
-          visibility,
-          is_nsfw: isNsfw,
+          visibility: gameVisibility,
+          is_nsfw: false,
           slug,
         })
         .select("id,type,slug")
         .single();
       if (gameErr || !game) throw gameErr ?? new Error("Failed to create game.");
 
-      if (type === "brackets") {
-        setStatus("Uploading bracket items...");
+      if (gameType === "brackets") {
+        setStatus("Saving participants...");
         const payload: { game_id: string; name: string; image_url: string; order: number }[] = [];
         for (let i = 0; i < bracketItems.length; i += 1) {
           const item = bracketItems[i];
-          const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
-          const { error: itemUploadErr } = await supabase.storage.from("brackets").upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
-          if (itemUploadErr) throw itemUploadErr;
-          const imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
-          payload.push({ game_id: game.id, name: item.name.trim() || `Item ${i + 1}`, image_url: imageUrl, order: i });
+          let imageUrl = item.externalUrl ?? item.preview;
+          if (item.file) {
+            const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
+            const { error: itemUploadErr } = await supabase.storage
+              .from("brackets")
+              .upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
+            if (itemUploadErr) throw itemUploadErr;
+            imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
+          }
+          payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, order: i });
         }
         const { error: itemsErr } = await supabase.from("ugc_brackets_items").insert(payload);
         if (itemsErr) throw itemsErr;
       } else {
-        setStatus("Saving balance rounds...");
-        const payload = balanceItems.map((it, i) => ({
-          game_id: game.id,
-          option_a: it.optionA.trim(),
-          option_b: it.optionB.trim(),
-          round: i + 1,
-          order: i,
-        }));
+        setStatus("Saving balance pairs...");
+        if (textEntries.length % 2 !== 0) throw new Error("Balance text entries must be an even number.");
+        const payload = [];
+        for (let i = 0; i < textEntries.length; i += 2) {
+          payload.push({
+            game_id: game.id,
+            option_a: textEntries[i].text,
+            option_b: textEntries[i + 1].text,
+            round: i / 2 + 1,
+            order: i / 2,
+          });
+        }
         const { error: balErr } = await supabase.from("ugc_balance_options").insert(payload);
         if (balErr) throw balErr;
       }
 
+      window.localStorage.removeItem(DRAFT_KEY);
       router.push(game.type === "brackets" ? `/ugc/brackets/${game.slug}` : `/ugc/balance/${game.slug}`);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to publish.");
@@ -210,214 +466,302 @@ export default function UgcCreateClient() {
     }
   };
 
-  const canGoStep2 = true;
-  const canGoStep3 = title.trim().length > 0;
-  const canGoStep4 = type === "brackets" ? bracketItems.length >= 2 : balanceItems.every((it) => it.optionA.trim() && it.optionB.trim());
-  const canPublish = canGoStep4 && Boolean(categoryId) && Boolean(language);
-
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", padding: "20px 16px 60px" }}>
+    <div style={{ maxWidth: 980, margin: "0 auto", padding: "20px 16px 60px" }}>
       <AuthModal open={needsAuth} onClose={() => router.push("/bracket")} />
-      <h1 style={{ fontSize: 28, fontWeight: 900 }}>Create Game</h1>
-      <p style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 14 }}>Build a Brackets or Balance game in 4 steps.</p>
-      {blockedByVerification && (
-        <div style={{ border: "1px solid #f59e0b66", background: "#f59e0b14", borderRadius: 12, padding: 12, marginBottom: 14 }}>
-          Please verify your email before creating games.
-          <div style={{ marginTop: 8 }}>
-            <button
-              onClick={async () => {
-                if (!supabase || !user?.email) return;
-                await supabase.auth.resend({
-                  type: "signup",
-                  email: user.email,
-                  options: { emailRedirectTo: `${window.location.origin}${window.location.pathname}` },
-                });
-              }}
-              style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "6px 10px", background: "var(--bg-card)", fontSize: 12 }}
-            >
-              Resend verification email
-            </button>
-          </div>
-        </div>
-      )}
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-        {[1, 2, 3, 4].map((n) => (
-          <button
-            key={n}
-            onClick={() => setStep(n)}
-            disabled={blockedByVerification || (n === 2 && !canGoStep2) || (n === 3 && !canGoStep3) || (n === 4 && !canGoStep4)}
-            style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: step === n ? MUSTARD_BG : "transparent", color: step === n ? MUSTARD : "var(--text-1)", cursor: "pointer" }}
-          >
-            Step {n}
-          </button>
-        ))}
-      </div>
-
-      {step === 1 && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          <button onClick={() => setType("brackets")} style={{ border: `1px solid ${type === "brackets" ? MUSTARD : "var(--border)"}`, borderRadius: 12, padding: 18, background: type === "brackets" ? MUSTARD_BG : "transparent", cursor: "pointer", textAlign: "left" }}>
-            <div style={{ fontSize: 16, fontWeight: 800 }}>Brackets</div>
-            <div style={{ marginTop: 4, fontSize: 12, color: "var(--text-2)" }}>World-cup brackets style image tournament where players pick the favorites</div>
-          </button>
-          <button onClick={() => setType("balance")} style={{ border: `1px solid ${type === "balance" ? MUSTARD : "var(--border)"}`, borderRadius: 12, padding: 18, background: type === "balance" ? MUSTARD_BG : "transparent", cursor: "pointer", textAlign: "left" }}>
-            <div style={{ fontSize: 16, fontWeight: 800 }}>Balance Game</div>
-            <div style={{ marginTop: 4, fontSize: 12, color: "var(--text-2)" }}>Text choices where players decide between option A and B each round</div>
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div style={{ display: "grid", gap: 8 }}>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-card)" }} />
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description (optional)" rows={3} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-card)" }} />
-          <label style={{ fontSize: 12, color: "var(--text-2)" }}>Cover image {type === "brackets" ? "(required)" : "(optional)"}</label>
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsCoverDropOver(true);
-            }}
-            onDragLeave={() => setIsCoverDropOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setIsCoverDropOver(false);
-              void onUploadCover(e.dataTransfer.files?.[0] ?? null);
-            }}
-            style={{
-              border: `2px dashed ${isCoverDropOver ? MUSTARD : "var(--border)"}`,
-              borderRadius: 10,
-              padding: 16,
-              background: isCoverDropOver ? MUSTARD_BG : "var(--bg-card)",
-            }}
-          >
-            <div style={{ fontSize: 12, color: "var(--text-2)", marginBottom: 8 }}>Drop cover image here, or choose a file.</div>
-            <label style={{ display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
-              Choose cover file
-              <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} style={{ display: "none" }} onChange={(e) => void onUploadCover(e.target.files?.[0] ?? null)} />
-            </label>
-            {cover && (
-              <div style={{ marginTop: 10 }}>
-                <div style={{ fontSize: 11, color: "var(--text-3)", marginBottom: 6 }}>{cover.name}</div>
-                <img src={URL.createObjectURL(cover)} alt="Cover preview" style={{ width: "100%", maxWidth: 260, borderRadius: 8, border: "1px solid var(--border)" }} />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {step === 3 && type === "brackets" && (
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
         <div>
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDropOver(true);
-            }}
-            onDragLeave={() => setIsDropOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setIsDropOver(false);
-              void onUploadBracketFiles(e.dataTransfer.files);
-            }}
-            style={{
-              border: `1px dashed ${isDropOver ? MUSTARD : "var(--border)"}`,
-              borderRadius: 10,
-              padding: 14,
-              background: isDropOver ? MUSTARD_BG : "var(--bg-card)",
-              marginBottom: 8,
-            }}
-          >
-            <div style={{ fontSize: 12, color: "var(--text-2)", marginBottom: 8 }}>Drop bracket images here. Minimum 2 images.</div>
-            <label style={{ display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
-              Choose multiple files
-              <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} multiple style={{ display: "none" }} onChange={(e) => void onUploadBracketFiles(e.target.files)} />
+          <h1 style={{ fontSize: 28, fontWeight: 900 }}>Create Quiz</h1>
+          <p style={{ marginTop: 6, fontSize: 13, color: "var(--text-2)" }}>Single-page create flow for Bracket and Balance games.</p>
+        </div>
+        <div style={{ fontSize: 12, color: "var(--text-3)" }}>{lastSavedAt ? `Draft saved ${lastSavedAt.toLocaleTimeString()}` : "Draft not saved yet"}</div>
+      </div>
+
+      {blockedByVerification && (
+        <div style={{ marginTop: 12, border: "1px solid #f59e0b66", background: "#f59e0b14", borderRadius: 12, padding: 12 }}>
+          Please verify your email before creating games.
+        </div>
+      )}
+
+      <section style={{ marginTop: 18, border: "1px solid var(--border)", borderRadius: 14, padding: 14, background: "var(--bg-card)" }}>
+        <h2 style={{ fontSize: 16, fontWeight: 900, marginBottom: 10 }}>Basic Information</h2>
+        <div style={{ display: "grid", gap: 10 }}>
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, color: "var(--text-2)" }}>Title (required)</span>
+            <input value={title} maxLength={TITLE_MAX} onChange={(e) => setTitle(e.target.value)} placeholder="Title" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-elevated)" }} />
+            <span style={{ fontSize: 11, color: "var(--text-3)" }}>{title.length}/{TITLE_MAX}</span>
+          </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, color: "var(--text-2)" }}>Description (optional)</span>
+            <textarea value={description} maxLength={DESC_MAX} onChange={(e) => setDescription(e.target.value)} rows={3} placeholder="Description" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-elevated)" }} />
+            <span style={{ fontSize: 11, color: "var(--text-3)" }}>{description.length}/{DESC_MAX}</span>
+          </label>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 10 }}>
+            <label style={{ display: "grid", gap: 6 }}>
+              <span style={{ fontSize: 12, color: "var(--text-2)" }}>Visibility</span>
+              <select value={visibility === "closed" ? "closed" : "public"} onChange={(e) => setVisibility(e.target.value as UgcVisibility)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }}>
+                <option value="public">Public</option>
+                <option value="closed">Closed</option>
+              </select>
+            </label>
+
+            <label style={{ display: "grid", gap: 6 }}>
+              <span style={{ fontSize: 12, color: "var(--text-2)" }}>Language</span>
+              <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }}>
+                {ISO_LANGUAGE_OPTIONS.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label style={{ display: "grid", gap: 6 }}>
+              <span style={{ fontSize: 12, color: "var(--text-2)" }}>Category</span>
+              <select value={String(categoryId)} onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : "")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }}>
+                <option value="">Select category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
-          <div style={{ marginTop: 10, display: "grid", gap: 8 }}>
-            {bracketItems.map((item, idx) => (
-              <div key={`${item.file.name}-${idx}`} style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <img src={item.preview} alt={item.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 8 }} />
-                <input
-                  value={item.name}
-                  onChange={(e) => setBracketItems((prev) => prev.map((p, i) => (i === idx ? { ...p, name: e.target.value } : p)))}
-                  style={{ flex: 1, border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }}
-                />
-                <button onClick={() => removeBracketItem(idx)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "transparent", color: "#f87171", cursor: "pointer" }}>
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
-      )}
+      </section>
 
-      {step === 3 && type === "balance" && (
-        <div style={{ display: "grid", gap: 10 }}>
-          <select value={balanceRounds} onChange={(e) => setBalanceRounds(Number(e.target.value))} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }}>
-            {ROUND_OPTIONS.map((r) => (
-              <option key={r} value={r}>
-                {r} rounds
-              </option>
-            ))}
-          </select>
-          {balanceItems.map((item, idx) => (
-            <div key={idx} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              <input value={item.optionA} onChange={(e) => setBalanceItems((prev) => prev.map((p, i) => (i === idx ? { ...p, optionA: e.target.value } : p)))} placeholder={`Round ${idx + 1} option A`} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }} />
-              <input value={item.optionB} onChange={(e) => setBalanceItems((prev) => prev.map((p, i) => (i === idx ? { ...p, optionB: e.target.value } : p)))} placeholder={`Round ${idx + 1} option B`} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }} />
-            </div>
-          ))}
-        </div>
-      )}
+      <section style={{ marginTop: 14, border: "1px solid var(--border)", borderRadius: 14, padding: 14, background: "var(--bg-card)" }}>
+        <h2 style={{ fontSize: 16, fontWeight: 900, marginBottom: 10 }}>Quiz Content</h2>
 
-      {step === 4 && (
-        <div style={{ display: "grid", gap: 8 }}>
-          <select value={language} onChange={(e) => setLanguage(e.target.value)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }}>
-            {ISO_LANGUAGE_OPTIONS.map((lang) => (
-              <option key={lang.code} value={lang.code}>
-                {lang.name} ({lang.code})
-              </option>
-            ))}
-          </select>
-          <select value={String(categoryId)} onChange={(e) => setCategoryId(e.target.value ? Number(e.target.value) : "")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }}>
-            <option value="">Select category</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-          <select value={visibility} onChange={(e) => setVisibility(e.target.value as UgcVisibility)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-card)" }}>
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-            <option value="closed">Closed</option>
-          </select>
-          <label style={{ fontSize: 12 }}>
-            <input type="checkbox" checked={isNsfw} onChange={(e) => setIsNsfw(e.target.checked)} /> NSFW
-          </label>
-          <button onClick={publish} disabled={busy || blockedByVerification || !canPublish} style={{ border: "none", borderRadius: 10, padding: "11px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
-            {busy ? "Publishing..." : "Publish"}
-          </button>
-          {status && <p style={{ fontSize: 12, color: "var(--text-2)" }}>{status}</p>}
-        </div>
-      )}
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 14 }}>
-        <button
-          onClick={() => setStep((s) => Math.max(1, s - 1))}
-          disabled={step === 1}
-          style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 12px", background: "transparent", cursor: "pointer" }}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsCoverDropOver(true);
+          }}
+          onDragLeave={() => setIsCoverDropOver(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setIsCoverDropOver(false);
+            void onUploadCover(e.dataTransfer.files?.[0] ?? null);
+          }}
+          style={{
+            border: `2px dashed ${isCoverDropOver ? MUSTARD : "var(--border)"}`,
+            borderRadius: 12,
+            padding: 14,
+            background: isCoverDropOver ? MUSTARD_BG : "var(--bg-elevated)",
+          }}
         >
-          Back
-        </button>
-        {step < 4 && (
-          <button
-            onClick={() => setStep((s) => Math.min(4, s + 1))}
-            disabled={(step === 2 && !canGoStep3) || (step === 3 && !canGoStep4)}
-            style={{ border: "none", borderRadius: 8, padding: "8px 12px", background: MUSTARD, color: "#231600", fontWeight: 800, cursor: "pointer" }}
-          >
-            Next
-          </button>
+          <div style={{ fontSize: 12, color: "var(--text-2)" }}>Quiz Thumbnail (optional)</div>
+          <div style={{ marginTop: 4, fontSize: 11, color: "var(--text-3)" }}>If no thumbnail is provided, the first contender will be used</div>
+          <label style={{ marginTop: 8, display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
+            Upload thumbnail
+            <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} style={{ display: "none" }} onChange={(e) => void onUploadCover(e.target.files?.[0] ?? null)} />
+          </label>
+          {coverPreview && (
+            <div style={{ marginTop: 10 }}>
+              <img src={coverPreview} alt="Thumbnail preview" style={{ width: "100%", maxWidth: 320, borderRadius: 10, border: "1px solid var(--border)" }} />
+            </div>
+          )}
+        </div>
+
+        <div style={{ marginTop: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button onClick={() => setContentTab("bracket-image")} style={tabStyle(contentTab === "bracket-image")}>Bracket (Image)</button>
+          <button onClick={() => setContentTab("bracket-video")} style={tabStyle(contentTab === "bracket-video")}>Bracket (Video)</button>
+          <button onClick={() => setContentTab("balance-text")} style={tabStyle(contentTab === "balance-text")}>Balance Game (Text)</button>
+        </div>
+
+        {(contentTab === "bracket-image" || contentTab === "bracket-video") && (
+          <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
+            <div style={{ fontSize: 12, color: "var(--text-2)" }}>Participant count: {bracketItems.length} / {MAX_PARTICIPANTS}{contentTab === "bracket-video" ? " (YouTube)" : ""}</div>
+
+            {contentTab === "bracket-image" && (
+              <>
+                <div
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDropOver(true);
+                  }}
+                  onDragLeave={() => setIsDropOver(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDropOver(false);
+                    void onUploadBracketFiles(e.dataTransfer.files);
+                  }}
+                  style={{ border: `1px dashed ${isDropOver ? MUSTARD : "var(--border)"}`, borderRadius: 10, padding: 12, background: isDropOver ? MUSTARD_BG : "var(--bg-elevated)" }}
+                >
+                  <div style={{ fontSize: 12, color: "var(--text-2)" }}>Drag and drop images (max 64, 5MB each)</div>
+                  <label style={{ marginTop: 8, display: "inline-block", border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", cursor: "pointer", fontSize: 12 }}>
+                    Add image files
+                    <input type="file" accept={UGC_ACCEPT_IMAGE_INPUT} multiple style={{ display: "none" }} onChange={(e) => void onUploadBracketFiles(e.target.files)} />
+                  </label>
+                </div>
+
+                <div style={{ display: "grid", gap: 6 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-2)" }}>
+                    <span>Image URLs (one per line)</span>
+                    <span>{participantsRemaining} remaining</span>
+                  </div>
+                  <textarea value={imageUrlInput} onChange={(e) => setImageUrlInput(e.target.value)} rows={4} placeholder={"https://...\nhttps://..."} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-elevated)" }} />
+                  <button type="button" onClick={addImageUrls} style={smallBtn()}>Add URLs</button>
+                </div>
+              </>
+            )}
+
+            {contentTab === "bracket-video" && (
+              <>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button type="button" onClick={() => setVideoTab("single")} style={subTabStyle(videoTab === "single")}>Single Video</button>
+                  <button type="button" onClick={() => setVideoTab("bulk")} style={subTabStyle(videoTab === "bulk")}>Bulk Add</button>
+                </div>
+                {videoTab === "single" ? (
+                  <div style={{ display: "grid", gap: 8 }}>
+                    <input value={videoSingleUrl} onChange={(e) => setVideoSingleUrl(e.target.value)} placeholder="YouTube URL" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }} />
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: 8 }}>
+                      <input value={videoStart} onChange={(e) => setVideoStart(e.target.value)} placeholder="Start (s)" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }} />
+                      <input value={videoEnd} onChange={(e) => setVideoEnd(e.target.value)} placeholder="End (s)" style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }} />
+                      <button type="button" onClick={() => void addVideoSingle()} style={smallBtn()}>Add</button>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: "grid", gap: 6 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-2)" }}>
+                      <span>YouTube URLs (one per line)</span>
+                      <span>{participantsRemaining} remaining</span>
+                    </div>
+                    <textarea value={videoBulk} onChange={(e) => setVideoBulk(e.target.value)} rows={5} placeholder={"https://youtube...\nhttps://youtube..."} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-elevated)" }} />
+                    <button type="button" onClick={() => void addVideoBulk()} style={smallBtn()}>Add Videos</button>
+                  </div>
+                )}
+              </>
+            )}
+
+            <div style={{ display: "grid", gap: 8 }}>
+              {bracketItems.map((item, idx) => (
+                <div key={`${item.name}-${idx}`} style={{ display: "grid", gridTemplateColumns: "56px 1fr auto", gap: 8, alignItems: "center" }}>
+                  <img src={item.preview} alt={item.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: "cover", border: "1px solid var(--border)" }} />
+                  <input value={item.name} onChange={(e) => setBracketItems((prev) => prev.map((p, i) => (i === idx ? { ...p, name: e.target.value } : p)))} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-elevated)" }} />
+                  <button type="button" onClick={() => removeBracketItem(idx)} style={{ ...smallBtn(), color: "#f87171" }}>Remove</button>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
+
+        {contentTab === "balance-text" && (
+          <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
+            <div style={{ fontSize: 12, color: "var(--text-2)" }}>Participant entry count: {textEntries.length} / {MAX_TEXT_ENTRIES} text entries</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button type="button" onClick={() => setTextTab("single")} style={subTabStyle(textTab === "single")}>Single Entry</button>
+              <button type="button" onClick={() => setTextTab("bulk")} style={subTabStyle(textTab === "bulk")}>Bulk Add</button>
+            </div>
+            {textTab === "single" ? (
+              <>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8 }}>
+                  <input value={textSingle} onChange={(e) => setTextSingle(e.target.value)} placeholder="Enter text..." style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", background: "var(--bg-elevated)" }} />
+                  <button type="button" onClick={addTextSingle} style={smallBtn()}>+ Add</button>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))", gap: 8 }}>
+                  <label style={{ display: "grid", gap: 5 }}>
+                    <span style={{ fontSize: 11, color: "var(--text-3)" }}>Font</span>
+                    <select value={textFont} onChange={(e) => setTextFont(e.target.value)} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-elevated)" }}>
+                      {FONT_OPTIONS.map((f) => (
+                        <option key={f} value={f}>{f}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label style={{ display: "grid", gap: 5 }}>
+                    <span style={{ fontSize: 11, color: "var(--text-3)" }}>Size</span>
+                    <select value={textSize} onChange={(e) => setTextSize(e.target.value as "small" | "medium" | "large")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-elevated)" }}>
+                      <option value="small">Small</option>
+                      <option value="medium">Medium</option>
+                      <option value="large">Large</option>
+                    </select>
+                  </label>
+                  <label style={{ display: "grid", gap: 5 }}>
+                    <span style={{ fontSize: 11, color: "var(--text-3)" }}>Text Color ({textColor} {textColor.length}/7)</span>
+                    <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} style={{ width: "100%", height: 34, border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-elevated)" }} />
+                  </label>
+                  <label style={{ display: "grid", gap: 5 }}>
+                    <span style={{ fontSize: 11, color: "var(--text-3)" }}>Background ({textBgColor} {textBgColor.length}/7)</span>
+                    <input type="color" value={textBgColor} onChange={(e) => setTextBgColor(e.target.value)} style={{ width: "100%", height: 34, border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg-elevated)" }} />
+                  </label>
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: "var(--text-2)" }}>
+                  <span>Entries (one per line)</span>
+                  <span>{textRemaining} remaining</span>
+                </div>
+                <textarea value={textBulk} onChange={(e) => setTextBulk(e.target.value)} rows={6} placeholder={"Entry 1\nEntry 2\nEntry 3"} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "10px 12px", background: "var(--bg-elevated)" }} />
+                <button type="button" onClick={addTextBulk} style={smallBtn()}>Add Entries</button>
+              </>
+            )}
+
+            <div style={{ display: "grid", gap: 6 }}>
+              {textEntries.map((entry, idx) => (
+                <div key={`${entry.text}-${idx}`} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8, alignItems: "center" }}>
+                  <input value={entry.text} onChange={(e) => setTextEntries((prev) => prev.map((p, i) => (i === idx ? { ...p, text: e.target.value } : p)))} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-elevated)" }} />
+                  <button type="button" onClick={() => setTextEntries((prev) => prev.filter((_, i) => i !== idx))} style={{ ...smallBtn(), color: "#f87171" }}>Remove</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+
+      <div style={{ marginTop: 14, display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <button type="button" onClick={saveDraftNow} disabled={busy} style={{ border: "1px solid var(--border)", borderRadius: 10, padding: "10px 12px", background: "var(--bg-card)", cursor: "pointer" }}>
+          Save Draft
+        </button>
+        <button type="button" onClick={publish} disabled={busy || blockedByVerification} style={{ border: "none", borderRadius: 10, padding: "10px 14px", background: MUSTARD, color: "#231600", fontWeight: 900, cursor: "pointer" }}>
+          {busy ? "Creating..." : "Create"}
+        </button>
       </div>
-      {error && <p style={{ marginTop: 10, color: "#f87171", fontSize: 12 }}>{error}</p>}
+
+      {status && <p style={{ marginTop: 10, fontSize: 12, color: "var(--text-2)" }}>{status}</p>}
+      {error && <p style={{ marginTop: 8, color: "#f87171", fontSize: 12 }}>{error}</p>}
     </div>
   );
+}
+
+function tabStyle(active: boolean) {
+  return {
+    border: `1px solid ${active ? "#b8860b" : "var(--border)"}`,
+    borderRadius: 999,
+    padding: "7px 12px",
+    background: active ? "rgba(184,134,11,0.2)" : "transparent",
+    color: active ? "#b8860b" : "var(--text-2)",
+    fontSize: 12,
+    fontWeight: 800,
+    cursor: "pointer",
+  } as const;
+}
+
+function subTabStyle(active: boolean) {
+  return {
+    border: "1px solid var(--border)",
+    borderRadius: 8,
+    padding: "7px 10px",
+    background: active ? "rgba(184,134,11,0.2)" : "var(--bg-elevated)",
+    color: active ? "#b8860b" : "var(--text-2)",
+    fontSize: 12,
+    cursor: "pointer",
+    fontWeight: 700,
+  } as const;
+}
+
+function smallBtn() {
+  return {
+    border: "1px solid var(--border)",
+    borderRadius: 8,
+    padding: "8px 10px",
+    background: "var(--bg-card)",
+    cursor: "pointer",
+    fontSize: 12,
+  } as const;
 }
