@@ -73,8 +73,13 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
 
   const finalize = useCallback((all: number[], peaks: number[]) => {
     // Score = average % of peak caught across all rounds (0-100)
-    const pcts = all.map((v, i) => Math.min(100, Math.round((v / peaks[i]) * 100)));
-    const avgPct = Math.round(pcts.reduce((s,v) => s+v, 0) / pcts.length);
+    const pcts = all.map((v, i) => {
+      const peak = peaks[i];
+      const denom = peak != null && Number.isFinite(peak) && peak > 0 ? peak : BASE_SALARY;
+      return Math.min(100, Math.round((v / denom) * 100));
+    });
+    const avgPct =
+      pcts.length > 0 ? Math.round(pcts.reduce((s, v) => s + v, 0) / pcts.length) : 0;
     setFinalScore(avgPct);
     const isNew = saveHighScore(game.id, avgPct);
     setIsNewBest(isNew); if (isNew) setHS(avgPct);
@@ -132,6 +137,9 @@ export default function RaiseOrRaise({ game }: { game: GameData }) {
     if (phase !== "playing") return;
     clearT();
     const locked = Math.round(salary);
+    const roundPeak = Math.round(peakRef.current);
+    const nextPeaks = [...peaksRef.current, roundPeak];
+    peaksRef.current = nextPeaks;
     playBeep(locked > BASE_SALARY + 50000 ? "success" : "go");
     setLastAccepted(locked);
     const next = [...acceptedRef.current, locked];
