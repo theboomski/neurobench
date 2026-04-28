@@ -3591,9 +3591,8 @@
         "howToPlay": [
           "You have 30 seconds on the clock.",
           "Each round shows one cue word and four choices — tap the strongest semantic associate.",
-          "Questions are drawn in random order from a bank of 50 pairs.",
-          "Your score is how many you get right before time runs out.",
-          "If you clear the full bank before 30 seconds end, the deck shuffles and loops so you can keep adding correct answers."
+          "Prompts appear in random order.",
+          "Your score is how many you get right before time runs out."
         ],
         "science": "Semantic network theory (Collins & Loftus, 1975) models the mental lexicon as a network of nodes (concepts) connected by weighted edges (associations). Faster and more distant associations indicate a richer, more densely interconnected semantic network. Verbal fluency tasks — a related measure — are among the most sensitive neuropsychological tests for detecting early cognitive decline, as semantic network degradation is an early sign of neurodegenerative disease. High associative intelligence predicts creative problem-solving, metaphor comprehension, and verbal IQ.",
         "tips": [

@@ -37,7 +37,7 @@ function shuffleOpts(options: string[], correct: number) {
 
 type Pair = { word: string; options: string[]; correct: number };
 
-// 50 word → best associate (4 options each). Hospital: explicit “Nurse and Scalpel” correct answer.
+// Word → best associate (4 options each). Hospital: explicit “Nurse and Scalpel” correct answer.
 const PAIRS: Pair[] = [
   { word: "Ocean", options: ["Wave", "Chair", "Pencil", "Tuesday"], correct: 0 },
   { word: "Fire", options: ["Carpet", "Smoke", "Piano", "Envelope"], correct: 1 },
@@ -263,8 +263,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
         <div style={{ fontSize: 56, marginBottom: 16 }}>🕸️</div>
         <h2 style={{ fontSize: 22, fontWeight: 800, marginBottom: 10 }}>Word Association IQ</h2>
         <p style={{ color: "var(--text-2)", fontSize: 14, marginBottom: 16, lineHeight: 1.7, maxWidth: 420, margin: "0 auto 16px" }}>
-          You have <strong>30 seconds</strong>. Answer as many as you can. Each prompt shows a word — pick the strongest association. Questions are drawn in{" "}
-          <strong>random order</strong> from 50 pairs; if you clear the full set before time runs out, the deck <strong>shuffles and loops</strong> so you can keep scoring.
+          You have <strong>30 seconds</strong>. Answer as many as you can. Each prompt shows a word — pick the strongest association. Prompts appear in <strong>random order</strong>.
         </p>
         <div style={{ background: "var(--bg-elevated)", borderRadius: 12, padding: "16px 24px", marginBottom: 24, display: "inline-block" }}>
           <div style={{ fontSize: 18, fontWeight: 900, marginBottom: 8 }}>Ocean →</div>
@@ -273,7 +272,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
         </div>
         <br />
         <p style={{ color: "var(--text-3)", fontSize: 11, fontFamily: "var(--font-mono)", marginBottom: 24 }}>
-          50-word bank · 30-second sprint
+          30-second sprint
         </p>
         <button
           onClick={handleStart}
@@ -316,9 +315,7 @@ export default function WordAssociation({ game }: { game: GameData }) {
             gap: 8,
           }}
         >
-          <span>
-            {current + 1} / {deck.length} · loop
-          </span>
+          <span>#{current + 1}</span>
           <span style={{ color: "#f59e0b", fontWeight: 800 }}>{secLeft}s</span>
           <span style={{ color: "#10B981" }}>{correct} correct</span>
         </div>
