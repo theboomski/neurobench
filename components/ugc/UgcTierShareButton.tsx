@@ -1,8 +1,20 @@
 "use client";
 import type { CSSProperties } from "react";
 
-export default function UgcTierShareButton({ title, slug, playCount, style }: { title: string; slug: string; playCount: number; style?: CSSProperties }) {
-  const tierUrl = `https://zazaza.app/ugc/brackets/${slug}/tier`;
+export default function UgcTierShareButton({
+  title,
+  slug,
+  playCount,
+  gameType = "brackets",
+  style,
+}: {
+  title: string;
+  slug: string;
+  playCount: number;
+  gameType?: "brackets" | "balance";
+  style?: CSSProperties;
+}) {
+  const tierUrl = gameType === "balance" ? `https://zazaza.app/ugc/balance/${slug}/tier` : `https://zazaza.app/ugc/brackets/${slug}/tier`;
   const text = `"${title}" tier list — ${playCount} votes in\nDo you agree? → ${tierUrl}`;
 
   return (

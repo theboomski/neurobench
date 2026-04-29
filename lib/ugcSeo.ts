@@ -102,6 +102,32 @@ export function bracketsTierMetadata(
   };
 }
 
+export function balanceTierMetadata(
+  row: Pick<UgcGameSeoRow, "title" | "slug" | "is_nsfw" | "visibility" | "is_approved" | "cover_image_url">,
+): Metadata {
+  const title = nsfwLabel(row.title, row.is_nsfw);
+  const descBase = `See the tier ranking for ${row.title}. Tiers are based on current votes and update in real time.`;
+  const description = row.is_nsfw ? `[NSFW] ${descBase}` : descBase;
+  const pageTitle = `${title} Tier List | ZAZAZA Balance`;
+  const url = `${UGC_SITE_BASE}/ugc/balance/${row.slug}/tier`;
+  const ogImage = row.cover_image_url || UGC_DEFAULT_OG_IMAGE;
+  return {
+    title: pageTitle,
+    description,
+    alternates: { canonical: url },
+    robots: row.visibility === "public" && row.is_approved ? { index: true, follow: true } : { index: false, follow: false },
+    openGraph: {
+      type: "website",
+      url,
+      title: pageTitle,
+      description,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+      siteName: "ZAZAZA",
+    },
+    twitter: { card: "summary_large_image", title: pageTitle, description, images: [ogImage] },
+  };
+}
+
 export function balanceResultsMetadata(row: Pick<UgcGameSeoRow, "title" | "slug" | "is_nsfw" | "visibility" | "is_approved">): Metadata {
   const title = nsfwLabel(row.title, row.is_nsfw);
   const descBase = `See how people voted in ${row.title}. Which option won? Full results updated in real time.`;
