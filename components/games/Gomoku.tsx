@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData, GameRank } from "@/lib/types";
 import { resolveResultTone } from "@/lib/resultUtils";
@@ -377,6 +377,7 @@ function chooseAiMove(board: Cell[][]) {
 }
 
 const SCORE_TIME_CAP_MS = 180000;
+const END_REVEAL_MS = 280;
 
 function scoreFromClearMs(ms: number) {
   const clamped = Math.max(0, Math.min(SCORE_TIME_CAP_MS, ms));
@@ -415,6 +416,7 @@ export default function Omok({ game }: { game: GameData }) {
   const [board, setBoard] = useState<Cell[][]>(makeBoard);
   const [turn, setTurn] = useState<Turn>("player");
   const [result, setResult] = useState<GameResult>(null);
+  const [ending, setEnding] = useState(false);
   const [winning, setWinning] = useState<Set<string>>(new Set());
   const [lastMove, setLastMove] = useState<{ r: number; c: number; who: Cell } | null>(null);
   const [showAd, setShowAd] = useState(false);
@@ -423,8 +425,9 @@ export default function Omok({ game }: { game: GameData }) {
   const [clearMs, setClearMs] = useState<number>(0);
   const [finalScore, setFinalScore] = useState<number>(0);
   const [runStartedAt, setRunStartedAt] = useState<number>(0);
+  const endTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const ended = result !== null;
+  const ended = result !== null || ending;
   const turnLabel = turn === "player" ? "Black (You)" : "White (AI)";
 
   const status = useMemo(() => {
@@ -435,10 +438,15 @@ export default function Omok({ game }: { game: GameData }) {
   }, [result, turnLabel]);
 
   const restart = () => {
+    if (endTimerRef.current) {
+      clearTimeout(endTimerRef.current);
+      endTimerRef.current = null;
+    }
     setStarted(false);
     setBoard(makeBoard());
     setTurn("player");
     setResult(null);
+    setEnding(false);
     setWinning(new Set());
     setLastMove(null);
     setIsNewBest(false);
@@ -450,6 +458,16 @@ export default function Omok({ game }: { game: GameData }) {
   useEffect(() => {
     setHighScore(getBestScore());
   }, []);
+
+  useEffect(
+    () => () => {
+      if (endTimerRef.current) {
+        clearTimeout(endTimerRef.current);
+        endTimerRef.current = null;
+      }
+    },
+    [],
+  );
 
   const finishIfEnded = (next: Cell[][], last: Pos, who: Cell): boolean => {
     const moverExact = exactFiveFrom(next, last, who);
@@ -468,7 +486,11 @@ export default function Omok({ game }: { game: GameData }) {
       const isNew = saveBestScore(score);
       setIsNewBest(isNew);
       if (isNew) setHighScore(score);
-      setResult("win");
+      setEnding(true);
+      endTimerRef.current = setTimeout(() => {
+        setEnding(false);
+        setResult("win");
+      }, END_REVEAL_MS);
       return true;
     }
 
@@ -482,7 +504,11 @@ export default function Omok({ game }: { game: GameData }) {
       const isNew = saveBestScore(score);
       setIsNewBest(isNew);
       if (isNew) setHighScore(score);
-      setResult("win");
+      setEnding(true);
+      endTimerRef.current = setTimeout(() => {
+        setEnding(false);
+        setResult("win");
+      }, END_REVEAL_MS);
       return true;
     }
 
@@ -491,14 +517,22 @@ export default function Omok({ game }: { game: GameData }) {
       setBoard(next);
       setWinning(new Set(moverExact.map(keyOf)));
       setFinalScore(0);
-      setResult("lose");
+      setEnding(true);
+      endTimerRef.current = setTimeout(() => {
+        setEnding(false);
+        setResult("lose");
+      }, END_REVEAL_MS);
       return true;
     }
 
     if (isDraw(next)) {
       setBoard(next);
       setFinalScore(0);
-      setResult("draw");
+      setEnding(true);
+      endTimerRef.current = setTimeout(() => {
+        setEnding(false);
+        setResult("draw");
+      }, END_REVEAL_MS);
       return true;
     }
     return false;
