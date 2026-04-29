@@ -275,7 +275,9 @@ export default function BracketHubClient({
                 justifyContent: "space-between",
                 background: game.cover_image_url
                   ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${game.cover_image_url}) center/cover`
-                  : "linear-gradient(160deg, #2b220f, #171107)",
+                  : game.type === "balance"
+                    ? "#000"
+                    : "linear-gradient(160deg, #2b220f, #171107)",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
@@ -300,7 +302,7 @@ export default function BracketHubClient({
                       margin: 0,
                       fontSize: 13,
                       fontWeight: 800,
-                      color: "#ede4cf",
+                      color: "#fff",
                       textAlign: "center",
                       lineHeight: 1.35,
                       display: "-webkit-box",
