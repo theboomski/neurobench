@@ -295,7 +295,7 @@
           }
         ]
       },
-      "hasLeaderboard": false
+      "hasLeaderboard": true
     },
     {
       "id": "number-memory",
