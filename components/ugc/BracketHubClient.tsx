@@ -37,7 +37,7 @@ function normalizeBracketCover(u: string | null | undefined) {
   const t = trimUrl(u);
   if (!t) return null;
   const lower = t.toLowerCase();
-  return lower === "null" || lower === "undefined" ? null : t;
+  return lower === "null" || lower === "undefined" || lower.startsWith("blob:") ? null : t;
 }
 
 type BracketHubClientProps = {

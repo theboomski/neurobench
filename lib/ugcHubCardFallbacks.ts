@@ -18,7 +18,7 @@ function hasUsableBracketCover(g: UgcHubCardGameBase) {
   const t = String(g.cover_image_url ?? "").trim();
   if (!t) return false;
   const lower = t.toLowerCase();
-  return lower !== "null" && lower !== "undefined";
+  return lower !== "null" && lower !== "undefined" && !lower.startsWith("blob:");
 }
 
 function firstBracketImageByGameId(items: Array<{ game_id?: string | null; image_url?: string | null; order?: number | string | null }> | null) {
