@@ -10,6 +10,7 @@ type HubGame = {
   title: string;
   description?: string | null;
   cover_image_url: string | null;
+  bracket_preview_image_url?: string | null;
   balance_preview_label?: string | null;
   play_count: number;
   language: string;

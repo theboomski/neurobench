@@ -1,10 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-/** Hub / feed card row: optional text preview for balance games without a cover image. */
+/** Hub / feed card row: optional fallbacks when no quiz thumbnail is uploaded. */
 export type UgcHubCardGameBase = {
   id: string;
   type: string;
   cover_image_url: string | null;
+  /** First bracket contender image when `cover_image_url` is empty (server-filled). */
+  bracket_preview_image_url?: string | null;
   balance_preview_label?: string | null;
 };
 
@@ -52,7 +54,7 @@ async function applyBracketCoverFallbacks<T extends UgcHubCardGameBase>(supabase
   return games.map((g) => {
     if (!noCover(g) || g.type !== "brackets") return g;
     const u = urlByGame.get(g.id);
-    return u ? { ...g, cover_image_url: u } : g;
+    return u ? { ...g, bracket_preview_image_url: u } : g;
   });
 }
 
@@ -74,9 +76,9 @@ async function applyBalanceTextFallbacks<T extends UgcHubCardGameBase>(supabase:
 }
 
 /**
- * Hub cards: bracket games with no `cover_image_url` use the first contender's
- * `image_url` (lowest `order` in `ugc_brackets_items`). Balance games with no
- * cover get `balance_preview_label` from the first row's `option_a`.
+ * Hub cards: bracket games with no uploaded thumbnail get `bracket_preview_image_url`
+ * from the first contender's `image_url` (lowest `order` in `ugc_brackets_items`).
+ * Balance games with no cover get `balance_preview_label` from the first row's `option_a`.
  */
 export async function withUgcHubCardFallbacks<T extends UgcHubCardGameBase>(supabase: SupabaseClient, games: T[]): Promise<T[]> {
   const withBracketCovers = await applyBracketCoverFallbacks(supabase, games);

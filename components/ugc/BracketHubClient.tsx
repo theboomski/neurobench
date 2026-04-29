@@ -13,6 +13,8 @@ type HubGame = {
   title: string;
   description?: string | null;
   cover_image_url: string | null;
+  /** First bracket contender image when no quiz thumbnail (server-filled). */
+  bracket_preview_image_url?: string | null;
   /** First balance `option_a` when there is no quiz thumbnail (server-filled). */
   balance_preview_label?: string | null;
   play_count: number;
@@ -25,6 +27,11 @@ type HubGame = {
 const MUSTARD = "#b8860b";
 const ISO_NAME_BY_CODE = new Map(ISO_LANGUAGE_OPTIONS.map((x) => [x.code, x.name]));
 const PAGE_SIZE = 16;
+
+function trimUrl(u: string | null | undefined) {
+  const t = String(u ?? "").trim();
+  return t.length ? t : null;
+}
 
 type BracketHubClientProps = {
   initialGames?: HubGame[];
@@ -254,7 +261,14 @@ export default function BracketHubClient({
       {loading && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Updating games...</p>}
       {!loading && games.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>No bracket games yet.</p>}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
-        {games.map((game) => (
+        {games.map((game) => {
+          const userCover = trimUrl(game.cover_image_url);
+          const heroImage =
+            game.type === "brackets"
+              ? userCover ?? trimUrl(game.bracket_preview_image_url)
+              : userCover;
+          const balanceTextFallback = !userCover && game.type === "balance" && game.balance_preview_label;
+          return (
           <Link
             key={game.id}
             href={toUgcPath(game)}
@@ -273,8 +287,8 @@ export default function BracketHubClient({
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                background: game.cover_image_url
-                  ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${game.cover_image_url}) center/cover`
+                background: heroImage
+                  ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${heroImage}) center/cover`
                   : game.type === "balance"
                     ? "#000"
                     : "linear-gradient(160deg, #2b220f, #171107)",
@@ -286,7 +300,7 @@ export default function BracketHubClient({
                 </span>
                 <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
               </div>
-              {!game.cover_image_url && game.type === "balance" && game.balance_preview_label ? (
+              {balanceTextFallback ? (
                 <div
                   style={{
                     flex: 1,
@@ -332,7 +346,8 @@ export default function BracketHubClient({
               </div>
             </article>
           </Link>
-        ))}
+          );
+        })}
       </div>
       {hasMore && (
         <div ref={loaderRef} style={{ marginTop: 12, minHeight: 24, display: "grid", placeItems: "center" }}>
