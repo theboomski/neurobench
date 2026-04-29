@@ -664,7 +664,7 @@ export default function Omok({ game }: { game: GameData }) {
       <div style={{ marginTop: 12 }}>
         <div
           style={{
-            width: "min(92vw, 560px)",
+            width: "min(100%, 560px)",
             margin: "0 auto",
             aspectRatio: "1 / 1",
             position: "relative",
@@ -672,6 +672,7 @@ export default function Omok({ game }: { game: GameData }) {
             overflow: "hidden",
             border: "1px solid rgba(148,163,184,0.24)",
             background: "#5d4123",
+            boxSizing: "border-box",
           }}
         >
           <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ position: "absolute", inset: 0 }}>
