@@ -225,7 +225,7 @@ function randomAdjacentMove(board: Cell[][]) {
   if (!all.length) return null;
   const near = all.filter((p) => countAdjacent(board, p) > 0);
   if (near.length) return near[Math.floor(Math.random() * near.length)];
-  return { r: Math.floor(BOARD_SIZE / 2), c: Math.floor(BOARD_SIZE / 2) };
+  return all[Math.floor(Math.random() * all.length)];
 }
 
 function hasAnyExactFive(board: Cell[][], who: Cell) {
@@ -417,6 +417,7 @@ export default function Omok({ game }: { game: GameData }) {
   const [turn, setTurn] = useState<Turn>("player");
   const [result, setResult] = useState<GameResult>(null);
   const [ending, setEnding] = useState(false);
+  const [endingMessage, setEndingMessage] = useState<string | null>(null);
   const [winning, setWinning] = useState<Set<string>>(new Set());
   const [lastMove, setLastMove] = useState<{ r: number; c: number; who: Cell } | null>(null);
   const [showAd, setShowAd] = useState(false);
@@ -447,6 +448,7 @@ export default function Omok({ game }: { game: GameData }) {
     setTurn("player");
     setResult(null);
     setEnding(false);
+    setEndingMessage(null);
     setWinning(new Set());
     setLastMove(null);
     setIsNewBest(false);
@@ -471,28 +473,6 @@ export default function Omok({ game }: { game: GameData }) {
 
   const finishIfEnded = (next: Cell[][], last: Pos, who: Cell): boolean => {
     const moverExact = exactFiveFrom(next, last, who);
-    const playerExact = findAnyExactFiveLine(next, PLAYER);
-    const aiExact = findAnyExactFiveLine(next, AI);
-
-    // Guard against stale/ambiguous board states: if the player already has an
-    // exact-five on the resulting board, never declare AI as winner.
-    if (who === AI && playerExact) {
-      setBoard(next);
-      setWinning(new Set(playerExact.map(keyOf)));
-      const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
-      const score = scoreFromClearMs(elapsed);
-      setClearMs(elapsed);
-      setFinalScore(score);
-      const isNew = saveBestScore(score);
-      setIsNewBest(isNew);
-      if (isNew) setHighScore(score);
-      setEnding(true);
-      endTimerRef.current = setTimeout(() => {
-        setEnding(false);
-        setResult("win");
-      }, END_REVEAL_MS);
-      return true;
-    }
 
     if (who === PLAYER && moverExact) {
       setBoard(next);
@@ -505,21 +485,25 @@ export default function Omok({ game }: { game: GameData }) {
       setIsNewBest(isNew);
       if (isNew) setHighScore(score);
       setEnding(true);
+      setEndingMessage("Player made 5 stones in a row.");
       endTimerRef.current = setTimeout(() => {
         setEnding(false);
+        setEndingMessage(null);
         setResult("win");
       }, END_REVEAL_MS);
       return true;
     }
 
     // AI only wins if its latest move itself creates exact-five.
-    if (who === AI && moverExact && aiExact) {
+    if (who === AI && moverExact) {
       setBoard(next);
       setWinning(new Set(moverExact.map(keyOf)));
       setFinalScore(0);
       setEnding(true);
+      setEndingMessage("AI made 5 stones in a row.");
       endTimerRef.current = setTimeout(() => {
         setEnding(false);
+        setEndingMessage(null);
         setResult("lose");
       }, END_REVEAL_MS);
       return true;
@@ -529,8 +513,10 @@ export default function Omok({ game }: { game: GameData }) {
       setBoard(next);
       setFinalScore(0);
       setEnding(true);
+      setEndingMessage("Draw. No 5 in a row and board is full.");
       endTimerRef.current = setTimeout(() => {
         setEnding(false);
+        setEndingMessage(null);
         setResult("draw");
       }, END_REVEAL_MS);
       return true;
@@ -553,7 +539,15 @@ export default function Omok({ game }: { game: GameData }) {
     const timer = window.setTimeout(() => {
       const move = chooseAiMove(board);
       if (!move) {
-        setResult("draw");
+        if (isDraw(board)) {
+          setEnding(true);
+          setEndingMessage("Draw. No 5 in a row and board is full.");
+          endTimerRef.current = setTimeout(() => {
+            setEnding(false);
+            setEndingMessage(null);
+            setResult("draw");
+          }, END_REVEAL_MS);
+        }
         return;
       }
       const next = place(board, move, AI);
@@ -664,7 +658,7 @@ export default function Omok({ game }: { game: GameData }) {
     >
       <h2 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff" }}>Omok (13x13)</h2>
       <p style={{ margin: "8px 0 0", color: "#9ca3af", fontSize: 13 }}>
-        {status}
+        {endingMessage ?? status}
       </p>
 
       <div style={{ marginTop: 12 }}>
