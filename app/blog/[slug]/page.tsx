@@ -7,6 +7,40 @@ import postsData from "@/content/blog/posts.json";
 type Post = typeof postsData[0];
 type Props = { params: Promise<{ slug: string }> };
 
+const MD_IMAGE_RE = /^!\[(.*?)\]\((https?:\/\/[^\s)]+)\)$/;
+
+function renderBodyBlocks(body: string) {
+  return body.split("\n\n").map((block, idx) => {
+    const line = block.trim();
+    const m = line.match(MD_IMAGE_RE);
+    if (m) {
+      const alt = m[1] || "Blog image";
+      const src = m[2];
+      return (
+        <img
+          key={`img-${idx}-${src}`}
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          style={{
+            width: "100%",
+            height: "auto",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border)",
+            margin: "14px 0 18px",
+          }}
+        />
+      );
+    }
+    return (
+      <p key={`p-${idx}`} style={{ fontSize: 15, lineHeight: 1.9, color: "var(--text-2)", marginBottom: 14 }}>
+        {line}
+      </p>
+    );
+  });
+}
+
 export async function generateStaticParams() {
   return postsData.map(p => ({ slug: p.slug }));
 }
@@ -66,9 +100,9 @@ export default async function BlogPostPage({ params }: Props) {
 
       {/* Article body */}
       <article style={{ paddingBottom: 48 }}>
-        <p style={{ fontSize: 16, lineHeight: 1.9, color: "var(--text-2)", marginBottom: 32, borderLeft: `3px solid ${p.accent}`, paddingLeft: 16, fontStyle: "italic" }}>
-          {p.content.intro}
-        </p>
+        <div style={{ borderLeft: `3px solid ${p.accent}`, paddingLeft: 16, marginBottom: 32, fontStyle: "italic" }}>
+          {renderBodyBlocks(p.content.intro)}
+        </div>
 
         {p.content.sections.map((section, i) => (
           <section key={i} style={{ marginBottom: 36 }}>
@@ -76,11 +110,7 @@ export default async function BlogPostPage({ params }: Props) {
               <span style={{ fontSize: 10, color: p.accent, fontFamily: "var(--font-mono)", letterSpacing: "0.1em" }}>0{i + 1} /</span>
               {section.heading}
             </h2>
-            {section.body.split("\n\n").map((para, j) => (
-              <p key={j} style={{ fontSize: 15, lineHeight: 1.9, color: "var(--text-2)", marginBottom: 14 }}>
-                {para}
-              </p>
-            ))}
+            {renderBodyBlocks(section.body)}
           </section>
         ))}
 
