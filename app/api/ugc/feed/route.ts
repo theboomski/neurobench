@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withBracketHubCoverFallbacks } from "@/lib/ugcBracketCoverFallback";
 import { getSupabaseServer } from "@/lib/supabase";
 
 export async function GET(req: NextRequest) {
@@ -37,11 +38,11 @@ export async function GET(req: NextRequest) {
   if (!includeNsfw) query = query.eq("is_nsfw", false);
   query = sort === "popular" ? query.order("play_count", { ascending: false }) : query.order("created_at", { ascending: false });
 
-  const { data: games, error } = await query;
-  if (error || !games?.length) return NextResponse.json({ games: [], hasMore: false, nextOffset: offset });
+  const { data: gameRows, error } = await query;
+  if (error || !gameRows?.length) return NextResponse.json({ games: [], hasMore: false, nextOffset: offset });
 
-  const hasMore = games.length > limit;
-  const pageGames = hasMore ? games.slice(0, limit) : games;
+  const hasMore = gameRows.length > limit;
+  const pageGames = hasMore ? gameRows.slice(0, limit) : gameRows;
 
   const userIds = [...new Set(pageGames.map((g) => g.user_id))];
   const categoryIds = [...new Set(pageGames.map((g) => g.category_id).filter(Boolean))];
@@ -56,12 +57,15 @@ export async function GET(req: NextRequest) {
   const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
   const categoryMap = new Map((categories ?? []).map((c) => [c.id, c]));
 
+  const gamesWithMeta = pageGames.map((g) => ({
+    ...g,
+    creator: profileMap.get(g.user_id) ?? null,
+    category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
+  }));
+  const gamesOut = await withBracketHubCoverFallbacks(supabase, gamesWithMeta);
+
   return NextResponse.json({
-    games: pageGames.map((g) => ({
-      ...g,
-      creator: profileMap.get(g.user_id) ?? null,
-      category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
-    })),
+    games: gamesOut,
     hasMore,
     nextOffset: offset + pageGames.length,
   });

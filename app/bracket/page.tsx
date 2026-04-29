@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BracketHubClient from "@/components/ugc/BracketHubClient";
+import { withBracketHubCoverFallbacks } from "@/lib/ugcBracketCoverFallback";
 import { getSupabaseServer } from "@/lib/supabase";
 
 type HubGame = {
@@ -39,9 +40,9 @@ async function getBracketBootstrap() {
     supabase.from("ugc_games").select("language").eq("visibility", "public").eq("is_approved", true).limit(5000),
   ]);
 
-  const games = (gamesRaw ?? []) as Array<Omit<HubGame, "creator" | "category">>;
-  const userIds = [...new Set(games.map((g) => g.user_id))];
-  const categoryIds = [...new Set(games.map((g) => g.category_id).filter((v): v is number => typeof v === "number"))];
+  const gameRows = (gamesRaw ?? []) as Array<Omit<HubGame, "creator" | "category">>;
+  const userIds = [...new Set(gameRows.map((g) => g.user_id))];
+  const categoryIds = [...new Set(gameRows.map((g) => g.category_id).filter((v): v is number => typeof v === "number"))];
   const [{ data: profiles }, { data: categoriesForGames }] = await Promise.all([
     userIds.length ? supabase.from("profiles").select("id,display_name,avatar_url").in("id", userIds) : Promise.resolve({ data: [] as Array<{ id: string; display_name: string | null; avatar_url: string | null }> }),
     categoryIds.length ? supabase.from("ugc_categories").select("id,name").in("id", categoryIds) : Promise.resolve({ data: [] as Array<{ id: number; name: string }> }),
@@ -60,12 +61,15 @@ async function getBracketBootstrap() {
     .slice(0, 10)
     .map(([code, count]) => ({ code, count }));
 
+  const gamesWithMeta = gameRows.map((g) => ({
+    ...g,
+    creator: profileMap.get(g.user_id) ?? null,
+    category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
+  }));
+  const games = await withBracketHubCoverFallbacks(supabase, gamesWithMeta);
+
   return {
-    games: games.map((g) => ({
-      ...g,
-      creator: profileMap.get(g.user_id) ?? null,
-      category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
-    })),
+    games,
     categories: (categoriesRaw ?? []).map((c) => ({ id: c.id, name: c.name })),
     languages,
   };
