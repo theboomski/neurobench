@@ -1,6 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { trackPlay } from "@/lib/tracking";
+import type { GameData, GameRank } from "@/lib/types";
+import { resolveResultTone } from "@/lib/resultUtils";
+import CommonResult from "@/components/CommonResult";
+import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 
 const BOARD_SIZE = 13;
 const PLAYER = 1; // black
@@ -249,12 +254,53 @@ function chooseAiMove(board: Cell[][]) {
   return randomAdjacentMove(board);
 }
 
-export default function Omok() {
+const SCORE_TIME_CAP_MS = 180000;
+
+function scoreFromClearMs(ms: number) {
+  const clamped = Math.max(0, Math.min(SCORE_TIME_CAP_MS, ms));
+  const ratio = 1 - clamped / SCORE_TIME_CAP_MS;
+  return Math.max(1, Math.min(100, Math.round(1 + ratio * 99)));
+}
+
+function getScoreRank(score: number): GameRank {
+  if (score >= 90) return { label: "S", maxMs: 100, color: "#FFD700", title: "Board Oracle", subtitle: "You read every line before it happens.", percentileLabel: "Top 5%" };
+  if (score >= 75) return { label: "A", maxMs: 100, color: "#22C55E", title: "Threat Architect", subtitle: "You create pressure and close cleanly.", percentileLabel: "Top 20%" };
+  if (score >= 55) return { label: "B", maxMs: 100, color: "#3B82F6", title: "Sequence Reader", subtitle: "Solid lines and good defensive timing.", percentileLabel: "Top 45%" };
+  if (score >= 30) return { label: "C", maxMs: 100, color: "#94A3B8", title: "Line Builder", subtitle: "You are building strong Omok fundamentals.", percentileLabel: "Top 75%" };
+  return { label: "D", maxMs: 100, color: "#F97316", title: "Stone Starter", subtitle: "Keep playing — your reads sharpen each run.", percentileLabel: "Bottom 25%" };
+}
+
+function getBestScore() {
+  if (typeof window === "undefined") return null;
+  const raw = window.localStorage.getItem("nb_hs_omok");
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function saveBestScore(score: number) {
+  if (typeof window === "undefined") return false;
+  const prev = getBestScore();
+  if (prev === null || score > prev) {
+    window.localStorage.setItem("nb_hs_omok", String(score));
+    return true;
+  }
+  return false;
+}
+
+export default function Omok({ game }: { game: GameData }) {
   const [started, setStarted] = useState(false);
   const [board, setBoard] = useState<Cell[][]>(makeBoard);
   const [turn, setTurn] = useState<Turn>("player");
   const [result, setResult] = useState<GameResult>(null);
   const [winning, setWinning] = useState<Set<string>>(new Set());
+  const [lastMove, setLastMove] = useState<{ r: number; c: number; who: Cell } | null>(null);
+  const [showAd, setShowAd] = useState(false);
+  const [highScore, setHighScore] = useState<number | null>(null);
+  const [isNewBest, setIsNewBest] = useState(false);
+  const [clearMs, setClearMs] = useState<number>(0);
+  const [finalScore, setFinalScore] = useState<number>(0);
+  const [runStartedAt, setRunStartedAt] = useState<number>(0);
 
   const ended = result !== null;
   const turnLabel = turn === "player" ? "Black (You)" : "White (AI)";
@@ -272,18 +318,40 @@ export default function Omok() {
     setTurn("player");
     setResult(null);
     setWinning(new Set());
+    setLastMove(null);
+    setIsNewBest(false);
+    setClearMs(0);
+    setFinalScore(0);
+    setRunStartedAt(0);
   };
+
+  useEffect(() => {
+    setHighScore(getBestScore());
+  }, []);
 
   const finishIfEnded = (next: Cell[][], last: Pos, who: Cell): boolean => {
     const exact = exactFiveFrom(next, last, who);
     if (exact) {
       setBoard(next);
       setWinning(new Set(exact.map(keyOf)));
-      setResult(who === PLAYER ? "win" : "lose");
+      if (who === PLAYER) {
+        const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
+        const score = scoreFromClearMs(elapsed);
+        setClearMs(elapsed);
+        setFinalScore(score);
+        const isNew = saveBestScore(score);
+        setIsNewBest(isNew);
+        if (isNew) setHighScore(score);
+        setResult("win");
+      } else {
+        setFinalScore(0);
+        setResult("lose");
+      }
       return true;
     }
     if (isDraw(next)) {
       setBoard(next);
+      setFinalScore(0);
       setResult("draw");
       return true;
     }
@@ -294,6 +362,7 @@ export default function Omok() {
     if (ended || turn !== "player") return;
     if (board[p.r][p.c] !== 0) return;
     const next = place(board, p, PLAYER);
+    setLastMove({ r: p.r, c: p.c, who: PLAYER });
     if (finishIfEnded(next, p, PLAYER)) return;
     setBoard(next);
     setTurn("ai");
@@ -308,6 +377,7 @@ export default function Omok() {
         return;
       }
       const next = place(board, move, AI);
+      setLastMove({ r: move.r, c: move.c, who: AI });
       if (finishIfEnded(next, move, AI)) return;
       setBoard(next);
       setTurn("player");
@@ -316,6 +386,52 @@ export default function Omok() {
   }, [board, ended, started, turn]);
 
   const btnSize = "clamp(24px, 5.6vw, 34px)";
+
+  const handleRetry = () => {
+    if (shouldShowAd()) setShowAd(true);
+    else restart();
+  };
+  const afterAd = () => {
+    setShowAd(false);
+    restart();
+  };
+
+  if (result) {
+    const percentile = Math.max(0, Math.min(100, finalScore));
+    const rank = getScoreRank(finalScore);
+    const shareTextOverride =
+      result === "win"
+        ? `I beat the AI in Omok with ${finalScore}/100. Can you beat me?`
+        : `I played Omok on ZAZAZA. Can you beat the AI?`;
+    const killerLineOverride =
+      result === "win"
+        ? `You beat the AI in ${Math.round(clearMs / 1000)}s.`
+        : result === "draw"
+          ? "Draw. No five-in-a-row before the board filled."
+          : "AI wins this round. Run it back.";
+
+    return (
+      <>
+        {showAd && <InterstitialAd onDone={afterAd} />}
+        <CommonResult
+          game={game}
+          rawScore={finalScore}
+          rawUnit="pts"
+          normalizedScore={finalScore}
+          percentile={percentile}
+          rank={rank}
+          highScore={highScore}
+          isNewBest={isNewBest}
+          showAd={showAd}
+          onAdDone={afterAd}
+          onRetry={handleRetry}
+          tone={resolveResultTone(game)}
+          killerLineOverride={killerLineOverride}
+          shareTextOverride={shareTextOverride}
+        />
+      </>
+    );
+  }
 
   if (!started) {
     return (
@@ -335,7 +451,11 @@ export default function Omok() {
         </p>
         <button
           type="button"
-          onClick={() => setStarted(true)}
+          onClick={() => {
+            trackPlay(game.id);
+            setRunStartedAt(performance.now());
+            setStarted(true);
+          }}
           style={{
             border: "none",
             borderRadius: 10,
@@ -398,6 +518,8 @@ export default function Omok() {
               const left = `${(c / (BOARD_SIZE - 1)) * 100}%`;
               const top = `${(r / (BOARD_SIZE - 1)) * 100}%`;
               const isWin = winning.has(`${r}:${c}`);
+              const isLast = lastMove?.r === r && lastMove?.c === c;
+              const lastHighlight = lastMove?.who === PLAYER ? "#f59e0b" : "#38bdf8";
               return (
                 <button
                   key={`${r}-${c}`}
@@ -428,7 +550,7 @@ export default function Omok() {
                         height: "72%",
                         borderRadius: 999,
                         background: v === PLAYER ? "#111" : "#f5f5f5",
-                        border: v === PLAYER ? "1px solid #2b2b2b" : "1px solid #9ca3af",
+                        border: isLast ? `2px solid ${lastHighlight}` : v === PLAYER ? "1px solid #2b2b2b" : "1px solid #9ca3af",
                         boxShadow: isWin ? "0 0 0 2px #00FF94, 0 0 12px rgba(0,255,148,0.55)" : "0 1px 4px rgba(0,0,0,0.45)",
                       }}
                     />
@@ -440,25 +562,6 @@ export default function Omok() {
         </div>
       </div>
 
-      {ended && (
-        <div style={{ marginTop: 14, textAlign: "center" }}>
-          <button
-            type="button"
-            onClick={restart}
-            style={{
-              border: "none",
-              borderRadius: 10,
-              padding: "10px 14px",
-              background: "#00FF94",
-              color: "#042012",
-              fontWeight: 900,
-              cursor: "pointer",
-            }}
-          >
-            Play Again
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -74,7 +74,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "red-light-green-light": return <RedLightGreenLight game={game} />;
     case "sudoku": return <Sudoku game={game} />;
     case "mini-speed-sudoku": return <MiniSpeedSudoku game={game} />;
-    case "omok": return <Omok />;
+    case "omok": return <Omok game={game} />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Protocol pending.</p>;
   }
 }
