@@ -54,7 +54,9 @@ async function applyBracketCoverFallbacks<T extends UgcHubCardGameBase>(supabase
   return games.map((g) => {
     if (!noCover(g) || g.type !== "brackets") return g;
     const u = urlByGame.get(g.id);
-    return u ? { ...g, bracket_preview_image_url: u } : g;
+    // Keep bracket-specific preview field, and also set cover_image_url fallback
+    // so any card path that still reads cover_image_url shows the first contender.
+    return u ? { ...g, bracket_preview_image_url: u, cover_image_url: u } : g;
   });
 }
 
