@@ -238,6 +238,17 @@ function hasAnyExactFive(board: Cell[][], who: Cell) {
   return false;
 }
 
+function findAnyExactFiveLine(board: Cell[][], who: Cell): Pos[] | null {
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] !== who) continue;
+      const line = exactFiveFrom(board, { r, c }, who);
+      if (line) return line;
+    }
+  }
+  return null;
+}
+
 function getCandidateMoves(board: Cell[][], radius = 2) {
   const out = new Map<string, Pos>();
   let hasStone = false;
@@ -441,25 +452,49 @@ export default function Omok({ game }: { game: GameData }) {
   }, []);
 
   const finishIfEnded = (next: Cell[][], last: Pos, who: Cell): boolean => {
-    const exact = exactFiveFrom(next, last, who);
-    if (exact) {
+    const moverExact = exactFiveFrom(next, last, who);
+    const playerExact = findAnyExactFiveLine(next, PLAYER);
+    const aiExact = findAnyExactFiveLine(next, AI);
+
+    // Guard against stale/ambiguous board states: if the player already has an
+    // exact-five on the resulting board, never declare AI as winner.
+    if (who === AI && playerExact) {
       setBoard(next);
-      setWinning(new Set(exact.map(keyOf)));
-      if (who === PLAYER) {
-        const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
-        const score = scoreFromClearMs(elapsed);
-        setClearMs(elapsed);
-        setFinalScore(score);
-        const isNew = saveBestScore(score);
-        setIsNewBest(isNew);
-        if (isNew) setHighScore(score);
-        setResult("win");
-      } else {
-        setFinalScore(0);
-        setResult("lose");
-      }
+      setWinning(new Set(playerExact.map(keyOf)));
+      const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
+      const score = scoreFromClearMs(elapsed);
+      setClearMs(elapsed);
+      setFinalScore(score);
+      const isNew = saveBestScore(score);
+      setIsNewBest(isNew);
+      if (isNew) setHighScore(score);
+      setResult("win");
       return true;
     }
+
+    if (who === PLAYER && moverExact) {
+      setBoard(next);
+      setWinning(new Set(moverExact.map(keyOf)));
+      const elapsed = Math.max(0, Math.round(performance.now() - runStartedAt));
+      const score = scoreFromClearMs(elapsed);
+      setClearMs(elapsed);
+      setFinalScore(score);
+      const isNew = saveBestScore(score);
+      setIsNewBest(isNew);
+      if (isNew) setHighScore(score);
+      setResult("win");
+      return true;
+    }
+
+    // AI only wins if its latest move itself creates exact-five.
+    if (who === AI && moverExact && aiExact) {
+      setBoard(next);
+      setWinning(new Set(moverExact.map(keyOf)));
+      setFinalScore(0);
+      setResult("lose");
+      return true;
+    }
+
     if (isDraw(next)) {
       setBoard(next);
       setFinalScore(0);
