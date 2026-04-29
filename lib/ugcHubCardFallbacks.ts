@@ -14,6 +14,13 @@ function noCover(g: UgcHubCardGameBase) {
   return !String(g.cover_image_url ?? "").trim();
 }
 
+function hasUsableBracketCover(g: UgcHubCardGameBase) {
+  const t = String(g.cover_image_url ?? "").trim();
+  if (!t) return false;
+  const lower = t.toLowerCase();
+  return lower !== "null" && lower !== "undefined";
+}
+
 function firstBracketImageByGameId(items: Array<{ game_id?: string | null; image_url?: string | null; order?: number | string | null }> | null) {
   const best = new Map<string, { order: number; url: string }>();
   for (const row of items ?? []) {
@@ -42,7 +49,7 @@ function firstBalanceLabelByGameId(items: { game_id: string; option_a: string; o
 }
 
 async function applyBracketCoverFallbacks<T extends UgcHubCardGameBase>(supabase: SupabaseClient, games: T[]): Promise<T[]> {
-  const bracketIds = games.filter((g) => g.type === "brackets" && noCover(g)).map((g) => g.id);
+  const bracketIds = games.filter((g) => g.type === "brackets" && !hasUsableBracketCover(g)).map((g) => g.id);
   if (!bracketIds.length) return games;
 
   const { data: items, error } = await supabase.from("ugc_brackets_items").select("game_id,image_url,order").in("game_id", bracketIds);
@@ -52,7 +59,7 @@ async function applyBracketCoverFallbacks<T extends UgcHubCardGameBase>(supabase
   if (!urlByGame.size) return games;
 
   return games.map((g) => {
-    if (!noCover(g) || g.type !== "brackets") return g;
+    if (g.type !== "brackets" || hasUsableBracketCover(g)) return g;
     const u = urlByGame.get(g.id);
     // Keep bracket-specific preview field, and also set cover_image_url fallback
     // so any card path that still reads cover_image_url shows the first contender.

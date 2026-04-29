@@ -33,6 +33,13 @@ function trimUrl(u: string | null | undefined) {
   return t.length ? t : null;
 }
 
+function normalizeBracketCover(u: string | null | undefined) {
+  const t = trimUrl(u);
+  if (!t) return null;
+  const lower = t.toLowerCase();
+  return lower === "null" || lower === "undefined" ? null : t;
+}
+
 type BracketHubClientProps = {
   initialGames?: HubGame[];
   initialCategories?: Array<{ id: number; name: string }>;
@@ -265,7 +272,7 @@ export default function BracketHubClient({
           const userCover = trimUrl(game.cover_image_url);
           const heroImage =
             game.type === "brackets"
-              ? userCover ?? trimUrl(game.bracket_preview_image_url)
+              ? normalizeBracketCover(game.cover_image_url) ?? normalizeBracketCover(game.bracket_preview_image_url)
               : userCover;
           const balanceTextFallback = !userCover && game.type === "balance" && game.balance_preview_label;
           return (
