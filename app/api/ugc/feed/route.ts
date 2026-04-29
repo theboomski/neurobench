@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withBracketHubCoverFallbacks } from "@/lib/ugcBracketCoverFallback";
+import { withUgcHubCardFallbacks } from "@/lib/ugcHubCardFallbacks";
 import { getSupabaseServer } from "@/lib/supabase";
 
 export async function GET(req: NextRequest) {
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     creator: profileMap.get(g.user_id) ?? null,
     category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
   }));
-  const gamesOut = await withBracketHubCoverFallbacks(supabase, gamesWithMeta);
+  const gamesOut = await withUgcHubCardFallbacks(supabase, gamesWithMeta);
 
   return NextResponse.json({
     games: gamesOut,

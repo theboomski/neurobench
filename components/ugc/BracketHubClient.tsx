@@ -13,6 +13,8 @@ type HubGame = {
   title: string;
   description?: string | null;
   cover_image_url: string | null;
+  /** First balance `option_a` when there is no quiz thumbnail (server-filled). */
+  balance_preview_label?: string | null;
   play_count: number;
   language: string;
   slug: string;
@@ -282,6 +284,38 @@ export default function BracketHubClient({
                 </span>
                 <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
               </div>
+              {!game.cover_image_url && game.type === "balance" && game.balance_preview_label ? (
+                <div
+                  style={{
+                    flex: 1,
+                    minHeight: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "4px 12px 2px",
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 13,
+                      fontWeight: 800,
+                      color: "#ede4cf",
+                      textAlign: "center",
+                      lineHeight: 1.35,
+                      display: "-webkit-box",
+                      WebkitLineClamp: 4,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {game.balance_preview_label}
+                  </p>
+                </div>
+              ) : (
+                <div style={{ flex: 1, minHeight: 0 }} />
+              )}
               <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
                 <div style={{ fontSize: 10, color: "#f2d08a", fontFamily: "var(--font-mono)" }}>{game.category?.name ?? "Uncategorized"} · {game.language?.toUpperCase?.() ?? "EN"}</div>
                 <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>

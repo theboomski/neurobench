@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import BracketHubClient from "@/components/ugc/BracketHubClient";
-import { withBracketHubCoverFallbacks } from "@/lib/ugcBracketCoverFallback";
+import { withUgcHubCardFallbacks } from "@/lib/ugcHubCardFallbacks";
 import { getSupabaseServer } from "@/lib/supabase";
 
 type HubGame = {
@@ -10,6 +10,7 @@ type HubGame = {
   title: string;
   description?: string | null;
   cover_image_url: string | null;
+  balance_preview_label?: string | null;
   play_count: number;
   language: string;
   slug: string;
@@ -66,7 +67,7 @@ async function getBracketBootstrap() {
     creator: profileMap.get(g.user_id) ?? null,
     category: g.category_id ? categoryMap.get(g.category_id) ?? null : null,
   }));
-  const games = await withBracketHubCoverFallbacks(supabase, gamesWithMeta);
+  const games = await withUgcHubCardFallbacks(supabase, gamesWithMeta);
 
   return {
     games,
