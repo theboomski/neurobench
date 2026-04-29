@@ -48,6 +48,7 @@ import SocialPredator from "@/components/games/SocialPredator";
 import RedLightGreenLight from "@/components/games/RedLightGreenLight";
 import Sudoku from "@/components/games/Sudoku";
 import MiniSpeedSudoku from "@/components/games/MiniSpeedSudoku";
+import Omok from "@/components/games/Gomoku";
 
 const games = ALL_GAMES;
 
@@ -126,6 +127,7 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
     case "red-light-green-light": return <RedLightGreenLight game={game} />;
     case "sudoku": return <Sudoku game={game} />;
     case "mini-speed-sudoku": return <MiniSpeedSudoku game={game} />;
+    case "omok": return <Omok />;
     default: return <p style={{ color: "var(--text-2)", padding: 40, textAlign: "center", fontFamily: "var(--font-mono)" }}>Coming soon.</p>;
   }
 }

@@ -176,6 +176,128 @@
       "hasLeaderboard": true
     },
     {
+      "id": "omok",
+      "releasedAt": "2026-04-29",
+      "title": "Omok",
+      "clinicalTitle": "Five-in-a-Row Pattern Duel",
+      "shortDescription": "Place black stones first and outread the AI on a 13x13 board.",
+      "description": "Classic Omok (Gomoku) on a 13x13 board. You are black and move first. Win by making exactly five in a row; six or more does not count.",
+      "emoji": "⚫",
+      "accent": "#00FF94",
+      "accentDim": "rgba(0,255,148,0.12)",
+      "category": "office-iq",
+      "categoryLabel": "Games",
+      "tags": [
+        "omok",
+        "gomoku",
+        "five in a row",
+        "board game",
+        "strategy game"
+      ],
+      "seo": {
+        "metaTitle": "Omok (오목) – 13x13 Five-in-a-Row vs AI | ZAZAZA",
+        "metaDescription": "Play Omok in your browser: black goes first, beat the AI, and win with exactly five in a row.",
+        "keywords": [
+          "omok",
+          "gomoku online",
+          "five in a row game",
+          "13x13 omok",
+          "strategy board game"
+        ]
+      },
+      "content": {
+        "howToPlay": [
+          "Tap an intersection to place your black stone. AI places white stones.",
+          "Black always goes first and turns alternate.",
+          "Make exactly five stones in a row to win: horizontal, vertical, or diagonal.",
+          "Six or more in a row does not count as a win.",
+          "If all intersections are filled with no winner, the game is a draw."
+        ],
+        "science": "Omok is a deterministic connection game that stresses lookahead search, threat recognition, and pattern chunking. Strong play relies on rapid detection of forcing structures like open threes and open fours under alternating turns.",
+        "tips": [
+          "Favor moves that create two threats at once rather than single lines.",
+          "Watch open-three and closed-four formations every turn.",
+          "Control central intersections early to maximize branching options.",
+          "Avoid overextending into six-in-a-row patterns since they do not win."
+        ]
+      },
+      "stats": {
+        "percentiles": [
+          {
+            "ms": 600,
+            "percentile": 99
+          },
+          {
+            "ms": 520,
+            "percentile": 92
+          },
+          {
+            "ms": 440,
+            "percentile": 80
+          },
+          {
+            "ms": 360,
+            "percentile": 60
+          },
+          {
+            "ms": 280,
+            "percentile": 40
+          },
+          {
+            "ms": 200,
+            "percentile": 20
+          },
+          {
+            "ms": 120,
+            "percentile": 5
+          }
+        ],
+        "ranks": [
+          {
+            "label": "S",
+            "maxMs": 520,
+            "color": "#FFD700",
+            "title": "Board Oracle",
+            "subtitle": "You spot forcing lines before they happen.",
+            "percentileLabel": "Top 5%"
+          },
+          {
+            "label": "A",
+            "maxMs": 420,
+            "color": "#22C55E",
+            "title": "Threat Architect",
+            "subtitle": "Strong pattern control and tactical timing.",
+            "percentileLabel": "Top 20%"
+          },
+          {
+            "label": "B",
+            "maxMs": 320,
+            "color": "#3B82F6",
+            "title": "Sequence Reader",
+            "subtitle": "You read most forks and blocks reliably.",
+            "percentileLabel": "Top 45%"
+          },
+          {
+            "label": "C",
+            "maxMs": 240,
+            "color": "#94A3B8",
+            "title": "Line Builder",
+            "subtitle": "Solid fundamentals with room to sharpen threats.",
+            "percentileLabel": "Top 75%"
+          },
+          {
+            "label": "D",
+            "maxMs": 9999,
+            "color": "#F97316",
+            "title": "Stone Starter",
+            "subtitle": "Every board teaches a stronger next line.",
+            "percentileLabel": "Bottom 25%"
+          }
+        ]
+      },
+      "hasLeaderboard": false
+    },
+    {
       "id": "number-memory",
       "title": "Memory Matrix",
       "clinicalTitle": "Working Memory Capacity Assessment",

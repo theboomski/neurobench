@@ -1,0 +1,440 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+const BOARD_SIZE = 13;
+const PLAYER = 1; // black
+const AI = 2; // white
+const DIRECTIONS: Array<[number, number]> = [
+  [1, 0],
+  [0, 1],
+  [1, 1],
+  [1, -1],
+];
+
+type Cell = 0 | 1 | 2;
+type Pos = { r: number; c: number };
+type Turn = "player" | "ai";
+type GameResult = "win" | "lose" | "draw" | null;
+
+function makeBoard(): Cell[][] {
+  return Array.from({ length: BOARD_SIZE }, () => Array<Cell>(BOARD_SIZE).fill(0));
+}
+
+function inBounds(r: number, c: number) {
+  return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
+}
+
+function keyOf(p: Pos) {
+  return `${p.r}:${p.c}`;
+}
+
+function cloneBoard(board: Cell[][]) {
+  return board.map((row) => row.slice());
+}
+
+function place(board: Cell[][], p: Pos, v: Cell) {
+  const next = cloneBoard(board);
+  next[p.r][p.c] = v;
+  return next;
+}
+
+function gatherLine(board: Cell[][], p: Pos, who: Cell, dr: number, dc: number) {
+  const line: Pos[] = [{ r: p.r, c: p.c }];
+  let r = p.r - dr;
+  let c = p.c - dc;
+  while (inBounds(r, c) && board[r][c] === who) {
+    line.unshift({ r, c });
+    r -= dr;
+    c -= dc;
+  }
+  r = p.r + dr;
+  c = p.c + dc;
+  while (inBounds(r, c) && board[r][c] === who) {
+    line.push({ r, c });
+    r += dr;
+    c += dc;
+  }
+  return line;
+}
+
+function exactFiveFrom(board: Cell[][], p: Pos, who: Cell): Pos[] | null {
+  for (const [dr, dc] of DIRECTIONS) {
+    const line = gatherLine(board, p, who, dr, dc);
+    if (line.length === 5) return line;
+  }
+  return null;
+}
+
+function isDraw(board: Cell[][]) {
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] === 0) return false;
+    }
+  }
+  return true;
+}
+
+function emptyCells(board: Cell[][]): Pos[] {
+  const out: Pos[] = [];
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] === 0) out.push({ r, c });
+    }
+  }
+  return out;
+}
+
+function immediateWinningMoves(board: Cell[][], who: Cell): Pos[] {
+  const wins: Pos[] = [];
+  for (const p of emptyCells(board)) {
+    const test = place(board, p, who);
+    if (exactFiveFrom(test, p, who)) wins.push(p);
+  }
+  return wins;
+}
+
+function analyzeRuns(board: Cell[][], who: Cell) {
+  let open4 = 0;
+  let closed4 = 0;
+  let open3 = 0;
+
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] !== who) continue;
+      for (const [dr, dc] of DIRECTIONS) {
+        const pr = r - dr;
+        const pc = c - dc;
+        if (inBounds(pr, pc) && board[pr][pc] === who) continue;
+
+        let len = 0;
+        let rr = r;
+        let cc = c;
+        while (inBounds(rr, cc) && board[rr][cc] === who) {
+          len += 1;
+          rr += dr;
+          cc += dc;
+        }
+        const openA = inBounds(pr, pc) && board[pr][pc] === 0;
+        const openB = inBounds(rr, cc) && board[rr][cc] === 0;
+        const openEnds = (openA ? 1 : 0) + (openB ? 1 : 0);
+
+        if (len === 4) {
+          if (openEnds === 2) open4 += 1;
+          if (openEnds === 1) closed4 += 1;
+        }
+        if (len === 3 && openEnds === 2) open3 += 1;
+      }
+    }
+  }
+
+  return { open4, closed4, open3 };
+}
+
+function openThreeBlockingSpots(board: Cell[][], who: Cell): Pos[] {
+  const spots = new Map<string, Pos>();
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] !== who) continue;
+      for (const [dr, dc] of DIRECTIONS) {
+        const pr = r - dr;
+        const pc = c - dc;
+        if (inBounds(pr, pc) && board[pr][pc] === who) continue;
+
+        let len = 0;
+        let rr = r;
+        let cc = c;
+        while (inBounds(rr, cc) && board[rr][cc] === who) {
+          len += 1;
+          rr += dr;
+          cc += dc;
+        }
+        if (len !== 3) continue;
+        const aOpen = inBounds(pr, pc) && board[pr][pc] === 0;
+        const bOpen = inBounds(rr, cc) && board[rr][cc] === 0;
+        if (!aOpen || !bOpen) continue;
+        const a = { r: pr, c: pc };
+        const b = { r: rr, c: cc };
+        spots.set(keyOf(a), a);
+        spots.set(keyOf(b), b);
+      }
+    }
+  }
+  return [...spots.values()];
+}
+
+function countAdjacent(board: Cell[][], p: Pos) {
+  let count = 0;
+  for (let dr = -1; dr <= 1; dr += 1) {
+    for (let dc = -1; dc <= 1; dc += 1) {
+      if (!dr && !dc) continue;
+      const rr = p.r + dr;
+      const cc = p.c + dc;
+      if (inBounds(rr, cc) && board[rr][cc] !== 0) count += 1;
+    }
+  }
+  return count;
+}
+
+function pickByAdjacency(board: Cell[][], choices: Pos[]) {
+  if (!choices.length) return null;
+  let best = -1;
+  let bucket: Pos[] = [];
+  for (const p of choices) {
+    const s = countAdjacent(board, p);
+    if (s > best) {
+      best = s;
+      bucket = [p];
+    } else if (s === best) {
+      bucket.push(p);
+    }
+  }
+  return bucket[Math.floor(Math.random() * bucket.length)];
+}
+
+function bestByPattern(board: Cell[][], who: Cell, predicate: (r: ReturnType<typeof analyzeRuns>) => boolean) {
+  const candidates = emptyCells(board);
+  const matched: Pos[] = [];
+  for (const p of candidates) {
+    const test = place(board, p, who);
+    const runs = analyzeRuns(test, who);
+    if (predicate(runs)) matched.push(p);
+  }
+  return pickByAdjacency(board, matched);
+}
+
+function threateningMoves(board: Cell[][], who: Cell, predicate: (r: ReturnType<typeof analyzeRuns>) => boolean) {
+  const out: Pos[] = [];
+  for (const p of emptyCells(board)) {
+    const test = place(board, p, who);
+    const runs = analyzeRuns(test, who);
+    if (predicate(runs)) out.push(p);
+  }
+  return out;
+}
+
+function randomAdjacentMove(board: Cell[][]) {
+  const all = emptyCells(board);
+  if (!all.length) return null;
+  const near = all.filter((p) => countAdjacent(board, p) > 0);
+  if (near.length) return near[Math.floor(Math.random() * near.length)];
+  return { r: Math.floor(BOARD_SIZE / 2), c: Math.floor(BOARD_SIZE / 2) };
+}
+
+function chooseAiMove(board: Cell[][]) {
+  const aiWins = immediateWinningMoves(board, AI);
+  if (aiWins.length) return { move: pickByAdjacency(board, aiWins), forcedLose: false as const };
+
+  const playerWins = immediateWinningMoves(board, PLAYER);
+  if (playerWins.length >= 2) return { move: null, forcedLose: true as const };
+  if (playerWins.length === 1) return { move: playerWins[0], forcedLose: false as const };
+
+  const open3Blocks = openThreeBlockingSpots(board, PLAYER);
+  if (open3Blocks.length) return { move: pickByAdjacency(board, open3Blocks), forcedLose: false as const };
+
+  const ai43 = bestByPattern(board, AI, (r) => r.closed4 >= 1 && r.open3 >= 1);
+  if (ai43) return { move: ai43, forcedLose: false as const };
+
+  const player43 = threateningMoves(board, PLAYER, (r) => r.closed4 >= 1 && r.open3 >= 1);
+  if (player43.length) return { move: pickByAdjacency(board, player43), forcedLose: false as const };
+
+  const ai33 = bestByPattern(board, AI, (r) => r.open3 >= 2);
+  if (ai33) return { move: ai33, forcedLose: false as const };
+
+  const player33 = threateningMoves(board, PLAYER, (r) => r.open3 >= 2);
+  if (player33.length) return { move: pickByAdjacency(board, player33), forcedLose: false as const };
+
+  const aiOpen3 = bestByPattern(board, AI, (r) => r.open3 >= 1);
+  if (aiOpen3) return { move: aiOpen3, forcedLose: false as const };
+
+  return { move: randomAdjacentMove(board), forcedLose: false as const };
+}
+
+export default function Omok() {
+  const [board, setBoard] = useState<Cell[][]>(makeBoard);
+  const [turn, setTurn] = useState<Turn>("player");
+  const [result, setResult] = useState<GameResult>(null);
+  const [winning, setWinning] = useState<Set<string>>(new Set());
+
+  const ended = result !== null;
+  const turnLabel = turn === "player" ? "Black (You)" : "White (AI)";
+
+  const status = useMemo(() => {
+    if (result === "win") return "You win! Exactly five in a row.";
+    if (result === "lose") return "AI wins.";
+    if (result === "draw") return "Draw.";
+    return `Turn: ${turnLabel}`;
+  }, [result, turnLabel]);
+
+  const restart = () => {
+    setBoard(makeBoard());
+    setTurn("player");
+    setResult(null);
+    setWinning(new Set());
+  };
+
+  const finishIfEnded = (next: Cell[][], last: Pos, who: Cell): boolean => {
+    const exact = exactFiveFrom(next, last, who);
+    if (exact) {
+      setBoard(next);
+      setWinning(new Set(exact.map(keyOf)));
+      setResult(who === PLAYER ? "win" : "lose");
+      return true;
+    }
+    if (isDraw(next)) {
+      setBoard(next);
+      setResult("draw");
+      return true;
+    }
+    return false;
+  };
+
+  const handlePlayerMove = (p: Pos) => {
+    if (ended || turn !== "player") return;
+    if (board[p.r][p.c] !== 0) return;
+    const next = place(board, p, PLAYER);
+    if (finishIfEnded(next, p, PLAYER)) return;
+    setBoard(next);
+    setTurn("ai");
+  };
+
+  useEffect(() => {
+    if (ended || turn !== "ai") return;
+    const timer = window.setTimeout(() => {
+      const pick = chooseAiMove(board);
+      if (pick.forcedLose) {
+        setResult("win");
+        return;
+      }
+      if (!pick.move) {
+        setResult("draw");
+        return;
+      }
+      const next = place(board, pick.move, AI);
+      if (finishIfEnded(next, pick.move, AI)) return;
+      setBoard(next);
+      setTurn("player");
+    }, 180);
+    return () => window.clearTimeout(timer);
+  }, [board, ended, turn]);
+
+  const btnSize = "clamp(24px, 5.6vw, 34px)";
+
+  return (
+    <div
+      style={{
+        background: "#0a0a0f",
+        border: "1px solid rgba(148,163,184,0.22)",
+        borderRadius: 16,
+        padding: "16px 14px 18px",
+      }}
+    >
+      <h2 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff" }}>Omok (13x13)</h2>
+      <p style={{ margin: "8px 0 0", color: "#9ca3af", fontSize: 13 }}>
+        {status}
+      </p>
+
+      <div style={{ marginTop: 12 }}>
+        <div
+          style={{
+            width: "min(92vw, 560px)",
+            margin: "0 auto",
+            aspectRatio: "1 / 1",
+            position: "relative",
+            borderRadius: 12,
+            overflow: "hidden",
+            border: "1px solid rgba(148,163,184,0.24)",
+            background: "#0f1117",
+          }}
+        >
+          <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ position: "absolute", inset: 0 }}>
+            {Array.from({ length: BOARD_SIZE }).map((_, i) => {
+              const p = (i / (BOARD_SIZE - 1)) * 100;
+              return (
+                <g key={`line-${i}`}>
+                  <line x1={0} y1={p} x2={100} y2={p} stroke="rgba(148,163,184,0.35)" strokeWidth={0.35} />
+                  <line x1={p} y1={0} x2={p} y2={100} stroke="rgba(148,163,184,0.35)" strokeWidth={0.35} />
+                </g>
+              );
+            })}
+          </svg>
+
+          {Array.from({ length: BOARD_SIZE }).flatMap((_, r) =>
+            Array.from({ length: BOARD_SIZE }).map((__, c) => {
+              const v = board[r][c];
+              const left = `${(c / (BOARD_SIZE - 1)) * 100}%`;
+              const top = `${(r / (BOARD_SIZE - 1)) * 100}%`;
+              const isWin = winning.has(`${r}:${c}`);
+              return (
+                <button
+                  key={`${r}-${c}`}
+                  type="button"
+                  onClick={() => handlePlayerMove({ r, c })}
+                  disabled={ended || turn !== "player" || v !== 0}
+                  style={{
+                    position: "absolute",
+                    left,
+                    top,
+                    width: btnSize,
+                    height: btnSize,
+                    transform: "translate(-50%, -50%)",
+                    border: "none",
+                    background: "transparent",
+                    padding: 0,
+                    cursor: ended || turn !== "player" || v !== 0 ? "default" : "pointer",
+                    touchAction: "manipulation",
+                    display: "grid",
+                    placeItems: "center",
+                  }}
+                  aria-label={`Place at row ${r + 1}, col ${c + 1}`}
+                >
+                  {v !== 0 && (
+                    <span
+                      style={{
+                        width: "72%",
+                        height: "72%",
+                        borderRadius: 999,
+                        background: v === PLAYER ? "#111" : "#f5f5f5",
+                        border: v === PLAYER ? "1px solid #2b2b2b" : "1px solid #9ca3af",
+                        boxShadow: isWin ? "0 0 0 2px #00FF94, 0 0 12px rgba(0,255,148,0.55)" : "0 1px 4px rgba(0,0,0,0.45)",
+                      }}
+                    />
+                  )}
+                </button>
+              );
+            }),
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 14, display: "grid", gap: 4, color: "#d1d5db", fontSize: 13 }}>
+        <div style={{ color: "#00FF94", fontWeight: 800 }}>How to Play</div>
+        <div>- Place stones on intersections of the board.</div>
+        <div>- Black goes first, then players alternate.</div>
+        <div>- First to get exactly 5 in a row wins.</div>
+        <div>- 6 or more in a row does not count as a win.</div>
+      </div>
+
+      {ended && (
+        <div style={{ marginTop: 14, textAlign: "center" }}>
+          <button
+            type="button"
+            onClick={restart}
+            style={{
+              border: "none",
+              borderRadius: 10,
+              padding: "10px 14px",
+              background: "#00FF94",
+              color: "#042012",
+              fontWeight: 900,
+              cursor: "pointer",
+            }}
+          >
+            Play Again
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
