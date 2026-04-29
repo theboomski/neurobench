@@ -24,28 +24,10 @@ function getTier(ratio: number): TierKey {
   return "D";
 }
 
-function BalanceTierCard({ id, name, ratio }: { id: "a" | "b"; name: string; ratio: number }) {
-  const letter = id === "a" ? "A" : "B";
-  const bg = id === "a" ? "linear-gradient(135deg, #1d4ed8, #3b82f6)" : "linear-gradient(135deg, #047857, #22c55e)";
+function BalanceTierCard({ name, ratio }: { name: string; ratio: number }) {
   return (
-    <div style={{ width: 112 }}>
-      <div
-        style={{
-          width: 112,
-          height: 112,
-          borderRadius: 10,
-          background: bg,
-          display: "grid",
-          placeItems: "center",
-          fontSize: 44,
-          fontWeight: 900,
-          color: "#fff",
-          fontFamily: "var(--font-mono)",
-        }}
-      >
-        {letter}
-      </div>
-      <div style={{ marginTop: 6, fontSize: 12, fontWeight: 700, lineHeight: 1.25 }}>{name}</div>
+    <div style={{ minWidth: 140, maxWidth: 220, border: "1px solid var(--border)", borderRadius: 10, padding: "10px 12px", background: "rgba(255,255,255,0.02)" }}>
+      <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.25 }}>{name}</div>
       <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{ratio.toFixed(1)}%</div>
     </div>
   );
@@ -133,7 +115,7 @@ export default async function UgcBalanceTierPage({ params }: { params: Promise<{
               ) : (
                 tiers[tier]
                   .sort((a, b) => b.ratio - a.ratio)
-                  .map((item) => <BalanceTierCard key={item.id} id={item.id} name={item.name} ratio={item.ratio} />)
+                  .map((item) => <BalanceTierCard key={item.id} name={item.name} ratio={item.ratio} />)
               )}
             </div>
           </div>

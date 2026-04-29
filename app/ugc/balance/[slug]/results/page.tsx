@@ -80,7 +80,7 @@ export default async function UgcBalanceResultsPage({ params }: { params: Promis
           }}
         >
           <div>Rank</div>
-          <div>Name</div>
+          <div>Option</div>
           <div>Round Win Ratio</div>
           <div>Final Win Ratio</div>
         </div>

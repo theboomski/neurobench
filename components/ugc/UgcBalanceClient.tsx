@@ -289,30 +289,6 @@ export default function UgcBalanceClient({ game, options, summary }: { game: Bal
   );
 }
 
-function BalanceSideBadge({ id }: { id: "a" | "b" }) {
-  const letter = id === "a" ? "A" : "B";
-  const bg = id === "a" ? "linear-gradient(135deg, #1d4ed8, #3b82f6)" : "linear-gradient(135deg, #047857, #22c55e)";
-  return (
-    <div
-      style={{
-        width: "100%",
-        aspectRatio: "1",
-        maxWidth: 126,
-        borderRadius: 12,
-        background: bg,
-        display: "grid",
-        placeItems: "center",
-        fontSize: 40,
-        fontWeight: 900,
-        color: "#fff",
-        fontFamily: "var(--font-mono)",
-      }}
-    >
-      {letter}
-    </div>
-  );
-}
-
 function MobileBalanceResultsList({ rows }: { rows: Array<BalanceScoreRow & { oneVsOneRatio: number; finalWinRatio: number }> }) {
   return (
     <div style={{ marginTop: 10, display: "grid", gap: 8 }}>
@@ -325,15 +301,12 @@ function MobileBalanceResultsList({ rows }: { rows: Array<BalanceScoreRow & { on
             background: "var(--bg-card)",
             padding: 10,
             display: "grid",
-            gridTemplateColumns: "28px 84px 1fr",
+            gridTemplateColumns: "28px 1fr",
             gap: 10,
             alignItems: "center",
           }}
         >
           <div style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "var(--text-2)", fontWeight: 900 }}>#{idx + 1}</div>
-          <div style={{ width: 84 }}>
-            <BalanceSideBadge id={row.id} />
-          </div>
           <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 800, lineHeight: 1.2 }}>{row.name}</div>
             <div style={{ marginTop: 6, display: "grid", gap: 5 }}>
@@ -399,7 +372,7 @@ function ResultsTable({ rows }: { rows: Array<BalanceScoreRow & { oneVsOneRatio:
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "54px 134px minmax(120px,1fr) minmax(120px,1fr) minmax(120px,1fr)",
+          gridTemplateColumns: "54px minmax(120px,1fr) minmax(120px,1fr) minmax(120px,1fr)",
           gap: 10,
           alignItems: "center",
           padding: "10px 12px",
@@ -413,8 +386,7 @@ function ResultsTable({ rows }: { rows: Array<BalanceScoreRow & { oneVsOneRatio:
         }}
       >
         <div>Rank</div>
-        <div>Side</div>
-        <div>Name</div>
+        <div>Option</div>
         <div>Round Win Ratio</div>
         <div>Final Win Ratio</div>
       </div>
@@ -423,7 +395,7 @@ function ResultsTable({ rows }: { rows: Array<BalanceScoreRow & { oneVsOneRatio:
           key={row.id}
           style={{
             display: "grid",
-            gridTemplateColumns: "54px 134px minmax(120px,1fr) minmax(120px,1fr) minmax(120px,1fr)",
+            gridTemplateColumns: "54px minmax(120px,1fr) minmax(120px,1fr) minmax(120px,1fr)",
             gap: 10,
             alignItems: "center",
             padding: "10px 12px",
@@ -431,9 +403,6 @@ function ResultsTable({ rows }: { rows: Array<BalanceScoreRow & { oneVsOneRatio:
           }}
         >
           <div style={{ fontSize: 12, fontFamily: "var(--font-mono)", color: "var(--text-2)", fontWeight: 800 }}>#{idx + 1}</div>
-          <div style={{ width: 126 }}>
-            <BalanceSideBadge id={row.id} />
-          </div>
           <div style={{ fontSize: 14, fontWeight: 700 }}>{row.name}</div>
           <RatioBar value={row.oneVsOneRatio} color="#22c55e" />
           <RatioBar value={row.finalWinRatio} color="#3b82f6" />
