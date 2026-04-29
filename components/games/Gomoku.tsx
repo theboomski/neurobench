@@ -138,13 +138,14 @@ function analyzeRuns(board: Cell[][], who: Cell) {
 
 function openThreeBlockingSpots(board: Cell[][], who: Cell): Pos[] {
   const spots = new Map<string, Pos>();
+  // Detect contiguous 3-in-a-row with both ends open and block either end.
   for (let r = 0; r < BOARD_SIZE; r += 1) {
     for (let c = 0; c < BOARD_SIZE; c += 1) {
       if (board[r][c] !== who) continue;
       for (const [dr, dc] of DIRECTIONS) {
-        const pr = r - dr;
-        const pc = c - dc;
-        if (inBounds(pr, pc) && board[pr][pc] === who) continue;
+        const prevR = r - dr;
+        const prevC = c - dc;
+        if (inBounds(prevR, prevC) && board[prevR][prevC] === who) continue;
 
         let len = 0;
         let rr = r;
@@ -155,13 +156,14 @@ function openThreeBlockingSpots(board: Cell[][], who: Cell): Pos[] {
           cc += dc;
         }
         if (len !== 3) continue;
-        const aOpen = inBounds(pr, pc) && board[pr][pc] === 0;
-        const bOpen = inBounds(rr, cc) && board[rr][cc] === 0;
-        if (!aOpen || !bOpen) continue;
-        const a = { r: pr, c: pc };
-        const b = { r: rr, c: cc };
-        spots.set(keyOf(a), a);
-        spots.set(keyOf(b), b);
+        const leftOpen = inBounds(prevR, prevC) && board[prevR][prevC] === 0;
+        const rightOpen = inBounds(rr, cc) && board[rr][cc] === 0;
+        if (!leftOpen || !rightOpen) continue;
+
+        const left = { r: prevR, c: prevC };
+        const right = { r: rr, c: cc };
+        spots.set(keyOf(left), left);
+        spots.set(keyOf(right), right);
       }
     }
   }
@@ -226,7 +228,116 @@ function randomAdjacentMove(board: Cell[][]) {
   return { r: Math.floor(BOARD_SIZE / 2), c: Math.floor(BOARD_SIZE / 2) };
 }
 
+function hasAnyExactFive(board: Cell[][], who: Cell) {
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] !== who) continue;
+      if (exactFiveFrom(board, { r, c }, who)) return true;
+    }
+  }
+  return false;
+}
+
+function getCandidateMoves(board: Cell[][], radius = 2) {
+  const out = new Map<string, Pos>();
+  let hasStone = false;
+  for (let r = 0; r < BOARD_SIZE; r += 1) {
+    for (let c = 0; c < BOARD_SIZE; c += 1) {
+      if (board[r][c] === 0) continue;
+      hasStone = true;
+      for (let dr = -radius; dr <= radius; dr += 1) {
+        for (let dc = -radius; dc <= radius; dc += 1) {
+          const rr = r + dr;
+          const cc = c + dc;
+          if (!inBounds(rr, cc) || board[rr][cc] !== 0) continue;
+          const p = { r: rr, c: cc };
+          out.set(keyOf(p), p);
+        }
+      }
+    }
+  }
+  if (!hasStone) return [{ r: Math.floor(BOARD_SIZE / 2), c: Math.floor(BOARD_SIZE / 2) }];
+  return [...out.values()];
+}
+
+function sortCandidates(board: Cell[][], moves: Pos[]) {
+  return [...moves].sort((a, b) => countAdjacent(board, b) - countAdjacent(board, a));
+}
+
+function estimateThreatScore(board: Cell[][], who: Cell, candidates: Pos[]) {
+  let open4 = 0;
+  let closed4 = 0;
+  let open3 = 0;
+  let fork43 = 0;
+  let fork33 = 0;
+  let instantWins = 0;
+
+  for (const p of candidates) {
+    if (board[p.r][p.c] !== 0) continue;
+    const test = place(board, p, who);
+    if (exactFiveFrom(test, p, who)) instantWins += 1;
+    const runs = analyzeRuns(test, who);
+    if (runs.open4 >= 1) open4 += 1;
+    if (runs.closed4 >= 1) closed4 += 1;
+    if (runs.open3 >= 1) open3 += 1;
+    if (runs.closed4 >= 1 && runs.open3 >= 1) fork43 += 1;
+    if (runs.open3 >= 2) fork33 += 1;
+  }
+
+  return (
+    instantWins * 200000 +
+    open4 * 30000 +
+    closed4 * 7000 +
+    open3 * 1200 +
+    fork43 * 18000 +
+    fork33 * 6500
+  );
+}
+
+function evaluateBoard(board: Cell[][]) {
+  if (hasAnyExactFive(board, AI)) return 10_000_000;
+  if (hasAnyExactFive(board, PLAYER)) return -10_000_000;
+
+  const cands = getCandidateMoves(board, 2);
+  const aiScore = estimateThreatScore(board, AI, cands);
+  const playerScore = estimateThreatScore(board, PLAYER, cands);
+  return aiScore - playerScore;
+}
+
+function minimax(board: Cell[][], depth: number, alpha: number, beta: number, maximizing: boolean): number {
+  if (depth === 0 || isDraw(board) || hasAnyExactFive(board, AI) || hasAnyExactFive(board, PLAYER)) {
+    return evaluateBoard(board);
+  }
+
+  const all = sortCandidates(board, getCandidateMoves(board, 2));
+  const moves = all.slice(0, 14);
+  if (!moves.length) return evaluateBoard(board);
+
+  if (maximizing) {
+    let best = -Infinity;
+    for (const m of moves) {
+      const next = place(board, m, AI);
+      const score = minimax(next, depth - 1, alpha, beta, false);
+      best = Math.max(best, score);
+      alpha = Math.max(alpha, score);
+      if (beta <= alpha) break;
+    }
+    return best;
+  }
+
+  let best = Infinity;
+  for (const m of moves) {
+    const next = place(board, m, PLAYER);
+    const score = minimax(next, depth - 1, alpha, beta, true);
+    best = Math.min(best, score);
+    beta = Math.min(beta, score);
+    if (beta <= alpha) break;
+  }
+  return best;
+}
+
 function chooseAiMove(board: Cell[][]) {
+  // Fast tactical checks before minimax.
   const aiWins = immediateWinningMoves(board, AI);
   if (aiWins.length) return pickByAdjacency(board, aiWins);
 
@@ -236,22 +347,22 @@ function chooseAiMove(board: Cell[][]) {
   const open3Blocks = openThreeBlockingSpots(board, PLAYER);
   if (open3Blocks.length) return pickByAdjacency(board, open3Blocks);
 
-  const ai43 = bestByPattern(board, AI, (r) => r.closed4 >= 1 && r.open3 >= 1);
-  if (ai43) return ai43;
+  const rootMoves = sortCandidates(board, getCandidateMoves(board, 2)).slice(0, 18);
+  if (!rootMoves.length) return randomAdjacentMove(board);
 
-  const player43 = threateningMoves(board, PLAYER, (r) => r.closed4 >= 1 && r.open3 >= 1);
-  if (player43.length) return pickByAdjacency(board, player43);
-
-  const ai33 = bestByPattern(board, AI, (r) => r.open3 >= 2);
-  if (ai33) return ai33;
-
-  const player33 = threateningMoves(board, PLAYER, (r) => r.open3 >= 2);
-  if (player33.length) return pickByAdjacency(board, player33);
-
-  const aiOpen3 = bestByPattern(board, AI, (r) => r.open3 >= 1);
-  if (aiOpen3) return aiOpen3;
-
-  return randomAdjacentMove(board);
+  let bestScore = -Infinity;
+  let bestMoves: Pos[] = [];
+  for (const m of rootMoves) {
+    const next = place(board, m, AI);
+    const score = minimax(next, 2, -Infinity, Infinity, false); // depth 3 total plies
+    if (score > bestScore) {
+      bestScore = score;
+      bestMoves = [m];
+    } else if (score === bestScore) {
+      bestMoves.push(m);
+    }
+  }
+  return pickByAdjacency(board, bestMoves) ?? randomAdjacentMove(board);
 }
 
 const SCORE_TIME_CAP_MS = 180000;
