@@ -27,6 +27,8 @@ Wrong format, because they ask, "Is this person a red flag?" as if compatibility
 
 That wording sounds less dramatic. It is also far more accurate.
 
+![Couple conversation and relationship tension](https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80)
+
 ## Why Smart People Miss Early Red Flags
 
 Missing early risk signals is not a sign of low intelligence. It is a predictable byproduct of human bonding.
@@ -88,6 +90,8 @@ When she asked for breathing room, he reframed it as betrayal: "If you loved me,
 What looked like a texting issue was actually boundary punishment plus ambiguity control. The intervention was simple but difficult: define communication norms in writing, hold for three weeks, track deviations and repair quality. The data was decisive. Pattern persisted. Relationship ended.
 
 The lesson: if the rule always expands in one direction, it is not reassurance. It is territory acquisition.
+
+![Person reflecting on relationship communication](https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80)
 
 ## H2: Does Your Boyfriend Sound Like a Red Flag?
 

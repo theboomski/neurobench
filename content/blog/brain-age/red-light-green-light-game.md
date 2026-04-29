@@ -30,6 +30,8 @@ That is the scene that broke the internet. Not because it was gory — though it
 
 We are a team that geeks out on Korean TV show games, reaction labs, and the weirdly smart cruelty of simple rules. So we did the obvious thing: we turned that moment into something you can actually play — a squid game browser game you can load in five seconds, sweat through in three rounds, and close with shaky hands and a score to prove you survived. ZAZAZA.app is where we put it. No account wall. No install screen. Just the doll, the line, and you.
 
+![Red Light Green Light playground scene](https://images.unsplash.com/photo-1517649763962-0c623066013b?w=800&q=80)
+
 That is the hook Netflix paid millions to film. Your living room already did half the work — the silence between notes, the lean forward, the involuntary flinch when a character on screen moves a millisecond too late. We wanted to steal that electricity back from passive binge mode and hand it to your thumb.
 
 ## What Is Red Light, Green Light? (The Korean Street Game Netflix Borrowed)
@@ -97,6 +99,8 @@ You get a numeric score out of 1000 that blends survival, pace, and nerve — so
 You can compete against players worldwide, see how you rank, and tie scores to a country code so the meta becomes quietly geopolitical in the friendliest possible way — who flinches first, Seoul or San Francisco? Leaderboards are not there to make you feel bad about your reflexes; they are there to turn solitary shame into social sport. When you see someone two countries away edge you by ten points, the next run stops being "practice" and starts being pride.
 
 If you wanted a squid game browser game that respects your lunch break, this is the shape of it: short sessions, loud emotions, zero install.
+
+![Focused player reaction timing](https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80)
 
 ## The Psychology — Why Freeze Games Are Unfairly Addictive
 

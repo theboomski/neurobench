@@ -25,6 +25,8 @@ In psychology, dark traits are best understood as **social strategies under unce
 
 The Dark Triad model organizes these tendencies into three measurable clusters: narcissism, Machiavellianism, and psychopathy. The useful question is not "Am I a good person or a bad person?" The useful question is: **Which strategies do I default to under pressure, and what is the cost curve over time?**
 
+![Moody portrait representing dark personality themes](https://images.unsplash.com/photo-1521119989659-a83eee488004?w=800&q=80)
+
 ## Dark Traits Are About Strategy, Not Identity
 
 Most people make a category error when they hear "dark personality." They assume traits are fixed identity labels. In psychometrics, traits are probability distributions. A trait tells you what a person is *more likely* to do in specific contexts, not what they will always do.
@@ -108,6 +110,8 @@ At home, the same architecture appears. Conflict is never about the specific iss
 From the outside, this looks like a sudden downfall. From the trait perspective, it is a predictable trajectory: strategies optimized for acquisition fail in the phase where maintenance requires humility, reciprocity, and error correction.
 
 This is the core paradox of dark traits: they can accelerate entry and sabotage longevity.
+
+![Shadowed social dynamics concept image](https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80)
 
 ## Can Dark Traits Be Changed?
 

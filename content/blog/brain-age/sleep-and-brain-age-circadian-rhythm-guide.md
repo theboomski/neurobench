@@ -27,6 +27,8 @@ Brain age is not only about years lived. It is about processing speed, attention
 People usually ask, "How many hours should I sleep?"  
 A better opening question is: **How stable is my circadian signal across the week?**
 
+![Person waking with morning sunlight](https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=800&q=80)
+
 ## Brain Age and Sleep: Why Timing Beats Heroic Recovery
 
 Many high performers rely on a damaging cycle: short sleep on weekdays, "recovery sleep" on weekends, caffeine to bridge the gap, and occasional deep-rest rituals to compensate. Subjectively this feels manageable. Objectively it produces chronic circadian misalignment.
@@ -187,6 +189,8 @@ What to expect:
 - three to four weeks for meaningful pattern shift.
 
 This is slower than supplement marketing. It is also more reliable.
+
+![Night routine and circadian rhythm planning](https://images.unsplash.com/photo-1495195129352-aeb325a55b65?w=800&q=80)
 
 ## H3: Should You Use Sleep Supplements?
 
