@@ -223,34 +223,34 @@ function randomAdjacentMove(board: Cell[][]) {
 
 function chooseAiMove(board: Cell[][]) {
   const aiWins = immediateWinningMoves(board, AI);
-  if (aiWins.length) return { move: pickByAdjacency(board, aiWins), forcedLose: false as const };
+  if (aiWins.length) return pickByAdjacency(board, aiWins);
 
   const playerWins = immediateWinningMoves(board, PLAYER);
-  if (playerWins.length >= 2) return { move: null, forcedLose: true as const };
-  if (playerWins.length === 1) return { move: playerWins[0], forcedLose: false as const };
+  if (playerWins.length) return pickByAdjacency(board, playerWins);
 
   const open3Blocks = openThreeBlockingSpots(board, PLAYER);
-  if (open3Blocks.length) return { move: pickByAdjacency(board, open3Blocks), forcedLose: false as const };
+  if (open3Blocks.length) return pickByAdjacency(board, open3Blocks);
 
   const ai43 = bestByPattern(board, AI, (r) => r.closed4 >= 1 && r.open3 >= 1);
-  if (ai43) return { move: ai43, forcedLose: false as const };
+  if (ai43) return ai43;
 
   const player43 = threateningMoves(board, PLAYER, (r) => r.closed4 >= 1 && r.open3 >= 1);
-  if (player43.length) return { move: pickByAdjacency(board, player43), forcedLose: false as const };
+  if (player43.length) return pickByAdjacency(board, player43);
 
   const ai33 = bestByPattern(board, AI, (r) => r.open3 >= 2);
-  if (ai33) return { move: ai33, forcedLose: false as const };
+  if (ai33) return ai33;
 
   const player33 = threateningMoves(board, PLAYER, (r) => r.open3 >= 2);
-  if (player33.length) return { move: pickByAdjacency(board, player33), forcedLose: false as const };
+  if (player33.length) return pickByAdjacency(board, player33);
 
   const aiOpen3 = bestByPattern(board, AI, (r) => r.open3 >= 1);
-  if (aiOpen3) return { move: aiOpen3, forcedLose: false as const };
+  if (aiOpen3) return aiOpen3;
 
-  return { move: randomAdjacentMove(board), forcedLose: false as const };
+  return randomAdjacentMove(board);
 }
 
 export default function Omok() {
+  const [started, setStarted] = useState(false);
   const [board, setBoard] = useState<Cell[][]>(makeBoard);
   const [turn, setTurn] = useState<Turn>("player");
   const [result, setResult] = useState<GameResult>(null);
@@ -267,6 +267,7 @@ export default function Omok() {
   }, [result, turnLabel]);
 
   const restart = () => {
+    setStarted(false);
     setBoard(makeBoard());
     setTurn("player");
     setResult(null);
@@ -299,26 +300,58 @@ export default function Omok() {
   };
 
   useEffect(() => {
-    if (ended || turn !== "ai") return;
+    if (!started || ended || turn !== "ai") return;
     const timer = window.setTimeout(() => {
-      const pick = chooseAiMove(board);
-      if (pick.forcedLose) {
-        setResult("win");
-        return;
-      }
-      if (!pick.move) {
+      const move = chooseAiMove(board);
+      if (!move) {
         setResult("draw");
         return;
       }
-      const next = place(board, pick.move, AI);
-      if (finishIfEnded(next, pick.move, AI)) return;
+      const next = place(board, move, AI);
+      if (finishIfEnded(next, move, AI)) return;
       setBoard(next);
       setTurn("player");
     }, 180);
     return () => window.clearTimeout(timer);
-  }, [board, ended, turn]);
+  }, [board, ended, started, turn]);
 
   const btnSize = "clamp(24px, 5.6vw, 34px)";
+
+  if (!started) {
+    return (
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: "1.5px solid #00FF9440",
+          borderRadius: "var(--radius-xl)",
+          padding: "34px 24px",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ fontSize: 54, marginBottom: 14 }}>⚫</div>
+        <p style={{ fontSize: 18, fontWeight: 800, color: "var(--text-1)", marginBottom: 8 }}>Omok (13x13)</p>
+        <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 20 }}>
+          Black first · Exact 5 wins · 6+ does not count
+        </p>
+        <button
+          type="button"
+          onClick={() => setStarted(true)}
+          style={{
+            border: "none",
+            borderRadius: 10,
+            padding: "12px 22px",
+            background: "#00FF94",
+            color: "#042012",
+            fontWeight: 900,
+            fontFamily: "var(--font-mono)",
+            cursor: "pointer",
+          }}
+        >
+          ▶ PLAY
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -344,7 +377,7 @@ export default function Omok() {
             borderRadius: 12,
             overflow: "hidden",
             border: "1px solid rgba(148,163,184,0.24)",
-            background: "#0f1117",
+            background: "#5d4123",
           }}
         >
           <svg width="100%" height="100%" viewBox="0 0 100 100" style={{ position: "absolute", inset: 0 }}>
@@ -405,14 +438,6 @@ export default function Omok() {
             }),
           )}
         </div>
-      </div>
-
-      <div style={{ marginTop: 14, display: "grid", gap: 4, color: "#d1d5db", fontSize: 13 }}>
-        <div style={{ color: "#00FF94", fontWeight: 800 }}>How to Play</div>
-        <div>- Place stones on intersections of the board.</div>
-        <div>- Black goes first, then players alternate.</div>
-        <div>- First to get exactly 5 in a row wins.</div>
-        <div>- 6 or more in a row does not count as a win.</div>
       </div>
 
       {ended && (
