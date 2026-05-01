@@ -267,7 +267,7 @@ export default function BracketHubClient({
 
       {loading && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>Updating games...</p>}
       {!loading && games.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 8 }}>No bracket games yet.</p>}
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-3 xl:grid-cols-4">
         {games.map((game) => {
           const userCover = trimUrl(game.cover_image_url);
           const heroImage =
@@ -275,6 +275,13 @@ export default function BracketHubClient({
               ? normalizeBracketCover(game.cover_image_url) ?? normalizeBracketCover(game.bracket_preview_image_url)
               : userCover;
           const balanceTextFallback = !userCover && game.type === "balance" && game.balance_preview_label;
+          const heroBackground = heroImage
+            ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${heroImage}) center/cover`
+            : game.type === "balance"
+              ? "#000"
+              : "linear-gradient(160deg, #2b220f, #171107)";
+          const typeBorder = game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`;
+          const metaLine = `${game.category?.name ?? "Uncategorized"} · ${game.language?.toUpperCase?.() ?? "EN"}`;
           return (
           <Link
             key={game.id}
@@ -283,72 +290,128 @@ export default function BracketHubClient({
             onMouseEnter={() => router.prefetch(toUgcPath(game))}
             onTouchStart={() => router.prefetch(toUgcPath(game))}
             style={{ textDecoration: "none" }}
+            className="block min-w-0"
           >
             <article
-              style={{
-                position: "relative",
-                borderRadius: 12,
-                border: "none",
-                overflow: "hidden",
-                aspectRatio: "4 / 3",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                background: heroImage
-                  ? `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.82)), url(${heroImage}) center/cover`
-                  : game.type === "balance"
-                    ? "#000"
-                    : "linear-gradient(160deg, #2b220f, #171107)",
-              }}
+              className="relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-[var(--border)] shadow-[0_8px_28px_rgba(0,0,0,0.12)] md:aspect-[4/3] md:rounded-[12px] md:border-none md:shadow-none"
             >
-              <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
-                <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>
-                  {game.type === "brackets" ? "BRACKET" : "BALANCE GAME"}
-                </span>
-                <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
+              {/* md+: full-card hero (unchanged look) */}
+              <div
+                className="pointer-events-none absolute inset-0 hidden bg-center bg-cover md:block"
+                style={{ background: heroBackground }}
+                aria-hidden
+              />
+
+              {/* Mobile: image / preview strip separated from text */}
+              <div
+                className="relative aspect-[5/4] w-full shrink-0 bg-center bg-cover sm:aspect-[16/10] md:hidden"
+                style={{ background: heroBackground }}
+              >
+                <div className="absolute inset-x-0 top-0 flex justify-between gap-1 p-2 sm:p-3">
+                  <span className="max-w-[46%] truncate text-[9px] sm:text-[10px]" style={{ color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.85)", border: typeBorder, padding: "3px 6px", borderRadius: 999 }}>
+                    {game.type === "brackets" ? (
+                      "BRACKET"
+                    ) : (
+                      <>
+                        <span className="sm:hidden">BALANCE</span>
+                        <span className="hidden sm:inline">BALANCE GAME</span>
+                      </>
+                    )}
+                  </span>
+                  <span className="shrink-0 text-[9px] sm:text-[10px]" style={{ color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.85)", border: typeBorder, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
+                </div>
+                {balanceTextFallback ? (
+                  <div className="flex h-full min-h-[100px] items-center justify-center px-2 pb-2 pt-9 sm:min-h-[120px] sm:px-4 sm:pb-3 sm:pt-10">
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#fff",
+                        textAlign: "center",
+                        lineHeight: 1.45,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 5,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {game.balance_preview_label}
+                    </p>
+                  </div>
+                ) : null}
               </div>
-              {balanceTextFallback ? (
-                <div
-                  style={{
-                    flex: 1,
-                    minHeight: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "4px 12px 2px",
-                  }}
-                >
-                  <p
+
+              {/* Mobile: text panel */}
+              <div
+                className="relative z-[1] flex flex-col gap-1.5 border-t border-[var(--border)] bg-[var(--bg-card)] px-2.5 py-3 sm:gap-2 sm:px-4 sm:py-4 md:hidden"
+              >
+                <div className="text-[10px] leading-tight text-[#b8962e] sm:text-[11px]" style={{ fontFamily: "var(--font-mono)", letterSpacing: "0.02em" }}>{metaLine}</div>
+                <h3 className="text-[13px] font-extrabold leading-snug tracking-tight text-[var(--text-1)] sm:text-[16px]">{game.title}</h3>
+                <div className="mt-0.5 flex items-center justify-between gap-2 border-t border-[var(--border)] pt-2 sm:mt-1 sm:gap-3 sm:pt-3">
+                  <div className="flex min-w-0 items-center gap-1.5 text-[11px] text-[var(--text-2)] sm:gap-2 sm:text-[12px]">
+                    {game.creator?.avatar_url ? (
+                      <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} loading="lazy" decoding="async" className="h-6 w-6 shrink-0 rounded-full border border-[var(--border)] object-cover sm:h-7 sm:w-7" />
+                    ) : (
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-[var(--border)] text-xs sm:h-7 sm:w-7 sm:text-sm">👤</span>
+                    )}
+                    <span className="truncate">by {game.creator?.display_name ?? "Anonymous"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* md+: overlay content (original layout) */}
+              <div className="relative z-[1] hidden h-full min-h-0 flex-col justify-between md:flex">
+                <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
+                  <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>
+                    {game.type === "brackets" ? "BRACKET" : "BALANCE GAME"}
+                  </span>
+                  <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>▶ {game.play_count}</span>
+                </div>
+                {balanceTextFallback ? (
+                  <div
                     style={{
-                      margin: 0,
-                      fontSize: 13,
-                      fontWeight: 800,
-                      color: "#fff",
-                      textAlign: "center",
-                      lineHeight: 1.35,
-                      display: "-webkit-box",
-                      WebkitLineClamp: 4,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      wordBreak: "break-word",
+                      flex: 1,
+                      minHeight: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "4px 12px 2px",
                     }}
                   >
-                    {game.balance_preview_label}
-                  </p>
-                </div>
-              ) : (
-                <div style={{ flex: 1, minHeight: 0 }} />
-              )}
-              <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
-                <div style={{ fontSize: 10, color: "#f2d08a", fontFamily: "var(--font-mono)" }}>{game.category?.name ?? "Uncategorized"} · {game.language?.toUpperCase?.() ?? "EN"}</div>
-                <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
-                <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 10, color: "#e7d9b8" }}>
-                  {game.creator?.avatar_url ? (
-                    <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} loading="lazy" decoding="async" style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
-                  ) : (
-                    <span style={{ width: 18, height: 18, borderRadius: "999px", border: "1px solid rgba(255,255,255,0.22)", display: "grid", placeItems: "center", fontSize: 10 }}>👤</span>
-                  )}
-                  <span>by {game.creator?.display_name ?? "Anonymous"}</span>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: 13,
+                        fontWeight: 800,
+                        color: "#fff",
+                        textAlign: "center",
+                        lineHeight: 1.35,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 4,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {game.balance_preview_label}
+                    </p>
+                  </div>
+                ) : (
+                  <div style={{ flex: 1, minHeight: 0 }} />
+                )}
+                <div style={{ padding: 10, background: "linear-gradient(180deg, transparent, rgba(0,0,0,.92))" }}>
+                  <div style={{ fontSize: 10, color: "#f2d08a", fontFamily: "var(--font-mono)" }}>{metaLine}</div>
+                  <h3 style={{ marginTop: 3, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.2 }}>{game.title}</h3>
+                  <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 6, fontSize: 10, color: "#e7d9b8" }}>
+                    {game.creator?.avatar_url ? (
+                      <img src={game.creator.avatar_url} alt={game.creator?.display_name ?? "Creator avatar"} loading="lazy" decoding="async" style={{ width: 18, height: 18, borderRadius: "999px", objectFit: "cover", border: "1px solid rgba(255,255,255,0.22)" }} />
+                    ) : (
+                      <span style={{ width: 18, height: 18, borderRadius: "999px", border: "1px solid rgba(255,255,255,0.22)", display: "grid", placeItems: "center", fontSize: 10 }}>👤</span>
+                    )}
+                    <span>by {game.creator?.display_name ?? "Anonymous"}</span>
+                  </div>
                 </div>
               </div>
             </article>
