@@ -34,6 +34,19 @@ const MAX_TEXT_ENTRIES = 1024;
 const DRAFT_KEY = "ugc-create-draft-v2";
 const FONT_OPTIONS = ["Inter", "Pretendard", "Noto Sans", "Arial", "Georgia"];
 
+function buildYouTubeWatchUrl(videoId: string, startSec?: number, endSec?: number): string {
+  const u = new URL(`https://www.youtube.com/watch?v=${videoId}`);
+  if (typeof startSec === "number" && startSec >= 0) u.searchParams.set("start", String(startSec));
+  if (typeof endSec === "number" && endSec > 0) u.searchParams.set("end", String(endSec));
+  return u.toString();
+}
+
+function parseOptionalSeconds(raw: string): number | undefined {
+  const v = Number(raw.trim());
+  if (!Number.isFinite(v) || v < 0) return undefined;
+  return Math.floor(v);
+}
+
 export default function UgcCreateClient() {
   const router = useRouter();
   const supabase = useMemo(() => getSupabaseBrowser(), []);
@@ -259,6 +272,9 @@ export default function UgcCreateClient() {
     setStatus("Fetching video info...");
     try {
       const meta = await fetchYouTubeMeta(url);
+      const startSec = parseOptionalSeconds(videoStart);
+      const endSec = parseOptionalSeconds(videoEnd);
+      const watchUrl = buildYouTubeWatchUrl(videoId, startSec, endSec);
       const label = [meta.title, videoStart.trim() ? `@${videoStart.trim()}s` : "", videoEnd.trim() ? `-${videoEnd.trim()}s` : ""]
         .filter(Boolean)
         .join(" ");
@@ -267,7 +283,7 @@ export default function UgcCreateClient() {
         {
           name: label,
           preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-          externalUrl: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          externalUrl: watchUrl,
           source: "youtube",
         },
       ]);
@@ -299,7 +315,7 @@ export default function UgcCreateClient() {
         next.push({
           name: meta.title,
           preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-          externalUrl: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+          externalUrl: url,
           source: "youtube",
         });
       }
@@ -423,10 +439,11 @@ export default function UgcCreateClient() {
 
       if (gameType === "brackets") {
         setStatus("Saving participants...");
-        const payload: { game_id: string; name: string; image_url: string; order: number }[] = [];
+        const payload: Array<{ game_id: string; name: string; image_url: string; video_url: string | null; order: number }> = [];
         for (let i = 0; i < bracketItems.length; i += 1) {
           const item = bracketItems[i];
-          let imageUrl = item.externalUrl ?? item.preview;
+          let imageUrl = item.preview;
+          let videoUrl: string | null = null;
           if (item.file) {
             const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
             const { error: itemUploadErr } = await supabase.storage
@@ -434,8 +451,13 @@ export default function UgcCreateClient() {
               .upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
             if (itemUploadErr) throw itemUploadErr;
             imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
+          } else if (item.source === "youtube") {
+            videoUrl = item.externalUrl ?? null;
+            imageUrl = item.preview;
+          } else {
+            imageUrl = item.externalUrl ?? item.preview;
           }
-          payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, order: i });
+          payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, video_url: videoUrl, order: i });
         }
         const { error: itemsErr } = await supabase.from("ugc_brackets_items").insert(payload);
         if (itemsErr) throw itemsErr;

@@ -8,7 +8,7 @@ import { shareTextNativeOrClipboard } from "@/lib/shareTextNativeOrClipboard";
 import UgcImageCard from "@/components/ugc/UgcImageCard";
 
 type BracketGame = { id: string; title: string; slug: string; description?: string | null; play_count?: number };
-type BracketItem = { id: string; name: string; image_url: string; order: number; win_count?: number; match_count?: number };
+type BracketItem = { id: string; name: string; image_url: string; video_url?: string | null; order: number; win_count?: number; match_count?: number };
 type BracketScoreRow = {
   id: string;
   name: string;
@@ -21,6 +21,56 @@ type BracketScoreRow = {
 type Match = { a: BracketItem; b: BracketItem | null };
 type ItemMatchStat = { id: string; matchInc: number; winInc: number };
 const MUSTARD = "#b8860b";
+
+function toYouTubeEmbedUrl(raw: string): string | null {
+  try {
+    const u = new URL(raw.trim());
+    let videoId = "";
+    if (u.hostname.includes("youtu.be")) {
+      videoId = u.pathname.replace("/", "");
+    } else if (u.hostname.includes("youtube.com")) {
+      videoId = u.searchParams.get("v") ?? "";
+    }
+    if (!videoId) return null;
+    const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+    const start = u.searchParams.get("start") ?? u.searchParams.get("t");
+    const end = u.searchParams.get("end");
+    if (start && /^\d+$/.test(start)) embed.searchParams.set("start", start);
+    if (end && /^\d+$/.test(end)) embed.searchParams.set("end", end);
+    embed.searchParams.set("rel", "0");
+    embed.searchParams.set("modestbranding", "1");
+    return embed.toString();
+  } catch {
+    return null;
+  }
+}
+
+function BracketMedia({ item, priority }: { item: BracketItem; priority: boolean }) {
+  const embed = item.video_url ? toYouTubeEmbedUrl(item.video_url) : null;
+  if (!embed) return <UgcImageCard src={item.image_url} alt={item.name} priority={priority} borderRadius={10} />;
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        aspectRatio: "1 / 1",
+        borderRadius: 10,
+        overflow: "hidden",
+        border: "1px solid var(--border)",
+        background: "#0b0b0b",
+      }}
+    >
+      <iframe
+        src={embed}
+        title={item.name}
+        style={{ width: "100%", height: "100%", border: 0 }}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        loading={priority ? "eager" : "lazy"}
+      />
+    </div>
+  );
+}
 
 export default function UgcBracketsClient({ game, items, scoreboard }: { game: BracketGame; items: BracketItem[]; scoreboard: BracketScoreRow[] }) {
   const router = useRouter();
@@ -266,7 +316,7 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
             onMouseUp={(e) => e.currentTarget.blur()}
           >
             <div style={{ position: "relative" }}>
-              <UgcImageCard src={item.image_url} alt={item.name} priority={idx === 0} borderRadius={10} />
+              <BracketMedia item={item} priority={idx === 0} />
               {winFlashId === item.id && (
                 <div style={{ position: "absolute", inset: 0, zIndex: 8, display: "grid", placeItems: "center", background: "rgba(0,0,0,0.14)", color: MUSTARD, fontWeight: 900, fontSize: 40, textShadow: "0 0 20px rgba(0,0,0,0.7)", pointerEvents: "none" }}>
                   WIN

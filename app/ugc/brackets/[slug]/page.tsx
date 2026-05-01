@@ -84,7 +84,7 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
 
   const { data: items } = await supabase
     .from("ugc_brackets_items")
-    .select("id,name,image_url,order,win_count,match_count")
+    .select("id,name,image_url,video_url,order,win_count,match_count")
     .eq("game_id", game.id)
     .order("order", { ascending: true });
   if (!items?.length) notFound();
