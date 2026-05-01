@@ -12,14 +12,13 @@ export const metadata: Metadata = {
 };
 
 const CATEGORIES = [
-  { emoji: "🧠", name: "Brain Age", href: "/brain-age", desc: "Reaction time, working memory, attention, and processing speed." },
-  { emoji: "💼", name: "Office IQ", href: "/office-iq", desc: "Workplace survival instincts and professional decision-making." },
-  { emoji: "🎮", name: "Korean TV Shows", href: "/korean-tv", desc: "Inspired by crazy Korean TV shows. Can you survive?" },
-  { emoji: "🎯", name: "Focus & Attention", href: "/focus-test", desc: "Sustained attention, distraction resistance, and cognitive flexibility." },
-  { emoji: "🌑", name: "Dark Personality", href: "/dark-personality", desc: "Dark Triad, empathy quotient, and manipulation pattern recognition." },
-  { emoji: "📚", name: "Vocab & Word IQ", href: "/word-iq", desc: "Vocabulary age, lexical decision speed, and semantic intelligence." },
-  { emoji: "💔", name: "Relationship IQ", href: "/relationship", desc: "Red flags, attachment styles, and love languages." },
-  { emoji: "💰", name: "Money IQ", href: "/money", desc: "Financial mindset, risk tolerance, and financial literacy." },
+  { emoji: "🧠", name: "Brain Tests", href: "/brain-age", desc: "Reaction time, working memory, sequence memory, attention span, and cognitive processing speed." },
+  { emoji: "🎮", name: "Games", href: "/office-iq", desc: "Survival instincts, reflexes, straregies, and more." },
+  { emoji: "🌑", name: "Personality", href: "/dark-personality", desc: "Dark Triad, empathy quotient, manipulation pattern recognition, main character syndrome, and more." },
+  { emoji: "🏆", name: "Brackets", href: "/bracket", desc: "Community-made bracket tournaments and balance games. Vote, create, and share your results." },
+  { emoji: "🌍", name: "Arena", href: "/arena", desc: "Global country rankings, weekly leaderboards, and the Hall of Fame. Where do you stand?" },
+  { emoji: "📝", name: "Blog", href: "/blog", desc: "The science behind the tests. Brain age, cognitive psychology, behavioral finance, and dark personality research — in plain English." },
+  { emoji: "💌", name: "Fun Sends", href: "/send", desc: "Send a fun, free personalized card to someone you love, miss, or want to challenge. No signup. Instant." },
 ];
 
 const S = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
