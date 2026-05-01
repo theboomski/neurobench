@@ -153,7 +153,14 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
         {game.description && <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 14 }}>{game.description}</p>}
-        <p style={{ color: "var(--text-2)", marginTop: 8, fontSize: 14 }}>Your #1 choice is {finalWinner.name}!</p>
+        <div style={{ marginTop: 12, display: "grid", justifyItems: "center", gap: 10 }}>
+          <p style={{ margin: 0, color: "var(--text-1)", fontSize: "clamp(28px, 6.5vw, 52px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.02em" }}>
+            Your #1 choice is
+            <br />
+            {finalWinner.name}
+          </p>
+          <UgcImageCard src={finalWinner.image_url} alt={finalWinner.name} size={180} borderRadius={14} style={{ width: 180 }} />
+        </div>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 14 }}>
           <button
             onClick={() => sharePostPlay(finalWinner.name)}
