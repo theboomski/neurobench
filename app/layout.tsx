@@ -15,11 +15,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: { default: `ZAZAZA – Free Brain Tests. No Signup. Instant Results.`, template: `%s | ZAZAZA` },
-  description: "Free cognitive tests, brain age assessments, and IQ challenges. No signup. No payment. Instant results. Globally ranked.",
+  title: { default: "ZAZAZA – Free Brain Tests, Personality & IQ Games. No Signup.", template: "%s | ZAZAZA" },
+  description:
+    "Play 45+ free brain tests, personality quizzes, and IQ challenges. Create brackets, send fun cards, and rank globally. No signup. Instant results.",
   verification: { google: "r0k7rf80dAHrGhKKwocnpCajshQfOvssDm2RdWRh2O4" },
   metadataBase: new URL("https://zazaza.app"),
   openGraph: {
+    title: "ZAZAZA – Free Brain Tests, Personality & IQ Games. No Signup.",
+    description:
+      "Play 45+ free brain tests, personality quizzes, and IQ challenges. Create brackets, send fun cards, and rank globally. No signup. Instant results.",
     siteName: "ZAZAZA", type: "website", url: "https://zazaza.app",
     images: [{ url: "https://zazaza.app/og-image.png", width: 1200, height: 630 }],
   },

@@ -21,8 +21,15 @@ type HubGame = {
 };
 
 export const metadata: Metadata = {
-  title: "Bracket – Community Brackets & Balance Games | ZAZAZA",
-  description: "Choose your favorite community bracket and balance games. Create your own game and challenge friends.",
+  title: "Free Bracket & Balance Games – Create & Play | ZAZAZA",
+  description:
+    "Play community-made bracket tournaments and balance games. Vote for your favorites, create your own, and share the results. Free, no signup.",
+  openGraph: {
+    title: "Free Bracket & Balance Games – Create & Play | ZAZAZA",
+    description:
+      "Play community-made bracket tournaments and balance games. Vote for your favorites, create your own, and share the results. Free, no signup.",
+    url: "https://zazaza.app/bracket",
+  },
 };
 
 async function getBracketBootstrap() {

@@ -6,9 +6,15 @@ import { GameCard } from "@/components/CategoryCards";
 const games = ALL_GAMES.filter(g => g.category === "dark-personality");
 
 export const metadata: Metadata = {
-  title: "Free Your Personality? Test | ZAZAZA",
-  description: "Free dark-personality tests with instant results. No signup ever.",
-  openGraph: { title: "Free Your Personality? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/dark-personality" },
+  title: "Free Personality Tests – Dark Triad, Empathy & Attachment Style | ZAZAZA",
+  description:
+    "Discover your personality type with free tests. Dark Triad, empathy score, attachment style, love language and more. Instant results.",
+  openGraph: {
+    title: "Free Personality Tests – Dark Triad, Empathy & Attachment Style | ZAZAZA",
+    description:
+      "Discover your personality type with free tests. Dark Triad, empathy score, attachment style, love language and more. Instant results.",
+    url: "https://zazaza.app/dark-personality",
+  },
 };
 
 

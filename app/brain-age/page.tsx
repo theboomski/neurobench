@@ -6,9 +6,15 @@ import { GameCard } from "@/components/CategoryCards";
 const games = ALL_GAMES.filter(g => g.category === "brain-age");
 
 export const metadata: Metadata = {
-  title: "Free Brain Age Test – Memory, Reaction & Attention | ZAZAZA",
-  description: "Find your brain age in 60 seconds. Free memory tests, reaction time, attention span & processing speed. No signup. Instant results. Globally ranked.",
-  openGraph: { title: "Free Brain Age Test – How Old Is Your Brain? | ZAZAZA", description: "Take a free brain age test. Instant results. No signup ever.", url: "https://zazaza.app/brain-age" },
+  title: "Free Brain Tests – Reaction Time, Memory & Cognitive Tests | ZAZAZA",
+  description:
+    "Test your reaction time, working memory, attention span, and more. Free online brain benchmarks with global leaderboards. No signup needed.",
+  openGraph: {
+    title: "Free Brain Tests – Reaction Time, Memory & Cognitive Tests | ZAZAZA",
+    description:
+      "Test your reaction time, working memory, attention span, and more. Free online brain benchmarks with global leaderboards. No signup needed.",
+    url: "https://zazaza.app/brain-age",
+  },
 };
 
 

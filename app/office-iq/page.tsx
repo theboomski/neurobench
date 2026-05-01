@@ -6,9 +6,15 @@ import { GameCard } from "@/components/CategoryCards";
 const games = ALL_GAMES.filter(g => g.category === "office-iq");
 
 export const metadata: Metadata = {
-  title: "Free You At Work? Test | ZAZAZA",
-  description: "Free office-iq tests with instant results. No signup ever.",
-  openGraph: { title: "Free You At Work? Test | ZAZAZA", description: "Free tests. Instant results. No signup.", url: "https://zazaza.app/office-iq" },
+  title: "Free Online Games – Office IQ, Reflex & Survival Games | ZAZAZA",
+  description:
+    "Play free online games including boss dodger, corporate climber, and reflex challenges. Instant results, no signup.",
+  openGraph: {
+    title: "Free Online Games – Office IQ, Reflex & Survival Games | ZAZAZA",
+    description:
+      "Play free online games including boss dodger, corporate climber, and reflex challenges. Instant results, no signup.",
+    url: "https://zazaza.app/office-iq",
+  },
 };
 
 

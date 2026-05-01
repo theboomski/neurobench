@@ -6,8 +6,15 @@ import { FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Send a ZAZAZA Card – Dare Your Friends",
-  description: "Send a personalized ZAZAZA card. Happy Birthday, I love you, Thank you, Im Sorry, and more. Free, instant, no signup.",
+  title: "Fun Sends – Send AI Cards to Friends & Loved Ones | ZAZAZA",
+  description:
+    "Send a free personalized card with your pictures. I love you, Happy Birthday, Thank you, I'm Sorry and more. Free, instant, no signup needed.",
+  openGraph: {
+    title: "Fun Sends – Send AI Cards to Friends & Loved Ones | ZAZAZA",
+    description:
+      "Send a free personalized card with your pictures. I love you, Happy Birthday, Thank you, I'm Sorry and more. Free, instant, no signup needed.",
+    url: "https://zazaza.app/send",
+  },
 };
 
 export default function SendPage() {

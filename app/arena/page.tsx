@@ -69,8 +69,15 @@ const getArenaData = unstable_cache(
 );
 
 export const metadata: Metadata = {
-  title: "ZAZAZA Arena – Global Brain Rankings & Hall of Fame",
-  description: "See how your country ranks against the world. Country leaderboards, Hall of Fame, and live rankings across all ZAZAZA games.",
+  title: "ZAZAZA Arena – Global Brain Rankings & Weekly Leaderboards",
+  description:
+    "See how your country ranks against the world. Weekly leaderboards, Hall of Fame, and live global rankings across all ZAZAZA games.",
+  openGraph: {
+    title: "ZAZAZA Arena – Global Brain Rankings & Weekly Leaderboards",
+    description:
+      "See how your country ranks against the world. Weekly leaderboards, Hall of Fame, and live global rankings across all ZAZAZA games.",
+    url: "https://zazaza.app/arena",
+  },
 };
 
 function compareRowsByGameRules(a: LeaderboardRow, b: LeaderboardRow): number {

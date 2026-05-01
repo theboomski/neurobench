@@ -4,10 +4,12 @@ import postsData from "@/content/blog/posts.json";
 
 export const metadata: Metadata = {
   title: "ZAZAZA Blog – Brain Science, Personality & Cognitive Research",
-  description: "Explore the science behind ZAZAZA tests. Articles on brain age, cognitive psychology, personality research, and more.",
+  description:
+    "Explore the science behind brain age, cognitive psychology, dark personality traits, and behavioral finance. Research-backed articles.",
   openGraph: {
-    title: "ZAZAZA Blog – The Science Behind the Tests",
-    description: "Deep dives into cognitive science, personality psychology, and behavioral economics.",
+    title: "ZAZAZA Blog – Brain Science, Personality & Cognitive Research",
+    description:
+      "Explore the science behind brain age, cognitive psychology, dark personality traits, and behavioral finance. Research-backed articles.",
     url: "https://zazaza.app/blog",
   },
 };
