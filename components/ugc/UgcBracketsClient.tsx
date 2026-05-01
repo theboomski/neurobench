@@ -45,8 +45,28 @@ function toYouTubeEmbedUrl(raw: string): string | null {
   }
 }
 
+function toYouTubeEmbedUrlFromThumbnail(raw: string): string | null {
+  try {
+    const u = new URL(raw.trim());
+    const host = u.hostname.toLowerCase();
+    if (!(host.includes("img.youtube.com") || host.includes("ytimg.com"))) return null;
+    const parts = u.pathname.split("/").filter(Boolean);
+    const viIdx = parts.findIndex((p) => p === "vi" || p === "vi_webp");
+    const videoId = viIdx >= 0 ? parts[viIdx + 1] ?? "" : "";
+    if (!videoId) return null;
+    const embed = new URL(`https://www.youtube.com/embed/${videoId}`);
+    embed.searchParams.set("rel", "0");
+    embed.searchParams.set("modestbranding", "1");
+    return embed.toString();
+  } catch {
+    return null;
+  }
+}
+
 function BracketMedia({ item, priority }: { item: BracketItem; priority: boolean }) {
-  const embed = item.video_url ? toYouTubeEmbedUrl(item.video_url) : null;
+  const embed =
+    (item.video_url ? toYouTubeEmbedUrl(item.video_url) : null) ??
+    toYouTubeEmbedUrlFromThumbnail(item.image_url);
   if (!embed) return <UgcImageCard src={item.image_url} alt={item.name} priority={priority} borderRadius={10} />;
 
   return (
