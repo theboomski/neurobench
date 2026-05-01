@@ -82,11 +82,37 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
     );
   }
 
-  const { data: items } = await supabase
+  let items:
+    | Array<{
+        id: string;
+        name: string;
+        image_url: string;
+        video_url?: string | null;
+        order: number;
+        win_count: number | null;
+        match_count: number | null;
+      }>
+    | null
+    | undefined;
+
+  const withVideo = await supabase
     .from("ugc_brackets_items")
     .select("id,name,image_url,video_url,order,win_count,match_count")
     .eq("game_id", game.id)
     .order("order", { ascending: true });
+
+  if (!withVideo.error) {
+    items = withVideo.data;
+  } else {
+    // Backward compatibility: if DB migration for `video_url` is not applied yet,
+    // fall back to legacy shape so bracket pages never 404.
+    const legacy = await supabase
+      .from("ugc_brackets_items")
+      .select("id,name,image_url,order,win_count,match_count")
+      .eq("game_id", game.id)
+      .order("order", { ascending: true });
+    items = legacy.data?.map((row) => ({ ...row, video_url: null }));
+  }
   if (!items?.length) notFound();
 
   const finalWins = new Map<string, number>();
@@ -109,6 +135,12 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
       finalWinsCount,
     };
   });
+  const itemsForClient = items.map((item) => ({
+    ...item,
+    video_url: item.video_url ?? null,
+    win_count: Number(item.win_count ?? 0),
+    match_count: Number(item.match_count ?? 0),
+  }));
 
   const { category: _c, cover_image_url: _cover, is_nsfw: _n, ...gameForClient } = game;
 
@@ -116,7 +148,7 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: gameJsonLd }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadcrumbJsonLd }} />
-      <UgcBracketsClient game={gameForClient} items={items} scoreboard={scoreboard} />
+      <UgcBracketsClient game={gameForClient} items={itemsForClient} scoreboard={scoreboard} />
     </>
   );
 }
