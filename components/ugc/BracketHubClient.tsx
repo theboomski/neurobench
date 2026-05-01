@@ -307,7 +307,7 @@ export default function BracketHubClient({
                 className="relative aspect-[5/4] w-full shrink-0 bg-center bg-cover sm:aspect-[16/10] md:hidden"
                 style={{ background: heroBackground }}
               >
-                <div className="absolute inset-x-0 top-0 flex justify-between gap-1 p-2 sm:p-3">
+                <div className="absolute left-2.5 right-2.5 top-2.5 flex justify-between gap-1 sm:left-3 sm:right-3 sm:top-3">
                   <span className="max-w-[46%] truncate text-[9px] sm:text-[10px]" style={{ color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.85)", border: typeBorder, padding: "3px 6px", borderRadius: 999 }}>
                     {game.type === "brackets" ? (
                       "BRACKET"
@@ -363,7 +363,7 @@ export default function BracketHubClient({
 
               {/* md+: overlay content (original layout) */}
               <div className="relative z-[1] hidden h-full min-h-0 flex-col justify-between md:flex">
-                <div style={{ display: "flex", justifyContent: "space-between", padding: 8 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 10px 6px" }}>
                   <span style={{ fontSize: 10, color: "#f6deb0", fontFamily: "var(--font-mono)", background: "rgba(41,30,12,0.8)", border: game.type === "balance" ? "1px solid #000" : `1px solid ${MUSTARD}`, padding: "3px 6px", borderRadius: 999 }}>
                     {game.type === "brackets" ? "BRACKET" : "BALANCE GAME"}
                   </span>
