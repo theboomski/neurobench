@@ -13,6 +13,8 @@ type UgcImageCardProps = {
   borderRadius?: number;
 };
 
+const NEUTRAL_FILL = "#1a1a1a";
+
 const shimmer = (w: number, h: number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -42,7 +44,7 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
     borderRadius,
     overflow: "hidden",
     position: "relative",
-    background: "#141414",
+    background: NEUTRAL_FILL,
     ...style,
   };
 
@@ -53,40 +55,15 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
           style={{
             position: "absolute",
             inset: 0,
-            zIndex: 4,
+            zIndex: 2,
             borderRadius,
-            background: "linear-gradient(120deg, rgba(24,24,24,0.9), rgba(40,40,40,0.95), rgba(24,24,24,0.9))",
+            background: "linear-gradient(120deg, rgba(32,32,32,0.92), rgba(48,48,48,0.96), rgba(32,32,32,0.92))",
             backgroundSize: "200% 100%",
             animation: "ugc-skeleton 1.2s ease-in-out infinite",
           }}
         />
       )}
 
-      <Image
-        src={src}
-        alt=""
-        fill
-        sizes="(max-width: 768px) 48vw, 640px"
-        priority={priority}
-        quality={72}
-        loading={priority ? "eager" : "lazy"}
-        unoptimized={false}
-        placeholder="blur"
-        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(64, 64))}`}
-        style={{
-          objectFit: "cover",
-          filter: "blur(14px) brightness(0.5) saturate(0.85)",
-          transform: "scale(1.08)",
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.22))",
-          zIndex: 2,
-        }}
-      />
       <Image
         src={src}
         alt={alt}
@@ -100,7 +77,8 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
         blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(64, 64))}`}
         style={{
           objectFit: "contain",
-          zIndex: 3,
+          zIndex: 1,
+          backgroundColor: NEUTRAL_FILL,
         }}
         onLoad={() => setLoaded(true)}
       />
