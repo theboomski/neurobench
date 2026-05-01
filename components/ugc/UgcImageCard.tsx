@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 
@@ -15,23 +14,7 @@ type UgcImageCardProps = {
 
 const NEUTRAL_FILL = "#1a1a1a";
 
-const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#1a1a1a" offset="20%" />
-      <stop stop-color="#2a2a2a" offset="50%" />
-      <stop stop-color="#1a1a1a" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#111111" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.1s" repeatCount="indefinite" />
-</svg>`;
-
-const toBase64 = (str: string) => (typeof window === "undefined" ? Buffer.from(str).toString("base64") : window.btoa(str));
-
-export default function UgcImageCard({ src, alt, size = 640, priority = false, style, borderRadius = 12 }: UgcImageCardProps) {
+export default function UgcImageCard({ src, alt, size: _size = 640, priority = false, style, borderRadius = 12 }: UgcImageCardProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -64,23 +47,20 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
         />
       )}
 
-      <Image
+      <img
         src={src}
         alt={alt}
-        fill
-        sizes="(max-width: 768px) 48vw, 640px"
-        priority={priority}
-        quality={72}
         loading={priority ? "eager" : "lazy"}
-        unoptimized={false}
-        placeholder="blur"
-        blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(64, 64))}`}
+        decoding="async"
         style={{
+          width: "100%",
+          height: "100%",
           objectFit: "contain",
           zIndex: 1,
           backgroundColor: NEUTRAL_FILL,
         }}
         onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
       />
 
       <style jsx>{`
