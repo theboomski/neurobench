@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { CSSProperties } from "react";
 
 type UgcImageCardProps = {
@@ -15,11 +15,8 @@ type UgcImageCardProps = {
 const NEUTRAL_FILL = "#1a1a1a";
 
 export default function UgcImageCard({ src, alt, size: _size = 640, priority = false, style, borderRadius = 12 }: UgcImageCardProps) {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    setLoaded(false);
-  }, [src]);
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const loaded = loadedSrc === src;
 
   const imageStyle: CSSProperties = {
     width: "100%",
@@ -52,15 +49,17 @@ export default function UgcImageCard({ src, alt, size: _size = 640, priority = f
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
+        draggable={false}
         style={{
           width: "100%",
           height: "100%",
           objectFit: "contain",
           zIndex: 1,
           backgroundColor: NEUTRAL_FILL,
+          userSelect: "none",
         }}
-        onLoad={() => setLoaded(true)}
-        onError={() => setLoaded(true)}
+        onLoad={() => setLoadedSrc(src)}
+        onError={() => setLoadedSrc(src)}
       />
 
       <style jsx>{`

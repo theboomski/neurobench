@@ -251,14 +251,17 @@ export default function UgcBracketsClient({ game, items, scoreboard }: { game: B
               cursor: "pointer",
               transition: "transform 140ms ease",
               transform: winFlashId === item.id ? "scale(1.04)" : hoveredId === item.id ? "scale(1.02)" : "scale(1)",
+              outline: "none",
+              WebkitTapHighlightColor: "transparent",
             }}
             onMouseEnter={() => setHoveredId(item.id)}
             onMouseLeave={() => setHoveredId(null)}
+            onMouseUp={(e) => e.currentTarget.blur()}
           >
             <div style={{ position: "relative" }}>
               <UgcImageCard src={item.image_url} alt={item.name} priority={idx === 0} borderRadius={10} />
               {winFlashId === item.id && (
-                <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: MUSTARD, fontWeight: 900, fontSize: 40, textShadow: "0 0 20px rgba(0,0,0,0.7)" }}>
+                <div style={{ position: "absolute", inset: 0, zIndex: 8, display: "grid", placeItems: "center", background: "rgba(0,0,0,0.14)", color: MUSTARD, fontWeight: 900, fontSize: 40, textShadow: "0 0 20px rgba(0,0,0,0.7)", pointerEvents: "none" }}>
                   WIN
                 </div>
               )}
