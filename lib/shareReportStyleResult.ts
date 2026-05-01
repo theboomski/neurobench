@@ -1,3 +1,4 @@
+import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
@@ -62,5 +63,9 @@ export async function shareReportStyleResult(opts: ShareReportStyleInput): Promi
     text,
     url,
     onCopied: opts.onCopied,
+    analytics: {
+      content_type: shareContentTypeFromGameCategory(game.category),
+      item_id: game.id,
+    },
   });
 }

@@ -397,6 +397,7 @@ export default function Sudoku({ game }: { game: GameData }) {
         setShareCopied(true);
         window.setTimeout(() => setShareCopied(false), 2200);
       },
+      analytics: { content_type: "brain_test", item_id: "sudoku" },
     });
   }, [avgSec, game.accent, game.title, levelsCompleted, totalScore]);
 

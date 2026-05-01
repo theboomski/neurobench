@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { CSSProperties, ReactNode } from "react";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { trackShareEvent } from "@/lib/analytics";
 import { FUN_SEND_DEFAULT_FACE_RECT, FUN_SEND_TABS, type FunSendCategory, type FunSendTemplate } from "@/lib/funSendTemplates";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
@@ -88,6 +89,18 @@ function drawRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w:
 function readErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
   return "Something went wrong";
+}
+
+function funSendItemIdFromShareUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const parts = u.pathname.split("/").filter(Boolean);
+    const i = parts.indexOf("card");
+    if (i >= 0 && parts[i + 1]) return parts[i + 1]!;
+  } catch {
+    // ignore
+  }
+  return "unknown";
 }
 
 async function loadImage(src: string): Promise<HTMLImageElement> {
@@ -518,6 +531,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       setShareUrl(url);
       setShareMessage(message);
       setShareProgress(100);
+      trackShareEvent({
+        content_type: "fun_sends",
+        item_id: `${category}/${selectedTemplateId}/${shortId}`,
+        method: "publish",
+      });
       try {
         window.localStorage.setItem(FUN_SEND_SHARE_DRAFT_KEY, JSON.stringify({ shareUrl: url, shareMessage: message }));
       } catch {
@@ -533,20 +551,25 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
 
   const onCopy = async () => {
     if (!shareMessage) return;
+    const itemId = shareUrl ? funSendItemIdFromShareUrl(shareUrl) : `${category}/${selectedTemplateId}`;
     try {
       await navigator.clipboard.writeText(shareMessage);
+      trackShareEvent({ content_type: "fun_sends", item_id: itemId, method: "copy_link" });
     } catch {
       window.prompt("Copy this text:", shareMessage);
+      trackShareEvent({ content_type: "fun_sends", item_id: itemId, method: "copy_link" });
     }
   };
 
   const onNativeShare = async () => {
     if (!shareUrl || !navigator.share) return;
+    const itemId = funSendItemIdFromShareUrl(shareUrl);
     try {
       // Keep URL in `text` only to avoid duplicate messages on some share targets.
       await navigator.share({ title: "Fun Send", text: shareMessage });
-    } catch {
-      // no-op
+      trackShareEvent({ content_type: "fun_sends", item_id: itemId, method: "web_share" });
+    } catch (e) {
+      if ((e as Error)?.name === "AbortError") return;
     }
   };
 

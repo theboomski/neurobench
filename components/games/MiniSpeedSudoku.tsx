@@ -395,6 +395,7 @@ export default function MiniSpeedSudoku({ game }: { game: GameData }) {
         window.setTimeout(() => setShareCopied(false), 2200);
       },
       replaceUrlBeforeShare: false,
+      analytics: { content_type: "brain_test", item_id: "mini-speed-sudoku" },
     });
   }, [completedAllRounds, finalTotalSec, roundTimes.length]);
 

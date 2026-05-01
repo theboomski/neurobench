@@ -202,6 +202,7 @@ function SudokuResultBody({
         setToast(true);
         window.setTimeout(() => setToast(false), 2200);
       },
+      analytics: { content_type: "brain_test", item_id: payload.id },
     });
   };
 

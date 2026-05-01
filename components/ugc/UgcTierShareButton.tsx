@@ -1,5 +1,6 @@
 "use client";
 import type { CSSProperties } from "react";
+import { shareTextNativeOrClipboard } from "@/lib/shareTextNativeOrClipboard";
 
 export default function UgcTierShareButton({
   title,
@@ -17,17 +18,18 @@ export default function UgcTierShareButton({
   const tierUrl = gameType === "balance" ? `https://zazaza.app/ugc/balance/${slug}/tier` : `https://zazaza.app/ugc/brackets/${slug}/tier`;
   const text = `"${title}" tier list — ${playCount} votes in\nDo you agree? → ${tierUrl}`;
 
+  const contentType = gameType === "balance" ? "ugc_balance" : "ugc_brackets";
+  const itemId = `${slug}:tier`;
+
   return (
     <button
       type="button"
       onClick={async () => {
-        if (typeof navigator !== "undefined" && navigator.share) {
-          await navigator.share({ title: `${title} Tier`, text });
-          return;
-        }
-        if (typeof navigator !== "undefined" && navigator.clipboard) {
-          await navigator.clipboard.writeText(text);
-        }
+        await shareTextNativeOrClipboard({
+          title: `${title} Tier`,
+          text,
+          analytics: { content_type: contentType, item_id: itemId },
+        });
       }}
       style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer", background: "var(--bg-card)", color: "var(--text-1)", fontWeight: 700, ...style }}
     >

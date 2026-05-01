@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { shareTextNativeOrClipboard } from "@/lib/shareTextNativeOrClipboard";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
 type BalanceGame = { id: string; title: string; slug: string; description?: string | null; play_count?: number };
@@ -53,26 +54,22 @@ export default function UgcBalanceClient({ game, options, summary }: { game: Bal
   const canonicalUrl = `https://zazaza.app/ugc/balance/${game.slug}`;
 
   const sharePrePlay = async () => {
-    const shareText = `Everyone's voting on "${game.title}"\nWhat's your pick? → ${canonicalUrl}`;
-    if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: game.title, text: shareText });
-      return;
-    }
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      await navigator.clipboard.writeText(shareText);
-    }
+    const text = `Everyone's voting on "${game.title}"\nWhat's your pick? → ${canonicalUrl}`;
+    await shareTextNativeOrClipboard({
+      title: game.title,
+      text,
+      analytics: { content_type: "ugc_balance", item_id: game.slug },
+    });
   };
 
   const sharePostPlay = async (winnerName: string) => {
     const votes = Number(game.play_count ?? 0);
-    const shareText = `I voted ${winnerName} in "${game.title}" (${votes} votes so far)\nYou agree? → ${canonicalUrl}`;
-    if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: game.title, text: shareText });
-      return;
-    }
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      await navigator.clipboard.writeText(shareText);
-    }
+    const text = `I voted ${winnerName} in "${game.title}" (${votes} votes so far)\nYou agree? → ${canonicalUrl}`;
+    await shareTextNativeOrClipboard({
+      title: game.title,
+      text,
+      analytics: { content_type: "ugc_balance", item_id: game.slug },
+    });
   };
 
   const onPick = async (value: "a" | "b") => {

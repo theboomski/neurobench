@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import InterstitialAd from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
+import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
@@ -225,6 +226,10 @@ export default function CommonResult({
       onCopied: () => {
         setCopiedToast(true);
         window.setTimeout(() => setCopiedToast(false), 2200);
+      },
+      analytics: {
+        content_type: shareContentTypeFromGameCategory(game.category),
+        item_id: game.id,
       },
     });
   };

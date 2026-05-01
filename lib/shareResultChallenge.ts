@@ -1,3 +1,5 @@
+import { trackShareEvent } from "@/lib/analytics";
+
 const SITE = "https://zazaza.app";
 
 export type ShareChallengeOptions = {
@@ -9,6 +11,8 @@ export type ShareChallengeOptions = {
   onCopied?: () => void;
   /** Defaults to true: update browser URL to the result page before sharing. */
   replaceUrlBeforeShare?: boolean;
+  /** When set, fires GA4 `share` after a successful share or copy path. */
+  analytics?: { content_type: string; item_id: string };
 };
 
 function normalizeAbsoluteUrl(url: string): string {
@@ -37,6 +41,7 @@ export async function shareZazazaChallenge({
   url,
   onCopied,
   replaceUrlBeforeShare = true,
+  analytics,
 }: ShareChallengeOptions): Promise<void> {
   const absolute = normalizeAbsoluteUrl(url);
   if (replaceUrlBeforeShare) replaceBrowserUrl(absolute);
@@ -46,6 +51,7 @@ export async function shareZazazaChallenge({
       // Some share targets duplicate content when both `text` and `url` contain the same link.
       const textHasUrl = text.includes(absolute);
       await navigator.share(textHasUrl ? { title, text } : { title, text, url: absolute });
+      if (analytics) trackShareEvent({ ...analytics, method: "web_share" });
       return;
     } catch (e) {
       if ((e as Error)?.name === "AbortError") return;
@@ -54,8 +60,10 @@ export async function shareZazazaChallenge({
 
   try {
     await navigator.clipboard.writeText(text.includes(absolute) ? text : `${text} ${absolute}`);
+    if (analytics) trackShareEvent({ ...analytics, method: "copy_link" });
     onCopied?.();
   } catch {
     window.prompt("Copy this text:", text.includes(absolute) ? text : `${text} ${absolute}`);
+    if (analytics) trackShareEvent({ ...analytics, method: "copy_link" });
   }
 }
