@@ -112,7 +112,29 @@ export default function UgcBalanceClient({ game, options, summary }: { game: Bal
       <div style={{ maxWidth: 900, margin: "0 auto", padding: "24px 16px 56px", textAlign: "center" }}>
         <h1 style={{ fontSize: 36, fontWeight: 900 }}>{game.title}</h1>
         {game.description && <p style={{ marginTop: 6, color: "var(--text-2)", fontSize: 14 }}>{game.description}</p>}
-        <p style={{ color: "var(--text-2)", marginTop: 8, fontSize: 14 }}>Your #1 choice is {winnerName}!</p>
+        <div style={{ marginTop: 12, display: "grid", justifyItems: "center", gap: 10 }}>
+          <p style={{ margin: 0, color: "var(--text-1)", fontSize: "clamp(28px, 6.5vw, 52px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.02em" }}>
+            Your #1 choice is
+            <br />
+            {winnerName}
+          </p>
+          <div
+            style={{
+              width: 180,
+              aspectRatio: "1 / 1",
+              borderRadius: 14,
+              border: "1px solid var(--border)",
+              background: "linear-gradient(145deg, rgba(184,134,11,0.22), rgba(20,16,8,0.9))",
+              display: "grid",
+              placeItems: "center",
+              padding: 14,
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 900, lineHeight: 1.12, color: "var(--text-1)", textAlign: "center", wordBreak: "break-word" }}>
+              {winnerName}
+            </div>
+          </div>
+        </div>
         <div style={{ display: "flex", gap: 8, justifyContent: "center", marginTop: 14 }}>
           <button onClick={() => sharePostPlay(winnerName)} style={{ borderRadius: 10, border: "1px solid var(--border)", padding: "10px 12px", cursor: "pointer" }}>
             Share
