@@ -47,7 +47,7 @@ function normalizeAppPathname(pathname: string): string {
   return trimmed === "" ? "/" : trimmed;
 }
 
-/** Burned into preview + upload PNG in `renderComposite`. */
+/** Burned into preview + upload image in `renderComposite` (WebP for upload blob). */
 const FUN_SEND_WATERMARK_TEXT = "Make your own at Zazaza.app";
 
 function drawFunSendWatermark(ctx: CanvasRenderingContext2D) {
@@ -376,11 +376,11 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
             }
             resolve(b);
           },
-          "image/png",
-          0.95,
+          "image/webp",
+          0.92,
         );
       });
-      const preview = forUpload ? "" : canvas.toDataURL("image/png");
+      const preview = forUpload ? "" : canvas.toDataURL("image/webp", 0.92);
       return { blob, preview };
     },
     [currentTemplate, displayName, faceObjectUrl, faceRect, nameRect],
@@ -499,8 +499,12 @@ export default function SendPageClient({ templatesByCategory }: SendPageClientPr
       if (!sb) throw new Error("Supabase browser client is not configured.");
 
       const shortId = createShortId();
-      const path = `${shortId}.png`;
-      const upload = await sb.storage.from("cards").upload(path, blob, { contentType: "image/png", upsert: true });
+      const path = `${shortId}.webp`;
+      const upload = await sb.storage.from("cards").upload(path, blob, {
+        contentType: "image/webp",
+        upsert: true,
+        cacheControl: "31536000",
+      });
       if (upload.error) throw new Error(upload.error.message);
       setShareProgress((prev) => Math.max(prev, 72));
 

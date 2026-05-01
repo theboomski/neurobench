@@ -36,7 +36,7 @@ async function getBracketBootstrap() {
   const supabase = getSupabaseServer();
   if (!supabase) return { games: [] as HubGame[], categories: [] as Array<{ id: number; name: string }>, languages: [] as Array<{ code: string; count: number }> };
 
-  const [{ data: gamesRaw }, { data: categoriesRaw }, { data: gameLanguages }] = await Promise.all([
+  const [{ data: gamesRaw }, { data: categoriesRaw }, langRpc] = await Promise.all([
     supabase
       .from("ugc_games")
       .select("id,user_id,type,title,description,cover_image_url,category_id,language,play_count,slug,created_at")
@@ -46,8 +46,9 @@ async function getBracketBootstrap() {
       .order("created_at", { ascending: false })
       .limit(16),
     supabase.from("ugc_categories").select("id,name").eq("is_active", true).order("order", { ascending: true }),
-    supabase.from("ugc_games").select("language").eq("visibility", "public").eq("is_approved", true).limit(5000),
+    supabase.rpc("get_ugc_public_language_counts"),
   ]);
+  const langAgg = langRpc.error ? null : langRpc.data;
 
   const gameRows = (gamesRaw ?? []) as Array<Omit<HubGame, "creator" | "category">>;
   const userIds = [...new Set(gameRows.map((g) => g.user_id))];
@@ -59,16 +60,12 @@ async function getBracketBootstrap() {
 
   const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
   const categoryMap = new Map((categoriesForGames ?? []).map((c) => [c.id, c]));
-  const languageCount = new Map<string, number>();
-  for (const row of gameLanguages ?? []) {
-    const lang = String((row as { language?: string }).language ?? "").trim().toLowerCase();
-    if (!lang) continue;
-    languageCount.set(lang, (languageCount.get(lang) ?? 0) + 1);
-  }
-  const languages = [...languageCount.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([code, count]) => ({ code, count }));
+  const languages = (langAgg as { language: string; count: number }[] | null | undefined)?.length
+    ? (langAgg as { language: string; count: number }[]).map((r) => ({
+        code: String(r.language ?? "").trim().toLowerCase(),
+        count: Number(r.count) || 0,
+      }))
+    : [];
 
   const gamesWithMeta = gameRows.map((g) => ({
     ...g,

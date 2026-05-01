@@ -34,6 +34,8 @@ export async function POST(req: NextRequest) {
   if (!secret) return NextResponse.json({ error: "missing_signing_secret" }, { status: 503 });
 
   const supabase = createClient(url, serviceRoleKey);
+  await supabase.from(SESSION_TABLE).delete().lt("expires_at", new Date().toISOString());
+
   const nonce = crypto.randomUUID().replace(/-/g, "") + crypto.randomBytes(8).toString("hex");
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
 

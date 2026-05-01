@@ -3,8 +3,20 @@
 import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "@/components/ugc/AuthModal";
-import { sanitizeStorageFileName } from "@/lib/ugc";
+import { normalizeImageToWebp } from "@/lib/imageUpload";
 import { getSupabaseBrowser } from "@/lib/supabase";
+
+/** Extract storage object path from a public avatars URL, or null if not our bucket. */
+function avatarsObjectPathFromPublicUrl(url: string): string | null {
+  const marker = "/object/public/avatars/";
+  const i = url.indexOf(marker);
+  if (i === -1) return null;
+  try {
+    return decodeURIComponent(url.slice(i + marker.length));
+  } catch {
+    return null;
+  }
+}
 
 export default function UgcProfileClient() {
   const supabase = useMemo(() => getSupabaseBrowser(), []);
@@ -61,8 +73,17 @@ export default function UgcProfileClient() {
     setUploadingAvatar(true);
     setMsg("");
     try {
-      const key = `${user.id}/${Date.now()}-${sanitizeStorageFileName(file.name)}`;
-      const { error: uploadErr } = await supabase.storage.from("avatars").upload(key, file, { upsert: false });
+      const oldPath = avatarUrl ? avatarsObjectPathFromPublicUrl(avatarUrl) : null;
+      if (oldPath && oldPath.startsWith(`${user.id}/`)) {
+        await supabase.storage.from("avatars").remove([oldPath]);
+      }
+      const webp = await normalizeImageToWebp(file);
+      const key = `${user.id}/${Date.now()}-avatar.webp`;
+      const { error: uploadErr } = await supabase.storage.from("avatars").upload(key, webp, {
+        upsert: false,
+        cacheControl: "31536000",
+        contentType: "image/webp",
+      });
       if (uploadErr) throw uploadErr;
       const publicUrl = supabase.storage.from("avatars").getPublicUrl(key).data.publicUrl;
       setAvatarUrl(publicUrl);

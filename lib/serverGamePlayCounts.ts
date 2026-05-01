@@ -1,8 +1,5 @@
 import { createClient, type PostgrestError } from "@supabase/supabase-js";
 
-const GAME_PLAYS_TABLE = "game_plays" as const;
-const BATCH_SIZE = 1000;
-
 function serializePostgrestError(err: PostgrestError): Record<string, string | undefined | number> {
   return {
     message: err.message,
@@ -30,33 +27,25 @@ export async function fetchGamePlayCountsFromDb(): Promise<
     };
   }
 
-  const counts: Record<string, number> = {};
   const supabase = createClient(url, key);
-  let from = 0;
-  while (true) {
-    const to = from + BATCH_SIZE - 1;
-    const { data, error } = await supabase
-      .from(GAME_PLAYS_TABLE)
-      .select("game_id")
-      .order("played_at", { ascending: true })
-      .range(from, to);
-    if (error) {
-      return {
-        ok: false,
-        httpStatus: 500,
-        body: {
-          error: error.message,
-          errorFull: serializePostgrestError(error),
-        },
-      };
-    }
-    for (const row of data ?? []) {
-      const gameId = (row as { game_id?: string }).game_id;
-      if (!gameId) continue;
-      counts[gameId] = (counts[gameId] ?? 0) + 1;
-    }
-    if (!data || data.length < BATCH_SIZE) break;
-    from += BATCH_SIZE;
+  const { data, error } = await supabase.rpc("get_game_play_counts");
+  if (error) {
+    return {
+      ok: false,
+      httpStatus: 500,
+      body: {
+        error: error.message,
+        errorFull: serializePostgrestError(error),
+      },
+    };
+  }
+
+  const counts: Record<string, number> = {};
+  for (const row of data ?? []) {
+    const r = row as { game_id?: string; play_count?: number | string };
+    const gameId = r.game_id;
+    if (!gameId) continue;
+    counts[gameId] = Number(r.play_count ?? 0);
   }
 
   return { ok: true, counts };
