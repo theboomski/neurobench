@@ -17,12 +17,12 @@ const shimmer = (w: number, h: number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="g">
-      <stop stop-color="#0f172a" offset="20%" />
-      <stop stop-color="#1e293b" offset="50%" />
-      <stop stop-color="#0f172a" offset="70%" />
+      <stop stop-color="#1a1a1a" offset="20%" />
+      <stop stop-color="#2a2a2a" offset="50%" />
+      <stop stop-color="#1a1a1a" offset="70%" />
     </linearGradient>
   </defs>
-  <rect width="${w}" height="${h}" fill="#0b1220" />
+  <rect width="${w}" height="${h}" fill="#111111" />
   <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
   <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1.1s" repeatCount="indefinite" />
 </svg>`;
@@ -42,7 +42,7 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
     borderRadius,
     overflow: "hidden",
     position: "relative",
-    background: "#020617",
+    background: "#141414",
     ...style,
   };
 
@@ -55,7 +55,7 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
             inset: 0,
             zIndex: 4,
             borderRadius,
-            background: "linear-gradient(120deg, rgba(15,23,42,0.85), rgba(30,41,59,0.95), rgba(15,23,42,0.85))",
+            background: "linear-gradient(120deg, rgba(24,24,24,0.9), rgba(40,40,40,0.95), rgba(24,24,24,0.9))",
             backgroundSize: "200% 100%",
             animation: "ugc-skeleton 1.2s ease-in-out infinite",
           }}
@@ -75,15 +75,15 @@ export default function UgcImageCard({ src, alt, size = 640, priority = false, s
         blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(64, 64))}`}
         style={{
           objectFit: "cover",
-          filter: "blur(18px) brightness(0.42)",
-          transform: "scale(1.12)",
+          filter: "blur(14px) brightness(0.5) saturate(0.85)",
+          transform: "scale(1.08)",
         }}
       />
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(to bottom, rgba(2,6,23,0.04), rgba(2,6,23,0.28))",
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.06), rgba(0,0,0,0.22))",
           zIndex: 2,
         }}
       />
