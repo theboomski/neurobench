@@ -115,8 +115,6 @@ export default function UgcBalanceClient({ game, options, summary }: { game: Bal
         <div style={{ marginTop: 12, display: "grid", justifyItems: "center", gap: 10 }}>
           <p style={{ margin: 0, color: "var(--text-1)", fontSize: "clamp(28px, 6.5vw, 52px)", fontWeight: 900, lineHeight: 1.04, letterSpacing: "-0.02em" }}>
             Your #1 choice is
-            <br />
-            {winnerName}
           </p>
           <div
             style={{
