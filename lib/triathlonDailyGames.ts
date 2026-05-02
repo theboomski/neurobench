@@ -57,17 +57,24 @@ function seededRandom(seed: number, index: number): number {
   return x - Math.floor(x);
 }
 
-/** Same calendar day in the user agent yields the same three picks (local date). */
+/** Same UTC calendar day yields the same three picks; category play order is also seeded. */
 export function getDailyGames(date = new Date()): DailyTriathlonPick[] {
-  const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+  const today = date;
+  const seed = today.getUTCFullYear() * 10000 + (today.getUTCMonth() + 1) * 100 + today.getUTCDate();
 
-  const focusIndex = Math.floor(seededRandom(seed, 0) * TRIATHLON_GAMES.focus.length);
-  const memoryIndex = Math.floor(seededRandom(seed, 1) * TRIATHLON_GAMES.memory.length);
-  const speedIndex = Math.floor(seededRandom(seed, 2) * TRIATHLON_GAMES.speed.length);
+  const focusPick = TRIATHLON_GAMES.focus[Math.floor(seededRandom(seed, 0) * TRIATHLON_GAMES.focus.length)];
+  const memoryPick = TRIATHLON_GAMES.memory[Math.floor(seededRandom(seed, 1) * TRIATHLON_GAMES.memory.length)];
+  const speedPick = TRIATHLON_GAMES.speed[Math.floor(seededRandom(seed, 2) * TRIATHLON_GAMES.speed.length)];
 
-  return [
-    TRIATHLON_GAMES.focus[focusIndex],
-    TRIATHLON_GAMES.memory[memoryIndex],
-    TRIATHLON_GAMES.speed[speedIndex],
+  const picks = [focusPick, memoryPick, speedPick];
+  const orderSeed = Math.floor(seededRandom(seed, 3) * 6);
+  const orders = [
+    [0, 1, 2],
+    [0, 2, 1],
+    [1, 0, 2],
+    [1, 2, 0],
+    [2, 0, 1],
+    [2, 1, 0],
   ];
+  return orders[orderSeed].map((i) => picks[i]);
 }
