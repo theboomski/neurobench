@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { appendTriathlonModeQuery, getTriathlonNameForGameId, getTriathlonPathForGameId } from "@/lib/triathlonDailyGames";
-import { TRIATHLON_STORAGE_KEY, parseTriathlonSession, type TriathlonSession } from "@/lib/triathlonSession";
+import {
+  TRIATHLON_STORAGE_KEY,
+  normalizeTriathlonRawScore,
+  parseTriathlonSession,
+  type TriathlonSession,
+} from "@/lib/triathlonSession";
 
 const ACCENT = "#00FF94";
 
@@ -27,7 +32,10 @@ function computeUi(session: TriathlonSession, finishedGameId: string): UiState {
 
 type Props = {
   gameId: string;
+  /** Percentile-based 0–100 for result card UI only. */
   normalizedScore: number;
+  /** Raw game score (same units as leaderboard / finalScore) for ZCI linear normalization. */
+  rawScore: number;
   /** Full-width primary CTA inside CommonResult triathlon card (no outer landing margin). */
   embedded?: boolean;
 };
@@ -36,7 +44,7 @@ type Props = {
  * When an active triathlon session matches this result leg, records the score once
  * (strict-mode safe) and shows the next-game or complete CTA below the main result UI.
  */
-export default function TriathlonResultContinuation({ gameId, normalizedScore, embedded }: Props) {
+export default function TriathlonResultContinuation({ gameId, normalizedScore, rawScore, embedded }: Props) {
   const [ui, setUi] = useState<UiState>(null);
 
   useEffect(() => {
@@ -51,9 +59,17 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore, e
     if (legIndex === -1) return;
 
     if (session.scores.length === legIndex && session.currentIndex === legIndex) {
+      const gid = session.games[legIndex];
       session = {
         ...session,
-        scores: [...session.scores, { game: session.games[legIndex], score: normalizedScore }],
+        scores: [
+          ...session.scores,
+          {
+            game: gid,
+            score: rawScore,
+            normalizedScore: normalizeTriathlonRawScore(rawScore, gid),
+          },
+        ],
         currentIndex: legIndex + 1,
       };
       sessionStorage.setItem(TRIATHLON_STORAGE_KEY, JSON.stringify(session));
@@ -62,7 +78,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore, e
     const fresh = parseTriathlonSession(sessionStorage.getItem(TRIATHLON_STORAGE_KEY));
     if (!fresh) return;
     setUi(computeUi(fresh, gameId));
-  }, [gameId, normalizedScore]);
+  }, [gameId, normalizedScore, rawScore]);
 
   if (!ui) return null;
 
@@ -116,7 +132,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore, e
         </Link>
       ) : (
         <Link href="/triathlon/complete" style={linkStyle}>
-          See Your Brain Score →
+          See Your ZCI →
         </Link>
       )}
     </>

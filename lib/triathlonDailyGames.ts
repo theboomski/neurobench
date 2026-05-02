@@ -95,8 +95,17 @@ const PICK_BY_ID = new Map<string, DailyTriathlonPick>(ALL_PICKS.map((p) => [p.i
 
 const ALLOWED_TRIATHLON_IDS = new Set(ALL_PICKS.map((p) => p.id));
 
+export type TriathlonPillar = "focus" | "memory" | "speed";
+
 export function isAllowedTriathlonGameId(id: string): boolean {
   return ALLOWED_TRIATHLON_IDS.has(id);
+}
+
+export function triathlonPillarForGameId(id: string): TriathlonPillar | null {
+  if (TRIATHLON_GAMES.focus.some((p) => p.id === id)) return "focus";
+  if (TRIATHLON_GAMES.memory.some((p) => p.id === id)) return "memory";
+  if (TRIATHLON_GAMES.speed.some((p) => p.id === id)) return "speed";
+  return null;
 }
 
 export function getTriathlonPathForGameId(id: string): string | null {

@@ -464,7 +464,7 @@ export default function CommonResult({
               )}
 
               <div style={{ marginTop: "auto", width: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
-                <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} embedded />
+                <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} rawScore={rawScore} embedded />
                 <div
                   style={{
                     height: 1,
@@ -700,7 +700,7 @@ export default function CommonResult({
           </div>
         </div>
         {game.hasLeaderboard && <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />}
-        <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} />
+        <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} rawScore={rawScore} />
       </div>
     </>
   );
