@@ -8,21 +8,16 @@ const TRIATHLON_GAMES = [
   {
     title: "Color Conflict",
     cognitive: "Reflex & Control",
-    href: "/brain-age/color-conflict",
   },
   {
     title: "Sequence Memory",
     cognitive: "Working Memory",
-    href: "/brain-age/sequence-memory",
   },
   {
     title: "Neural Latency",
     cognitive: "Reaction Speed",
-    href: "/brain-age/reaction-time",
   },
 ] as const;
-
-const TRIATHLON_START_HREF = TRIATHLON_GAMES[0].href;
 
 export default function HomePageClient() {
   return (
@@ -49,7 +44,7 @@ export default function HomePageClient() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
           {TRIATHLON_GAMES.map((game) => (
             <article
-              key={game.href}
+              key={game.title}
               style={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
@@ -81,42 +76,17 @@ export default function HomePageClient() {
                   color: "var(--text-2)",
                   lineHeight: 1.45,
                   margin: 0,
-                  flex: 1,
                 }}
               >
                 {game.cognitive}
               </p>
-              <div style={{ marginTop: 12 }}>
-                <Link
-                  href={game.href}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "100%",
-                    padding: "12px 16px",
-                    borderRadius: "var(--radius-md)",
-                    border: `1px solid ${ACCENT}`,
-                    background: `${ACCENT}14`,
-                    color: ACCENT,
-                    fontSize: 13,
-                    fontWeight: 800,
-                    fontFamily: "var(--font-mono)",
-                    textDecoration: "none",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                  }}
-                >
-                  Play
-                </Link>
-              </div>
             </article>
           ))}
         </div>
 
         <div style={{ marginTop: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <Link
-            href={TRIATHLON_START_HREF}
+            href="/triathlon"
             style={{
               display: "inline-flex",
               alignItems: "center",

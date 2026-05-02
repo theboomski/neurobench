@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import InterstitialAd from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
+import TriathlonResultContinuation from "@/components/TriathlonResultContinuation";
 import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
@@ -308,6 +309,7 @@ export default function CommonResult({
       {game.hasLeaderboard && (
         <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />
       )}
+      <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} />
       </div>
     </>
   );
