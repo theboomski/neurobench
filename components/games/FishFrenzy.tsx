@@ -165,10 +165,14 @@ function FishFrenzyInner({ game, triathlonFromServer }: { game: GameData; triath
         setScore(scoreRef.current);
       } else {
         playBeep("tap");
+        if (isTriathlon) {
+          scoreRef.current = Math.max(0, scoreRef.current - 1);
+          setScore(scoreRef.current);
+        }
       }
       nextRound();
     },
-    [phase, round, nextRound],
+    [phase, round, nextRound, isTriathlon],
   );
 
   const startGame = useCallback(() => {
