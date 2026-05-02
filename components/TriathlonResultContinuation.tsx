@@ -49,7 +49,8 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore, r
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.location.pathname.endsWith("/result")) return;
+    // Shared score landings use `/games/[id]/result` — never mutate triathlon session there.
+    if (/^\/games\/[^/]+\/result\/?$/i.test(window.location.pathname)) return;
 
     const raw = sessionStorage.getItem(TRIATHLON_STORAGE_KEY);
     let session = parseTriathlonSession(raw);

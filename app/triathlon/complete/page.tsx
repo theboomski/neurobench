@@ -14,6 +14,7 @@ const ACCENT = "#00FF94";
 const MEMORY_COLOR = "#38bdf8";
 const SPEED_COLOR = "#f59e0b";
 const SITE = "https://zazaza.app";
+const CLIENT_LOG = "[triathlon/complete]";
 
 const PILLAR_META: { pillar: TriathlonPillar; label: string; color: string }[] = [
   { pillar: "focus", label: "Focus", color: ACCENT },
@@ -121,6 +122,17 @@ export default function TriathlonCompletePage() {
     if (!session || session === "bad") return;
     if (user === "pending") return;
     if (!user) return;
+    if (session.scores.length !== 3) {
+      console.error(CLIENT_LOG, "skip_save_incomplete_session", {
+        scoreCount: session.scores.length,
+        games: session.games,
+      });
+      setSaveApi({
+        status: "error",
+        message: `Could not save: expected 3 leg scores, got ${session.scores.length}.`,
+      });
+      return;
+    }
     if (saveStarted.current) return;
     saveStarted.current = true;
     setSaveApi({ status: "loading" });
@@ -142,28 +154,46 @@ export default function TriathlonCompletePage() {
       const supabase = getSupabaseBrowser();
       const token = (await supabase?.auth.getSession())?.data.session?.access_token;
       if (!token) {
+        console.warn(CLIENT_LOG, "skip_save_no_access_token");
         setSaveApi({ status: "error", message: "No session" });
         return;
       }
 
+      const payload = {
+        games: [...session.games],
+        scores: session.scores.map((s) => ({
+          game: s.game,
+          score: Number(s.score),
+          normalizedScore: Number(s.normalizedScore),
+        })),
+        country_code,
+      };
+
+      console.info(CLIENT_LOG, "post_save", {
+        games: payload.games,
+        scores: payload.scores.map((s) => ({ game: s.game, score: s.score })),
+        hasBearer: Boolean(token),
+      });
+
       try {
         const res = await fetch("/api/triathlon/save", {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            games: session.games,
-            scores: session.scores,
-            country_code,
-          }),
+          body: JSON.stringify(payload),
         });
         const json = (await res.json().catch(() => ({}))) as Record<string, unknown>;
         if (!res.ok) {
-          setSaveApi({ status: "error", message: typeof json.error === "string" ? json.error : "Save failed" });
+          const detail = typeof json.detail === "string" ? ` (${json.detail})` : "";
+          const msg = (typeof json.error === "string" ? json.error : "Save failed") + detail;
+          console.error(CLIENT_LOG, "save_http_error", res.status, msg, json);
+          setSaveApi({ status: "error", message: msg });
           return;
         }
+        console.info(CLIENT_LOG, "save_ok", json);
         setSaveApi({
           status: "ok",
           rank: Number(json.rank),
@@ -173,6 +203,7 @@ export default function TriathlonCompletePage() {
           zci_score: Number(json.zci_score),
         });
       } catch (e) {
+        console.error(CLIENT_LOG, "save_fetch_throw", e);
         setSaveApi({ status: "error", message: e instanceof Error ? e.message : "Save failed" });
       }
     })();

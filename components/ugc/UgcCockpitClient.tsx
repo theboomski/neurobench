@@ -71,6 +71,12 @@ export default function UgcCockpitClient() {
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3" style={{ marginTop: 14 }}>
+        <CockpitTile
+          href="/triathlon/dashboard"
+          title="Brain Triathlon"
+          description="ZCI trends, streaks, and full session history."
+          accent="#00FF94"
+        />
         <CockpitTile href="/ugc/profile" title="Profile" description="Update display name and avatar." accent={MUSTARD} />
         <CockpitTile href="/ugc/create" title="Create Game" description="Make a new brackets or balance game." accent={MUSTARD} />
         <CockpitTile href="/ugc/history" title="Play History" description="Review what you played." accent="#f59e0b" />
