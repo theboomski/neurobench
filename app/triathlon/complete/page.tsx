@@ -6,9 +6,8 @@ import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { getSupabaseBrowser } from "@/lib/supabase";
 import {
-  TRIATHLON_STORAGE_KEY,
   brainScoreFromTriathlonScores,
-  parseTriathlonSession,
+  readTriathlonSessionForCompletePage,
   triathlonKeyToCompleteRowTitle,
   type TriathlonSession,
 } from "@/lib/triathlonSession";
@@ -24,15 +23,11 @@ export default function TriathlonCompletePage() {
   const [shareCopied, setShareCopied] = useState(false);
 
   useEffect(() => {
-    const raw = typeof window !== "undefined" ? sessionStorage.getItem(TRIATHLON_STORAGE_KEY) : null;
-    const parsed = parseTriathlonSession(raw);
-    if (!parsed || parsed.scores.length === 0) {
+    const data = readTriathlonSessionForCompletePage();
+    if (!data) {
       setSession("bad");
     } else {
-      setSession(parsed);
-    }
-    if (typeof window !== "undefined") {
-      sessionStorage.removeItem(TRIATHLON_STORAGE_KEY);
+      setSession(data);
     }
   }, []);
 

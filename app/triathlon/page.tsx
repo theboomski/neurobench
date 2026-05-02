@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { TRIATHLON_STORAGE_KEY, createInitialTriathlonSession } from "@/lib/triathlonSession";
+import { TRIATHLON_STORAGE_KEY, clearTriathlonCompletePageMemory, createInitialTriathlonSession } from "@/lib/triathlonSession";
 
 export default function TriathlonStartPage() {
   const router = useRouter();
 
   useEffect(() => {
+    clearTriathlonCompletePageMemory();
     sessionStorage.setItem(TRIATHLON_STORAGE_KEY, JSON.stringify(createInitialTriathlonSession()));
     router.replace("/brain-age/color-conflict");
   }, [router]);

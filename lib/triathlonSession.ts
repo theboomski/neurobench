@@ -68,3 +68,37 @@ export function brainScoreFromTriathlonScores(scores: Array<{ score: number }>):
   const sum = scores.reduce((a, s) => a + s.score, 0);
   return Math.round((sum / scores.length / 100) * 1000);
 }
+
+/**
+ * In development, React Strict Mode runs effects twice; the first run would
+ * `removeItem` before the second could read. We keep one in-memory copy after
+ * a successful read so the second run still returns data. Cleared when starting
+ * a new triathlon (`clearTriathlonCompletePageMemory`).
+ */
+let triathlonCompletePageMemory: TriathlonSession | null = null;
+
+export function clearTriathlonCompletePageMemory(): void {
+  triathlonCompletePageMemory = null;
+}
+
+/**
+ * For `/triathlon/complete` only: read session from sessionStorage, parse, copy
+ * into React state via caller, then clear storage. If storage was already
+ * cleared (e.g. Strict Mode re-run), returns the in-memory copy once.
+ */
+export function readTriathlonSessionForCompletePage(): TriathlonSession | null {
+  if (typeof window === "undefined") return null;
+  if (triathlonCompletePageMemory) {
+    return triathlonCompletePageMemory;
+  }
+  const raw = sessionStorage.getItem(TRIATHLON_STORAGE_KEY);
+  if (!raw) return null;
+  const parsed = parseTriathlonSession(raw);
+  if (!parsed || parsed.scores.length === 0) {
+    sessionStorage.removeItem(TRIATHLON_STORAGE_KEY);
+    return null;
+  }
+  triathlonCompletePageMemory = parsed;
+  sessionStorage.removeItem(TRIATHLON_STORAGE_KEY);
+  return parsed;
+}
