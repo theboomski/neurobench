@@ -29,6 +29,8 @@ import Sudoku from "@/components/games/Sudoku";
 import MiniSpeedSudoku from "@/components/games/MiniSpeedSudoku";
 import Omok from "@/components/games/Gomoku";
 
+export const dynamic = "force-dynamic";
+
 const games = ALL_GAMES;
 type Props = { params: Promise<{ id: string }> };
 

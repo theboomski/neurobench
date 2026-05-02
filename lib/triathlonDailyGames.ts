@@ -26,7 +26,6 @@ export const TRIATHLON_GAMES = {
   speed: [
     { id: "instant-comparison", name: "Instant Comparison", category: "Speed", path: "/brain-age/instant-comparison" },
     { id: "fish-frenzy", name: "Fish Frenzy", category: "Speed", path: "/brain-age/fish-frenzy" },
-    { id: "word-association", name: "Word Association IQ", category: "Speed", path: "/word-iq/word-association" },
   ],
 } as const;
 

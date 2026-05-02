@@ -1,12 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import CommonResult from "@/components/CommonResult";
 import { resolveResultTone } from "@/lib/resultUtils";
+
+const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_ROUND_MS_START = 2500;
+const TRIATHLON_ROUND_MS_FLOOR = 1500;
+const TRIATHLON_ROUND_MS_CEILING = 3500;
+const TRIATHLON_UI_ACCENT = "#00FF94";
 
 type ColorName = "RED" | "BLUE" | "GREEN" | "YELLOW" | "PURPLE" | "WHITE";
 type Phase = "idle" | "playing" | "done";
@@ -57,7 +64,6 @@ function getPercentile(score: number, game: GameData): number {
   return 50;
 }
 
-// 0 correct => 0, 100+ => 100, linear in between.
 function normalizeScore(raw: number): number {
   if (raw <= 0) return 0;
   if (raw >= 100) return 100;
@@ -77,11 +83,20 @@ function createPrompt(totalRoundsSoFar: number, yesRoundsSoFar: number): RoundPr
   const topMeaning = randomFrom(COLOR_NAMES);
   const makeYes = shouldGenerateYes(totalRoundsSoFar, yesRoundsSoFar);
   const bottomInkName = makeYes ? topMeaning : randomFrom(COLOR_NAMES.filter((c) => c !== topMeaning));
-  const bottomWord = randomFrom(COLOR_NAMES); // independent from meaning/ink
+  const bottomWord = randomFrom(COLOR_NAMES);
   return { topMeaning, bottomWord, bottomInkName, isYes: makeYes };
 }
 
-export default function ColorConflict2({ game }: { game: GameData }) {
+function triathlonPointsForRoundMs(roundMs: number): number {
+  if (roundMs > 2000) return 1;
+  if (roundMs >= 1500) return 2;
+  return 3;
+}
+
+function ColorConflict2Inner({ game }: { game: GameData }) {
+  const searchParams = useSearchParams();
+  const isTriathlon = searchParams.get("mode") === "triathlon";
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
@@ -92,20 +107,51 @@ export default function ColorConflict2({ game }: { game: GameData }) {
   const [roundTimeMs, setRoundTimeMs] = useState(3000);
   const [timeLeftMs, setTimeLeftMs] = useState(3000);
   const [showAd, setShowAd] = useState(false);
+  const [triathlonTimeLeft, setTriathlonTimeLeft] = useState(TRIATHLON_SESSION_MS);
+  const [triathlonIntroVisible, setTriathlonIntroVisible] = useState(false);
 
   const timerTickRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scoreRef = useRef(0);
   const totalRoundsRef = useRef(0);
   const yesRoundsRef = useRef(0);
+  const triathlonScoreRef = useRef(0);
+  const triathlonRoundMsRef = useRef(TRIATHLON_ROUND_MS_START);
+  const triathlonRoundLimitSnapshotRef = useRef(TRIATHLON_ROUND_MS_START);
+  const triathlonSessionStartRef = useRef(0);
+  const triathlonCountdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const triathlonIntroTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const phaseRef = useRef<Phase>("idle");
 
   useEffect(() => {
     setHighScore(getHighScore(game.id));
   }, [game.id]);
 
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+
   const clearRoundTimers = () => {
     if (timerTickRef.current) clearInterval(timerTickRef.current);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timerTickRef.current = null;
+    timeoutRef.current = null;
+  };
+
+  const clearTriathlonCountdown = () => {
+    if (triathlonCountdownRef.current) clearInterval(triathlonCountdownRef.current);
+    triathlonCountdownRef.current = null;
+  };
+
+  const clearTriathlonIntroTimer = () => {
+    if (triathlonIntroTimerRef.current) clearTimeout(triathlonIntroTimerRef.current);
+    triathlonIntroTimerRef.current = null;
+  };
+
+  const clearAllPlayingTimers = () => {
+    clearRoundTimers();
+    clearTriathlonCountdown();
+    clearTriathlonIntroTimer();
   };
 
   const endGame = useCallback(
@@ -116,46 +162,90 @@ export default function ColorConflict2({ game }: { game: GameData }) {
       if (isNew) setHighScore(rawScore);
       setFinalScore(rawScore);
       setPhase("done");
+      phaseRef.current = "done";
     },
     [game.id],
   );
 
-  const startRound = useCallback(
-    (nextRound: number) => {
-      const nextPrompt = createPrompt(totalRoundsRef.current, yesRoundsRef.current);
-      const nextLimitMs = getRoundTimeMs(nextRound);
-      if (nextPrompt.isYes) yesRoundsRef.current += 1;
-      totalRoundsRef.current += 1;
+  const endTriathlonSession = useCallback(() => {
+    if (phaseRef.current === "done") return;
+    clearAllPlayingTimers();
+    const raw = triathlonScoreRef.current;
+    const isNew = saveHighScore(game.id, raw);
+    setIsNewBest(isNew);
+    if (isNew) setHighScore(raw);
+    setFinalScore(raw);
+    setPhase("done");
+    phaseRef.current = "done";
+  }, [game.id]);
 
-      setPrompt(nextPrompt);
-      setRoundNumber(nextRound);
-      setRoundTimeMs(nextLimitMs);
-      setTimeLeftMs(nextLimitMs);
+  function scheduleRound(nextRound: number) {
+    const nextPrompt = createPrompt(totalRoundsRef.current, yesRoundsRef.current);
+    if (nextPrompt.isYes) yesRoundsRef.current += 1;
+    totalRoundsRef.current += 1;
 
-      const startedAt = performance.now();
-      timerTickRef.current = setInterval(() => {
-        const elapsed = performance.now() - startedAt;
-        const remaining = Math.max(0, nextLimitMs - elapsed);
-        setTimeLeftMs(remaining);
-      }, 50);
+    const nextLimitMs = isTriathlon ? triathlonRoundMsRef.current : getRoundTimeMs(nextRound);
+    if (isTriathlon) {
+      triathlonRoundLimitSnapshotRef.current = triathlonRoundMsRef.current;
+    }
 
-      timeoutRef.current = setTimeout(() => {
-        playBeep("fail");
+    setPrompt(nextPrompt);
+    setRoundNumber(nextRound);
+    setRoundTimeMs(nextLimitMs);
+    setTimeLeftMs(nextLimitMs);
+
+    const startedAt = performance.now();
+    timerTickRef.current = setInterval(() => {
+      const elapsed = performance.now() - startedAt;
+      const remaining = Math.max(0, nextLimitMs - elapsed);
+      setTimeLeftMs(remaining);
+    }, 50);
+
+    timeoutRef.current = setTimeout(() => {
+      playBeep("fail");
+      if (isTriathlon) {
+        clearRoundTimers();
+        triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+        if (phaseRef.current === "playing") {
+          scheduleRound(nextRound + 1);
+        }
+      } else {
         endGame(scoreRef.current);
-      }, nextLimitMs);
-    },
-    [endGame],
-  );
+      }
+    }, nextLimitMs);
+  }
 
   const startGame = () => {
     trackPlay(game.id);
-    clearRoundTimers();
+    clearAllPlayingTimers();
     scoreRef.current = 0;
     totalRoundsRef.current = 0;
     yesRoundsRef.current = 0;
     setScore(0);
     setPhase("playing");
-    startRound(1);
+    phaseRef.current = "playing";
+
+    if (isTriathlon) {
+      triathlonScoreRef.current = 0;
+      triathlonRoundMsRef.current = TRIATHLON_ROUND_MS_START;
+      setTriathlonTimeLeft(TRIATHLON_SESSION_MS);
+      triathlonSessionStartRef.current = Date.now();
+      setTriathlonIntroVisible(true);
+      triathlonIntroTimerRef.current = setTimeout(() => {
+        setTriathlonIntroVisible(false);
+        triathlonIntroTimerRef.current = null;
+      }, 2500);
+
+      triathlonCountdownRef.current = setInterval(() => {
+        const left = Math.max(0, TRIATHLON_SESSION_MS - (Date.now() - triathlonSessionStartRef.current));
+        setTriathlonTimeLeft(left);
+        if (left <= 0) {
+          endTriathlonSession();
+        }
+      }, 100);
+    }
+
+    scheduleRound(1);
   };
 
   const answer = (userSaysYes: boolean) => {
@@ -164,17 +254,30 @@ export default function ColorConflict2({ game }: { game: GameData }) {
 
     if (userSaysYes === prompt.isYes) {
       playBeep("success");
-      scoreRef.current += 1;
-      setScore(scoreRef.current);
-      startRound(scoreRef.current + 1);
+      if (isTriathlon) {
+        const pts = triathlonPointsForRoundMs(triathlonRoundLimitSnapshotRef.current);
+        triathlonScoreRef.current += pts;
+        setScore(triathlonScoreRef.current);
+        triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - 100);
+        scheduleRound(roundNumber + 1);
+      } else {
+        scoreRef.current += 1;
+        setScore(scoreRef.current);
+        scheduleRound(scoreRef.current + 1);
+      }
       return;
     }
 
     playBeep("fail");
-    endGame(scoreRef.current);
+    if (isTriathlon) {
+      triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+      scheduleRound(roundNumber + 1);
+    } else {
+      endGame(scoreRef.current);
+    }
   };
 
-  useEffect(() => () => clearRoundTimers(), []);
+  useEffect(() => () => clearAllPlayingTimers(), []);
 
   const handleRetry = () => {
     if (shouldShowAd()) setShowAd(true);
@@ -182,9 +285,13 @@ export default function ColorConflict2({ game }: { game: GameData }) {
   };
 
   const afterAd = () => {
+    clearAllPlayingTimers();
     setShowAd(false);
     setPhase("idle");
+    phaseRef.current = "idle";
     setIsNewBest(false);
+    setTriathlonIntroVisible(false);
+    setTriathlonTimeLeft(TRIATHLON_SESSION_MS);
   };
 
   const rank = getRank(finalScore, game);
@@ -227,7 +334,9 @@ export default function ColorConflict2({ game }: { game: GameData }) {
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 16 }}>🎯</div>
           <h2 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 900, marginBottom: 10 }}>Color Conflict 2</h2>
           <p style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.7, maxWidth: 420, margin: "0 auto 10px" }}>
-            Top word gives the meaning. Bottom word gives the ink color. Decide if they match. One mistake or timeout ends the run.
+            {isTriathlon
+              ? "Top word gives the meaning. Bottom word gives the ink color. Triathlon: 60 seconds — faster rounds score more."
+              : "Top word gives the meaning. Bottom word gives the ink color. Decide if they match. One mistake or timeout ends the run."}
           </p>
           <div style={{ marginBottom: 24 }} />
           <button
@@ -250,9 +359,49 @@ export default function ColorConflict2({ game }: { game: GameData }) {
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {isTriathlon && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: 8,
+                fontFamily: "var(--font-mono)",
+                fontSize: "clamp(11px, 2.8vw, 12px)",
+              }}
+            >
+              <span style={{ color: TRIATHLON_UI_ACCENT, fontWeight: 800 }}>{(triathlonTimeLeft / 1000).toFixed(1)}s left</span>
+              <span style={{ color: TRIATHLON_UI_ACCENT, fontWeight: 800 }}>SCORE {score}</span>
+            </div>
+          )}
+          {isTriathlon && (
+            <div
+              style={{
+                textAlign: "center",
+                fontSize: "clamp(10px, 2.6vw, 12px)",
+                fontFamily: "var(--font-mono)",
+                color: "var(--text-2)",
+                opacity: triathlonIntroVisible ? 1 : 0,
+                transition: "opacity 0.35s ease",
+                maxHeight: triathlonIntroVisible ? 40 : 0,
+                overflow: "hidden",
+              }}
+            >
+              60 seconds. Score more with faster rounds.
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--text-3)" }}>COLOR CONFLICT 2</div>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: game.accent, fontWeight: 800 }}>SCORE {score}</div>
+            <div
+              style={{
+                fontFamily: "var(--font-mono)",
+                fontSize: 13,
+                color: isTriathlon ? TRIATHLON_UI_ACCENT : game.accent,
+                fontWeight: 800,
+              }}
+            >
+              {isTriathlon ? `ROUND ${roundNumber}` : `SCORE ${score}`}
+            </div>
           </div>
 
           <div style={{ height: 5, borderRadius: 999, overflow: "hidden", background: "var(--bg-elevated)", marginBottom: 4 }}>
@@ -260,7 +409,17 @@ export default function ColorConflict2({ game }: { game: GameData }) {
               style={{
                 height: "100%",
                 width: `${timerPct}%`,
-                background: timerPct > 45 ? game.accent : timerPct > 20 ? "#f59e0b" : "#ef4444",
+                background: isTriathlon
+                  ? timerPct > 45
+                    ? TRIATHLON_UI_ACCENT
+                    : timerPct > 20
+                      ? "#f59e0b"
+                      : "#ef4444"
+                  : timerPct > 45
+                    ? game.accent
+                    : timerPct > 20
+                      ? "#f59e0b"
+                      : "#ef4444",
                 transition: "width 0.05s linear",
               }}
             />
@@ -278,7 +437,15 @@ export default function ColorConflict2({ game }: { game: GameData }) {
               justifyContent: "center",
             }}
           >
-            <span style={{ color: "#ffffff", fontSize: "clamp(30px,10vw,44px)", letterSpacing: "0.04em", fontWeight: 900, fontFamily: "var(--font-mono)" }}>
+            <span
+              style={{
+                color: "#ffffff",
+                fontSize: "clamp(30px,10vw,44px)",
+                letterSpacing: "0.04em",
+                fontWeight: 900,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
               {prompt.topMeaning}
             </span>
           </div>
@@ -352,5 +519,13 @@ export default function ColorConflict2({ game }: { game: GameData }) {
         </div>
       )}
     </>
+  );
+}
+
+export default function ColorConflict2({ game }: { game: GameData }) {
+  return (
+    <Suspense fallback={null}>
+      <ColorConflict2Inner game={game} />
+    </Suspense>
   );
 }

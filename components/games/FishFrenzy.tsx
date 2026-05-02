@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -10,6 +11,14 @@ import { resolveResultTone } from "@/lib/resultUtils";
 
 type Phase = "idle" | "playing" | "done";
 type Dir = "up" | "down" | "left" | "right";
+
+const ROUND_TIME_MS = 30_000;
+const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_UI_ACCENT = "#00FF94";
+const FISH_COUNT = 10;
+const SWIPE_THRESHOLD = 28;
+const FISH_SPEED_PCT_PER_SEC = 34;
+const ALL_DIRS: Dir[] = ["up", "down", "left", "right"];
 type FishColor = "blue" | "purple";
 
 type RoundState = {
@@ -23,12 +32,6 @@ type FishSprite = {
   offsetPct: number;
   scale: number;
 };
-
-const ROUND_TIME_MS = 30_000;
-const FISH_COUNT = 10;
-const SWIPE_THRESHOLD = 28;
-const FISH_SPEED_PCT_PER_SEC = 34; // same constant speed for all fish
-const ALL_DIRS: Dir[] = ["up", "down", "left", "right"];
 
 function randomDir(): Dir {
   return ALL_DIRS[Math.floor(Math.random() * ALL_DIRS.length)] as Dir;
@@ -52,7 +55,6 @@ function getPercentile(score: number, game: GameData): number {
   return 50;
 }
 
-// 0 => 0, 40+ => 100
 function normalizeScore(raw: number): number {
   if (raw <= 0) return 0;
   if (raw >= 40) return 100;
@@ -75,10 +77,9 @@ function buildFishSprites(): FishSprite[] {
   const laneMin = 14;
   const laneMax = 86;
   const laneStep = FISH_COUNT > 1 ? (laneMax - laneMin) / (FISH_COUNT - 1) : 0;
-  const travelWindowPct = 140; // from -20% to 120%
+  const travelWindowPct = 140;
   const gapStep = travelWindowPct / FISH_COUNT;
   return Array.from({ length: FISH_COUNT }).map((_, i) => ({
-    // Fixed lane and fixed spacing keep formation stable.
     lanePct: laneMin + laneStep * i,
     offsetPct: i * gapStep,
     scale: 0.95,
@@ -92,7 +93,10 @@ function headRotation(dir: Dir): number {
   return -90;
 }
 
-export default function FishFrenzy({ game }: { game: GameData }) {
+function FishFrenzyInner({ game }: { game: GameData }) {
+  const searchParams = useSearchParams();
+  const isTriathlon = searchParams.get("mode") === "triathlon";
+
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
   const [finalScore, setFinalScore] = useState(0);
@@ -100,6 +104,8 @@ export default function FishFrenzy({ game }: { game: GameData }) {
   const [highScore, setHighScore] = useState<number | null>(null);
   const [showAd, setShowAd] = useState(false);
   const [timeLeftMs, setTimeLeftMs] = useState(ROUND_TIME_MS);
+  const [sessionTotalMs, setSessionTotalMs] = useState(ROUND_TIME_MS);
+  const [triathlonIntroVisible, setTriathlonIntroVisible] = useState(false);
   const [round, setRound] = useState<RoundState>(() => buildRound());
   const [fishSprites, setFishSprites] = useState<FishSprite[]>(() => buildFishSprites());
 
@@ -107,12 +113,20 @@ export default function FishFrenzy({ game }: { game: GameData }) {
   const gameEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scoreRef = useRef(0);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const triathlonIntroTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const sessionMs = isTriathlon ? TRIATHLON_SESSION_MS : ROUND_TIME_MS;
 
   const clearGameTimers = () => {
     if (gameTimerRef.current) clearInterval(gameTimerRef.current);
     if (gameEndTimeoutRef.current) clearTimeout(gameEndTimeoutRef.current);
     gameTimerRef.current = null;
     gameEndTimeoutRef.current = null;
+  };
+
+  const clearTriathlonIntroTimer = () => {
+    if (triathlonIntroTimerRef.current) clearTimeout(triathlonIntroTimerRef.current);
+    triathlonIntroTimerRef.current = null;
   };
 
   useEffect(() => {
@@ -122,6 +136,7 @@ export default function FishFrenzy({ game }: { game: GameData }) {
   useEffect(
     () => () => {
       clearGameTimers();
+      clearTriathlonIntroTimer();
     },
     [],
   );
@@ -160,24 +175,35 @@ export default function FishFrenzy({ game }: { game: GameData }) {
   const startGame = useCallback(() => {
     trackPlay(game.id);
     clearGameTimers();
+    clearTriathlonIntroTimer();
     scoreRef.current = 0;
     setScore(0);
     setRound(buildRound());
     setFishSprites(buildFishSprites());
-    setTimeLeftMs(ROUND_TIME_MS);
+    const total = isTriathlon ? TRIATHLON_SESSION_MS : ROUND_TIME_MS;
+    setSessionTotalMs(total);
+    setTimeLeftMs(total);
     setPhase("playing");
     setIsNewBest(false);
 
+    if (isTriathlon) {
+      setTriathlonIntroVisible(true);
+      triathlonIntroTimerRef.current = setTimeout(() => {
+        setTriathlonIntroVisible(false);
+        triathlonIntroTimerRef.current = null;
+      }, 2500);
+    }
+
     const startedAt = performance.now();
     gameTimerRef.current = setInterval(() => {
-      const left = Math.max(0, ROUND_TIME_MS - (performance.now() - startedAt));
+      const left = Math.max(0, total - (performance.now() - startedAt));
       setTimeLeftMs(left);
     }, 50);
 
     gameEndTimeoutRef.current = setTimeout(() => {
       stopAndFinish();
-    }, ROUND_TIME_MS);
-  }, [game.id, stopAndFinish]);
+    }, total);
+  }, [game.id, stopAndFinish, isTriathlon]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
@@ -220,13 +246,17 @@ export default function FishFrenzy({ game }: { game: GameData }) {
     else afterAd();
   };
   const afterAd = () => {
+    clearGameTimers();
+    clearTriathlonIntroTimer();
     setShowAd(false);
     setPhase("idle");
+    setTriathlonIntroVisible(false);
     setScore(0);
     setFinalScore(0);
     setRound(buildRound());
     setFishSprites(buildFishSprites());
-    setTimeLeftMs(ROUND_TIME_MS);
+    setTimeLeftMs(sessionMs);
+    setSessionTotalMs(sessionMs);
   };
 
   const rank = phase === "done" ? getRank(finalScore, game) : null;
@@ -236,11 +266,10 @@ export default function FishFrenzy({ game }: { game: GameData }) {
   const headDeg = useMemo(() => headRotation(round.headDir), [round.headDir]);
   const fishBody = round.color === "blue" ? "#3b82f6" : "#a855f7";
   const fishStroke = round.color === "blue" ? "#93c5fd" : "#d8b4fe";
-  const timerPct = Math.max(0, (timeLeftMs / ROUND_TIME_MS) * 100);
-  const elapsedMs = Math.max(0, ROUND_TIME_MS - timeLeftMs);
+  const timerPct = sessionTotalMs > 0 ? Math.max(0, (timeLeftMs / sessionTotalMs) * 100) : 0;
+  const elapsedMs = Math.max(0, sessionTotalMs - timeLeftMs);
 
   const getTravelPositionPct = (fish: FishSprite) => {
-    // Travel window from -20% (off-screen before entry) to 120% (off-screen after exit).
     const travelWindowPct = 140;
     const travel = ((fish.offsetPct + (elapsedMs * FISH_SPEED_PCT_PER_SEC) / 1000) % travelWindowPct) - 20;
     if (round.movementDir === "right") return { xPct: travel, yPct: fish.lanePct };
@@ -284,7 +313,9 @@ export default function FishFrenzy({ game }: { game: GameData }) {
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 16 }}>🐟</div>
           <h2 style={{ fontSize: "clamp(20px,5vw,30px)", fontWeight: 900, marginBottom: 8 }}>Fish Frenzy</h2>
           <p style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.7, maxWidth: 460, margin: "0 auto 10px" }}>
-            Blue fish: swipe where they move. Purple fish: swipe where their heads point. 30 seconds. Go as fast as you can.
+            {isTriathlon
+              ? "Blue fish: swipe where they move. Purple fish: swipe where their heads point. 60 seconds in triathlon — go as fast as you can."
+              : "Blue fish: swipe where they move. Purple fish: swipe where their heads point. 30 seconds. Go as fast as you can."}
           </p>
           <p style={{ color: "var(--text-3)", fontSize: 12, fontFamily: "var(--font-mono)", marginBottom: 22 }}>
             Mobile swipe · Desktop arrows · Wrong is allowed, no penalty
@@ -322,11 +353,33 @@ export default function FishFrenzy({ game }: { game: GameData }) {
             gap: 8,
             userSelect: "none",
             touchAction: "none",
+            position: "relative",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2px 4px" }}>
+          {isTriathlon && (
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: 4,
+                fontSize: "clamp(10px, 2.6vw, 12px)",
+                fontFamily: "var(--font-mono)",
+                color: "var(--text-2)",
+                lineHeight: 1.35,
+                opacity: triathlonIntroVisible ? 1 : 0,
+                transition: "opacity 0.35s ease",
+                maxHeight: triathlonIntroVisible ? 48 : 0,
+                overflow: "hidden",
+              }}
+            >
+              60 seconds. Swipe the right direction.
+            </div>
+          )}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2px 4px", flexWrap: "wrap", gap: 8 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--text-2)" }}>
-              TIME <span style={{ color: timerPct < 25 ? "#ef4444" : "var(--text-1)", fontWeight: 800 }}>{(timeLeftMs / 1000).toFixed(1)}s</span>
+              TIME{" "}
+              <span style={{ color: timerPct < 25 ? "#ef4444" : "var(--text-1)", fontWeight: 800 }}>
+                {(timeLeftMs / 1000).toFixed(1)}s
+              </span>
             </div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: game.accent, fontWeight: 900 }}>SCORE {score}</div>
           </div>
@@ -336,7 +389,7 @@ export default function FishFrenzy({ game }: { game: GameData }) {
               style={{
                 height: "100%",
                 width: `${timerPct}%`,
-                background: timerPct > 45 ? game.accent : timerPct > 20 ? "#f59e0b" : "#ef4444",
+                background: isTriathlon ? (timerPct > 45 ? TRIATHLON_UI_ACCENT : timerPct > 20 ? "#f59e0b" : "#ef4444") : timerPct > 45 ? game.accent : timerPct > 20 ? "#f59e0b" : "#ef4444",
                 transition: "width 0.05s linear",
               }}
             />
@@ -363,11 +416,9 @@ export default function FishFrenzy({ game }: { game: GameData }) {
                     top: `${yPct}%`,
                     transform: `translate(-50%, -50%) scale(${fish.scale}) rotate(${headDeg}deg)`,
                     transformOrigin: "center center",
-                    // No positional transition: prevents reverse interpolation when wrapping edge-to-edge.
                     transition: "none",
                   }}
                 >
-                  {/* simple fish shape: body + tail + eye */}
                   <div
                     style={{
                       position: "relative",
@@ -421,5 +472,13 @@ export default function FishFrenzy({ game }: { game: GameData }) {
         </div>
       )}
     </>
+  );
+}
+
+export default function FishFrenzy({ game }: { game: GameData }) {
+  return (
+    <Suspense fallback={null}>
+      <FishFrenzyInner game={game} />
+    </Suspense>
   );
 }

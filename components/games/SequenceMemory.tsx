@@ -11,6 +11,9 @@ import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
 const GRID_SIZE = 9;
+const TRIATHLON_TRIALS = 15;
+const TRIATHLON_START_LEN = 5;
+const TRIATHLON_UI_ACCENT = "#00FF94";
 
 // Higher score = better (same as number memory)
 function getSeqRank(score: number, game: GameData) {
@@ -51,8 +54,9 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tapFlashTimeoutsRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
-  const consecutiveFailsRef = useRef(0);
+  const trialCountRef = useRef(0);
   const highestLevelRef = useRef(0);
+  const [trialDisplay, setTrialDisplay] = useState(1);
 
   useEffect(() => {
     setHS(getHighScore(game.id));
@@ -78,7 +82,6 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
     [],
   );
 
-  // 2x faster than previous sequence playback
   const getFlashMs = (level: number) => Math.max(150, 350 - level * 15);
 
   const playSequence = useCallback((seq: number[]) => {
@@ -132,10 +135,17 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
 
   const startGame = useCallback(() => {
     if (isTriathlon) {
-      consecutiveFailsRef.current = 0;
+      trialCountRef.current = 0;
       highestLevelRef.current = 0;
+      setTrialDisplay(1);
     }
     trackPlay(game.id);
+    if (isTriathlon) {
+      const seq = Array.from({ length: TRIATHLON_START_LEN }, () => Math.floor(Math.random() * GRID_SIZE));
+      setSequence(seq);
+      playSequence(seq);
+      return;
+    }
     const first = Math.floor(Math.random() * GRID_SIZE);
     const seq = [first];
     setSequence(seq);
@@ -154,12 +164,10 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
         playBeep("fail");
 
         if (isTriathlon) {
-          consecutiveFailsRef.current += 1;
-          const completed = sequence.length - 1;
-          if (completed > highestLevelRef.current) {
-            highestLevelRef.current = completed;
-          }
-          if (consecutiveFailsRef.current >= 2 && sequence.length <= 1) {
+          trialCountRef.current += 1;
+          setTrialDisplay(Math.min(trialCountRef.current + 1, TRIATHLON_TRIALS));
+          highestLevelRef.current = Math.max(highestLevelRef.current, sequence.length - 1);
+          if (trialCountRef.current >= TRIATHLON_TRIALS) {
             endTriathlonSession();
             return;
           }
@@ -181,7 +189,6 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
         return;
       }
 
-      // Correct so far — pulse tapped cell (always retriggers, even same index).
       playBeep("tap");
       setCorrectPulse({ idx, key: performance.now() });
       clearPulse();
@@ -190,7 +197,13 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
 
       if (next.length === sequence.length) {
         if (isTriathlon) {
-          consecutiveFailsRef.current = 0;
+          trialCountRef.current += 1;
+          setTrialDisplay(Math.min(trialCountRef.current + 1, TRIATHLON_TRIALS));
+          highestLevelRef.current = Math.max(highestLevelRef.current, sequence.length);
+          if (trialCountRef.current >= TRIATHLON_TRIALS) {
+            endTriathlonSession();
+            return;
+          }
         }
         playBeep("success");
         const newSeq = [...sequence, Math.floor(Math.random() * GRID_SIZE)];
@@ -210,8 +223,9 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
     else afterAd();
   };
   const afterAd = () => {
-    consecutiveFailsRef.current = 0;
+    trialCountRef.current = 0;
     highestLevelRef.current = 0;
+    setTrialDisplay(1);
     setShowAd(false);
     setPhase("idle");
     setSequence([]);
@@ -247,7 +261,6 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
     );
   }
 
-  // ── GRID ─────────────────────────────────────────────────────────────────────
   const getCellStyle = (idx: number) => {
     const isHighlighted = highlighted === idx;
     const isWrong = wrongCell === idx;
@@ -285,32 +298,47 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
     <>
       {showAd && <InterstitialAd onDone={afterAd} />}
 
-      {/* Level bar */}
       {phase !== "idle" && phase !== "done" && (
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
-          <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>
-            LEVEL {sequence.length}
-          </div>
-          <div style={{ display: "flex", gap: 3 }}>
-            {Array.from({ length: Math.min(sequence.length, 15) }).map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  width: 16,
-                  height: 3,
-                  borderRadius: 2,
-                  background: i < sequence.length - 1 ? game.accent : `${game.accent}40`,
-                }}
-              />
-            ))}
-          </div>
-          <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
-            {phase === "showing" ? "WATCH" : phase === "input" ? `${userSeq.length}/${sequence.length}` : phase === "correct" ? "✓" : ""}
+        <div style={{ marginBottom: 14 }}>
+          {isTriathlon && (
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: 8,
+                fontSize: "clamp(11px, 2.8vw, 12px)",
+                fontFamily: "var(--font-mono)",
+                fontWeight: 800,
+                letterSpacing: "0.06em",
+                color: TRIATHLON_UI_ACCENT,
+              }}
+            >
+              Trial {trialDisplay} / {TRIATHLON_TRIALS}
+            </div>
+          )}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+            <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>
+              LEVEL {sequence.length}
+            </div>
+            <div style={{ display: "flex", gap: 3, flex: 1, justifyContent: "center", minWidth: 0 }}>
+              {Array.from({ length: Math.min(sequence.length, 15) }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    width: 16,
+                    height: 3,
+                    borderRadius: 2,
+                    background: i < sequence.length - 1 ? game.accent : `${game.accent}40`,
+                  }}
+                />
+              ))}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>
+              {phase === "showing" ? "WATCH" : phase === "input" ? `${userSeq.length}/${sequence.length}` : phase === "correct" ? "✓" : ""}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Main area */}
       <div
         style={{
           background: "var(--bg-card)",
