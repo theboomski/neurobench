@@ -52,6 +52,12 @@ export function getTriathlonNameForGameId(id: string): string {
   return PICK_BY_ID.get(id)?.name ?? id;
 }
 
+/** Append `mode=triathlon` for in-flow game URLs (chain + Sequence Memory triathlon mode). */
+export function appendTriathlonModeQuery(path: string): string {
+  const joiner = path.includes("?") ? "&" : "?";
+  return `${path}${joiner}mode=triathlon`;
+}
+
 function seededRandom(seed: number, index: number): number {
   const x = Math.sin(seed + index) * 10000;
   return x - Math.floor(x);

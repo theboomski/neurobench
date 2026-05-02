@@ -2,21 +2,20 @@
 
 import { trackPlay } from "@/lib/tracking";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { Suspense, useState, useRef, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import type { GameData } from "@/lib/types";
-import { dict } from "@/lib/i18n";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
-const t = dict.en;
 const GRID_SIZE = 9;
 
 // Higher score = better (same as number memory)
 function getSeqRank(score: number, game: GameData) {
   const ranks = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);
-  return ranks.find(r => score >= r.maxMs) ?? ranks[ranks.length - 1];
+  return ranks.find((r) => score >= r.maxMs) ?? ranks[ranks.length - 1];
 }
 function getSeqPercentile(score: number, game: GameData): number {
   const pts = game.stats.percentiles;
@@ -34,32 +33,50 @@ function getSeqPercentile(score: number, game: GameData): number {
 type Phase = "idle" | "showing" | "input" | "correct" | "wrong" | "done";
 type CorrectPulse = { idx: number; key: number } | null;
 
-export default function SequenceMemory({ game }: { game: GameData }) {
-  const [phase, setPhase]           = useState<Phase>("idle");
-  const [sequence, setSequence]     = useState<number[]>([]);
-  const [userSeq, setUserSeq]       = useState<number[]>([]);
+function SequenceMemoryInner({ game }: { game: GameData }) {
+  const searchParams = useSearchParams();
+  const isTriathlon = searchParams.get("mode") === "triathlon";
+
+  const [phase, setPhase] = useState<Phase>("idle");
+  const [sequence, setSequence] = useState<number[]>([]);
+  const [userSeq, setUserSeq] = useState<number[]>([]);
   const [highlighted, setHighlighted] = useState<number | null>(null);
-  const [wrongCell, setWrongCell]   = useState<number | null>(null);
+  const [wrongCell, setWrongCell] = useState<number | null>(null);
   const [correctPulse, setCorrectPulse] = useState<CorrectPulse>(null);
   const [tapFlashCells, setTapFlashCells] = useState<number[]>([]);
   const [finalScore, setFinalScore] = useState(0);
-  const [showAd, setShowAd]         = useState(false);
-  const [highScore, setHS]          = useState<number | null>(null);
-  const [isNewBest, setIsNewBest]   = useState(false);
+  const [showAd, setShowAd] = useState(false);
+  const [highScore, setHS] = useState<number | null>(null);
+  const [isNewBest, setIsNewBest] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const tapFlashTimeoutsRef = useRef<Record<number, ReturnType<typeof setTimeout>>>({});
+  const consecutiveFailsRef = useRef(0);
+  const highestLevelRef = useRef(0);
 
-  useEffect(() => { setHS(getHighScore(game.id)); }, [game.id]);
-  const clearT = () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
-  const clearPulse = () => { if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current); };
+  useEffect(() => {
+    setHS(getHighScore(game.id));
+  }, [game.id]);
+  const clearT = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  };
+  const clearPulse = () => {
+    if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
+  };
   const clearTapFlashTimers = () => {
     for (const key of Object.keys(tapFlashTimeoutsRef.current)) {
       clearTimeout(tapFlashTimeoutsRef.current[Number(key)]);
     }
     tapFlashTimeoutsRef.current = {};
   };
-  useEffect(() => () => { clearT(); clearPulse(); clearTapFlashTimers(); }, []);
+  useEffect(
+    () => () => {
+      clearT();
+      clearPulse();
+      clearTapFlashTimers();
+    },
+    [],
+  );
 
   // 2x faster than previous sequence playback
   const getFlashMs = (level: number) => Math.max(150, 350 - level * 15);
@@ -88,66 +105,127 @@ export default function SequenceMemory({ game }: { game: GameData }) {
     timeoutRef.current = setTimeout(flashNext, 250);
   }, []);
 
+  const resetToLevel = useCallback(
+    (length: number) => {
+      clearT();
+      clearPulse();
+      clearTapFlashTimers();
+      const newSeq = Array.from({ length }, () => Math.floor(Math.random() * GRID_SIZE));
+      setSequence(newSeq);
+      setUserSeq([]);
+      setWrongCell(null);
+      setCorrectPulse(null);
+      setTapFlashCells([]);
+      playSequence(newSeq);
+    },
+    [playSequence],
+  );
+
+  const endTriathlonSession = useCallback(() => {
+    const score = highestLevelRef.current;
+    setFinalScore(score);
+    const isNew = saveHighScore(game.id, score);
+    setIsNewBest(isNew);
+    if (isNew) setHS(score);
+    timeoutRef.current = setTimeout(() => setPhase("done"), 1200);
+  }, [game.id]);
+
   const startGame = useCallback(() => {
+    if (isTriathlon) {
+      consecutiveFailsRef.current = 0;
+      highestLevelRef.current = 0;
+    }
     trackPlay(game.id);
     const first = Math.floor(Math.random() * GRID_SIZE);
     const seq = [first];
     setSequence(seq);
     playSequence(seq);
-  }, [playSequence]);
+  }, [playSequence, isTriathlon]);
 
-  const handleCellClick = useCallback((idx: number) => {
-    if (phase !== "input") return;
-    const next = [...userSeq, idx];
-    const pos = next.length - 1;
+  const handleCellClick = useCallback(
+    (idx: number) => {
+      if (phase !== "input") return;
+      const next = [...userSeq, idx];
+      const pos = next.length - 1;
 
-    if (idx !== sequence[pos]) {
-      // Wrong
-      setPhase("wrong");
-      setWrongCell(idx);
-      playBeep("fail");
-      const score = sequence.length - 1;
-      setFinalScore(score);
-      const isNew = saveHighScore(game.id, score);
-      setIsNewBest(isNew);
-      if (isNew) setHS(score);
-      timeoutRef.current = setTimeout(() => setPhase("done"), 1200);
-      return;
-    }
+      if (idx !== sequence[pos]) {
+        setPhase("wrong");
+        setWrongCell(idx);
+        playBeep("fail");
 
-    // Correct so far — pulse tapped cell (always retriggers, even same index).
-    playBeep("tap");
-    setCorrectPulse({ idx, key: performance.now() });
-    clearPulse();
-    pulseTimeoutRef.current = setTimeout(() => setCorrectPulse(null), 220);
-    setUserSeq(next);
+        if (isTriathlon) {
+          consecutiveFailsRef.current += 1;
+          const completed = sequence.length - 1;
+          if (completed > highestLevelRef.current) {
+            highestLevelRef.current = completed;
+          }
+          if (consecutiveFailsRef.current >= 2 && sequence.length <= 1) {
+            endTriathlonSession();
+            return;
+          }
+          clearT();
+          const len = sequence.length;
+          timeoutRef.current = setTimeout(() => {
+            setWrongCell(null);
+            resetToLevel(Math.max(1, len - 1));
+          }, 800);
+          return;
+        }
 
-    if (next.length === sequence.length) {
-      // Full sequence correct
-      playBeep("success");
-      const newSeq = [
-        ...sequence,
-        Math.floor(Math.random() * GRID_SIZE),
-      ];
-      setSequence(newSeq);
-      setPhase("correct");
-      // Keep the last tap visibly confirmed before the next round starts.
-      timeoutRef.current = setTimeout(() => {
-        setCorrectPulse(null);
-        playSequence(newSeq);
-      }, 325);
-    }
-  }, [phase, userSeq, sequence, game.id, playSequence]);
+        const score = sequence.length - 1;
+        setFinalScore(score);
+        const isNew = saveHighScore(game.id, score);
+        setIsNewBest(isNew);
+        if (isNew) setHS(score);
+        timeoutRef.current = setTimeout(() => setPhase("done"), 1200);
+        return;
+      }
 
-  const handleRetry = () => { if (shouldShowAd()) setShowAd(true); else afterAd(); };
+      // Correct so far — pulse tapped cell (always retriggers, even same index).
+      playBeep("tap");
+      setCorrectPulse({ idx, key: performance.now() });
+      clearPulse();
+      pulseTimeoutRef.current = setTimeout(() => setCorrectPulse(null), 220);
+      setUserSeq(next);
+
+      if (next.length === sequence.length) {
+        if (isTriathlon) {
+          consecutiveFailsRef.current = 0;
+        }
+        playBeep("success");
+        const newSeq = [...sequence, Math.floor(Math.random() * GRID_SIZE)];
+        setSequence(newSeq);
+        setPhase("correct");
+        timeoutRef.current = setTimeout(() => {
+          setCorrectPulse(null);
+          playSequence(newSeq);
+        }, 325);
+      }
+    },
+    [phase, userSeq, sequence, game.id, playSequence, isTriathlon, endTriathlonSession, resetToLevel],
+  );
+
+  const handleRetry = () => {
+    if (shouldShowAd()) setShowAd(true);
+    else afterAd();
+  };
   const afterAd = () => {
-    setShowAd(false); setPhase("idle"); setSequence([]); setUserSeq([]);
-    setHighlighted(null); setWrongCell(null); setCorrectPulse(null); setTapFlashCells([]);
-    setFinalScore(0); setIsNewBest(false);
+    consecutiveFailsRef.current = 0;
+    highestLevelRef.current = 0;
+    setShowAd(false);
+    setPhase("idle");
+    setSequence([]);
+    setUserSeq([]);
+    setHighlighted(null);
+    setWrongCell(null);
+    setCorrectPulse(null);
+    setTapFlashCells([]);
+    setFinalScore(0);
+    setIsNewBest(false);
   };
 
   const rank = phase === "done" ? getSeqRank(finalScore, game) : null;
-  const pct  = phase === "done" ? getSeqPercentile(finalScore, game) : 0;
+  const pct = phase === "done" ? getSeqPercentile(finalScore, game) : 0;
 
   if (phase === "done" && rank) {
     const normalized = normalizeTo100FromPercentile(pct, finalScore);
@@ -172,8 +250,8 @@ export default function SequenceMemory({ game }: { game: GameData }) {
   // ── GRID ─────────────────────────────────────────────────────────────────────
   const getCellStyle = (idx: number) => {
     const isHighlighted = highlighted === idx;
-    const isWrong       = wrongCell === idx;
-    const isCorrect     = correctPulse?.idx === idx || tapFlashCells.includes(idx);
+    const isWrong = wrongCell === idx;
+    const isCorrect = correctPulse?.idx === idx || tapFlashCells.includes(idx);
     let bg = "var(--bg-elevated)";
     let border = "var(--border)";
     let shadow = "none";
@@ -215,7 +293,15 @@ export default function SequenceMemory({ game }: { game: GameData }) {
           </div>
           <div style={{ display: "flex", gap: 3 }}>
             {Array.from({ length: Math.min(sequence.length, 15) }).map((_, i) => (
-              <div key={i} style={{ width: 16, height: 3, borderRadius: 2, background: i < sequence.length - 1 ? game.accent : `${game.accent}40` }} />
+              <div
+                key={i}
+                style={{
+                  width: 16,
+                  height: 3,
+                  borderRadius: 2,
+                  background: i < sequence.length - 1 ? game.accent : `${game.accent}40`,
+                }}
+              />
             ))}
           </div>
           <div style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
@@ -225,14 +311,38 @@ export default function SequenceMemory({ game }: { game: GameData }) {
       )}
 
       {/* Main area */}
-      <div style={{ background: "var(--bg-card)", border: `1.5px solid ${phase === "wrong" ? "#ef444440" : phase === "correct" ? `${game.accent}40` : "var(--border)"}`, borderRadius: "var(--radius-xl)", padding: "clamp(24px,5vw,40px)", transition: "border-color 0.15s" }}>
-
+      <div
+        style={{
+          background: "var(--bg-card)",
+          border: `1.5px solid ${phase === "wrong" ? "#ef444440" : phase === "correct" ? `${game.accent}40` : "var(--border)"}`,
+          borderRadius: "var(--radius-xl)",
+          padding: "clamp(24px,5vw,40px)",
+          transition: "border-color 0.15s",
+        }}
+      >
         {phase === "idle" ? (
           <div className="anim-fade-up" style={{ textAlign: "center", padding: "16px 0" }}>
             <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>🔲</div>
             <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Sequential Pattern Recognition</p>
-            <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>Watch the sequence · Repeat it back · Go as long as you can</p>
-            <button onClick={startGame} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 36px", fontSize: 14, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
+            <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>
+              Watch the sequence · Repeat it back · Go as long as you can
+            </p>
+            <button
+              onClick={startGame}
+              className="pressable"
+              style={{
+                background: game.accent,
+                color: "#000",
+                border: "none",
+                borderRadius: "var(--radius-md)",
+                padding: "14px 36px",
+                fontSize: 14,
+                fontWeight: 800,
+                cursor: "pointer",
+                fontFamily: "var(--font-mono)",
+                letterSpacing: "0.06em",
+              }}
+            >
               ▶ PLAY
             </button>
           </div>
@@ -244,7 +354,6 @@ export default function SequenceMemory({ game }: { game: GameData }) {
                 style={getCellStyle(idx)}
                 onClick={() => handleCellClick(idx)}
                 onPointerDown={() => {
-                  // Immediate visual touch response on mobile.
                   if (phase !== "input") return;
                   setTapFlashCells((prev) => (prev.includes(idx) ? prev : [...prev, idx]));
                   const existing = tapFlashTimeoutsRef.current[idx];
@@ -260,13 +369,30 @@ export default function SequenceMemory({ game }: { game: GameData }) {
         )}
       </div>
 
-      <div style={{ textAlign: "center", marginTop: 10, fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.06em" }}>
-        {phase === "idle"    && "3×3 GRID · SEQUENCE GROWS EACH ROUND"}
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: 10,
+          fontSize: 11,
+          color: "var(--text-3)",
+          fontFamily: "var(--font-mono)",
+          letterSpacing: "0.06em",
+        }}
+      >
+        {phase === "idle" && "3×3 GRID · SEQUENCE GROWS EACH ROUND"}
         {phase === "showing" && "MEMORIZE THE SEQUENCE"}
-        {phase === "input"   && "REPEAT THE SEQUENCE IN ORDER"}
+        {phase === "input" && "REPEAT THE SEQUENCE IN ORDER"}
         {phase === "correct" && "CORRECT · ADDING ONE MORE STEP"}
-        {phase === "wrong"   && "INCORRECT · CALCULATING RESULTS"}
+        {phase === "wrong" && "INCORRECT · CALCULATING RESULTS"}
       </div>
     </>
+  );
+}
+
+export default function SequenceMemory({ game }: { game: GameData }) {
+  return (
+    <Suspense fallback={null}>
+      <SequenceMemoryInner game={game} />
+    </Suspense>
   );
 }

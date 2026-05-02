@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getTriathlonNameForGameId, getTriathlonPathForGameId } from "@/lib/triathlonDailyGames";
+import { appendTriathlonModeQuery, getTriathlonNameForGameId, getTriathlonPathForGameId } from "@/lib/triathlonDailyGames";
 import { TRIATHLON_STORAGE_KEY, parseTriathlonSession, type TriathlonSession } from "@/lib/triathlonSession";
 
 const ACCENT = "#00FF94";
@@ -20,7 +20,7 @@ function computeUi(session: TriathlonSession, finishedGameId: string): UiState {
     const nextId = session.games[session.currentIndex];
     const path = getTriathlonPathForGameId(nextId);
     if (!path) return null;
-    return { kind: "next", path, nextTitle: getTriathlonNameForGameId(nextId) };
+    return { kind: "next", path: appendTriathlonModeQuery(path), nextTitle: getTriathlonNameForGameId(nextId) };
   }
   return { kind: "complete" };
 }

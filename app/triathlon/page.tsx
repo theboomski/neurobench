@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { getDailyGames } from "@/lib/triathlonDailyGames";
+import { appendTriathlonModeQuery, getDailyGames } from "@/lib/triathlonDailyGames";
 import { TRIATHLON_STORAGE_KEY, clearTriathlonCompletePageMemory, createInitialTriathlonSession } from "@/lib/triathlonSession";
 
 export default function TriathlonStartPage() {
@@ -15,7 +15,7 @@ export default function TriathlonStartPage() {
       TRIATHLON_STORAGE_KEY,
       JSON.stringify(createInitialTriathlonSession(picks.map((p) => p.id))),
     );
-    router.replace(picks[0].path);
+    router.replace(appendTriathlonModeQuery(picks[0].path));
   }, [router]);
 
   return (
