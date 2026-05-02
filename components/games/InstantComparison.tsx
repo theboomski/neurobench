@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -86,9 +86,8 @@ function makePair(difficulty: number) {
 
 type Phase = "idle" | "playing" | "done";
 
-function InstantComparisonInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
@@ -498,10 +497,10 @@ function InstantComparisonInner({ game }: { game: GameData }) {
   );
 }
 
-export default function InstantComparison({ game }: { game: GameData }) {
+export default function InstantComparison({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <InstantComparisonInner game={game} />
+      <InstantComparisonInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }

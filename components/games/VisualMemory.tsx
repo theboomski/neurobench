@@ -3,7 +3,7 @@
 import { trackPlay } from "@/lib/tracking";
 
 import { Suspense, useState, useRef, useCallback, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
@@ -42,9 +42,8 @@ function getSquareCount(level: number) {
 
 type Phase = "idle" | "showing" | "input" | "correct" | "wrong" | "done";
 
-function VisualMemoryInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function VisualMemoryInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [level, setLevel] = useState(1);
@@ -368,10 +367,10 @@ function VisualMemoryInner({ game }: { game: GameData }) {
   );
 }
 
-export default function VisualMemory({ game }: { game: GameData }) {
+export default function VisualMemory({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <VisualMemoryInner game={game} />
+      <VisualMemoryInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ALL_GAMES } from "@/lib/games";
+import { triathlonModeFromSearchParams } from "@/lib/triathlonUrl";
 import type { GameData } from "@/lib/types";
 import GameLayout from "@/components/GameLayout";
 import BossSlapper from "@/components/games/BossSlapper";
@@ -54,7 +55,10 @@ export const dynamic = "force-dynamic";
 
 const games = ALL_GAMES;
 
-type Props = { params: Promise<{ category: string; id: string }> };
+type Props = {
+  params: Promise<{ category: string; id: string }>;
+  searchParams: Promise<{ mode?: string | string[] }>;
+};
 
 /** Static segment at app/korean-tv/red-light-green-light owns this URL. */
 const DEDICATED_STATIC_GAME_KEYS = new Set(["korean-tv:red-light-green-light", "brain-age:sudoku"]);
@@ -82,19 +86,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function GameComponent({ id, game }: { id: string; game: GameData }) {
+function GameComponent({
+  id,
+  game,
+  triathlonFromServer,
+}: {
+  id: string;
+  game: GameData;
+  triathlonFromServer: boolean;
+}) {
   switch (id) {
     case "boss-slapper":      return <BossSlapper game={game} />;
-    case "number-memory":     return <NumberMemory game={game} />;
-    case "sequence-memory":   return <SequenceMemory game={game} />;
+    case "number-memory":     return <NumberMemory game={game} triathlonFromServer={triathlonFromServer} />;
+    case "sequence-memory":   return <SequenceMemory game={game} triathlonFromServer={triathlonFromServer} />;
     case "verbal-memory":     return <VerbalMemory game={game} />;
-    case "visual-memory":     return <VisualMemory game={game} />;
-    case "chimp-test":        return <ChimpTest game={game} />;
+    case "visual-memory":     return <VisualMemory game={game} triathlonFromServer={triathlonFromServer} />;
+    case "chimp-test":        return <ChimpTest game={game} triathlonFromServer={triathlonFromServer} />;
     case "typing-speed":      return <TypingSpeed game={game} />;
-    case "color-conflict":    return <ColorConflict game={game} />;
-    case "color-conflict-2":  return <ColorConflict2 game={game} />;
-    case "fish-frenzy":       return <FishFrenzy game={game} />;
-    case "instant-comparison":return <InstantComparison game={game} />;
+    case "color-conflict":    return <ColorConflict game={game} triathlonFromServer={triathlonFromServer} />;
+    case "color-conflict-2":  return <ColorConflict2 game={game} triathlonFromServer={triathlonFromServer} />;
+    case "fish-frenzy":       return <FishFrenzy game={game} triathlonFromServer={triathlonFromServer} />;
+    case "instant-comparison":return <InstantComparison game={game} triathlonFromServer={triathlonFromServer} />;
     case "angle-precision":   return <AnglePrecision game={game} />;
     case "rapid-scan":        return <RapidScan game={game} />;
     case "temporal-pulse":    return <TemporalPulse game={game} />;
@@ -134,8 +146,9 @@ function GameComponent({ id, game }: { id: string; game: GameData }) {
   }
 }
 
-export default async function GamePage({ params }: Props) {
-  const { category, id } = await params;
+export default async function GamePage({ params, searchParams }: Props) {
+  const [{ category, id }, sp] = await Promise.all([params, searchParams]);
+  const triathlonFromServer = triathlonModeFromSearchParams(sp);
   // Exclude static routes that should not be handled here
   if (category === "blog" || category === "about" || category === "privacy-policy" || category === "terms-of-service") notFound();
   const game = games.find(g => g.id === id && g.category === category);
@@ -157,7 +170,7 @@ export default async function GamePage({ params }: Props) {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <GameLayout game={game}>
-        <GameComponent id={id} game={game} />
+        <GameComponent id={id} game={game} triathlonFromServer={triathlonFromServer} />
       </GameLayout>
     </>
   );

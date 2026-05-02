@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -93,9 +93,8 @@ function headRotation(dir: Dir): number {
   return -90;
 }
 
-function FishFrenzyInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function FishFrenzyInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
@@ -475,10 +474,10 @@ function FishFrenzyInner({ game }: { game: GameData }) {
   );
 }
 
-export default function FishFrenzy({ game }: { game: GameData }) {
+export default function FishFrenzy({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <FishFrenzyInner game={game} />
+      <FishFrenzyInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }

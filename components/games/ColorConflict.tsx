@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import { trackPlay } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
@@ -107,9 +107,8 @@ function triathlonPointsForChoices(n: 4 | 5 | 6): number {
   return Math.max(1, n - 3);
 }
 
-function ColorConflictInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [score, setScore] = useState(0);
@@ -576,10 +575,10 @@ function ColorConflictInner({ game }: { game: GameData }) {
   );
 }
 
-export default function ColorConflict({ game }: { game: GameData }) {
+export default function ColorConflict({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <ColorConflictInner game={game} />
+      <ColorConflictInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }

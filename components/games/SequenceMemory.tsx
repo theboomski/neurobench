@@ -3,7 +3,7 @@
 import { trackPlay } from "@/lib/tracking";
 
 import { Suspense, useState, useRef, useCallback, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
@@ -36,9 +36,8 @@ function getSeqPercentile(score: number, game: GameData): number {
 type Phase = "idle" | "showing" | "input" | "correct" | "wrong" | "done";
 type CorrectPulse = { idx: number; key: number } | null;
 
-function SequenceMemoryInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function SequenceMemoryInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [sequence, setSequence] = useState<number[]>([]);
@@ -417,10 +416,10 @@ function SequenceMemoryInner({ game }: { game: GameData }) {
   );
 }
 
-export default function SequenceMemory({ game }: { game: GameData }) {
+export default function SequenceMemory({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <SequenceMemoryInner game={game} />
+      <SequenceMemoryInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }

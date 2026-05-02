@@ -3,7 +3,7 @@
 import { trackPlay } from "@/lib/tracking";
 
 import { Suspense, useState, useRef, useCallback, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useTriathlonMode } from "@/lib/useTriathlonMode";
 import type { GameData } from "@/lib/types";
 import { getHighScore, saveHighScore, playBeep } from "@/lib/gameUtils";
 import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
@@ -45,9 +45,8 @@ function generateSequence(length: number): string {
   return s;
 }
 
-function NumberMemoryInner({ game }: { game: GameData }) {
-  const searchParams = useSearchParams();
-  const isTriathlon = searchParams.get("mode") === "triathlon";
+function NumberMemoryInner({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
+  const isTriathlon = useTriathlonMode(triathlonFromServer);
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [level, setLevel] = useState(1);
@@ -522,10 +521,10 @@ function NumberMemoryInner({ game }: { game: GameData }) {
   );
 }
 
-export default function NumberMemory({ game }: { game: GameData }) {
+export default function NumberMemory({ game, triathlonFromServer }: { game: GameData; triathlonFromServer?: boolean }) {
   return (
     <Suspense fallback={null}>
-      <NumberMemoryInner game={game} />
+      <NumberMemoryInner game={game} triathlonFromServer={triathlonFromServer} />
     </Suspense>
   );
 }
