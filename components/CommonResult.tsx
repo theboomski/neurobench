@@ -1,15 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import InterstitialAd from "@/components/InterstitialAd";
 import LeaderboardSection from "@/components/LeaderboardSection";
 import TriathlonResultContinuation from "@/components/TriathlonResultContinuation";
 import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
+import { getTriathlonCognitiveCategoryForGameId } from "@/lib/triathlonDailyGames";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
+import { TRIATHLON_STORAGE_KEY, parseTriathlonSession } from "@/lib/triathlonSession";
 import type { GameData } from "@/lib/types";
+
+const TRIATHLON_ACCENT = "#00FF94";
 
 type AnalysisTone = "brain" | "office" | "focus" | "vocab";
 
@@ -34,6 +38,8 @@ interface Props {
   benchmarkNoteOverride?: string | null;
   /** Override retry CTA label (default: ▶ PLAY AGAIN). */
   retryLabel?: string;
+  /** When true, URL triathlon mode; when undefined, triathlon result UI also activates if `triathlonSession` lists this game. */
+  isTriathlon?: boolean;
 }
 
 function getLevel(normalized: number) {
@@ -90,6 +96,22 @@ function getNeonByScore(normalized: number): string {
   if (normalized >= 70) return "radial-gradient(120% 90% at 25% 10%, rgba(56,189,248,0.42) 0%, rgba(139,92,246,0.30) 45%, rgba(2,6,23,0.95) 100%)";
   if (normalized >= 50) return "radial-gradient(120% 90% at 25% 10%, rgba(168,85,247,0.35) 0%, rgba(37,99,235,0.25) 50%, rgba(2,6,23,0.96) 100%)";
   return "radial-gradient(120% 90% at 25% 10%, rgba(71,85,105,0.35) 0%, rgba(30,41,59,0.25) 50%, rgba(2,6,23,0.98) 100%)";
+}
+
+function getTriathlonTierLabel(normalized: number): string {
+  if (normalized >= 90) return "PEAK COGNITION";
+  if (normalized >= 75) return "HIGH PERFORMANCE";
+  if (normalized >= 55) return "PROFICIENT";
+  if (normalized >= 30) return "DEVELOPING";
+  return "BEGINNER";
+}
+
+function getTriathlonProfessionalKiller(normalized: number): string {
+  if (normalized >= 90) return "Top percentile. Your cognitive control is operating at peak capacity.";
+  if (normalized >= 75) return "Strong result. You're outperforming the majority of players.";
+  if (normalized >= 55) return "Solid baseline. Daily training will move you into the upper tier.";
+  if (normalized >= 30) return "Room to grow. Brain plasticity means this score can improve with practice.";
+  return "Every expert started here. Your brain is just warming up.";
 }
 
 function formatMsAsMinSec(ms: number): string {
@@ -169,8 +191,8 @@ export default function CommonResult({
   normalizedScore,
   percentile,
   rank,
-  highScore,
-  isNewBest,
+  highScore: _highScore,
+  isNewBest: _isNewBest,
   showAd,
   onAdDone,
   onRetry,
@@ -179,6 +201,7 @@ export default function CommonResult({
   shareTextOverride,
   benchmarkNoteOverride,
   retryLabel = "▶ PLAY AGAIN",
+  isTriathlon: isTriathlonProp,
 }: Props) {
   const level = getLevel(normalizedScore);
   const scoreEmoji = getScoreEmoji(normalizedScore);
@@ -189,6 +212,23 @@ export default function CommonResult({
   const peopleCount = Math.round((higherThanPct / 100) * WORLD_POP);
   const peopleBillions = (peopleCount / 1_000_000_000).toFixed(2);
   const [copiedToast, setCopiedToast] = useState(false);
+  const [sessionListsGame, setSessionListsGame] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = sessionStorage.getItem(TRIATHLON_STORAGE_KEY);
+    const session = parseTriathlonSession(raw);
+    setSessionListsGame(!!(session && session.games.includes(game.id)));
+  }, [game.id]);
+
+  const useTriathlonResultCard =
+    isTriathlonProp === true || (isTriathlonProp !== false && sessionListsGame);
+
+  const triathlonTierLabel = getTriathlonTierLabel(normalizedScore);
+  const triathlonKiller = killerLineOverride ?? getTriathlonProfessionalKiller(normalizedScore);
+  const triathlonPercentileSentence = `You outperformed ${higherThanPct.toFixed(1)}% of players who took this test.`;
+  const cognitiveCategory = getTriathlonCognitiveCategoryForGameId(game.id) ?? "Cognitive";
+
   const shareText = useMemo(() => {
     if (shareTextOverride) return shareTextOverride;
     const link = `https://zazaza.app/${game.category}/${game.id}`;
@@ -196,6 +236,46 @@ export default function CommonResult({
   }, [game.category, game.id, game.title, normalizedScore, shareTextOverride]);
 
   const handleShare = async () => {
+    if (useTriathlonResultCard) {
+      const payload: ResultSharePayloadV1 = {
+        v: 1,
+        kind: "common",
+        category: game.category,
+        id: game.id,
+        gameTitle: game.title,
+        primaryColor: game.accent,
+        normalizedScore,
+        rawScore,
+        rawUnit,
+        percentile,
+        rank,
+        levelLabel: triathlonTierLabel,
+        scoreEmoji: "",
+        percentileSentence: triathlonPercentileSentence,
+        killerLine: triathlonKiller,
+        benchmarkNote,
+        tone,
+      };
+      const url = await createSharedResultUrl(payload);
+      const challenge = shareTextOverride
+        ? `${shareTextOverride} ${url}`
+        : `${game.title}: ${normalizedScore}/100 (${triathlonTierLabel}). ${triathlonPercentileSentence} ${url}`;
+      await shareZazazaChallenge({
+        title: `${triathlonTierLabel} — ${game.title} | ZAZAZA`,
+        text: challenge,
+        url,
+        onCopied: () => {
+          setCopiedToast(true);
+          window.setTimeout(() => setCopiedToast(false), 2200);
+        },
+        analytics: {
+          content_type: shareContentTypeFromGameCategory(game.category),
+          item_id: game.id,
+        },
+      });
+      return;
+    }
+
     const percentileSentence = `Your score is higher than ${higherThanPct.toFixed(1)}% of the world - about ${peopleBillions} billion people.`;
     const payload: ResultSharePayloadV1 = {
       v: 1,
@@ -235,81 +315,392 @@ export default function CommonResult({
     });
   };
 
+  if (useTriathlonResultCard) {
+    const barPct = Math.max(0, Math.min(100, normalizedScore));
+    return (
+      <>
+        <ShareCopiedToast show={copiedToast} />
+        {showAd && <InterstitialAd onDone={onAdDone} />}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+          <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <div
+              className="anim-scale-in"
+              style={{
+                width: "min(92vw, 420px)",
+                minHeight: "min(72vh, 640px)",
+                background: "var(--bg-card)",
+                border: "1px solid var(--border-md)",
+                borderTop: `2px solid ${TRIATHLON_ACCENT}`,
+                borderRadius: 24,
+                padding: "clamp(18px, 4vw, 24px) clamp(14px, 3.5vw, 20px)",
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                gap: 14,
+                boxSizing: "border-box",
+                fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: "clamp(17px, 4.2vw, 22px)",
+                    fontWeight: 800,
+                    color: "#fff",
+                    lineHeight: 1.25,
+                    marginBottom: 6,
+                    textWrap: "balance" as never,
+                  }}
+                >
+                  {cognitiveCategory} Test
+                </div>
+                <div
+                  style={{
+                    fontSize: "clamp(13px, 3.2vw, 15px)",
+                    fontWeight: 600,
+                    color: "var(--text-2)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  {game.title}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  fontSize: "clamp(15px, 3.8vw, 18px)",
+                  fontWeight: 800,
+                  color: TRIATHLON_ACCENT,
+                  letterSpacing: "0.06em",
+                  fontFamily: "var(--font-mono)",
+                }}
+              >
+                {triathlonTierLabel}
+              </div>
+
+              <div style={{ textAlign: "left", width: "100%" }}>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: "var(--text-3)",
+                    fontFamily: "var(--font-mono)",
+                    marginBottom: 8,
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  Your Score
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                  <div
+                    style={{
+                      flex: "1 1 140px",
+                      minWidth: 0,
+                      height: 10,
+                      borderRadius: 5,
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border)",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${barPct}%`,
+                        height: "100%",
+                        background: TRIATHLON_ACCENT,
+                        borderRadius: 4,
+                        transition: "width 0.35s ease",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      fontSize: "clamp(22px, 6vw, 28px)",
+                      fontWeight: 900,
+                      color: "#fff",
+                      fontFamily: "var(--font-mono)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {normalizedScore}
+                    <span style={{ fontSize: "clamp(14px, 3.5vw, 17px)", fontWeight: 700, color: "var(--text-2)", marginLeft: 4 }}>/100</span>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "var(--text-2)",
+                  lineHeight: 1.45,
+                  textWrap: "balance" as never,
+                }}
+              >
+                {triathlonPercentileSentence}
+              </div>
+
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 600,
+                  color: "var(--text-1)",
+                  lineHeight: 1.45,
+                  textAlign: "left",
+                  padding: "12px 14px",
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 12,
+                  textWrap: "balance" as never,
+                }}
+              >
+                {triathlonKiller}
+              </div>
+
+              {benchmarkNote && (
+                <div style={{ fontSize: 10, color: "var(--text-3)", lineHeight: 1.45, fontFamily: "var(--font-mono)", textAlign: "left" }}>
+                  {benchmarkNote}
+                </div>
+              )}
+
+              <div style={{ marginTop: "auto", width: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
+                <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} embedded />
+                <div
+                  style={{
+                    height: 1,
+                    background: "var(--border-md)",
+                    width: "100%",
+                    opacity: 0.85,
+                  }}
+                />
+                <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", paddingBottom: "max(6px, env(safe-area-inset-bottom))" }}>
+                  <button
+                    type="button"
+                    onClick={onRetry}
+                    className="pressable"
+                    style={{
+                      background: "var(--bg-elevated)",
+                      color: "var(--text-1)",
+                      border: "1px solid var(--border-md)",
+                      borderRadius: "var(--radius-md)",
+                      padding: "14px 12px",
+                      fontSize: 12,
+                      fontWeight: 800,
+                      cursor: "pointer",
+                      width: "50%",
+                      fontFamily: "inherit",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    {retryLabel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleShare()}
+                    className="pressable"
+                    style={{
+                      background: game.accent,
+                      color: "#000",
+                      border: "none",
+                      borderRadius: "var(--radius-md)",
+                      padding: "14px 12px",
+                      fontSize: 12,
+                      fontWeight: 900,
+                      cursor: "pointer",
+                      width: "50%",
+                      fontFamily: "inherit",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    Share to Challenge a Friend
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {game.hasLeaderboard && <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />}
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <ShareCopiedToast show={copiedToast} />
       {showAd && <InterstitialAd onDone={onAdDone} />}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div
-          className="anim-scale-in"
-          style={{
-            width: "min(92vw, 420px)",
-            minHeight: "min(88vh, 760px)",
-            background: getNeonByScore(normalizedScore),
-            border: "1px solid rgba(255,255,255,0.22)",
-            borderTop: `2px solid ${rank.color}`,
-            borderRadius: 24,
-            padding: "20px 16px",
-            textAlign: "center",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            gap: 8,
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-            boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 50px ${rank.color}33`,
-            overflow: "visible",
-            fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-          }}
-        >
-        <div style={{ fontSize: 106, lineHeight: 1, marginTop: 2, marginBottom: 2 }}>
-          {scoreEmoji}
-        </div>
-        <div style={{ fontSize: 10, color: "var(--text-3)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4, fontFamily: "var(--font-mono)" }}>
-          ZAZAZA Result
-        </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            className="anim-scale-in"
+            style={{
+              width: "min(92vw, 420px)",
+              minHeight: "min(88vh, 760px)",
+              background: getNeonByScore(normalizedScore),
+              border: "1px solid rgba(255,255,255,0.22)",
+              borderTop: `2px solid ${rank.color}`,
+              borderRadius: 24,
+              padding: "20px 16px",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: 8,
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+              boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 50px ${rank.color}33`,
+              overflow: "visible",
+              fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+            }}
+          >
+            <div style={{ fontSize: 106, lineHeight: 1, marginTop: 2, marginBottom: 2 }}>{scoreEmoji}</div>
+            <div
+              style={{
+                fontSize: 10,
+                color: "var(--text-3)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: 4,
+                fontFamily: "var(--font-mono)",
+              }}
+            >
+              ZAZAZA Result
+            </div>
 
-        <div style={{ margin: "12px auto 8px", width: "100%", borderRadius: 18, padding: "16px 10px", background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.2)", boxShadow: `0 0 36px ${rank.color}66 inset` }}>
-        <div style={{ fontSize: "clamp(72px,21vw,122px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1, color: "#fff", textShadow: `0 0 22px ${rank.color}, 0 10px 28px rgba(0,0,0,0.45)` }}>
-          {normalizedScore}
-          <span style={{ fontSize: "clamp(18px,3vw,24px)", fontWeight: 700, color: "rgba(255,255,255,0.95)", marginLeft: 10, letterSpacing: "0.04em" }}>/100</span>
-        </div>
-        </div>
+            <div
+              style={{
+                margin: "12px auto 8px",
+                width: "100%",
+                borderRadius: 18,
+                padding: "16px 10px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.2)",
+                boxShadow: `0 0 36px ${rank.color}66 inset`,
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "clamp(72px,21vw,122px)",
+                  fontWeight: 900,
+                  letterSpacing: "-0.04em",
+                  lineHeight: 1,
+                  color: "#fff",
+                  textShadow: `0 0 22px ${rank.color}, 0 10px 28px rgba(0,0,0,0.45)`,
+                }}
+              >
+                {normalizedScore}
+                <span
+                  style={{
+                    fontSize: "clamp(18px,3vw,24px)",
+                    fontWeight: 700,
+                    color: "rgba(255,255,255,0.95)",
+                    marginLeft: 10,
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  /100
+                </span>
+              </div>
+            </div>
 
-        <div style={{ fontSize: 38, color: "#fff", fontWeight: 900, marginBottom: 8, letterSpacing: "-0.01em", lineHeight: 1.03, textWrap: "balance" as never, textShadow: `2px 0 rgba(255,0,128,0.28), -2px 0 rgba(0,255,255,0.28), 0 0 18px ${rank.color}` }}>
-          {level.label}
-        </div>
-        <div style={{ fontSize: 16, color: "rgba(255,255,255,0.96)", fontWeight: 700, marginBottom: 6, lineHeight: 1.3, textWrap: "balance" as never }}>
-          You scored {normalizedScore} in {game.title}.
-        </div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,0.95)", marginBottom: 6, lineHeight: 1.3 }}>
-          Your score is higher than {higherThanPct.toFixed(1)}% of the world - about {peopleBillions} billion people.
-        </div>
-        <div style={{ fontSize: 20, fontWeight: 900, color: "rgba(209,250,229,0.98)", marginBottom: 10, lineHeight: 1.25, textWrap: "balance" as never, textShadow: `0 0 18px ${rank.color}66`, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: 12, padding: "10px 12px" }}>
-          {killerLine}
-        </div>
+            <div
+              style={{
+                fontSize: 38,
+                color: "#fff",
+                fontWeight: 900,
+                marginBottom: 8,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.03,
+                textWrap: "balance" as never,
+                textShadow: `2px 0 rgba(255,0,128,0.28), -2px 0 rgba(0,255,255,0.28), 0 0 18px ${rank.color}`,
+              }}
+            >
+              {level.label}
+            </div>
+            <div style={{ fontSize: 16, color: "rgba(255,255,255,0.96)", fontWeight: 700, marginBottom: 6, lineHeight: 1.3, textWrap: "balance" as never }}>
+              You scored {normalizedScore} in {game.title}.
+            </div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,0.95)", marginBottom: 6, lineHeight: 1.3 }}>
+              Your score is higher than {higherThanPct.toFixed(1)}% of the world - about {peopleBillions} billion people.
+            </div>
+            <div
+              style={{
+                fontSize: 20,
+                fontWeight: 900,
+                color: "rgba(209,250,229,0.98)",
+                marginBottom: 10,
+                lineHeight: 1.25,
+                textWrap: "balance" as never,
+                textShadow: `0 0 18px ${rank.color}66`,
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.14)",
+                borderRadius: 12,
+                padding: "10px 12px",
+              }}
+            >
+              {killerLine}
+            </div>
 
-        {benchmarkNote && (
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.62)", lineHeight: 1.4, marginBottom: 8, fontFamily: "var(--font-mono)" }}>
-            {benchmarkNote}
+            {benchmarkNote && (
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.62)", lineHeight: 1.4, marginBottom: 8, fontFamily: "var(--font-mono)" }}>
+                {benchmarkNote}
+              </div>
+            )}
+
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                justifyContent: "center",
+                flexWrap: "nowrap",
+                marginTop: "auto",
+                paddingBottom: "max(6px, env(safe-area-inset-bottom))",
+              }}
+            >
+              <button
+                type="button"
+                onClick={onRetry}
+                className="pressable"
+                style={{
+                  background: "var(--bg-elevated)",
+                  color: "var(--text-1)",
+                  border: "1px solid var(--border-md)",
+                  borderRadius: "var(--radius-md)",
+                  padding: "14px 12px",
+                  fontSize: 12,
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  width: "50%",
+                  fontFamily: "inherit",
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {retryLabel}
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleShare()}
+                className="pressable"
+                style={{
+                  background: game.accent,
+                  color: "#000",
+                  border: "none",
+                  borderRadius: "var(--radius-md)",
+                  padding: "14px 12px",
+                  fontSize: 12,
+                  fontWeight: 900,
+                  cursor: "pointer",
+                  width: "50%",
+                  fontFamily: "inherit",
+                  letterSpacing: "0.01em",
+                }}
+              >
+                Share to Challenge a Friend
+              </button>
+            </div>
           </div>
-        )}
-
-        <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "nowrap", marginTop: "auto", paddingBottom: "max(6px, env(safe-area-inset-bottom))" }}>
-          <button onClick={onRetry} className="pressable" style={{ background: "var(--bg-elevated)", color: "var(--text-1)", border: "1px solid var(--border-md)", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 800, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
-            {retryLabel}
-          </button>
-          <button onClick={handleShare} className="pressable" style={{ background: game.accent, color: "#000", border: "none", borderRadius: "var(--radius-md)", padding: "14px 12px", fontSize: 12, fontWeight: 900, cursor: "pointer", width: "50%", fontFamily: "inherit", letterSpacing: "0.01em" }}>
-            Share to Challenge a Friend
-          </button>
         </div>
-        </div>
-      </div>
-      {game.hasLeaderboard && (
-        <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />
-      )}
-      <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} />
+        {game.hasLeaderboard && <LeaderboardSection gameId={game.id} rawScore={rawScore} rawUnit={rawUnit} accent={game.accent} />}
+        <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} />
       </div>
     </>
   );

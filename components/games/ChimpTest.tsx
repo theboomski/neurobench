@@ -205,6 +205,7 @@ function ChimpTestInner({ game, triathlonFromServer }: { game: GameData; triathl
         onAdDone={afterAd}
         onRetry={handleRetry}
         tone={resolveResultTone(game)}
+        isTriathlon={isTriathlon}
       />
     );
   }

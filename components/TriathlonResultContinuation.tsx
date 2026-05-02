@@ -28,13 +28,15 @@ function computeUi(session: TriathlonSession, finishedGameId: string): UiState {
 type Props = {
   gameId: string;
   normalizedScore: number;
+  /** Full-width primary CTA inside CommonResult triathlon card (no outer landing margin). */
+  embedded?: boolean;
 };
 
 /**
  * When an active triathlon session matches this result leg, records the score once
  * (strict-mode safe) and shows the next-game or complete CTA below the main result UI.
  */
-export default function TriathlonResultContinuation({ gameId, normalizedScore }: Props) {
+export default function TriathlonResultContinuation({ gameId, normalizedScore, embedded }: Props) {
   const [ui, setUi] = useState<UiState>(null);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore }:
 
   if (!ui) return null;
 
-  const linkStyle: React.CSSProperties = {
+  const linkStyleDefault: React.CSSProperties = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -85,6 +87,45 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore }:
     boxSizing: "border-box",
   };
 
+  const linkStyleEmbedded: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    padding: "14px 18px",
+    borderRadius: "var(--radius-md)",
+    background: ACCENT,
+    color: "#0a0a0f",
+    border: `1px solid ${ACCENT}`,
+    fontSize: 14,
+    fontWeight: 800,
+    letterSpacing: "-0.02em",
+    textDecoration: "none",
+    textAlign: "center",
+    lineHeight: 1.35,
+    boxSizing: "border-box",
+  };
+
+  const linkStyle = embedded ? linkStyleEmbedded : linkStyleDefault;
+
+  const inner = (
+    <>
+      {ui.kind === "next" ? (
+        <Link href={ui.path} style={linkStyle}>
+          Next Test: {ui.nextTitle} →
+        </Link>
+      ) : (
+        <Link href="/triathlon/complete" style={linkStyle}>
+          See Your Brain Score →
+        </Link>
+      )}
+    </>
+  );
+
+  if (embedded) {
+    return <div style={{ width: "100%", marginBottom: 4 }}>{inner}</div>;
+  }
+
   return (
     <div
       style={{
@@ -96,15 +137,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore }:
         paddingBottom: "max(8px, env(safe-area-inset-bottom))",
       }}
     >
-      {ui.kind === "next" ? (
-        <Link href={ui.path} style={linkStyle}>
-          Next Test: {ui.nextTitle} →
-        </Link>
-      ) : (
-        <Link href="/triathlon/complete" style={{ ...linkStyle, background: ACCENT, color: "#0a0a0f", border: `1px solid ${ACCENT}` }}>
-          See Your Brain Score →
-        </Link>
-      )}
+      {inner}
     </div>
   );
 }

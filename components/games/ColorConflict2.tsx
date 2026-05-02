@@ -313,6 +313,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
         onAdDone={afterAd}
         onRetry={handleRetry}
         tone={resolveResultTone(game)}
+        isTriathlon={isTriathlon}
       />
     );
   }

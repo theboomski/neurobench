@@ -296,6 +296,7 @@ function FishFrenzyInner({ game, triathlonFromServer }: { game: GameData; triath
         onAdDone={afterAd}
         onRetry={handleRetry}
         tone={resolveResultTone(game)}
+        isTriathlon={isTriathlon}
       />
     );
   }

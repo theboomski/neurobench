@@ -335,6 +335,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
         onAdDone={afterAd}
         onRetry={handleRetry}
         tone={resolveResultTone(game)}
+        isTriathlon={isTriathlon}
       />
     );
   }

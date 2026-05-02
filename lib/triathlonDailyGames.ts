@@ -4,6 +4,8 @@ export type DailyTriathlonPick = {
   name: string;
   category: string;
   path: string;
+  /** Short cognitive label for triathlon result UI (e.g. "Inhibitory Control"). */
+  cognitiveCategory: string;
 };
 
 /**
@@ -13,19 +15,73 @@ export type DailyTriathlonPick = {
  */
 export const TRIATHLON_GAMES = {
   focus: [
-    { id: "color-conflict", name: "Color Conflict", category: "Focus", path: "/brain-age/color-conflict" },
-    { id: "color-conflict-2", name: "Color Conflict 2", category: "Focus", path: "/brain-age/color-conflict-2" },
+    {
+      id: "color-conflict",
+      name: "Color Conflict",
+      category: "Focus",
+      path: "/brain-age/color-conflict",
+      cognitiveCategory: "Inhibitory Control",
+    },
+    {
+      id: "color-conflict-2",
+      name: "Color Conflict 2",
+      category: "Focus",
+      path: "/brain-age/color-conflict-2",
+      cognitiveCategory: "Cognitive Interference",
+    },
   ],
   memory: [
-    { id: "sequence-memory", name: "Sequence Memory", category: "Memory", path: "/brain-age/sequence-memory" },
-    { id: "number-memory", name: "Memory Matrix", category: "Memory", path: "/brain-age/number-memory" },
-    { id: "visual-memory", name: "Visual Memory", category: "Memory", path: "/brain-age/visual-memory" },
-    { id: "chimp-test", name: "Chimp Test", category: "Memory", path: "/brain-age/chimp-test" },
-    { id: "verbal-memory", name: "Verbal Memory", category: "Memory", path: "/brain-age/verbal-memory" },
+    {
+      id: "sequence-memory",
+      name: "Sequence Memory",
+      category: "Memory",
+      path: "/brain-age/sequence-memory",
+      cognitiveCategory: "Working Memory",
+    },
+    {
+      id: "number-memory",
+      name: "Memory Matrix",
+      category: "Memory",
+      path: "/brain-age/number-memory",
+      cognitiveCategory: "Digit Span Memory",
+    },
+    {
+      id: "visual-memory",
+      name: "Visual Memory",
+      category: "Memory",
+      path: "/brain-age/visual-memory",
+      cognitiveCategory: "Spatial Memory",
+    },
+    {
+      id: "chimp-test",
+      name: "Chimp Test",
+      category: "Memory",
+      path: "/brain-age/chimp-test",
+      cognitiveCategory: "Visuospatial Memory",
+    },
+    {
+      id: "verbal-memory",
+      name: "Verbal Memory",
+      category: "Memory",
+      path: "/brain-age/verbal-memory",
+      cognitiveCategory: "Recognition Memory",
+    },
   ],
   speed: [
-    { id: "instant-comparison", name: "Instant Comparison", category: "Speed", path: "/brain-age/instant-comparison" },
-    { id: "fish-frenzy", name: "Fish Frenzy", category: "Speed", path: "/brain-age/fish-frenzy" },
+    {
+      id: "instant-comparison",
+      name: "Instant Comparison",
+      category: "Speed",
+      path: "/brain-age/instant-comparison",
+      cognitiveCategory: "Processing Speed",
+    },
+    {
+      id: "fish-frenzy",
+      name: "Fish Frenzy",
+      category: "Speed",
+      path: "/brain-age/fish-frenzy",
+      cognitiveCategory: "Response Inhibition",
+    },
   ],
 } as const;
 
@@ -49,6 +105,10 @@ export function getTriathlonPathForGameId(id: string): string | null {
 
 export function getTriathlonNameForGameId(id: string): string {
   return PICK_BY_ID.get(id)?.name ?? id;
+}
+
+export function getTriathlonCognitiveCategoryForGameId(id: string): string | null {
+  return PICK_BY_ID.get(id)?.cognitiveCategory ?? null;
 }
 
 /** Safe first-leg URL if daily picks ever fail validation (must exist as a route). */
@@ -87,7 +147,9 @@ function isValidPick(p: unknown): p is DailyTriathlonPick {
     typeof o.path === "string" &&
     o.path.length > 0 &&
     typeof o.name === "string" &&
-    typeof o.category === "string"
+    typeof o.category === "string" &&
+    typeof o.cognitiveCategory === "string" &&
+    o.cognitiveCategory.length > 0
   );
 }
 
@@ -116,8 +178,26 @@ export function getDailyGames(date = new Date()): DailyTriathlonPick[] {
   if (ordered.length === 3) return ordered;
 
   return [
-    { id: "color-conflict", name: "Color Conflict", category: "Focus", path: "/brain-age/color-conflict" },
-    { id: "sequence-memory", name: "Sequence Memory", category: "Memory", path: "/brain-age/sequence-memory" },
-    { id: "instant-comparison", name: "Instant Comparison", category: "Speed", path: "/brain-age/instant-comparison" },
+    {
+      id: "color-conflict",
+      name: "Color Conflict",
+      category: "Focus",
+      path: "/brain-age/color-conflict",
+      cognitiveCategory: "Inhibitory Control",
+    },
+    {
+      id: "sequence-memory",
+      name: "Sequence Memory",
+      category: "Memory",
+      path: "/brain-age/sequence-memory",
+      cognitiveCategory: "Working Memory",
+    },
+    {
+      id: "instant-comparison",
+      name: "Instant Comparison",
+      category: "Speed",
+      path: "/brain-age/instant-comparison",
+      cognitiveCategory: "Processing Speed",
+    },
   ];
 }

@@ -387,6 +387,7 @@ export default function ResultShareLanding({ category, id, zParam, payload: pref
           killerLineOverride={payload.killerLine}
           shareTextOverride={null}
           retryLabel="▶ PLAY"
+          isTriathlon={false}
         />
       </GameLayout>
     );

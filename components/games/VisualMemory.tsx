@@ -221,6 +221,7 @@ function VisualMemoryInner({ game, triathlonFromServer }: { game: GameData; tria
         onAdDone={afterAd}
         onRetry={handleRetry}
         tone={resolveResultTone(game)}
+        isTriathlon={isTriathlon}
       />
     );
   }
