@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { getDailyGames } from "@/lib/triathlonDailyGames";
 import { TRIATHLON_STORAGE_KEY, clearTriathlonCompletePageMemory, createInitialTriathlonSession } from "@/lib/triathlonSession";
 
 export default function TriathlonStartPage() {
@@ -9,8 +10,12 @@ export default function TriathlonStartPage() {
 
   useEffect(() => {
     clearTriathlonCompletePageMemory();
-    sessionStorage.setItem(TRIATHLON_STORAGE_KEY, JSON.stringify(createInitialTriathlonSession()));
-    router.replace("/brain-age/color-conflict");
+    const picks = getDailyGames();
+    sessionStorage.setItem(
+      TRIATHLON_STORAGE_KEY,
+      JSON.stringify(createInitialTriathlonSession(picks.map((p) => p.id))),
+    );
+    router.replace(picks[0].path);
   }, [router]);
 
   return (

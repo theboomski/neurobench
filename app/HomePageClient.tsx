@@ -1,25 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
 const ACCENT = "#00FF94";
 
-const TRIATHLON_GAMES = [
-  {
-    title: "Color Conflict",
-    cognitive: "Reflex & Control",
-  },
-  {
-    title: "Sequence Memory",
-    cognitive: "Working Memory",
-  },
-  {
-    title: "Neural Latency",
-    cognitive: "Reaction Speed",
-  },
-] as const;
-
 export default function HomePageClient() {
+  const [dailyGames, setDailyGames] = useState<DailyTriathlonPick[] | null>(null);
+
+  useEffect(() => {
+    setDailyGames(getDailyGames());
+  }, []);
+
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>
       <div style={{ marginBottom: 14 }}>
@@ -42,46 +35,67 @@ export default function HomePageClient() {
         </h1>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-          {TRIATHLON_GAMES.map((game) => (
-            <article
-              key={game.title}
-              style={{
-                background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderLeft: `3px solid ${ACCENT}`,
-                borderRadius: "var(--radius-lg)",
-                padding: "24px 20px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "stretch",
-                gap: 8,
-                minHeight: 0,
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: 20,
-                  fontWeight: 800,
-                  letterSpacing: "-0.02em",
-                  color: "var(--text-1)",
-                  lineHeight: 1.2,
-                  margin: 0,
-                }}
-              >
-                {game.title}
-              </h2>
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "var(--text-2)",
-                  lineHeight: 1.45,
-                  margin: 0,
-                }}
-              >
-                {game.cognitive}
-              </p>
-            </article>
-          ))}
+          {dailyGames
+            ? dailyGames.map((game) => (
+                <article
+                  key={game.id}
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    borderLeft: `3px solid ${ACCENT}`,
+                    borderRadius: "var(--radius-lg)",
+                    padding: "24px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "stretch",
+                    gap: 8,
+                    minHeight: 0,
+                  }}
+                >
+                  <h2
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 800,
+                      letterSpacing: "-0.02em",
+                      color: "var(--text-1)",
+                      lineHeight: 1.2,
+                      margin: 0,
+                    }}
+                  >
+                    {game.name}
+                  </h2>
+                  <p
+                    style={{
+                      fontSize: 13,
+                      color: "var(--text-2)",
+                      lineHeight: 1.45,
+                      margin: 0,
+                    }}
+                  >
+                    {game.category}
+                  </p>
+                </article>
+              ))
+            : [0, 1, 2].map((i) => (
+                <article
+                  key={`triathlon-skel-${i}`}
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    borderLeft: `3px solid ${ACCENT}`,
+                    borderRadius: "var(--radius-lg)",
+                    padding: "24px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    minHeight: 0,
+                    opacity: 0.5,
+                  }}
+                >
+                  <div style={{ height: 26, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "85%" }} />
+                  <div style={{ height: 16, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "55%" }} />
+                </article>
+              ))}
         </div>
 
         <div style={{ marginTop: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>

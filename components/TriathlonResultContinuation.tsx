@@ -2,14 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  TRIATHLON_STORAGE_KEY,
-  gameIdToTriathlonKey,
-  parseTriathlonSession,
-  triathlonKeyToNextButtonTitle,
-  triathlonKeyToPath,
-  type TriathlonSession,
-} from "@/lib/triathlonSession";
+import { getTriathlonNameForGameId, getTriathlonPathForGameId } from "@/lib/triathlonDailyGames";
+import { TRIATHLON_STORAGE_KEY, parseTriathlonSession, type TriathlonSession } from "@/lib/triathlonSession";
 
 const ACCENT = "#00FF94";
 
@@ -18,15 +12,15 @@ type UiState =
   | { kind: "next"; path: string; nextTitle: string }
   | { kind: "complete" };
 
-function computeUi(session: TriathlonSession, triKey: string): UiState {
+function computeUi(session: TriathlonSession, finishedGameId: string): UiState {
   if (session.currentIndex < 1) return null;
   const justFinished = session.games[session.currentIndex - 1];
-  if (justFinished !== triKey) return null;
+  if (justFinished !== finishedGameId) return null;
   if (session.currentIndex < session.games.length) {
-    const nextKey = session.games[session.currentIndex];
-    const path = triathlonKeyToPath(nextKey);
+    const nextId = session.games[session.currentIndex];
+    const path = getTriathlonPathForGameId(nextId);
     if (!path) return null;
-    return { kind: "next", path, nextTitle: triathlonKeyToNextButtonTitle(nextKey) };
+    return { kind: "next", path, nextTitle: getTriathlonNameForGameId(nextId) };
   }
   return { kind: "complete" };
 }
@@ -47,14 +41,11 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore }:
     if (typeof window === "undefined") return;
     if (window.location.pathname.endsWith("/result")) return;
 
-    const triKey = gameIdToTriathlonKey(gameId);
-    if (!triKey) return;
-
     const raw = sessionStorage.getItem(TRIATHLON_STORAGE_KEY);
     let session = parseTriathlonSession(raw);
     if (!session) return;
 
-    const legIndex = session.games.indexOf(triKey as (typeof session.games)[number]);
+    const legIndex = session.games.indexOf(gameId);
     if (legIndex === -1) return;
 
     if (session.scores.length === legIndex && session.currentIndex === legIndex) {
@@ -68,7 +59,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore }:
 
     const fresh = parseTriathlonSession(sessionStorage.getItem(TRIATHLON_STORAGE_KEY));
     if (!fresh) return;
-    setUi(computeUi(fresh, triKey));
+    setUi(computeUi(fresh, gameId));
   }, [gameId, normalizedScore]);
 
   if (!ui) return null;

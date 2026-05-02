@@ -5,12 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import ShareCopiedToast from "@/components/ShareCopiedToast";
 import { shareContentTypeFromGameCategory } from "@/lib/analytics";
 import { getSupabaseBrowser } from "@/lib/supabase";
-import {
-  brainScoreFromTriathlonScores,
-  readTriathlonSessionForCompletePage,
-  triathlonKeyToCompleteRowTitle,
-  type TriathlonSession,
-} from "@/lib/triathlonSession";
+import { getTriathlonNameForGameId } from "@/lib/triathlonDailyGames";
+import { brainScoreFromTriathlonScores, readTriathlonSessionForCompletePage, type TriathlonSession } from "@/lib/triathlonSession";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import type { User } from "@supabase/supabase-js";
 
@@ -125,7 +121,7 @@ export default function TriathlonCompletePage() {
                   flexWrap: "wrap",
                 }}
               >
-                <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-1)" }}>{triathlonKeyToCompleteRowTitle(row.game)}</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-1)" }}>{getTriathlonNameForGameId(row.game)}</span>
                 <span style={{ fontSize: 14, fontWeight: 800, color: ACCENT, fontFamily: "var(--font-mono)" }}>{row.score}</span>
               </li>
             ))}

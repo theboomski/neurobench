@@ -1,49 +1,25 @@
+import { isAllowedTriathlonGameId } from "@/lib/triathlonDailyGames";
+
 export const TRIATHLON_STORAGE_KEY = "triathlonSession";
 
-/** Session `games` uses triathlon keys; `reaction-time` maps to `neural-latency`. */
-export type TriathlonGameKey = "color-conflict" | "sequence-memory" | "neural-latency";
-
 export type TriathlonSession = {
-  games: TriathlonGameKey[];
+  /** Three game ids from the daily pool, in play order. */
+  games: string[];
   currentIndex: number;
   scores: Array<{ game: string; score: number }>;
   startedAt: number;
 };
 
-export const TRIATHLON_GAME_ORDER: TriathlonGameKey[] = ["color-conflict", "sequence-memory", "neural-latency"];
-
-export function createInitialTriathlonSession(): TriathlonSession {
+export function createInitialTriathlonSession(gameIds: string[]): TriathlonSession {
+  if (gameIds.length !== 3 || !gameIds.every((id) => isAllowedTriathlonGameId(id))) {
+    throw new Error("createInitialTriathlonSession: invalid game ids");
+  }
   return {
-    games: [...TRIATHLON_GAME_ORDER],
+    games: [...gameIds],
     currentIndex: 0,
     scores: [],
     startedAt: Date.now(),
   };
-}
-
-export function gameIdToTriathlonKey(gameId: string): TriathlonGameKey | null {
-  if (gameId === "color-conflict") return "color-conflict";
-  if (gameId === "sequence-memory") return "sequence-memory";
-  if (gameId === "reaction-time") return "neural-latency";
-  return null;
-}
-
-export function triathlonKeyToPath(key: string): string | null {
-  if (key === "color-conflict") return "/brain-age/color-conflict";
-  if (key === "sequence-memory") return "/brain-age/sequence-memory";
-  if (key === "neural-latency") return "/brain-age/reaction-time";
-  return null;
-}
-
-export function triathlonKeyToNextButtonTitle(key: string): string {
-  if (key === "color-conflict") return "Color Conflict";
-  if (key === "sequence-memory") return "Sequence Memory";
-  if (key === "neural-latency") return "Neural Latency";
-  return "Next";
-}
-
-export function triathlonKeyToCompleteRowTitle(key: string): string {
-  return triathlonKeyToNextButtonTitle(key);
 }
 
 export function parseTriathlonSession(raw: string | null): TriathlonSession | null {
@@ -54,8 +30,7 @@ export function parseTriathlonSession(raw: string | null): TriathlonSession | nu
     if (typeof o.currentIndex !== "number" || o.currentIndex < 0) return null;
     if (!Array.isArray(o.scores)) return null;
     if (typeof o.startedAt !== "number") return null;
-    const allowed = new Set<string>(TRIATHLON_GAME_ORDER);
-    if (!o.games.every((g) => typeof g === "string" && allowed.has(g))) return null;
+    if (!o.games.every((g) => typeof g === "string" && isAllowedTriathlonGameId(g))) return null;
     return o as TriathlonSession;
   } catch {
     return null;
