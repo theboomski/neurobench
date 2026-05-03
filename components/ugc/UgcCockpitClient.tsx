@@ -5,7 +5,24 @@ import { useEffect, useMemo, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import AuthModal from "@/components/ugc/AuthModal";
 import { getSupabaseBrowser } from "@/lib/supabase";
+
 const MUSTARD = "#b8860b";
+const TRIATHLON_ACCENT = "#00FF94";
+
+/** Cockpit quick links (see `app/ugc/cockpit/page.tsx` → this client). */
+const COCKPIT_TILES: { href: string; title: string; description: string; accent: string }[] = [
+  { href: "/ugc/profile", title: "Profile", description: "Update display name and avatar.", accent: MUSTARD },
+  { href: "/ugc/create", title: "Create Game", description: "Make a new brackets or balance game.", accent: MUSTARD },
+  { href: "/ugc/history", title: "Play History", description: "Review what you played.", accent: "#f59e0b" },
+  { href: "/ugc/my-games", title: "My Games", description: "Manage visibility and delete.", accent: MUSTARD },
+  {
+    href: "/triathlon/dashboard",
+    title: "Brain Triathlon",
+    description: "ZCI trends, streaks, and full session history.",
+    accent: TRIATHLON_ACCENT,
+  },
+  { href: "/bracket", title: "Bracket", description: "Browse community creations.", accent: "#b8860b" },
+];
 
 type ProfileLite = {
   display_name: string | null;
@@ -71,17 +88,9 @@ export default function UgcCockpitClient() {
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3" style={{ marginTop: 14 }}>
-        <CockpitTile
-          href="/triathlon/dashboard"
-          title="Brain Triathlon"
-          description="ZCI trends, streaks, and full session history."
-          accent="#00FF94"
-        />
-        <CockpitTile href="/ugc/profile" title="Profile" description="Update display name and avatar." accent={MUSTARD} />
-        <CockpitTile href="/ugc/create" title="Create Game" description="Make a new brackets or balance game." accent={MUSTARD} />
-        <CockpitTile href="/ugc/history" title="Play History" description="Review what you played." accent="#f59e0b" />
-        <CockpitTile href="/ugc/my-games" title="My Games" description="Manage visibility and delete." accent={MUSTARD} />
-        <CockpitTile href="/bracket" title="Bracket" description="Browse community creations." accent="#b8860b" />
+        {COCKPIT_TILES.map((t) => (
+          <CockpitTile key={t.href} href={t.href} title={t.title} description={t.description} accent={t.accent} />
+        ))}
         <button
           onClick={async () => {
             await supabase?.auth.signOut();
