@@ -55,6 +55,19 @@ const PLAY_COUNT_PILL_STYLE: CSSProperties = {
 
 const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
 
+const TRIATHLON_CARD_SHELL: CSSProperties = {
+  background: "var(--bg-card)",
+  border: "1px solid var(--border)",
+  borderLeft: `3px solid ${ACCENT}`,
+  borderRadius: "var(--radius-lg)",
+  padding: "24px 20px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "stretch",
+  gap: 10,
+  minHeight: 0,
+};
+
 function mapGameType(category: GameData["category"]): Exclude<HomeTypeFilter, "all"> {
   if (category === "office-iq" || category === "korean-tv") return "game";
   if (category === "dark-personality" || category === "relationship" || category === "money") return "personality";
@@ -79,6 +92,20 @@ function formatUtcYmdDots(d: Date): string {
   return `${y}.${m}.${day}`;
 }
 
+/** Ms from `now` until next UTC 00:00:00 (exclusive upper bound of “today” UTC). */
+function msUntilNextUtcMidnight(now: Date): number {
+  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0));
+  return Math.max(0, next.getTime() - now.getTime());
+}
+
+function formatHms(ms: number): string {
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
+
 function triathlonEmojiForPick(pick: DailyTriathlonPick): string {
   const g = ALL_GAMES.find((x) => x.id === pick.id);
   return g?.emoji ?? "🧠";
@@ -92,6 +119,7 @@ export type HomePageClientProps = {
 export default function HomePageClient({ initialPlayCounts }: HomePageClientProps) {
   const [utcNow, setUtcNow] = useState(() => new Date());
   const [dailyGames, setDailyGames] = useState<DailyTriathlonPick[] | null>(null);
+  const [midnightCountdownMs, setMidnightCountdownMs] = useState(() => msUntilNextUtcMidnight(new Date()));
 
   const [queryState, setQueryState] = useState<{ category: HomeTypeFilter; sort: HomeSort }>(() => readInitialQuery());
   const category = queryState.category;
@@ -119,6 +147,23 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
     };
     tick();
     const id = window.setInterval(tick, 60_000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      let ms = msUntilNextUtcMidnight(now);
+      if (ms <= 0) {
+        setDailyGames(getDailyGames());
+        setUtcNow(new Date());
+        const now2 = new Date();
+        ms = msUntilNextUtcMidnight(now2);
+      }
+      setMidnightCountdownMs(ms);
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -230,40 +275,135 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         >
           Today&apos;s Brain Triathlon: {utcLabel}
         </h1>
-        <p
+        <div
           style={{
-            fontSize: "clamp(14px, 2.2vw, 16px)",
-            color: "var(--text-2)",
-            lineHeight: 1.55,
-            margin: 0,
             maxWidth: 520,
             marginLeft: "auto",
             marginRight: "auto",
           }}
         >
-          2-minute daily brain exercise. Different challenge every day.
-        </p>
+          <p
+            style={{
+              fontSize: "clamp(14px, 2.2vw, 16px)",
+              color: "var(--text-2)",
+              lineHeight: 1.55,
+              margin: 0,
+            }}
+          >
+            2-minute daily brain exercise. Different challenge every day.
+          </p>
+          <p
+            style={{
+              fontSize: 12,
+              color: "var(--text-3)",
+              fontFamily: "var(--font-mono)",
+              lineHeight: 1.5,
+              margin: 0,
+              marginTop: 8,
+            }}
+          >
+            Next challenge in {formatHms(midnightCountdownMs)}
+          </p>
+        </div>
       </section>
 
-      <section style={{ paddingTop: 10, paddingBottom: 8 }}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+      {/* Mobile: 2×2 grid — 3 daily games + Start card (md = 768px) */}
+      <section className="block md:hidden" style={{ paddingTop: 10, paddingBottom: 8 }}>
+        <div className="grid grid-cols-2 gap-4">
           {dailyGames
-            ? dailyGames.map((pick) => (
+            ? (
+                <>
+                  {dailyGames.map((pick) => (
+                    <article key={pick.id} style={TRIATHLON_CARD_SHELL}>
+                      <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 4 }} aria-hidden>
+                        {triathlonEmojiForPick(pick)}
+                      </div>
+                      <h2
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 800,
+                          letterSpacing: "-0.02em",
+                          color: "var(--text-1)",
+                          lineHeight: 1.2,
+                          margin: 0,
+                        }}
+                      >
+                        {pick.name}
+                      </h2>
+                      <p
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          fontFamily: "var(--font-mono)",
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          color: ACCENT,
+                          margin: 0,
+                        }}
+                      >
+                        {pick.category}
+                      </p>
+                      <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55, margin: 0 }}>
+                        {TRIATHLON_CARD_BLURB[pick.id] ?? pick.cognitiveCategory}
+                      </p>
+                    </article>
+                  ))}
+                  <Link
+                    href="/triathlon"
+                    className="pressable"
+                    style={{
+                      ...TRIATHLON_CARD_SHELL,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      textDecoration: "none",
+                      height: "100%",
+                    }}
+                  >
+                    <span
+                      style={{
+                        color: ACCENT,
+                        fontWeight: 800,
+                        fontSize: 15,
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      Start Today&apos;s Triathlon →
+                    </span>
+                  </Link>
+                </>
+              )
+            : [0, 1, 2, 3].map((i) => (
                 <article
-                  key={pick.id}
+                  key={`triathlon-skel-m-${i}`}
                   style={{
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--border)",
-                    borderLeft: `3px solid ${ACCENT}`,
-                    borderRadius: "var(--radius-lg)",
-                    padding: "24px 20px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "stretch",
-                    gap: 10,
-                    minHeight: 0,
+                    ...TRIATHLON_CARD_SHELL,
+                    gap: 8,
+                    opacity: 0.5,
                   }}
                 >
+                  {i < 3 ? (
+                    <>
+                      <div style={{ height: 40, borderRadius: 8, background: "var(--bg-elevated)", maxWidth: 48 }} />
+                      <div style={{ height: 26, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "85%" }} />
+                      <div style={{ height: 14, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "40%" }} />
+                      <div style={{ height: 52, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "100%" }} />
+                    </>
+                  ) : (
+                    <div style={{ height: 24, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "80%", margin: "auto" }} />
+                  )}
+                </article>
+              ))}
+        </div>
+      </section>
+
+      {/* Desktop: 3 cards in a row (unchanged) */}
+      <section className="hidden md:block" style={{ paddingTop: 10, paddingBottom: 8 }}>
+        <div className="grid grid-cols-3 gap-5">
+          {dailyGames
+            ? dailyGames.map((pick) => (
+                <article key={pick.id} style={TRIATHLON_CARD_SHELL}>
                   <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 4 }} aria-hidden>
                     {triathlonEmojiForPick(pick)}
                   </div>
@@ -301,13 +441,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                 <article
                   key={`triathlon-skel-${i}`}
                   style={{
-                    background: "var(--bg-card)",
-                    border: "1px solid var(--border)",
-                    borderLeft: `3px solid ${ACCENT}`,
-                    borderRadius: "var(--radius-lg)",
-                    padding: "24px 20px",
-                    display: "flex",
-                    flexDirection: "column",
+                    ...TRIATHLON_CARD_SHELL,
                     gap: 8,
                     minHeight: 0,
                     opacity: 0.5,
@@ -322,7 +456,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         </div>
       </section>
 
-      <section style={{ paddingTop: 28, paddingBottom: 8 }}>
+      <section className="hidden md:block" style={{ paddingTop: 28, paddingBottom: 8 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <Link
             href="/triathlon"
@@ -358,6 +492,24 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
             No signup required · Track progress free with account
           </p>
         </div>
+      </section>
+
+      <section className="block md:hidden" style={{ paddingTop: 8, paddingBottom: 8 }}>
+        <p
+          style={{
+            fontSize: 12,
+            color: "var(--text-3)",
+            fontFamily: "var(--font-mono)",
+            textAlign: "center",
+            lineHeight: 1.6,
+            margin: 0,
+            maxWidth: 420,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          No signup required · Track progress free with account
+        </p>
       </section>
 
       <section style={{ marginTop: 28, marginBottom: 48 }}>
