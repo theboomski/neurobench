@@ -11,6 +11,8 @@ import { getSupabaseBrowser } from "@/lib/supabase";
 import type { UgcCategory, UgcVisibility } from "@/lib/ugcTypes";
 
 type BracketDraftItem = {
+  /** Stable React list key (never use `name` — it changes while editing). */
+  draftKey: string;
   name: string;
   preview: string;
   file?: File;
@@ -33,6 +35,10 @@ const MAX_PARTICIPANTS = 64;
 const MAX_TEXT_ENTRIES = 1024;
 const DRAFT_KEY = "ugc-create-draft-v2";
 const FONT_OPTIONS = ["Inter", "Pretendard", "Noto Sans", "Arial", "Georgia"];
+
+function newBracketDraftKey(): string {
+  return typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `bracket-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
 
 function formatPublishError(e: unknown): string {
   if (e && typeof e === "object" && "message" in e && typeof (e as { message: unknown }).message === "string") {
@@ -142,7 +148,7 @@ export default function UgcCreateClient() {
         language?: string;
         visibility?: UgcVisibility;
         contentTab?: ContentTab;
-        bracketItems?: Array<{ name: string; preview: string; externalUrl?: string; source: "upload" | "url" | "youtube" }>;
+        bracketItems?: Array<{ draftKey?: string; name: string; preview: string; externalUrl?: string; source: "upload" | "url" | "youtube" }>;
         textEntries?: TextEntry[];
       };
       if (draft.title) setTitle(draft.title);
@@ -151,7 +157,13 @@ export default function UgcCreateClient() {
       if (draft.language) setLanguage(draft.language);
       if (draft.visibility) setVisibility(draft.visibility);
       if (draft.contentTab) setContentTab(draft.contentTab);
-      if (draft.bracketItems?.length) setBracketItems(draft.bracketItems.map((x) => ({ ...x })));
+      if (draft.bracketItems?.length)
+        setBracketItems(
+          draft.bracketItems.map((x) => ({
+            ...x,
+            draftKey: x.draftKey ?? newBracketDraftKey(),
+          })),
+        );
       if (draft.textEntries?.length) setTextEntries(draft.textEntries);
     } catch {
       // ignore malformed drafts
@@ -167,7 +179,7 @@ export default function UgcCreateClient() {
         language,
         visibility,
         contentTab,
-        bracketItems: bracketItems.map((x) => ({ name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
+        bracketItems: bracketItems.map((x) => ({ draftKey: x.draftKey, name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
         textEntries,
       };
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -236,6 +248,7 @@ export default function UgcCreateClient() {
         picked.map(async (f) => {
           const webp = await normalizeImageToWebp(f);
           return {
+            draftKey: newBracketDraftKey(),
             file: webp,
             name: deriveItemNameFromFilename(f.name) || "Untitled",
             preview: URL.createObjectURL(webp),
@@ -259,6 +272,7 @@ export default function UgcCreateClient() {
       .slice(0, participantsRemaining);
     if (!urls.length) return;
     const next = urls.map((url) => ({
+      draftKey: newBracketDraftKey(),
       name: deriveNameFromUrl(url),
       preview: url,
       externalUrl: url,
@@ -289,6 +303,7 @@ export default function UgcCreateClient() {
       setBracketItems((prev) => [
         ...prev,
         {
+          draftKey: newBracketDraftKey(),
           name: label,
           preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           externalUrl: watchUrl,
@@ -321,6 +336,7 @@ export default function UgcCreateClient() {
         if (!videoId) continue;
         const meta = await fetchYouTubeMeta(url);
         next.push({
+          draftKey: newBracketDraftKey(),
           name: meta.title,
           preview: meta.thumbnail || `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           externalUrl: url,
@@ -370,7 +386,7 @@ export default function UgcCreateClient() {
       language,
       visibility,
       contentTab,
-      bracketItems: bracketItems.map((x) => ({ name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
+      bracketItems: bracketItems.map((x) => ({ draftKey: x.draftKey, name: x.name, preview: x.preview, externalUrl: x.externalUrl, source: x.source })),
       textEntries,
     };
     window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -449,7 +465,7 @@ export default function UgcCreateClient() {
       try {
         if (gameType === "brackets") {
           setStatus("Saving participants...");
-          const payload: Array<{ game_id: string; name: string; image_url: string; video_url: string | null; order: number }> = [];
+          const payload: Array<{ game_id: string; name: string; image_url: string; order: number; video_url?: string }> = [];
           for (let i = 0; i < bracketItems.length; i += 1) {
             const item = bracketItems[i];
             let imageUrl = item.preview;
@@ -467,7 +483,15 @@ export default function UgcCreateClient() {
             } else {
               imageUrl = item.externalUrl ?? item.preview;
             }
-            payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, video_url: videoUrl, order: i });
+            const row: { game_id: string; name: string; image_url: string; order: number; video_url?: string } = {
+              game_id: game.id,
+              name: item.name.trim() || `Participant ${i + 1}`,
+              image_url: imageUrl,
+              order: i,
+            };
+            // Omit when absent so DBs without `video_url` still accept image-only brackets (migration: 20260502_ugc_bracket_video_items.sql).
+            if (videoUrl != null && String(videoUrl).trim() !== "") row.video_url = videoUrl;
+            payload.push(row);
           }
           const { error: itemsErr } = await supabase.from("ugc_brackets_items").insert(payload);
           if (itemsErr) throw itemsErr;
@@ -677,7 +701,7 @@ export default function UgcCreateClient() {
 
             <div style={{ display: "grid", gap: 8 }}>
               {bracketItems.map((item, idx) => (
-                <div key={`${item.name}-${idx}`} style={{ display: "grid", gridTemplateColumns: "56px 1fr auto", gap: 8, alignItems: "center" }}>
+                <div key={item.draftKey} style={{ display: "grid", gridTemplateColumns: "56px 1fr auto", gap: 8, alignItems: "center" }}>
                   <img src={item.preview} alt={item.name} style={{ width: 56, height: 56, borderRadius: 8, objectFit: "cover", border: "1px solid var(--border)" }} />
                   <input value={item.name} onChange={(e) => setBracketItems((prev) => prev.map((p, i) => (i === idx ? { ...p, name: e.target.value } : p)))} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: "var(--bg-elevated)" }} />
                   <button type="button" onClick={() => removeBracketItem(idx)} style={{ ...smallBtn(), color: "#f87171" }}>Remove</button>
