@@ -10,7 +10,7 @@ import { createSharedResultUrl } from "@/lib/createSharedResultUrl";
 import { getTriathlonCognitiveCategoryForGameId } from "@/lib/triathlonDailyGames";
 import type { ResultSharePayloadV1 } from "@/lib/resultShareTypes";
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
-import { TRIATHLON_STORAGE_KEY, parseTriathlonSession } from "@/lib/triathlonSession";
+import { TRIATHLON_STORAGE_KEY, normalizeTriathlonRawScore, parseTriathlonSession } from "@/lib/triathlonSession";
 import type { GameData } from "@/lib/types";
 
 const TRIATHLON_ACCENT = "#00FF94";
@@ -213,6 +213,9 @@ export default function CommonResult({
   const peopleBillions = (peopleCount / 1_000_000_000).toFixed(2);
   const [copiedToast, setCopiedToast] = useState(false);
   const [sessionListsGame, setSessionListsGame] = useState(false);
+  const [todayTriathlonTop, setTodayTriathlonTop] = useState<
+    null | "loading" | { show: false } | { show: true; topPercent: number }
+  >(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -224,8 +227,39 @@ export default function CommonResult({
   const useTriathlonResultCard =
     isTriathlonProp === true || (isTriathlonProp !== false && sessionListsGame);
 
-  const triathlonTierLabel = getTriathlonTierLabel(normalizedScore);
-  const triathlonKiller = killerLineOverride ?? getTriathlonProfessionalKiller(normalizedScore);
+  const triathlonLinearScore = normalizeTriathlonRawScore(rawScore, game.id);
+  const triathlonDisplayScore = isTriathlonProp === true ? triathlonLinearScore : normalizedScore;
+
+  useEffect(() => {
+    if (isTriathlonProp !== true) {
+      setTodayTriathlonTop(null);
+      return;
+    }
+    const linear = normalizeTriathlonRawScore(rawScore, game.id);
+    setTodayTriathlonTop("loading");
+    let cancelled = false;
+    void fetch(
+      `/api/triathlon/today-top-percent?gameId=${encodeURIComponent(game.id)}&normalizedScore=${encodeURIComponent(String(linear))}`,
+    )
+      .then((r) => r.json())
+      .then((j: { show?: boolean; topPercent?: number }) => {
+        if (cancelled) return;
+        if (j.show === true && typeof j.topPercent === "number") {
+          setTodayTriathlonTop({ show: true, topPercent: j.topPercent });
+        } else {
+          setTodayTriathlonTop({ show: false });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setTodayTriathlonTop({ show: false });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isTriathlonProp, game.id, rawScore]);
+
+  const triathlonTierLabel = getTriathlonTierLabel(triathlonDisplayScore);
+  const triathlonKiller = killerLineOverride ?? getTriathlonProfessionalKiller(triathlonDisplayScore);
   const triathlonPercentileSentence = `You outperformed ${higherThanPct.toFixed(1)}% of players who took this test.`;
   const cognitiveCategory = getTriathlonCognitiveCategoryForGameId(game.id) ?? "Cognitive";
 
@@ -235,8 +269,23 @@ export default function CommonResult({
     return `I scored ${normalizedScore} points in ${game.title}. Can you beat me? 🕹️ ${link}`;
   }, [game.category, game.id, game.title, normalizedScore, shareTextOverride]);
 
+  const triathlonUrlPercentileLine =
+    isTriathlonProp === true &&
+    todayTriathlonTop != null &&
+    todayTriathlonTop !== "loading" &&
+    todayTriathlonTop.show === true
+      ? `Top ${todayTriathlonTop.topPercent}% among today's triathlon players.`
+      : null;
+
   const handleShare = async () => {
     if (useTriathlonResultCard) {
+      const shareScore = isTriathlonProp === true ? triathlonLinearScore : normalizedScore;
+      const sharePercentileLine =
+        isTriathlonProp === true && triathlonUrlPercentileLine
+          ? triathlonUrlPercentileLine
+          : isTriathlonProp === true
+            ? ""
+            : triathlonPercentileSentence;
       const payload: ResultSharePayloadV1 = {
         v: 1,
         kind: "common",
@@ -244,14 +293,14 @@ export default function CommonResult({
         id: game.id,
         gameTitle: game.title,
         primaryColor: game.accent,
-        normalizedScore,
+        normalizedScore: shareScore,
         rawScore,
         rawUnit,
         percentile,
         rank,
         levelLabel: triathlonTierLabel,
         scoreEmoji: "",
-        percentileSentence: triathlonPercentileSentence,
+        percentileSentence: sharePercentileLine.trim() || triathlonPercentileSentence,
         killerLine: triathlonKiller,
         benchmarkNote,
         tone,
@@ -259,7 +308,7 @@ export default function CommonResult({
       const url = await createSharedResultUrl(payload);
       const challenge = shareTextOverride
         ? `${shareTextOverride} ${url}`
-        : `${game.title}: ${normalizedScore}/100 (${triathlonTierLabel}). ${triathlonPercentileSentence} ${url}`;
+        : `${game.title}: ${shareScore}/100 (${triathlonTierLabel}).${sharePercentileLine ? ` ${sharePercentileLine}` : ""} ${url}`;
       await shareZazazaChallenge({
         title: `${triathlonTierLabel} — ${game.title} | ZAZAZA`,
         text: challenge,
@@ -316,7 +365,7 @@ export default function CommonResult({
   };
 
   if (useTriathlonResultCard) {
-    const barPct = Math.max(0, Math.min(100, normalizedScore));
+    const barPct = Math.max(0, Math.min(100, triathlonDisplayScore));
     return (
       <>
         <ShareCopiedToast show={copiedToast} />
@@ -380,65 +429,122 @@ export default function CommonResult({
               </div>
 
               <div style={{ textAlign: "left", width: "100%" }}>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: "var(--text-3)",
-                    fontFamily: "var(--font-mono)",
-                    marginBottom: 8,
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  Your Score
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                  <div
-                    style={{
-                      flex: "1 1 140px",
-                      minWidth: 0,
-                      height: 10,
-                      borderRadius: 5,
-                      background: "var(--bg-elevated)",
-                      border: "1px solid var(--border)",
-                      overflow: "hidden",
-                    }}
-                  >
+                {isTriathlonProp === true ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
                     <div
                       style={{
-                        width: `${barPct}%`,
-                        height: "100%",
-                        background: TRIATHLON_ACCENT,
-                        borderRadius: 4,
-                        transition: "width 0.35s ease",
+                        flex: "1 1 140px",
+                        minWidth: 0,
+                        height: 10,
+                        borderRadius: 5,
+                        background: "var(--bg-elevated)",
+                        border: "1px solid var(--border)",
+                        overflow: "hidden",
                       }}
-                    />
+                    >
+                      <div
+                        style={{
+                          width: `${barPct}%`,
+                          height: "100%",
+                          background: TRIATHLON_ACCENT,
+                          borderRadius: 4,
+                          transition: "width 0.35s ease",
+                        }}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "clamp(15px, 3.8vw, 19px)",
+                        fontWeight: 800,
+                        color: "#fff",
+                        fontFamily: "var(--font-mono)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Your Score: <span style={{ color: TRIATHLON_ACCENT }}>{triathlonLinearScore}</span> / 100
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(22px, 6vw, 28px)",
-                      fontWeight: 900,
-                      color: "#fff",
-                      fontFamily: "var(--font-mono)",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {normalizedScore}
-                    <span style={{ fontSize: "clamp(14px, 3.5vw, 17px)", fontWeight: 700, color: "var(--text-2)", marginLeft: 4 }}>/100</span>
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: "var(--text-3)",
+                        fontFamily: "var(--font-mono)",
+                        marginBottom: 8,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Your Score
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                      <div
+                        style={{
+                          flex: "1 1 140px",
+                          minWidth: 0,
+                          height: 10,
+                          borderRadius: 5,
+                          background: "var(--bg-elevated)",
+                          border: "1px solid var(--border)",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${barPct}%`,
+                            height: "100%",
+                            background: TRIATHLON_ACCENT,
+                            borderRadius: 4,
+                            transition: "width 0.35s ease",
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "clamp(22px, 6vw, 28px)",
+                          fontWeight: 900,
+                          color: "#fff",
+                          fontFamily: "var(--font-mono)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {normalizedScore}
+                        <span style={{ fontSize: "clamp(14px, 3.5vw, 17px)", fontWeight: 700, color: "var(--text-2)", marginLeft: 4 }}>/100</span>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
-              <div
-                style={{
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: "var(--text-2)",
-                  lineHeight: 1.45,
-                  textWrap: "balance" as never,
-                }}
-              >
-                {triathlonPercentileSentence}
-              </div>
+              {isTriathlonProp === true ? (
+                todayTriathlonTop != null &&
+                todayTriathlonTop !== "loading" &&
+                todayTriathlonTop.show === true ? (
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--text-2)",
+                      lineHeight: 1.45,
+                      textWrap: "balance" as never,
+                    }}
+                  >
+                    Top {todayTriathlonTop.topPercent}% among today&apos;s triathlon players
+                  </div>
+                ) : null
+              ) : (
+                <div
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "var(--text-2)",
+                    lineHeight: 1.45,
+                    textWrap: "balance" as never,
+                  }}
+                >
+                  {triathlonPercentileSentence}
+                </div>
+              )}
 
               <div
                 style={{
@@ -464,7 +570,12 @@ export default function CommonResult({
               )}
 
               <div style={{ marginTop: "auto", width: "100%", display: "flex", flexDirection: "column", gap: 12 }}>
-                <TriathlonResultContinuation gameId={game.id} normalizedScore={normalizedScore} rawScore={rawScore} embedded />
+                <TriathlonResultContinuation
+                  gameId={game.id}
+                  normalizedScore={isTriathlonProp === true ? triathlonLinearScore : normalizedScore}
+                  rawScore={rawScore}
+                  embedded
+                />
                 <div
                   style={{
                     height: 1,

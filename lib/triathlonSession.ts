@@ -7,15 +7,15 @@ export const TRIATHLON_NORMALIZATION: Record<
   string,
   { min: number; max: number }
 > = {
-  "color-conflict": { min: 0, max: 120 },
-  "color-conflict-2": { min: 0, max: 120 },
+  "color-conflict": { min: 0, max: 150 },
+  "color-conflict-2": { min: 0, max: 150 },
   "sequence-memory": { min: 4, max: 19 },
   "number-memory": { min: 4, max: 19 },
   "visual-memory": { min: 4, max: 19 },
   "chimp-test": { min: 4, max: 19 },
-  "verbal-memory": { min: 0, max: 80 },
-  "instant-comparison": { min: 0, max: 150 },
-  "fish-frenzy": { min: 0, max: 90 },
+  "verbal-memory": { min: 0, max: 100 },
+  "instant-comparison": { min: 0, max: 300 },
+  "fish-frenzy": { min: 0, max: 100 },
 };
 
 export type TriathlonScore = {
