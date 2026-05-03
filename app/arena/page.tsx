@@ -1,8 +1,7 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
+import ArenaLeaderboardsClient from "./ArenaLeaderboardsClient";
 import ArenaRefreshButton from "./ArenaRefreshButton";
-import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { ALL_GAMES } from "@/lib/games";
 import { leaderboardUsesAscendingScore } from "@/lib/leaderboardConfig";
 import { fetchGamePlayCountsFromDb } from "@/lib/serverGamePlayCounts";
@@ -30,6 +29,8 @@ type HallOfFameRow = {
   countryCode: string | null;
   playCount: number;
   hasAllTimeScore: boolean;
+  /** Calendar days since current #1 row was logged (for streak pill) */
+  streakDays: number | null;
 };
 
 type WeeklyLeaderRow = {
@@ -44,6 +45,14 @@ type WeeklyLeaderRow = {
 };
 
 const RANK_POINTS = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+/** Full calendar days since the current record row was logged (UTC ms / 864e5). */
+function calendarDaysHeld(iso: string | null): number | null {
+  if (!iso) return null;
+  const t = new Date(iso).getTime();
+  if (!Number.isFinite(t)) return null;
+  return Math.max(0, Math.floor((Date.now() - t) / 86_400_000));
+}
 
 function getUtcWeekStart(now = new Date()): Date {
   const day = now.getUTCDay(); // 0 = Sunday, 1 = Monday
@@ -140,6 +149,7 @@ function buildHallOfFame(rows: LeaderboardRow[], playCounts: Record<string, numb
       countryCode: best ? (best.country_code || "US").toUpperCase() : null,
       playCount: playCounts[game.id] ?? 0,
       hasAllTimeScore: !!best,
+      streakDays: best?.created_at ? calendarDaysHeld(best.created_at) : null,
     });
   }
 
@@ -241,207 +251,7 @@ export default async function ArenaPage() {
         </div>
       </section>
 
-      <section style={{ marginBottom: 28 }}>
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #00FF94", borderRadius: "var(--radius-lg)", padding: "16px 14px" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Global Weekly Country Rankings</h2>
-          <div style={{ display: "grid", gap: 6 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "44px 1fr 78px", gap: 8, fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", textTransform: "uppercase" }}>
-              <span>Rank</span>
-              <span>Country</span>
-              <span style={{ textAlign: "right" }}>Points</span>
-            </div>
-            {countryRankings.map((row, index) => (
-              <div key={row.countryCode} style={{ display: "grid", gridTemplateColumns: "44px 1fr 78px", gap: 8, alignItems: "center", padding: "7px 0", borderTop: "1px solid var(--border)" }}>
-                <span style={{ fontSize: 12, color: "var(--text-2)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>#{index + 1}</span>
-                <span style={{ fontSize: 13, color: "var(--text-1)", fontWeight: 700 }}>{countryCodeToFlag(row.countryCode)} {countryCodeToRegionName(row.countryCode)}</span>
-                <span style={{ fontSize: 12, color: "#00FF94", textAlign: "right", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
-                  {row.points}
-                </span>
-              </div>
-            ))}
-            {countryRankings.length === 0 && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No leaderboard data yet.</p>}
-          </div>
-          <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
-            Rankings are based on this week&apos;s leaderboard positions across all ZAZAZA games (Monday 00:00 UTC to Sunday 23:59 UTC). Each game&apos;s top 10 players earn points (1st = 10pts ... 10th = 1pt). Country totals are updated each time you load or refresh this page.
-          </p>
-        </div>
-      </section>
-
-      <section style={{ marginBottom: 48 }}>
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #22d3ee", borderRadius: "var(--radius-lg)", padding: "16px 14px", marginBottom: 20 }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Weekly Leaders</h2>
-          <div style={{ display: "grid", gap: 6 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
-                gap: 6,
-                fontSize: 10,
-                color: "var(--text-3)",
-                fontFamily: "var(--font-mono)",
-                textTransform: "uppercase",
-              }}
-            >
-              <span>Game</span>
-              <span>Player</span>
-              <span>Country</span>
-              <span style={{ textAlign: "right" }}>Score</span>
-            </div>
-            {weeklyLeaders.map((row) => (
-              <div
-                key={row.gameId}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
-                  gap: 6,
-                  alignItems: "center",
-                  padding: "7px 0",
-                  borderTop: "1px solid var(--border)",
-                }}
-              >
-                <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700, lineHeight: 1.2 }}>{row.gameTitle}</span>
-                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname ?? "-"}</span>
-                <span style={{ fontSize: 18 }}>{row.countryCode ? countryCodeToFlag(row.countryCode) : "-"}</span>
-                <details style={{ justifySelf: "end" }}>
-                  <summary
-                    style={{
-                      listStyle: "none",
-                      cursor: "pointer",
-                      fontSize: 13,
-                      color: "#22d3ee",
-                      textAlign: "right",
-                      fontFamily: "var(--font-mono)",
-                      fontWeight: 800,
-                      whiteSpace: "nowrap",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 4,
-                      border: "1px solid rgba(34,211,238,0.35)",
-                      borderRadius: 8,
-                      padding: "3px 6px",
-                      background: "rgba(34,211,238,0.08)",
-                    }}
-                  >
-                    {row.score ?? "-"}
-                    <span aria-hidden style={{ fontSize: 10, lineHeight: 1 }}>
-                      ▾
-                    </span>
-                  </summary>
-                  <div style={{ marginTop: 6, display: "flex", justifyContent: "flex-end" }}>
-                    <Link
-                      href={row.gamePath}
-                      className="pressable"
-                      style={{
-                        textDecoration: "none",
-                        border: "1px solid #22d3ee",
-                        borderRadius: 8,
-                        padding: "4px 8px",
-                        fontSize: 11,
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 700,
-                        color: "#22d3ee",
-                      }}
-                    >
-                      Play
-                    </Link>
-                  </div>
-                </details>
-              </div>
-            ))}
-            {!weeklyLeaders.some((row) => row.hasWeeklyScore) && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No scores yet this week</p>}
-          </div>
-          <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
-            Weekly Leaders resets every Monday at 00:00 UTC and tracks this week&apos;s #1 player for each game.
-          </p>
-        </div>
-
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #38bdf8", borderRadius: "var(--radius-lg)", padding: "16px 14px" }}>
-          <h2 style={{ fontSize: 16, fontWeight: 800, marginBottom: 10 }}>ZAZAZA Hall of Fame</h2>
-          <div style={{ display: "grid", gap: 6 }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
-                gap: 6,
-                fontSize: 10,
-                color: "var(--text-3)",
-                fontFamily: "var(--font-mono)",
-                textTransform: "uppercase",
-              }}
-            >
-              <span>Game</span>
-              <span>Player</span>
-              <span>Country</span>
-              <span style={{ textAlign: "right" }}>Score</span>
-            </div>
-            {hallOfFame.map((row) => (
-              <div
-                key={row.gameId}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(96px,1.2fr) minmax(72px,1fr) 44px 72px",
-                  gap: 6,
-                  alignItems: "center",
-                  padding: "7px 0",
-                  borderTop: "1px solid var(--border)",
-                }}
-              >
-                <span style={{ fontSize: 12, color: "var(--text-1)", fontWeight: 700, lineHeight: 1.2 }}>{row.gameTitle}</span>
-                <span style={{ fontSize: 11, color: "var(--text-2)", lineHeight: 1.2 }}>{row.nickname ?? "-"}</span>
-                <span style={{ fontSize: 18 }}>{row.countryCode ? countryCodeToFlag(row.countryCode) : "-"}</span>
-                <details style={{ justifySelf: "end" }}>
-                  <summary
-                    style={{
-                      listStyle: "none",
-                      cursor: "pointer",
-                      fontSize: 13,
-                      color: "#38bdf8",
-                      textAlign: "right",
-                      fontFamily: "var(--font-mono)",
-                      fontWeight: 800,
-                      whiteSpace: "nowrap",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 4,
-                      border: "1px solid rgba(56,189,248,0.35)",
-                      borderRadius: 8,
-                      padding: "3px 6px",
-                      background: "rgba(56,189,248,0.08)",
-                    }}
-                  >
-                    {row.score ?? "-"}
-                    <span aria-hidden style={{ fontSize: 10, lineHeight: 1 }}>
-                      ▾
-                    </span>
-                  </summary>
-                  <div style={{ marginTop: 6, display: "flex", justifyContent: "flex-end" }}>
-                    <Link
-                      href={row.gamePath}
-                      className="pressable"
-                      style={{
-                        textDecoration: "none",
-                        border: "1px solid #38bdf8",
-                        borderRadius: 8,
-                        padding: "4px 8px",
-                        fontSize: 11,
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: 700,
-                        color: "#38bdf8",
-                      }}
-                    >
-                      Play
-                    </Link>
-                  </div>
-                </details>
-              </div>
-            ))}
-            {!hallOfFame.some((row) => row.hasAllTimeScore) && <p style={{ fontSize: 12, color: "var(--text-3)" }}>No leaderboard data yet.</p>}
-          </div>
-          <p style={{ marginTop: 10, fontSize: 11, color: "var(--text-3)", lineHeight: 1.6 }}>
-            Hall of Fame shows the current all-time #1 score for each game. Rankings update in real time - anyone can claim the top spot.
-          </p>
-        </div>
-      </section>
+      <ArenaLeaderboardsClient countryRankings={countryRankings} weeklyLeaders={weeklyLeaders} hallOfFame={hallOfFame} />
 
       <div style={{ paddingBottom: 32 }}>
         <div className="ad-slot ad-banner">Advertisement</div>
