@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = getSupabaseServer();
   if (!supabase) return {};
   const row = await fetchUgcGameForSeo(supabase, slug, "brackets");
-  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  if (!row) notFound();
   const itemCount = await countUgcBracketItems(supabase, row.id);
   return bracketsPlayMetadata(row, itemCount);
 }
@@ -34,7 +34,7 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
     .eq("slug", slug)
     .eq("type", "brackets")
     .single();
-  if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
+  if (!game) notFound();
 
   const cat = Array.isArray(game.category) ? game.category[0] ?? null : game.category;
   const gameUrl = `${UGC_SITE_BASE}/ugc/brackets/${game.slug}`;

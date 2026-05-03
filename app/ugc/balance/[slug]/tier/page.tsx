@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = getSupabaseServer();
   if (!supabase) return {};
   const row = await fetchUgcGameForSeo(supabase, slug, "balance");
-  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  if (!row) notFound();
   return balanceTierMetadata(row);
 }
 
@@ -44,7 +44,7 @@ export default async function UgcBalanceTierPage({ params }: { params: Promise<{
     .eq("slug", slug)
     .eq("type", "balance")
     .single();
-  if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
+  if (!game) notFound();
 
   const { data: options } = await supabase.from("ugc_balance_options").select("option_a,option_b").eq("game_id", game.id).order("order", { ascending: true });
   if (!options?.length) notFound();

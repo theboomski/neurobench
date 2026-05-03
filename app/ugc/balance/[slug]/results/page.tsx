@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = getSupabaseServer();
   if (!supabase) return {};
   const row = await fetchUgcGameForSeo(supabase, slug, "balance");
-  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  if (!row) notFound();
   return balanceResultsMetadata(row);
 }
 
@@ -24,7 +24,7 @@ export default async function UgcBalanceResultsPage({ params }: { params: Promis
     .eq("slug", slug)
     .eq("type", "balance")
     .single();
-  if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
+  if (!game) notFound();
 
   const { data: options } = await supabase
     .from("ugc_balance_options")

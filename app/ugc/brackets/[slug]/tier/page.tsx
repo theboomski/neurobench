@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = getSupabaseServer();
   if (!supabase) return {};
   const row = await fetchUgcGameForSeo(supabase, slug, "brackets");
-  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  if (!row) notFound();
   return bracketsTierMetadata(row);
 }
 
@@ -36,7 +36,7 @@ export default async function UgcBracketsTierPage({ params }: { params: Promise<
     .eq("slug", slug)
     .eq("type", "brackets")
     .single();
-  if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
+  if (!game) notFound();
 
   const { data: items } = await supabase
     .from("ugc_brackets_items")

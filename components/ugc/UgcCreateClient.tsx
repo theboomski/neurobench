@@ -34,6 +34,14 @@ const MAX_TEXT_ENTRIES = 1024;
 const DRAFT_KEY = "ugc-create-draft-v2";
 const FONT_OPTIONS = ["Inter", "Pretendard", "Noto Sans", "Arial", "Georgia"];
 
+function formatPublishError(e: unknown): string {
+  if (e && typeof e === "object" && "message" in e && typeof (e as { message: unknown }).message === "string") {
+    return (e as { message: string }).message;
+  }
+  if (e instanceof Error) return e.message;
+  return "Failed to publish.";
+}
+
 function buildYouTubeWatchUrl(videoId: string, startSec?: number, endSec?: number): string {
   const u = new URL(`https://www.youtube.com/watch?v=${videoId}`);
   if (typeof startSec === "number" && startSec >= 0) u.searchParams.set("start", String(startSec));
@@ -431,57 +439,63 @@ export default function UgcCreateClient() {
           language,
           visibility: gameVisibility,
           is_nsfw: false,
+          is_approved: true,
           slug,
         })
         .select("id,type,slug")
         .single();
       if (gameErr || !game) throw gameErr ?? new Error("Failed to create game.");
 
-      if (gameType === "brackets") {
-        setStatus("Saving participants...");
-        const payload: Array<{ game_id: string; name: string; image_url: string; video_url: string | null; order: number }> = [];
-        for (let i = 0; i < bracketItems.length; i += 1) {
-          const item = bracketItems[i];
-          let imageUrl = item.preview;
-          let videoUrl: string | null = null;
-          if (item.file) {
-            const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
-            const { error: itemUploadErr } = await supabase.storage
-              .from("brackets")
-              .upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
-            if (itemUploadErr) throw itemUploadErr;
-            imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
-          } else if (item.source === "youtube") {
-            videoUrl = item.externalUrl ?? null;
-            imageUrl = item.preview;
-          } else {
-            imageUrl = item.externalUrl ?? item.preview;
+      try {
+        if (gameType === "brackets") {
+          setStatus("Saving participants...");
+          const payload: Array<{ game_id: string; name: string; image_url: string; video_url: string | null; order: number }> = [];
+          for (let i = 0; i < bracketItems.length; i += 1) {
+            const item = bracketItems[i];
+            let imageUrl = item.preview;
+            let videoUrl: string | null = null;
+            if (item.file) {
+              const key = `${user.id}/${game.id}/${Date.now()}-${i}-${sanitizeStorageFileName(item.file.name)}`;
+              const { error: itemUploadErr } = await supabase.storage
+                .from("brackets")
+                .upload(key, item.file, { upsert: false, cacheControl: "31536000", contentType: "image/webp" });
+              if (itemUploadErr) throw itemUploadErr;
+              imageUrl = supabase.storage.from("brackets").getPublicUrl(key).data.publicUrl;
+            } else if (item.source === "youtube") {
+              videoUrl = item.externalUrl ?? null;
+              imageUrl = item.preview;
+            } else {
+              imageUrl = item.externalUrl ?? item.preview;
+            }
+            payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, video_url: videoUrl, order: i });
           }
-          payload.push({ game_id: game.id, name: item.name.trim() || `Participant ${i + 1}`, image_url: imageUrl, video_url: videoUrl, order: i });
+          const { error: itemsErr } = await supabase.from("ugc_brackets_items").insert(payload);
+          if (itemsErr) throw itemsErr;
+        } else {
+          setStatus("Saving balance pairs...");
+          if (textEntries.length % 2 !== 0) throw new Error("Balance text entries must be an even number.");
+          const payload = [];
+          for (let i = 0; i < textEntries.length; i += 2) {
+            payload.push({
+              game_id: game.id,
+              option_a: textEntries[i].text,
+              option_b: textEntries[i + 1].text,
+              round: i / 2 + 1,
+              order: i / 2,
+            });
+          }
+          const { error: balErr } = await supabase.from("ugc_balance_options").insert(payload);
+          if (balErr) throw balErr;
         }
-        const { error: itemsErr } = await supabase.from("ugc_brackets_items").insert(payload);
-        if (itemsErr) throw itemsErr;
-      } else {
-        setStatus("Saving balance pairs...");
-        if (textEntries.length % 2 !== 0) throw new Error("Balance text entries must be an even number.");
-        const payload = [];
-        for (let i = 0; i < textEntries.length; i += 2) {
-          payload.push({
-            game_id: game.id,
-            option_a: textEntries[i].text,
-            option_b: textEntries[i + 1].text,
-            round: i / 2 + 1,
-            order: i / 2,
-          });
-        }
-        const { error: balErr } = await supabase.from("ugc_balance_options").insert(payload);
-        if (balErr) throw balErr;
-      }
 
-      window.localStorage.removeItem(DRAFT_KEY);
-      router.push(game.type === "brackets" ? `/ugc/brackets/${game.slug}` : `/ugc/balance/${game.slug}`);
+        window.localStorage.removeItem(DRAFT_KEY);
+        router.push(game.type === "brackets" ? `/ugc/brackets/${game.slug}` : `/ugc/balance/${game.slug}`);
+      } catch (inner) {
+        await supabase.from("ugc_games").delete().eq("id", game.id);
+        throw inner;
+      }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to publish.");
+      setError(formatPublishError(e));
     } finally {
       setStatus(null);
       setBusy(false);

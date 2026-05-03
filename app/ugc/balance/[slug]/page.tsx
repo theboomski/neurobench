@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = getSupabaseServer();
   if (!supabase) return {};
   const row = await fetchUgcGameForSeo(supabase, slug, "balance");
-  if (!row || (!row.is_approved && row.visibility !== "private")) notFound();
+  if (!row) notFound();
   const optionCount = await countUgcBalanceOptions(supabase, row.id);
   return balancePlayMetadata(row, optionCount);
 }
@@ -33,7 +33,7 @@ export default async function UgcBalancePlayPage({ params }: { params: Promise<{
     .eq("slug", slug)
     .eq("type", "balance")
     .single();
-  if (!game || (!game.is_approved && game.visibility !== "private")) notFound();
+  if (!game) notFound();
 
   const cat = Array.isArray(game.category) ? game.category[0] ?? null : game.category;
   const gameUrl = `${UGC_SITE_BASE}/ugc/balance/${game.slug}`;
