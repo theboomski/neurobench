@@ -241,7 +241,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
             marginRight: "auto",
           }}
         >
-          2-minute daily exercise for your brain.
+          2-minute daily brain exercise. Different challenge every day.
         </p>
       </section>
 

@@ -63,11 +63,35 @@ export default function UserMenu() {
 
   return (
     <div ref={rootRef} style={{ position: "relative", flexShrink: 0, marginRight: isCompact ? 20 : 0 }}>
-      <button onClick={() => setOpen((v) => !v)} style={{ width: 34, height: 34, borderRadius: "999px", border: "1px solid var(--border)", background: "var(--bg-card)", color: "var(--text-1)", fontWeight: 900, overflow: "hidden", cursor: "pointer" }}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: "999px",
+          border: "1px solid rgba(255,255,255,0.92)",
+          background: "rgba(255,255,255,0.12)",
+          color: "#ffffff",
+          fontWeight: 900,
+          overflow: "hidden",
+          cursor: "pointer",
+          boxSizing: "border-box",
+        }}
+      >
         {avatarUrl ? (
           <img src={avatarUrl} alt="Profile avatar" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
-          <span style={{ display: "grid", placeItems: "center", width: "100%", height: "100%", fontSize: 14 }}>
+          <span
+            style={{
+              display: "grid",
+              placeItems: "center",
+              width: "100%",
+              height: "100%",
+              fontSize: 14,
+              filter: "brightness(0) invert(1)",
+            }}
+          >
             👤
           </span>
         )}
