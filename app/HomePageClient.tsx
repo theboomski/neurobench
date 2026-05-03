@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { GameCard } from "@/components/GameCard";
+import { canonicalGamePath } from "@/lib/canonicalGamePaths";
 import { ALL_GAMES } from "@/lib/games";
+import { getPlayCounts } from "@/lib/tracking";
+import type { GameData } from "@/lib/types";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
 const ACCENT = "#00FF94";
-const GRID_BATCH = 16;
+const INITIAL_PAGE_SIZE = 12;
 
 const TRIATHLON_CARD_BLURB: Record<string, string> = {
   "color-conflict": "Tests inhibitory control · Trains your cognitive flexibility",
@@ -21,6 +23,34 @@ const TRIATHLON_CARD_BLURB: Record<string, string> = {
   "fish-frenzy": "Tests response inhibition · Trains your reaction control",
 };
 
+type HomeTypeFilter = "all" | "brain" | "game" | "personality";
+type HomeSort = "popular" | "latest";
+
+const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
+  brain: "#10b981",
+  game: "#f97316",
+  personality: "#8b5cf6",
+};
+
+const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
+
+function mapGameType(category: GameData["category"]): Exclude<HomeTypeFilter, "all"> {
+  if (category === "office-iq" || category === "korean-tv") return "game";
+  if (category === "dark-personality" || category === "relationship" || category === "money") return "personality";
+  return "brain";
+}
+
+function readInitialQuery(): { category: HomeTypeFilter; sort: HomeSort } {
+  if (typeof window === "undefined") return { category: "all", sort: "popular" };
+  const sp = new URLSearchParams(window.location.search);
+  const categoryRaw = sp.get("category");
+  const sortRaw = sp.get("sort");
+  const category: HomeTypeFilter =
+    categoryRaw === "brain" || categoryRaw === "game" || categoryRaw === "personality" ? categoryRaw : "all";
+  const sort: HomeSort = sortRaw === "latest" ? "latest" : "popular";
+  return { category, sort };
+}
+
 function formatUtcYmdDots(d: Date): string {
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
@@ -33,13 +63,33 @@ function triathlonEmojiForPick(pick: DailyTriathlonPick): string {
   return g?.emoji ?? "🧠";
 }
 
-export default function HomePageClient() {
+export type HomePageClientProps = {
+  /** Server-fetched so Popular sort matches before client hydration (avoids list flash). */
+  initialPlayCounts: Record<string, number>;
+};
+
+export default function HomePageClient({ initialPlayCounts }: HomePageClientProps) {
   const [utcNow, setUtcNow] = useState(() => new Date());
   const [dailyGames, setDailyGames] = useState<DailyTriathlonPick[] | null>(null);
-  const [visibleCount, setVisibleCount] = useState(() => Math.min(GRID_BATCH, ALL_GAMES.length));
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  const allGames = useMemo(() => ALL_GAMES, []);
+  const [queryState, setQueryState] = useState<{ category: HomeTypeFilter; sort: HomeSort }>(() => readInitialQuery());
+  const category = queryState.category;
+  const sort = queryState.sort;
+  const [playCounts, setPlayCounts] = useState<Record<string, number>>(() => ({ ...initialPlayCounts }));
+  const [visibleCount, setVisibleCount] = useState(INITIAL_PAGE_SIZE);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const loadingMoreRef = useRef(false);
+
+  const games = useMemo(
+    () =>
+      ALL_GAMES.map((g, idx) => ({
+        ...g,
+        type: mapGameType(g.category),
+        latestIndex: idx,
+        releasedAtMs: g.releasedAt ? Date.parse(g.releasedAt) : Number.NaN,
+      })),
+    [],
+  );
 
   useEffect(() => {
     const tick = () => {
@@ -52,23 +102,93 @@ export default function HomePageClient() {
   }, []);
 
   useEffect(() => {
-    if (visibleCount >= allGames.length) return;
-    const el = sentinelRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setVisibleCount((v) => Math.min(v + GRID_BATCH, allGames.length));
-        }
-      },
-      { root: null, rootMargin: "240px 0px", threshold: 0 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [visibleCount, allGames.length]);
+    const refreshFromUrl = () => setQueryState(readInitialQuery());
+    const onQueryChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ category?: HomeTypeFilter; sort?: HomeSort }>).detail;
+      const nextCategory = detail?.category;
+      const nextSort = detail?.sort;
+      if (
+        (nextCategory === "all" || nextCategory === "brain" || nextCategory === "game" || nextCategory === "personality") &&
+        (nextSort === "popular" || nextSort === "latest")
+      ) {
+        setQueryState({ category: nextCategory, sort: nextSort });
+        return;
+      }
+      refreshFromUrl();
+    };
+    refreshFromUrl();
+    window.addEventListener("popstate", refreshFromUrl);
+    window.addEventListener("zazaza-home-query-change", onQueryChange);
+    return () => {
+      window.removeEventListener("popstate", refreshFromUrl);
+      window.removeEventListener("zazaza-home-query-change", onQueryChange);
+    };
+  }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      const counts = await getPlayCounts();
+      if (cancelled) return;
+      setPlayCounts(counts);
+    };
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [games]);
+
+  const filteredSortedGames = useMemo(() => {
+    const filtered = category === "all" ? games : games.filter((g) => g.type === category);
+    if (sort === "latest") {
+      return [...filtered].sort((a, b) => {
+        const aHasDate = Number.isFinite(a.releasedAtMs);
+        const bHasDate = Number.isFinite(b.releasedAtMs);
+        if (aHasDate || bHasDate) {
+          if (!aHasDate) return 1;
+          if (!bHasDate) return -1;
+          if (b.releasedAtMs !== a.releasedAtMs) return b.releasedAtMs - a.releasedAtMs;
+        }
+        return b.latestIndex - a.latestIndex;
+      });
+    }
+    return [...filtered].sort((a, b) => {
+      const aCount = playCounts[a.id] ?? 0;
+      const bCount = playCounts[b.id] ?? 0;
+      if (aCount === 0 && bCount > 0) return 1;
+      if (bCount === 0 && aCount > 0) return -1;
+      if (bCount !== aCount) return bCount - aCount;
+      return a.latestIndex - b.latestIndex;
+    });
+  }, [games, category, sort, playCounts]);
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_PAGE_SIZE);
+  }, [category, sort]);
+
+  useEffect(() => {
+    const node = loaderRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (!first?.isIntersecting || loadingMoreRef.current) return;
+        loadingMoreRef.current = true;
+        setVisibleCount((prev) => Math.min(prev + INITIAL_PAGE_SIZE, filteredSortedGames.length));
+        window.setTimeout(() => {
+          loadingMoreRef.current = false;
+        }, 80);
+      },
+      { rootMargin: "220px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [filteredSortedGames.length]);
+
+  const visibleGames = filteredSortedGames.slice(0, visibleCount);
+  const filterLabel = category === "all" ? "All" : category === "brain" ? "Brain Tests" : category === "game" ? "Games" : "Personality";
+  const sortLabel = sort === "popular" ? "Popular" : "Latest";
   const utcLabel = formatUtcYmdDots(utcNow);
-  const slice = allGames.slice(0, visibleCount);
 
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>
@@ -76,7 +196,6 @@ export default function HomePageClient() {
         <div className="ad-slot ad-banner">Advertisement</div>
       </div>
 
-      {/* Section 1 — Daily Brain Triathlon header */}
       <section style={{ paddingTop: 8, paddingBottom: 10, textAlign: "center" }}>
         <h1
           style={{
@@ -105,7 +224,6 @@ export default function HomePageClient() {
         </p>
       </section>
 
-      {/* Section 2 — Today&apos;s 3 game cards (display only) */}
       <section style={{ paddingTop: 10, paddingBottom: 8 }}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
           {dailyGames
@@ -153,14 +271,7 @@ export default function HomePageClient() {
                   >
                     {pick.category}
                   </p>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      color: "var(--text-2)",
-                      lineHeight: 1.55,
-                      margin: 0,
-                    }}
-                  >
+                  <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55, margin: 0 }}>
                     {TRIATHLON_CARD_BLURB[pick.id] ?? pick.cognitiveCategory}
                   </p>
                 </article>
@@ -190,7 +301,6 @@ export default function HomePageClient() {
         </div>
       </section>
 
-      {/* Section 3 — CTA */}
       <section style={{ paddingTop: 28, paddingBottom: 8 }}>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <Link
@@ -233,28 +343,78 @@ export default function HomePageClient() {
         <div className="ad-slot ad-banner">Advertisement</div>
       </div>
 
-      {/* Section 4 — All games infinite scroll */}
-      <section style={{ marginTop: 28, paddingBottom: 8 }}>
-        <h2
+      <section style={{ marginTop: 28, marginBottom: 48 }}>
+        <div
           style={{
-            fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
-            fontWeight: 900,
-            letterSpacing: "-0.03em",
-            color: "var(--text-1)",
-            marginBottom: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 10,
+            fontSize: 11,
+            color: "var(--text-3)",
+            fontFamily: "var(--font-mono)",
           }}
         >
-          All games
-        </h2>
-        <p style={{ fontSize: 13, color: "var(--text-2)", marginBottom: 18, lineHeight: 1.5 }}>
-          Browse the full catalog — keep scrolling to load more.
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
-          {slice.map((game) => (
-            <GameCard key={game.id} game={game} />
-          ))}
+          <span>
+            {filterLabel} · {sortLabel}
+          </span>
+          <span>{filteredSortedGames.length} games</span>
         </div>
-        {visibleCount < allGames.length ? <div ref={sentinelRef} style={{ height: 24, marginTop: 16 }} aria-hidden /> : null}
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
+          {visibleGames.map((game) => {
+            const plays = playCounts[game.id] ?? 0;
+            const border = BORDER_COLOR[game.type];
+            return (
+              <Link key={game.id} href={canonicalGamePath(game)} style={{ textDecoration: "none" }}>
+                <article
+                  className="pressable"
+                  style={{
+                    background: "var(--bg-card)",
+                    border: "1px solid var(--border)",
+                    borderLeft: `4px solid ${border}`,
+                    borderRadius: "var(--radius-lg)",
+                    padding: "16px 12px",
+                    minHeight: 160,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    height: "100%",
+                  }}
+                >
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <h3 style={{ fontSize: 18, color: "var(--text-1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+                      {game.title}
+                    </h3>
+                    <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.4 }}>{game.shortDescription}</p>
+                    <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
+                      {PLAY_FORMATTER.format(plays)} plays
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <span
+                      style={{
+                        fontSize: 11,
+                        color: border,
+                        fontWeight: 800,
+                        fontFamily: "var(--font-mono)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      PLAY →
+                    </span>
+                  </div>
+                </article>
+              </Link>
+            );
+          })}
+        </div>
+        <div ref={loaderRef} style={{ height: 30 }} />
+        {visibleCount < filteredSortedGames.length && (
+          <p style={{ fontSize: 11, color: "var(--text-3)", textAlign: "center", fontFamily: "var(--font-mono)" }}>Loading more games…</p>
+        )}
+        {filteredSortedGames.length === 0 && (
+          <p style={{ fontSize: 12, color: "var(--text-3)", textAlign: "center", fontFamily: "var(--font-mono)" }}>No games found in this filter.</p>
+        )}
       </section>
     </div>
   );
