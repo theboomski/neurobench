@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
 type UgcImageCardProps = {
@@ -16,7 +16,15 @@ const NEUTRAL_FILL = "#1a1a1a";
 
 export default function UgcImageCard({ src, alt, size: _size = 640, priority = false, style, borderRadius = 12 }: UgcImageCardProps) {
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const loaded = loadedSrc === src;
+
+  // Cached images often never fire `onLoad` after the listener is attached (e.g. full page reload / Play Again).
+  useLayoutEffect(() => {
+    const el = imgRef.current;
+    if (el?.complete && el.naturalWidth > 0) setLoadedSrc(src);
+    else setLoadedSrc(null);
+  }, [src]);
 
   const imageStyle: CSSProperties = {
     width: "100%",
@@ -45,6 +53,7 @@ export default function UgcImageCard({ src, alt, size: _size = 640, priority = f
       )}
 
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
