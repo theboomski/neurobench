@@ -55,14 +55,14 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  if (user?.id) {
-    await admin.from("ugc_play_history").insert({
-      user_id: user.id,
-      game_id: body.gameId,
-      winner_item_id: body.winnerItemId ?? null,
-      winner_option: body.winnerOption ?? null,
-    });
-  }
+  // One row per completed play so sum(final wins from ugc_bracket_final_wins) matches play_count.
+  // Authenticated: user_id set; anonymous: user_id null (requires nullable user_id — see migration).
+  await admin.from("ugc_play_history").insert({
+    user_id: user?.id ?? null,
+    game_id: body.gameId,
+    winner_item_id: body.winnerItemId ?? null,
+    winner_option: body.winnerOption ?? null,
+  });
 
   return NextResponse.json({ ok: true });
 }
