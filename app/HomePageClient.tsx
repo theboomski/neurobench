@@ -350,20 +350,22 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   ))}
                   <Link
                     href="/triathlon"
-                    className="pressable"
+                    className="pressable home-mobile-triathlon-cta"
                     style={{
-                      ...TRIATHLON_CARD_SHELL,
+                      display: "flex",
+                      flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "center",
                       textAlign: "center",
                       textDecoration: "none",
                       height: "100%",
+                      minHeight: 0,
                     }}
                   >
                     <span
                       style={{
-                        color: ACCENT,
-                        fontWeight: 800,
+                        color: "#000000",
+                        fontWeight: 700,
                         fontSize: 15,
                         letterSpacing: "-0.02em",
                         lineHeight: 1.3,

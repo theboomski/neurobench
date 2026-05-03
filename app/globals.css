@@ -95,6 +95,34 @@ body::before {
   to   { transform: translateX(-100%); }
 }
 
+/* Home mobile triathlon grid — CTA cell only (matches card radius/padding, solid green) */
+@keyframes triathlonCtaPulseShadow {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(0, 255, 148, 0.22);
+  }
+  50% {
+    box-shadow: 0 8px 26px rgba(0, 255, 148, 0.5);
+  }
+}
+.home-mobile-triathlon-cta {
+  background: #00ff94 !important;
+  color: #000000 !important;
+  border: none !important;
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  box-sizing: border-box;
+  font-weight: 700;
+  animation: triathlonCtaPulseShadow 2.2s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+.home-mobile-triathlon-cta:hover {
+  transform: scale(1.04);
+}
+.home-mobile-triathlon-cta.pressable:active {
+  transform: scale(0.97);
+  opacity: 1;
+}
+
 .anim-fade-up  { animation: fadeUp  0.35s ease both; }
 .anim-scale-in { animation: scaleIn 0.28s ease both; }
 .anim-shake    { animation: shake   0.35s ease; }
