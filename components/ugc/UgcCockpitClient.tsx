@@ -9,18 +9,18 @@ import { getSupabaseBrowser } from "@/lib/supabase";
 const MUSTARD = "#b8860b";
 const TRIATHLON_ACCENT = "#00FF94";
 
-/** Cockpit quick links (see `app/ugc/cockpit/page.tsx` → this client). */
+/** Cockpit quick links (see `app/ugc/cockpit/page.tsx` → this client). Brain Triathlon is first so it stays visible on narrow grids. */
 const COCKPIT_TILES: { href: string; title: string; description: string; accent: string }[] = [
-  { href: "/ugc/profile", title: "Profile", description: "Update display name and avatar.", accent: MUSTARD },
-  { href: "/ugc/create", title: "Create Game", description: "Make a new brackets or balance game.", accent: MUSTARD },
-  { href: "/ugc/history", title: "Play History", description: "Review what you played.", accent: "#f59e0b" },
-  { href: "/ugc/my-games", title: "My Games", description: "Manage visibility and delete.", accent: MUSTARD },
   {
     href: "/triathlon/dashboard",
     title: "Brain Triathlon",
     description: "ZCI trends, streaks, and full session history.",
     accent: TRIATHLON_ACCENT,
   },
+  { href: "/ugc/profile", title: "Profile", description: "Update display name and avatar.", accent: MUSTARD },
+  { href: "/ugc/create", title: "Create Game", description: "Make a new brackets or balance game.", accent: MUSTARD },
+  { href: "/ugc/history", title: "Play History", description: "Review what you played.", accent: "#f59e0b" },
+  { href: "/ugc/my-games", title: "My Games", description: "Manage visibility and delete.", accent: MUSTARD },
   { href: "/bracket", title: "Bracket", description: "Browse community creations.", accent: "#b8860b" },
 ];
 
@@ -58,7 +58,25 @@ export default function UgcCockpitClient() {
 
   return (
     <div style={{ maxWidth: 920, margin: "0 auto", padding: "20px 16px 56px" }}>
-      <AuthModal open={!user} onClose={() => (window.location.href = "/bracket")} />
+      <AuthModal
+        open={!user}
+        onClose={() => (window.location.href = "/bracket")}
+        footer={
+          <Link
+            href="/triathlon/dashboard"
+            style={{
+              display: "block",
+              textAlign: "center",
+              fontSize: 13,
+              fontWeight: 800,
+              color: TRIATHLON_ACCENT,
+              textDecoration: "none",
+            }}
+          >
+            Brain Triathlon — ZCI dashboard →
+          </Link>
+        }
+      />
       <h1 style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.02em" }}>Cockpit</h1>
       <p style={{ fontSize: 13, color: "var(--text-2)", marginTop: 6 }}>Your command center for community games.</p>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
@@ -8,9 +9,11 @@ type AuthModalProps = {
   onClose?: () => void;
   title?: string;
   description?: string;
+  /** Optional content below the form (e.g. Cockpit quick links while logged out). */
+  footer?: ReactNode;
 };
 
-export default function AuthModal({ open, onClose, title, description }: AuthModalProps) {
+export default function AuthModal({ open, onClose, title, description, footer }: AuthModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -142,6 +145,7 @@ export default function AuthModal({ open, onClose, title, description }: AuthMod
         )}
 
         {message && <p style={{ marginTop: 8, fontSize: 12, color: "var(--text-2)" }}>{message}</p>}
+        {footer ? <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)" }}>{footer}</div> : null}
       </div>
     </div>
   );
