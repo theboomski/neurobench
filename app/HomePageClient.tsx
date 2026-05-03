@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
 import { ALL_GAMES } from "@/lib/games";
@@ -9,6 +10,8 @@ import type { GameData } from "@/lib/types";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
 const ACCENT = "#00FF94";
+/** Bracket hub play-count pill border (matches `BracketHubClient`). */
+const PLAY_PILL_MUSTARD = "#b8860b";
 const INITIAL_PAGE_SIZE = 12;
 
 const TRIATHLON_CARD_BLURB: Record<string, string> = {
@@ -30,6 +33,24 @@ const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
   brain: "#10b981",
   game: "#f97316",
   personality: "#8b5cf6",
+};
+
+const CATEGORY_PILL_LABEL: Record<Exclude<HomeTypeFilter, "all">, string> = {
+  brain: "Brain Test",
+  game: "Game",
+  personality: "Personality",
+};
+
+/** Matches `BracketHubClient` mobile play-count pill. */
+const PLAY_COUNT_PILL_STYLE: CSSProperties = {
+  flexShrink: 0,
+  fontSize: "clamp(9px, 2.2vw, 10px)",
+  color: "#f6deb0",
+  fontFamily: "var(--font-mono)",
+  background: "rgba(41,30,12,0.85)",
+  border: `1px solid ${PLAY_PILL_MUSTARD}`,
+  padding: "3px 6px",
+  borderRadius: 999,
 };
 
 const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
@@ -339,10 +360,6 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         </div>
       </section>
 
-      <div style={{ marginTop: 16 }}>
-        <div className="ad-slot ad-banner">Advertisement</div>
-      </div>
-
       <section style={{ marginTop: 28, marginBottom: 48 }}>
         <div
           style={{
@@ -364,8 +381,9 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
           {visibleGames.map((game) => {
             const plays = playCounts[game.id] ?? 0;
             const border = BORDER_COLOR[game.type];
+            const catLabel = CATEGORY_PILL_LABEL[game.type];
             return (
-              <Link key={game.id} href={canonicalGamePath(game)} style={{ textDecoration: "none" }}>
+              <Link key={game.id} href={canonicalGamePath(game)} style={{ textDecoration: "none", display: "block", minWidth: 0 }}>
                 <article
                   className="pressable"
                   style={{
@@ -373,24 +391,52 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                     border: "1px solid var(--border)",
                     borderLeft: `4px solid ${border}`,
                     borderRadius: "var(--radius-lg)",
-                    padding: "16px 12px",
-                    minHeight: 160,
+                    padding: "14px 12px 12px",
+                    minHeight: 168,
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "space-between",
                     height: "100%",
                   }}
                 >
-                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <h3 style={{ fontSize: 18, color: "var(--text-1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.2 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 8,
+                      marginBottom: 10,
+                      minWidth: 0,
+                    }}
+                  >
+                    <span
+                      style={{
+                        maxWidth: "58%",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        fontFamily: "var(--font-mono)",
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        color: "var(--text-2)",
+                        border: `1px solid ${border}`,
+                        borderRadius: 999,
+                        padding: "3px 8px",
+                        background: "var(--bg-elevated)",
+                      }}
+                    >
+                      {catLabel}
+                    </span>
+                    <span style={PLAY_COUNT_PILL_STYLE}>▶ {PLAY_FORMATTER.format(plays)}</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0 }}>
+                    <h3 style={{ fontSize: 18, color: "var(--text-1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.2, margin: 0 }}>
                       {game.title}
                     </h3>
-                    <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.4 }}>{game.shortDescription}</p>
-                    <p style={{ fontSize: 11, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>
-                      {PLAY_FORMATTER.format(plays)} plays
-                    </p>
+                    <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45, margin: 0 }}>{game.shortDescription}</p>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12, paddingTop: 4 }}>
                     <span
                       style={{
                         fontSize: 11,
@@ -416,6 +462,10 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
           <p style={{ fontSize: 12, color: "var(--text-3)", textAlign: "center", fontFamily: "var(--font-mono)" }}>No games found in this filter.</p>
         )}
       </section>
+
+      <div style={{ marginTop: 20 }}>
+        <div className="ad-slot ad-banner">Advertisement</div>
+      </div>
     </div>
   );
 }
