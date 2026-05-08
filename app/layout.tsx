@@ -3,11 +3,16 @@ import { Suspense } from "react";
 import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
+import { DM_Mono, DM_Sans, Playfair_Display } from "next/font/google";
 import { dict } from "@/lib/i18n";
 import HomeHeaderControls from "@/components/HomeHeaderControls";
 import UserMenu from "@/components/UserMenu";
 
 const t = dict.en;
+
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", weight: ["400", "500", "700", "800"] });
+const dmMono = DM_Mono({ subsets: ["latin"], variable: "--font-dm-mono", weight: ["400", "500"] });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", weight: ["600", "700", "800"] });
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -37,24 +42,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5822666577768735" crossOrigin="anonymous" />
       </head>
-      <body>
+      <body className={`${dmSans.variable} ${dmMono.variable} ${playfair.variable}`}>
         {/* TOP NAV */}
         <nav
           id="zazaza-site-nav"
-          style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10,10,15,0.96)", backdropFilter: "blur(20px)", borderBottom: "1px solid var(--border)" }}
+          style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(245,240,232,0.94)", backdropFilter: "blur(14px)", borderBottom: "1px solid var(--border)" }}
         >
-          <div style={{ background: "#00FF9410", borderBottom: "1px solid #00FF9418", height: 24, overflow: "hidden", position: "relative" }}>
-            <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 30s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
+          <div style={{ borderBottom: "1px solid var(--border)", height: 24, overflow: "hidden", position: "relative", background: "rgba(255,255,255,0.45)" }}>
+            <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 40s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
               {["NO SIGN UP", "FREE BRAIN TESTS", "GAMES", "PERSONALITY TESTS", "INSTANT RESULTS", "GLOBAL LEADERBOARDS", "SHARE YOUR RESULTS"].map(s => (
-                <span key={s} style={{ fontSize: 10, color: "#00FF94", fontFamily: "var(--font-mono)", letterSpacing: "0.15em" }}>{s}</span>
+                <span key={s} style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.1em" }}>{s}</span>
               ))}
             </div>
           </div>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "10px 24px", minHeight: 76, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 10 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
               <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-0.045em", color: "var(--text-1)", lineHeight: 1, flexShrink: 0 }}>
-                  ZA<span style={{ color: "#00FF94" }}>ZA</span>ZA
+                <div style={{ fontSize: 48, fontWeight: 800, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text-1)", lineHeight: 1, flexShrink: 0 }}>
+                  ZA<span style={{ color: "var(--accent)" }}>ZA</span>ZA
                 </div>
               </Link>
             </div>
@@ -73,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     height: 34,
                     borderRadius: 999,
                     border: "1px solid var(--border)",
-                    background: "var(--bg-card)",
+                    background: "#ffffff",
                     color: "var(--text-1)",
                     display: "inline-flex",
                     alignItems: "center",
@@ -105,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main style={{ minHeight: "calc(100dvh - 106px)" }}>{children}</main>
 
         {/* FOOTER */}
-        <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px" }}>
+        <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px", background: "rgba(255,255,255,0.28)" }}>
           <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 10, flexWrap: "nowrap", alignItems: "center", whiteSpace: "nowrap", overflowX: "auto", scrollbarWidth: "none" }}>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>ZAZAZA</span>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginLeft: -4 }}>© {new Date().getFullYear()}</span>

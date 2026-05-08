@@ -1,21 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --bg:          #121212;
-  --bg-card:     #181818;
-  --bg-elevated: #202020;
-  --bg-overlay:  #282828;
-  --border:      rgba(255,255,255,0.07);
-  --border-md:   rgba(255,255,255,0.13);
-  --text-1:      #F0F0F0;
-  --text-2:      #A0A0A0;
-  --text-3:      #505050;
-  --accent:      #00FF94;
-  --radius-sm:   6px;
-  --radius-md:   12px;
-  --radius-lg:   18px;
-  --radius-xl:   24px;
-  --font-mono:   'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+  --bg: #f5f0e8;
+  --bg-card: #ffffff;
+  --bg-elevated: #f2ece2;
+  --bg-overlay: #ece4d8;
+  --border: #e0d9cf;
+  --border-md: #cfc6b8;
+  --text-1: #1a1a1a;
+  --text-2: #6b6560;
+  --text-3: #8a837d;
+  --accent: #c8410a;
+  --accent-secondary: #1b4d3e;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --font-display: var(--font-playfair), "Playfair Display", "DM Serif Display", Georgia, serif;
+  --font-body: var(--font-dm-sans), "DM Sans", "Instrument Sans", "Inter", "Segoe UI", sans-serif;
+  --font-mono: var(--font-dm-mono), "DM Mono", "JetBrains Mono", "Fira Code", monospace;
+  --card-shadow: 0 5px 18px rgba(26, 26, 26, 0.06);
+  --card-shadow-hover: 0 14px 28px rgba(26, 26, 26, 0.11);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,34 +29,22 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text-1);
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   min-height: 100dvh;
 }
 
-/* Scanline overlay for lab aesthetic */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
-  );
-  pointer-events: none;
-  z-index: 9998;
-}
-
 .mono { font-family: var(--font-mono); }
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
 
 /* Ad slots */
 .ad-slot {
   width: 100%;
   background: var(--bg-card);
-  border: 1px dashed rgba(255,255,255,0.08);
+  border: 1px dashed var(--border);
   border-radius: var(--radius-md);
   display: flex; align-items: center; justify-content: center;
   color: var(--text-3);
@@ -66,6 +59,17 @@ body::before {
 /* Active scale - mobile tactile */
 .pressable { transition: transform 0.1s ease, opacity 0.1s ease; cursor: pointer; }
 .pressable:active { transform: scale(0.95); opacity: 0.85; }
+
+.card-elevated {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.card-elevated:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
 
 /* Animations */
 @keyframes fadeUp {
@@ -98,17 +102,17 @@ body::before {
 /* Home mobile triathlon grid — CTA cell only (matches card radius/padding, solid green) */
 @keyframes triathlonCtaPulseShadow {
   0%, 100% {
-    box-shadow: 0 4px 14px rgba(0, 255, 148, 0.22);
+    box-shadow: 0 4px 14px rgba(200, 65, 10, 0.22);
   }
   50% {
-    box-shadow: 0 8px 26px rgba(0, 255, 148, 0.5);
+    box-shadow: 0 8px 26px rgba(200, 65, 10, 0.4);
   }
 }
 .home-mobile-triathlon-cta {
-  background: #00ff94 !important;
-  color: #000000 !important;
-  border: none !important;
-  border-radius: var(--radius-lg);
+  background: #c8410a !important;
+  color: #ffffff !important;
+  border: 1px solid #c8410a !important;
+  border-radius: 8px;
   padding: 24px 20px;
   box-sizing: border-box;
   font-weight: 700;
@@ -130,7 +134,7 @@ body::before {
 
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--bg-overlay); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #cdc4b8; border-radius: 2px; }
 
 @media (max-width: 640px) {
   .ad-banner { height: 60px; }

@@ -8,12 +8,13 @@ type HomeTypeFilter = "all" | "brain" | "game" | "personality";
 type HomeSort = "popular" | "latest";
 
 const TAB_COLOR: Record<HomeTypeFilter, string> = {
-  all: "#ffffff",
-  brain: "#10b981",
-  game: "#f97316",
-  personality: "#8b5cf6",
+  all: "var(--text-1)",
+  brain: "var(--accent-secondary)",
+  game: "var(--accent)",
+  personality: "#6c4f3d",
 };
 const BRACKET_MUSTARD = "#b8860b";
+const ARENA_GREEN = "#1B4D3E";
 
 const CATEGORY_TABS: Array<{ id: HomeTypeFilter; label: string }> = [
   { id: "all", label: "All" },
@@ -105,15 +106,16 @@ export default function HomeHeaderControls() {
                 onClick={() => setQuery(tab.id, sort)}
                 className="pressable home-tab-pill"
                 style={{
-                  border: active ? `2px solid ${accent}` : "1px solid var(--border)",
-                  background: active ? `${accent}26` : "var(--bg-elevated)",
+                  border: "1px solid transparent",
+                  borderBottom: active ? `2px solid ${accent}` : "1px solid var(--border)",
+                  background: "transparent",
                   color: active ? accent : "var(--text-2)",
-                  borderRadius: 999,
+                  borderRadius: 0,
                   padding: "7px 10px",
                   fontSize: 11,
                   fontWeight: 700,
                   whiteSpace: "nowrap",
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-body)",
                   cursor: "pointer",
                 }}
               >
@@ -128,14 +130,14 @@ export default function HomeHeaderControls() {
               display: "inline-flex",
               alignItems: "center",
               border: `1px solid ${BRACKET_MUSTARD}`,
-              background: "rgba(184,134,11,0.2)",
+              background: "rgba(184,134,11,0.08)",
               color: BRACKET_MUSTARD,
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-body)",
               cursor: "pointer",
               textDecoration: "none",
             }}
@@ -148,15 +150,15 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: "1px solid #00FF94",
-              background: "rgba(0,255,148,0.12)",
-              color: "#00FF94",
+              border: `1px solid ${ARENA_GREEN}`,
+              background: "rgba(27,77,62,0.08)",
+              color: ARENA_GREEN,
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-body)",
               cursor: "pointer",
               textDecoration: "none",
             }}
@@ -169,15 +171,15 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: "1px solid #38bdf8",
-              background: "rgba(56,189,248,0.14)",
-              color: "#38bdf8",
+              border: "1px solid var(--border-md)",
+              background: "#fff",
+              color: "var(--text-2)",
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-body)",
               cursor: "pointer",
               textDecoration: "none",
             }}
@@ -190,15 +192,15 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: "1px solid #f472b6",
-              background: "rgba(244,114,182,0.14)",
-              color: "#f472b6",
+              border: "1px solid var(--border-md)",
+              background: "#fff",
+              color: "var(--text-2)",
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
-              fontFamily: "var(--font-mono)",
+              fontFamily: "var(--font-body)",
               cursor: "pointer",
               textDecoration: "none",
             }}
@@ -226,15 +228,15 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileCategoryOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: `2px solid ${TAB_COLOR[category]}`,
-                background: `${TAB_COLOR[category]}26`,
+                border: "1px solid var(--border-md)",
+                background: "#fff",
                 color: TAB_COLOR[category],
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
@@ -255,11 +257,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 156,
-                  background: "var(--bg-card)",
+                  background: "#fff",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
                 }}
               >
                 {CATEGORY_TABS.map((tab) => {
@@ -274,14 +276,14 @@ export default function HomeHeaderControls() {
                       style={{
                         textAlign: "left",
                         border: active ? `1px solid ${accent}` : "1px solid var(--border)",
-                        background: active ? `${accent}22` : "var(--bg-elevated)",
+                        background: active ? "rgba(27,77,62,0.08)" : "#fff",
                         color: active ? accent : "var(--text-2)",
                         borderRadius: 9,
                         padding: "7px 10px",
                         fontSize: 11,
                         fontWeight: 700,
                         whiteSpace: "nowrap",
-                        fontFamily: "var(--font-mono)",
+                        fontFamily: "var(--font-body)",
                         cursor: "pointer",
                       }}
                     >
@@ -298,15 +300,15 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileBracketOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: `2px solid ${BRACKET_MUSTARD}`,
-                background: "rgba(184,134,11,0.2)",
+                border: `1px solid ${BRACKET_MUSTARD}`,
+                background: "rgba(184,134,11,0.08)",
                 color: BRACKET_MUSTARD,
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
@@ -327,11 +329,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 112,
-                  background: "var(--bg-card)",
+                  background: "#fff",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
                 }}
               >
                 <Link
@@ -340,14 +342,14 @@ export default function HomeHeaderControls() {
                   style={{
                     textAlign: "left",
                     border: `1px solid ${BRACKET_MUSTARD}`,
-                    background: "rgba(184,134,11,0.2)",
+                    background: "rgba(184,134,11,0.08)",
                     color: BRACKET_MUSTARD,
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
                     fontWeight: 700,
                     whiteSpace: "nowrap",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-body)",
                     textDecoration: "none",
                   }}
                 >
@@ -358,15 +360,15 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: "1px solid #f472b6",
-                    background: "rgba(244,114,182,0.14)",
-                    color: "#f472b6",
+                    border: "1px solid var(--border-md)",
+                    background: "#fff",
+                    color: "var(--text-2)",
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
                     fontWeight: 700,
                     whiteSpace: "nowrap",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-body)",
                     textDecoration: "none",
                   }}
                 >
@@ -381,15 +383,15 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileArenaOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: "2px solid #00FF94",
-                background: "rgba(0,255,148,0.14)",
-                color: "#00FF94",
+                border: `1px solid ${ARENA_GREEN}`,
+                background: "rgba(27,77,62,0.08)",
+                color: ARENA_GREEN,
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
@@ -410,11 +412,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 112,
-                  background: "var(--bg-card)",
+                  background: "#fff",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
                 }}
               >
                 <Link
@@ -422,15 +424,15 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: "1px solid #00FF94",
-                    background: "rgba(0,255,148,0.14)",
-                    color: "#00FF94",
+                    border: `1px solid ${ARENA_GREEN}`,
+                    background: "rgba(27,77,62,0.08)",
+                    color: ARENA_GREEN,
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
                     fontWeight: 700,
                     whiteSpace: "nowrap",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-body)",
                     textDecoration: "none",
                   }}
                 >
@@ -441,15 +443,15 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: "1px solid #38bdf8",
-                    background: "rgba(56,189,248,0.14)",
-                    color: "#38bdf8",
+                    border: "1px solid var(--border-md)",
+                    background: "#fff",
+                    color: "var(--text-2)",
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
                     fontWeight: 700,
                     whiteSpace: "nowrap",
-                    fontFamily: "var(--font-mono)",
+                    fontFamily: "var(--font-body)",
                     textDecoration: "none",
                   }}
                 >
@@ -468,14 +470,14 @@ export default function HomeHeaderControls() {
           className="pressable home-tab-pill"
           style={{
             border: "1px solid var(--border)",
-            background: "rgba(0,255,148,0.14)",
-            color: "#00FF94",
+            background: "#fff",
+            color: "var(--text-1)",
             borderRadius: 999,
             padding: isCompactHeader ? "6px 8px" : "7px 10px",
             fontSize: isCompactHeader ? 10 : 11,
             fontWeight: 700,
             whiteSpace: "nowrap",
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-body)",
             cursor: "pointer",
             display: "inline-flex",
             alignItems: "center",
@@ -496,11 +498,11 @@ export default function HomeHeaderControls() {
               flexDirection: "column",
               gap: 4,
               minWidth: 110,
-              background: "var(--bg-card)",
+              background: "#fff",
               border: "1px solid var(--border-md)",
               borderRadius: 12,
               padding: 6,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.32)",
+              boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
             }}
           >
             <button
@@ -509,15 +511,15 @@ export default function HomeHeaderControls() {
               className="pressable"
               style={{
                 textAlign: "left",
-                border: sort === "popular" ? "1px solid #00FF94" : "1px solid var(--border)",
-                background: sort === "popular" ? "rgba(0,255,148,0.14)" : "var(--bg-elevated)",
-                color: sort === "popular" ? "#00FF94" : "var(--text-2)",
+                border: sort === "popular" ? "1px solid var(--text-1)" : "1px solid var(--border)",
+                background: "#fff",
+                color: "var(--text-2)",
                 borderRadius: 9,
                 padding: "7px 10px",
                 fontSize: 11,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 cursor: "pointer",
               }}
             >
@@ -529,15 +531,15 @@ export default function HomeHeaderControls() {
               className="pressable"
               style={{
                 textAlign: "left",
-                border: sort === "latest" ? "1px solid #00FF94" : "1px solid var(--border)",
-                background: sort === "latest" ? "rgba(0,255,148,0.14)" : "var(--bg-elevated)",
-                color: sort === "latest" ? "#00FF94" : "var(--text-2)",
+                border: sort === "latest" ? "1px solid var(--text-1)" : "1px solid var(--border)",
+                background: "#fff",
+                color: "var(--text-2)",
                 borderRadius: 9,
                 padding: "7px 10px",
                 fontSize: 11,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                fontFamily: "var(--font-mono)",
+                fontFamily: "var(--font-body)",
                 cursor: "pointer",
               }}
             >

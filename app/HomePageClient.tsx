@@ -9,7 +9,7 @@ import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
-const ACCENT = "#00FF94";
+const ACCENT = "#C8410A";
 /** Bracket hub play-count pill border (matches `BracketHubClient`). */
 const PLAY_PILL_MUSTARD = "#b8860b";
 const INITIAL_PAGE_SIZE = 12;
@@ -30,9 +30,9 @@ type HomeTypeFilter = "all" | "brain" | "game" | "personality";
 type HomeSort = "popular" | "latest";
 
 const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
-  brain: "#10b981",
-  game: "#f97316",
-  personality: "#8b5cf6",
+  brain: "#1B4D3E",
+  game: "#C8410A",
+  personality: "#6c4f3d",
 };
 
 const CATEGORY_PILL_LABEL: Record<Exclude<HomeTypeFilter, "all">, string> = {
@@ -45,10 +45,10 @@ const CATEGORY_PILL_LABEL: Record<Exclude<HomeTypeFilter, "all">, string> = {
 const PLAY_COUNT_PILL_STYLE: CSSProperties = {
   flexShrink: 0,
   fontSize: "clamp(9px, 2.2vw, 10px)",
-  color: "#f6deb0",
+  color: "var(--text-3)",
   fontFamily: "var(--font-mono)",
-  background: "rgba(41,30,12,0.85)",
-  border: `1px solid ${PLAY_PILL_MUSTARD}`,
+  background: "transparent",
+  border: "1px solid var(--border)",
   padding: "3px 6px",
   borderRadius: 999,
 };
@@ -58,7 +58,7 @@ const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
 const TRIATHLON_CARD_SHELL: CSSProperties = {
   background: "var(--bg-card)",
   border: "1px solid var(--border)",
-  borderLeft: `3px solid ${ACCENT}`,
+  boxShadow: "var(--card-shadow)",
   borderRadius: "var(--radius-lg)",
   padding: "24px 20px",
   display: "flex",
@@ -266,7 +266,8 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         <h1
           style={{
             fontSize: "clamp(1.35rem, 3.5vw + 0.35rem, 2.25rem)",
-            fontWeight: 900,
+            fontWeight: 700,
+            fontFamily: "var(--font-display)",
             letterSpacing: "-0.035em",
             lineHeight: 1.15,
             color: "var(--text-1)",
@@ -320,8 +321,9 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                       </div>
                       <h2
                         style={{
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: 800,
+                          fontFamily: "var(--font-display)",
                           letterSpacing: "-0.02em",
                           color: "var(--text-1)",
                           lineHeight: 1.2,
@@ -337,7 +339,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                           fontFamily: "var(--font-mono)",
                           letterSpacing: "0.1em",
                           textTransform: "uppercase",
-                          color: ACCENT,
+                          color: "var(--text-3)",
                           margin: 0,
                         }}
                       >
@@ -364,7 +366,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   >
                     <span
                       style={{
-                        color: "#000000",
+                        color: "#ffffff",
                         fontWeight: 700,
                         fontSize: 15,
                         letterSpacing: "-0.02em",
@@ -387,13 +389,13 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                 >
                   {i < 3 ? (
                     <>
-                      <div style={{ height: 40, borderRadius: 8, background: "var(--bg-elevated)", maxWidth: 48 }} />
-                      <div style={{ height: 26, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "85%" }} />
-                      <div style={{ height: 14, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "40%" }} />
-                      <div style={{ height: 52, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "100%" }} />
+                      <div style={{ height: 40, borderRadius: 8, background: "var(--bg-overlay)", maxWidth: 48 }} />
+                      <div style={{ height: 26, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "85%" }} />
+                      <div style={{ height: 14, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "40%" }} />
+                      <div style={{ height: 52, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "100%" }} />
                     </>
                   ) : (
-                    <div style={{ height: 24, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "80%", margin: "auto" }} />
+                    <div style={{ height: 24, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "80%", margin: "auto" }} />
                   )}
                 </article>
               ))}
@@ -411,8 +413,9 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   </div>
                   <h2
                     style={{
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: 800,
+                      fontFamily: "var(--font-display)",
                       letterSpacing: "-0.02em",
                       color: "var(--text-1)",
                       lineHeight: 1.2,
@@ -428,7 +431,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                       fontFamily: "var(--font-mono)",
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
-                      color: ACCENT,
+                      color: "var(--text-3)",
                       margin: 0,
                     }}
                   >
@@ -449,10 +452,10 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                     opacity: 0.5,
                   }}
                 >
-                  <div style={{ height: 40, borderRadius: 8, background: "var(--bg-elevated)", maxWidth: 48 }} />
-                  <div style={{ height: 26, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "85%" }} />
-                  <div style={{ height: 14, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "40%" }} />
-                  <div style={{ height: 52, borderRadius: 6, background: "var(--bg-elevated)", maxWidth: "100%" }} />
+                  <div style={{ height: 40, borderRadius: 8, background: "var(--bg-overlay)", maxWidth: 48 }} />
+                  <div style={{ height: 26, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "85%" }} />
+                  <div style={{ height: 14, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "40%" }} />
+                  <div style={{ height: 52, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "100%" }} />
                 </article>
               ))}
         </div>
@@ -468,14 +471,14 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
               alignItems: "center",
               justifyContent: "center",
               padding: "16px 28px",
-              borderRadius: "var(--radius-lg)",
+              borderRadius: 8,
               background: ACCENT,
-              color: "#0a0a0f",
+              color: "#ffffff",
               fontSize: 15,
               fontWeight: 800,
               letterSpacing: "-0.02em",
               textDecoration: "none",
-              boxShadow: `0 0 0 1px ${ACCENT}, 0 12px 40px ${ACCENT}33`,
+              boxShadow: "0 8px 20px rgba(200,65,10,0.24)",
             }}
           >
             Start Today&apos;s Triathlon →
@@ -501,7 +504,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
           style={{
             fontSize: 12,
             color: "var(--text-3)",
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-body)",
             textAlign: "center",
             lineHeight: 1.6,
             margin: 0,
@@ -543,13 +546,22 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   style={{
                     background: "var(--bg-card)",
                     border: "1px solid var(--border)",
-                    borderLeft: `4px solid ${border}`,
                     borderRadius: "var(--radius-lg)",
                     padding: "14px 12px 12px",
                     minHeight: 168,
                     display: "flex",
                     flexDirection: "column",
                     height: "100%",
+                    boxShadow: "var(--card-shadow)",
+                    transition: "transform 0.18s ease, box-shadow 0.18s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.boxShadow = "var(--card-shadow-hover)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.boxShadow = "var(--card-shadow)";
                   }}
                 >
                   <div
@@ -570,35 +582,25 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                         whiteSpace: "nowrap",
                         fontSize: 9,
                         fontWeight: 700,
-                        fontFamily: "var(--font-mono)",
-                        letterSpacing: "0.06em",
+                        fontFamily: "var(--font-body)",
                         textTransform: "uppercase",
                         color: "var(--text-2)",
-                        border: `1px solid ${border}`,
-                        borderRadius: 999,
-                        padding: "3px 8px",
-                        background: "var(--bg-elevated)",
+                        letterSpacing: "0.14em",
                       }}
                     >
                       {catLabel}
                     </span>
-                    <span style={PLAY_COUNT_PILL_STYLE}>▶ {PLAY_FORMATTER.format(plays)}</span>
+                    <span style={PLAY_COUNT_PILL_STYLE}>{PLAY_FORMATTER.format(plays)}</span>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0 }}>
-                    <h3 style={{ fontSize: 18, color: "var(--text-1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.2, margin: 0 }}>
+                    <h3 style={{ fontSize: 22, color: "var(--text-1)", fontWeight: 700, fontFamily: "var(--font-display)", letterSpacing: "-0.01em", lineHeight: 1.2, margin: 0 }}>
                       {game.title}
                     </h3>
                     <p style={{ fontSize: 12, color: "var(--text-2)", lineHeight: 1.45, margin: 0 }}>{game.shortDescription}</p>
                   </div>
                   <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12, paddingTop: 4 }}>
                     <span
-                      style={{
-                        fontSize: 11,
-                        color: border,
-                        fontWeight: 800,
-                        fontFamily: "var(--font-mono)",
-                        textTransform: "uppercase",
-                      }}
+                      style={{ fontSize: 11, color: border, fontWeight: 700, fontFamily: "var(--font-body)", textTransform: "uppercase" }}
                     >
                       PLAY →
                     </span>

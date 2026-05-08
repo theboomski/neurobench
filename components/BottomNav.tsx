@@ -31,12 +31,12 @@ export default function BottomNav() {
           {/* Backdrop */}
           <div
             onClick={() => setShowMore(false)}
-            style={{ position: "fixed", inset: 0, zIndex: 190, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
+            style={{ position: "fixed", inset: 0, zIndex: 190, background: "rgba(26,26,26,0.18)", backdropFilter: "blur(2px)" }}
           />
           {/* Panel */}
           <div style={{
             position: "fixed", bottom: 64, left: 0, right: 0, zIndex: 195,
-            background: "rgba(10,10,15,0.98)",
+            background: "rgba(245,240,232,0.98)",
             borderTop: "1px solid var(--border)",
             padding: "12px 16px 16px",
           }}>
@@ -59,8 +59,8 @@ export default function BottomNav() {
       {/* Bottom bar */}
       <nav style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-        background: "rgba(10,10,15,0.97)",
-        backdropFilter: "blur(20px)",
+        background: "rgba(245,240,232,0.98)",
+        backdropFilter: "blur(12px)",
         borderTop: "1px solid var(--border)",
         height: 64,
         display: "flex",
@@ -69,9 +69,9 @@ export default function BottomNav() {
         padding: "0 4px",
       }}>
         {MAIN_TABS.map(tab => (
-          <Link key={tab.href} href={tab.href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 2, padding: "6px 2px", borderRadius: 8, WebkitTapHighlightColor: "transparent" }}>
+          <Link key={tab.href} href={tab.href} style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 2, padding: "6px 2px", borderRadius: 8, WebkitTapHighlightColor: "transparent", color: "var(--text-1)" }}>
             <span style={{ fontSize: 20, lineHeight: 1 }}>{tab.emoji}</span>
-            <span style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em", textTransform: "uppercase" }}>{tab.label}</span>
+            <span style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-body)", letterSpacing: "0.06em", textTransform: "uppercase" }}>{tab.label}</span>
           </Link>
         ))}
         {/* More button */}
@@ -79,7 +79,7 @@ export default function BottomNav() {
           onClick={() => setShowMore(v => !v)}
           style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 2, padding: "6px 2px", borderRadius: 8, background: "none", border: "none", cursor: "pointer", WebkitTapHighlightColor: "transparent" }}>
           <span style={{ fontSize: 20, lineHeight: 1 }}>{showMore ? "✕" : "⋯"}</span>
-          <span style={{ fontSize: 9, color: showMore ? "#00FF94" : "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em", textTransform: "uppercase" }}>More</span>
+          <span style={{ fontSize: 9, color: showMore ? "var(--accent)" : "var(--text-3)", fontFamily: "var(--font-body)", letterSpacing: "0.06em", textTransform: "uppercase" }}>More</span>
         </button>
       </nav>
     </>
