@@ -12,7 +12,7 @@ import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUti
 
 const TRIATHLON_TRIALS = 15;
 const TRIATHLON_START_LEVEL = 5;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 
 function getMemoryRank(digits: number, game: GameData) {
   const ranks = [...game.stats.ranks].reverse();

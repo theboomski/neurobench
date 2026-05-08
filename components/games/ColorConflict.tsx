@@ -17,7 +17,7 @@ const TRIATHLON_SESSION_MS = 60_000;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 
 function getRoundTimeMs(scoreAtRoundStart: number): number {
   return Math.max(MIN_ROUND_MS, Math.round(BASE_ROUND_MS - scoreAtRoundStart * MS_DECAY_PER_SCORE));
@@ -551,13 +551,12 @@ function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; tri
                   color: btn.labelTextHex,
                   borderRadius: "var(--radius-md)",
                   padding: "16px 0",
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: 800,
-                  fontFamily: "var(--font-mono)",
+                  fontFamily: "var(--font-body)",
                   cursor: "pointer",
-                  letterSpacing: "0.06em",
+                  letterSpacing: "0.01em",
                   WebkitTapHighlightColor: "transparent",
-                  textShadow: "0 0 3px rgba(0,0,0,0.85), 0 1px 2px rgba(0,0,0,0.75)",
                 }}
               >
                 {btn.name}

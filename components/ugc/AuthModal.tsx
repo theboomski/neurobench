@@ -115,10 +115,10 @@ export default function AuthModal({ open, onClose, title, description, footer }:
         <p style={{ fontSize: 13, color: "var(--text-2)", marginTop: 6 }}>{description ?? "Create and track UGC games with your account."}</p>
 
         <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-          <button onClick={() => setMode("login")} style={{ flex: 1, borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)", background: mode === "login" ? "#00FF9430" : "transparent", cursor: "pointer" }}>
+          <button onClick={() => setMode("login")} style={{ flex: 1, borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)", background: mode === "login" ? "rgba(27,77,62,0.16)" : "transparent", cursor: "pointer" }}>
             Login
           </button>
-          <button onClick={() => setMode("signup")} style={{ flex: 1, borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)", background: mode === "signup" ? "#00FF9430" : "transparent", cursor: "pointer" }}>
+          <button onClick={() => setMode("signup")} style={{ flex: 1, borderRadius: 8, padding: "8px 10px", border: "1px solid var(--border)", background: mode === "signup" ? "rgba(27,77,62,0.16)" : "transparent", cursor: "pointer" }}>
             Sign up
           </button>
         </div>
@@ -131,7 +131,7 @@ export default function AuthModal({ open, onClose, title, description, footer }:
         <button
           onClick={forgotMode ? onForgotPassword : onEmailSubmit}
           disabled={busy}
-          style={{ width: "100%", marginTop: 10, borderRadius: 10, padding: "10px 12px", fontWeight: 800, background: "#00FF94", color: "#062313", border: "none", cursor: "pointer" }}
+          style={{ width: "100%", marginTop: 10, borderRadius: 10, padding: "10px 12px", fontWeight: 800, background: "#1B4D3E", color: "#ffffff", border: "none", cursor: "pointer" }}
         >
           {forgotMode ? "Send reset link" : mode === "signup" ? "Create account" : "Login"}
         </button>

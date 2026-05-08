@@ -10,7 +10,7 @@ import {
   type TriathlonSession,
 } from "@/lib/triathlonSession";
 
-const ACCENT = "#00FF94";
+const ACCENT = "#1B4D3E";
 
 type UiState =
   | null

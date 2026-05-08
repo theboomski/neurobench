@@ -13,7 +13,7 @@ const TRIATHLON_SESSION_MS = 60_000;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 
 type ColorName = "RED" | "BLUE" | "GREEN" | "YELLOW" | "PURPLE" | "WHITE";
 type Phase = "idle" | "playing" | "done";

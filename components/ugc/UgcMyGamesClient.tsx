@@ -59,8 +59,8 @@ export default function UgcMyGamesClient() {
       <AuthModal open={!user} />
       <h1 style={{ fontSize: 26, fontWeight: 900 }}>My Games</h1>
       <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
-        <button onClick={() => setTab("brackets")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: tab === "brackets" ? "#00FF9422" : "transparent" }}>Brackets</button>
-        <button onClick={() => setTab("balance")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: tab === "balance" ? "#00FF9422" : "transparent" }}>Balance</button>
+        <button onClick={() => setTab("brackets")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: tab === "brackets" ? "rgba(27,77,62,0.14)" : "transparent" }}>Brackets</button>
+        <button onClick={() => setTab("balance")} style={{ border: "1px solid var(--border)", borderRadius: 8, padding: "8px 10px", background: tab === "balance" ? "rgba(27,77,62,0.14)" : "transparent" }}>Balance</button>
       </div>
       <div style={{ marginTop: 12, display: "grid", gap: 8 }}>
         {visible.map((game) => (
@@ -71,7 +71,7 @@ export default function UgcMyGamesClient() {
                 <div style={{ fontSize: 12, color: "var(--text-2)" }}>{game.visibility} · plays {game.play_count}</div>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
-                <Link href={toUgcPath({ type: game.type, slug: game.slug })} style={{ fontSize: 12, color: "#00FF94", textDecoration: "none", fontWeight: 800 }}>
+                <Link href={toUgcPath({ type: game.type, slug: game.slug })} style={{ fontSize: 12, color: "#1B4D3E", textDecoration: "none", fontWeight: 800 }}>
                   Open
                 </Link>
                 <select

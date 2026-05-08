@@ -21,7 +21,7 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
     }}>
       <div style={{
         background: "var(--bg-card)", border: "1px solid var(--border-md)",
-        borderTop: "2px solid #00FF94", borderRadius: "var(--radius-xl)",
+        borderTop: "2px solid #1B4D3E", borderRadius: "var(--radius-xl)",
         padding: "28px 24px", width: "100%", maxWidth: 480, textAlign: "center",
       }}>
         <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
@@ -51,7 +51,7 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
           style={{
             width: "100%", padding: "14px 0", borderRadius: "var(--radius-md)",
             border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
-            background: "#00FF94", color: "#000", fontFamily: "var(--font-mono)",
+            background: "#1B4D3E", color: "#fff", fontFamily: "var(--font-mono)",
             letterSpacing: "0.04em",
           }}
         >

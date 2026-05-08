@@ -612,7 +612,7 @@ export default function Omok({ game }: { game: GameData }) {
       <div
         style={{
           background: "var(--bg-card)",
-          border: "1.5px solid #00FF9440",
+          border: "1.5px solid rgba(27,77,62,0.4)",
           borderRadius: "var(--radius-xl)",
           padding: "34px 24px",
           textAlign: "center",
@@ -634,7 +634,7 @@ export default function Omok({ game }: { game: GameData }) {
             border: "none",
             borderRadius: 10,
             padding: "12px 22px",
-            background: "#00FF94",
+            background: "#1B4D3E",
             color: "#042012",
             fontWeight: 900,
             fontFamily: "var(--font-mono)",
@@ -726,7 +726,7 @@ export default function Omok({ game }: { game: GameData }) {
                         borderRadius: 999,
                         background: v === PLAYER ? "#111" : "#f5f5f5",
                         border: isLast ? `2px solid ${lastHighlight}` : v === PLAYER ? "1px solid #2b2b2b" : "1px solid #9ca3af",
-                        boxShadow: isWin ? "0 0 0 2px #00FF94, 0 0 12px rgba(0,255,148,0.55)" : "0 1px 4px rgba(0,0,0,0.45)",
+                        boxShadow: isWin ? "0 0 0 2px #1B4D3E, 0 0 12px rgba(27,77,62,0.45)" : "0 1px 4px rgba(0,0,0,0.45)",
                       }}
                     />
                   )}

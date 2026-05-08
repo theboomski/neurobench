@@ -3,7 +3,7 @@ export const metadata: Metadata = { title: "Terms of Service | ZAZAZA" };
 const S = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
   <div style={{ marginBottom: 32 }}>
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-      <span style={{ fontSize: 10, color: "#00FF94", fontFamily: "monospace", letterSpacing: "0.1em" }}>{n} /</span>
+      <span style={{ fontSize: 10, color: "#1B4D3E", fontFamily: "monospace", letterSpacing: "0.1em" }}>{n} /</span>
       <h2 style={{ fontSize: 17, fontWeight: 700 }}>{title}</h2>
     </div>
     <div style={{ color: "rgba(160,160,160,1)", lineHeight: 1.85, fontSize: 14 }}>{children}</div>
@@ -12,7 +12,7 @@ const S = ({ n, title, children }: { n: string; title: string; children: React.R
 export default function Page() {
   return (
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
-      <div style={{ fontSize: 10, color: "#00FF94", fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>Legal Documentation</div>
+      <div style={{ fontSize: 10, color: "#1B4D3E", fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>Legal Documentation</div>
       <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Terms of Service</h1>
       <p style={{ color: "rgba(120,120,120,1)", fontSize: 12, marginBottom: 48, fontFamily: "monospace" }}>Last updated: April 2026 · zazaza.app</p>
       <S n="01" title="Acceptance">By using ZAZAZA (zazaza.app) you agree to these terms.</S>

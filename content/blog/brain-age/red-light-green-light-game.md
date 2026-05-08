@@ -15,7 +15,7 @@ blogCategory: brain
 category: Brain & Cognition
 categorySlug: korean-tv
 emoji: "🦑"
-accent: "#00FF94"
+accent: "#1B4D3E"
 relatedGame: red-light-green-light
 relatedGameTitle: Play Red Light Green Light
 ---

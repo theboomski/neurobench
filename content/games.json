@@ -183,8 +183,8 @@
       "shortDescription": "Place black stones first and outread the AI on a 13x13 board.",
       "description": "Classic Omok (Gomoku) on a 13x13 board. You are black and move first. Win by making exactly five in a row; six or more does not count.",
       "emoji": "⚫",
-      "accent": "#00FF94",
-      "accentDim": "rgba(0,255,148,0.12)",
+      "accent": "#1B4D3E",
+      "accentDim": "rgba(27,77,62,0.12)",
       "category": "office-iq",
       "categoryLabel": "Games",
       "tags": [
@@ -2133,8 +2133,8 @@
       "shortDescription": "Measure your synaptic transmission speed in milliseconds.",
       "description": "A clinical-grade assessment of your visual cortex processing speed and motor neuron response time. Used by elite athletes and neuroscience researchers worldwide.",
       "emoji": "⚡",
-      "accent": "#00FF94",
-      "accentDim": "rgba(0,255,148,0.10)",
+      "accent": "#1B4D3E",
+      "accentDim": "rgba(27,77,62,0.10)",
       "category": "brain-age",
       "categoryLabel": "Brain Age Test",
       "tags": [
@@ -2225,7 +2225,7 @@
           {
             "label": "A",
             "maxMs": 223,
-            "color": "#00FF94",
+            "color": "#1B4D3E",
             "title": "High Performer",
             "subtitle": "Responds to Slack before it's sent",
             "percentileLabel": "Top 20%"

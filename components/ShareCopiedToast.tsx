@@ -11,7 +11,7 @@ export default function ShareCopiedToast({ show }: { show: boolean }) {
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 9999,
-        background: "rgba(0,255,148,0.95)",
+        background: "rgba(27,77,62,0.95)",
         color: "#000",
         fontWeight: 900,
         fontSize: 13,

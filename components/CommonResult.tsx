@@ -13,7 +13,7 @@ import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import { TRIATHLON_STORAGE_KEY, normalizeTriathlonRawScore, parseTriathlonSession } from "@/lib/triathlonSession";
 import type { GameData } from "@/lib/types";
 
-const TRIATHLON_ACCENT = "#00FF94";
+const TRIATHLON_ACCENT = "#1B4D3E";
 
 type AnalysisTone = "brain" | "office" | "focus" | "vocab";
 

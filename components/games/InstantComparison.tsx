@@ -15,7 +15,7 @@ const TRIATHLON_ROUND_MS_START = 3000;
 const TRIATHLON_ROUND_MS_FLOOR = 1700;
 const TRIATHLON_ROUND_MS_CEILING = 4300;
 const TRIATHLON_DIFFICULTY_MAX = 8;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 
 function getRank(score: number, game: GameData) {
   const sorted = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);

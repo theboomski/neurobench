@@ -13,7 +13,7 @@ import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUti
 const TRIATHLON_TRIALS = 15;
 const TRIATHLON_START_LEVEL = 5;
 const DEFAULT_START_LEVEL = 4;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 
 function getRank(score: number, game: GameData) {
   const sorted = [...game.stats.ranks].sort((a, b) => b.maxMs - a.maxMs);

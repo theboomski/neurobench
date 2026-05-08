@@ -6,7 +6,7 @@ blogCategory: brain
 category: Brain Age
 categorySlug: brain-age
 emoji: "😴"
-accent: "#00FF94"
+accent: "#1B4D3E"
 date: "2026-04-20"
 readTime: 15
 tags:

@@ -14,7 +14,7 @@ type Dir = "up" | "down" | "left" | "right";
 
 const ROUND_TIME_MS = 30_000;
 const TRIATHLON_SESSION_MS = 60_000;
-const TRIATHLON_UI_ACCENT = "#00FF94";
+const TRIATHLON_UI_ACCENT = "#1B4D3E";
 const FISH_COUNT = 10;
 const SWIPE_THRESHOLD = 28;
 const FISH_SPEED_PCT_PER_SEC = 34;
