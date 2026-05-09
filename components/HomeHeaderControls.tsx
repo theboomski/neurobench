@@ -11,10 +11,10 @@ const TAB_COLOR: Record<HomeTypeFilter, string> = {
   all: "var(--text-1)",
   brain: "var(--accent-secondary)",
   game: "var(--accent)",
-  personality: "#6c4f3d",
+  personality: "#8B6F47",
 };
-const BRACKET_MUSTARD = "#b8860b";
-const ARENA_GREEN = "#1B4D3E";
+const BRACKET_AMBER = "#d4823a";
+const ARENA_GREEN = "#4A7C59";
 
 const CATEGORY_TABS: Array<{ id: HomeTypeFilter; label: string }> = [
   { id: "all", label: "All" },
@@ -129,9 +129,9 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: `1px solid ${BRACKET_MUSTARD}`,
-              background: "rgba(184,134,11,0.08)",
-              color: BRACKET_MUSTARD,
+              border: `1px solid ${BRACKET_AMBER}`,
+              background: "rgba(212, 130, 58, 0.12)",
+              color: BRACKET_AMBER,
               borderRadius: 999,
               padding: "7px 10px",
               fontSize: 11,
@@ -151,7 +151,7 @@ export default function HomeHeaderControls() {
               display: "inline-flex",
               alignItems: "center",
               border: `1px solid ${ARENA_GREEN}`,
-              background: "rgba(27,77,62,0.08)",
+              background: "rgba(74, 124, 89, 0.14)",
               color: ARENA_GREEN,
               borderRadius: 999,
               padding: "7px 10px",
@@ -172,7 +172,7 @@ export default function HomeHeaderControls() {
               display: "inline-flex",
               alignItems: "center",
               border: "1px solid var(--border-md)",
-              background: "#fff",
+              background: "var(--bg-elevated)",
               color: "var(--text-2)",
               borderRadius: 999,
               padding: "7px 10px",
@@ -193,7 +193,7 @@ export default function HomeHeaderControls() {
               display: "inline-flex",
               alignItems: "center",
               border: "1px solid var(--border-md)",
-              background: "#fff",
+              background: "var(--bg-elevated)",
               color: "var(--text-2)",
               borderRadius: 999,
               padding: "7px 10px",
@@ -229,7 +229,7 @@ export default function HomeHeaderControls() {
               className="pressable home-tab-pill"
               style={{
                 border: "1px solid var(--border-md)",
-                background: "#fff",
+                background: "var(--bg-card)",
                 color: TAB_COLOR[category],
                 borderRadius: 999,
                 padding: "6px 8px",
@@ -257,11 +257,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 156,
-                  background: "#fff",
+                  background: "var(--bg-card)",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
+                  boxShadow: "0 14px 32px rgba(0,0,0,0.45)",
                 }}
               >
                 {CATEGORY_TABS.map((tab) => {
@@ -276,7 +276,7 @@ export default function HomeHeaderControls() {
                       style={{
                         textAlign: "left",
                         border: active ? `1px solid ${accent}` : "1px solid var(--border)",
-                        background: active ? "rgba(27,77,62,0.08)" : "#fff",
+                        background: active ? "var(--accent-muted)" : "var(--bg-card)",
                         color: active ? accent : "var(--text-2)",
                         borderRadius: 9,
                         padding: "7px 10px",
@@ -300,9 +300,9 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileBracketOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: `1px solid ${BRACKET_MUSTARD}`,
-                background: "rgba(184,134,11,0.08)",
-                color: BRACKET_MUSTARD,
+                border: `1px solid ${BRACKET_AMBER}`,
+                background: "rgba(212, 130, 58, 0.12)",
+                color: BRACKET_AMBER,
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
@@ -329,11 +329,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 112,
-                  background: "#fff",
+                  background: "var(--bg-card)",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
+                  boxShadow: "0 14px 32px rgba(0,0,0,0.45)",
                 }}
               >
                 <Link
@@ -341,9 +341,9 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: `1px solid ${BRACKET_MUSTARD}`,
-                    background: "rgba(184,134,11,0.08)",
-                    color: BRACKET_MUSTARD,
+                    border: `1px solid ${BRACKET_AMBER}`,
+                    background: "rgba(212, 130, 58, 0.12)",
+                    color: BRACKET_AMBER,
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
@@ -361,7 +361,7 @@ export default function HomeHeaderControls() {
                   style={{
                     textAlign: "left",
                     border: "1px solid var(--border-md)",
-                    background: "#fff",
+                    background: "var(--bg-card)",
                     color: "var(--text-2)",
                     borderRadius: 9,
                     padding: "7px 10px",
@@ -384,7 +384,7 @@ export default function HomeHeaderControls() {
               className="pressable home-tab-pill"
               style={{
                 border: `1px solid ${ARENA_GREEN}`,
-                background: "rgba(27,77,62,0.08)",
+                background: "rgba(74, 124, 89, 0.14)",
                 color: ARENA_GREEN,
                 borderRadius: 999,
                 padding: "6px 8px",
@@ -412,11 +412,11 @@ export default function HomeHeaderControls() {
                   flexDirection: "column",
                   gap: 4,
                   minWidth: 112,
-                  background: "#fff",
+                  background: "var(--bg-card)",
                   border: "1px solid var(--border-md)",
                   borderRadius: 12,
                   padding: 6,
-                  boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
+                  boxShadow: "0 14px 32px rgba(0,0,0,0.45)",
                 }}
               >
                 <Link
@@ -425,7 +425,7 @@ export default function HomeHeaderControls() {
                   style={{
                     textAlign: "left",
                     border: `1px solid ${ARENA_GREEN}`,
-                    background: "rgba(27,77,62,0.08)",
+                    background: "rgba(74, 124, 89, 0.14)",
                     color: ARENA_GREEN,
                     borderRadius: 9,
                     padding: "7px 10px",
@@ -444,7 +444,7 @@ export default function HomeHeaderControls() {
                   style={{
                     textAlign: "left",
                     border: "1px solid var(--border-md)",
-                    background: "#fff",
+                    background: "var(--bg-card)",
                     color: "var(--text-2)",
                     borderRadius: 9,
                     padding: "7px 10px",
@@ -470,7 +470,7 @@ export default function HomeHeaderControls() {
           className="pressable home-tab-pill"
           style={{
             border: "1px solid var(--border)",
-            background: "#fff",
+            background: "var(--bg-card)",
             color: "var(--text-1)",
             borderRadius: 999,
             padding: isCompactHeader ? "6px 8px" : "7px 10px",
@@ -498,11 +498,11 @@ export default function HomeHeaderControls() {
               flexDirection: "column",
               gap: 4,
               minWidth: 110,
-              background: "#fff",
+              background: "var(--bg-card)",
               border: "1px solid var(--border-md)",
               borderRadius: 12,
               padding: 6,
-              boxShadow: "0 12px 24px rgba(26,26,26,0.12)",
+              boxShadow: "0 14px 32px rgba(0,0,0,0.45)",
             }}
           >
             <button
@@ -512,7 +512,7 @@ export default function HomeHeaderControls() {
               style={{
                 textAlign: "left",
                 border: sort === "popular" ? "1px solid var(--text-1)" : "1px solid var(--border)",
-                background: "#fff",
+                background: "var(--bg-card)",
                 color: "var(--text-2)",
                 borderRadius: 9,
                 padding: "7px 10px",
@@ -532,7 +532,7 @@ export default function HomeHeaderControls() {
               style={{
                 textAlign: "left",
                 border: sort === "latest" ? "1px solid var(--text-1)" : "1px solid var(--border)",
-                background: "#fff",
+                background: "var(--bg-card)",
                 color: "var(--text-2)",
                 borderRadius: 9,
                 padding: "7px 10px",

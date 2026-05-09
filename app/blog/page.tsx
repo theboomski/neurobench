@@ -19,7 +19,7 @@ const BLOG_CATEGORIES = [
     key: "brain",
     label: "Brain & Cognition",
     emoji: "🧠",
-    accent: "#1B4D3E",
+    accent: "#D4823A",
     description: "Reaction time, working memory, brain age, and what actually affects cognitive performance.",
   },
   {

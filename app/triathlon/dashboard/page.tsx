@@ -6,7 +6,7 @@ import { getSupabaseBrowser } from "@/lib/supabase";
 import { getTriathlonNameForGameId } from "@/lib/triathlonDailyGames";
 import type { User } from "@supabase/supabase-js";
 
-const ACCENT = "#1B4D3E";
+const ACCENT = "#D4823A";
 const PAGE_SIZE = 20;
 
 type TriathlonRow = {

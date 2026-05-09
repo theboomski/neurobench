@@ -15,13 +15,13 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(0,0,0,0.92)", backdropFilter: "blur(16px)",
+      background: "rgba(15,13,11,0.94)", backdropFilter: "blur(16px)",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       padding: 24,
     }}>
       <div style={{
         background: "var(--bg-card)", border: "1px solid var(--border-md)",
-        borderTop: "2px solid #1B4D3E", borderRadius: "var(--radius-xl)",
+        borderTop: "2px solid #D4823A", borderRadius: "var(--radius-xl)",
         padding: "28px 24px", width: "100%", maxWidth: 480, textAlign: "center",
       }}>
         <div style={{ fontSize: 10, color: "var(--text-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 16 }}>
@@ -51,7 +51,7 @@ export default function InterstitialAd({ onDone }: { onDone: () => void }) {
           style={{
             width: "100%", padding: "14px 0", borderRadius: "var(--radius-md)",
             border: "none", fontSize: 14, fontWeight: 700, cursor: "pointer",
-            background: "#1B4D3E", color: "#fff", fontFamily: "var(--font-mono)",
+            background: "#D4823A", color: "#0F0D0B", fontFamily: "var(--font-mono)",
             letterSpacing: "0.04em",
           }}
         >

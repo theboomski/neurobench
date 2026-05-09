@@ -71,7 +71,7 @@ export default function UserMenu() {
           height: 34,
           borderRadius: "999px",
           border: "1px solid var(--border-md)",
-          background: "#ffffff",
+          background: "var(--bg-elevated)",
           color: "var(--text-1)",
           fontWeight: 900,
           overflow: "hidden",
@@ -96,7 +96,7 @@ export default function UserMenu() {
         )}
       </button>
       {open && (
-        <div style={{ position: "absolute", right: 0, top: 42, minWidth: 180, border: "1px solid var(--border)", background: "#fff", borderRadius: 10, overflow: "hidden", zIndex: 50, boxShadow: "var(--card-shadow-hover)" }}>
+        <div style={{ position: "absolute", right: 0, top: 42, minWidth: 180, border: "1px solid var(--border)", background: "var(--bg-card)", borderRadius: 10, overflow: "hidden", zIndex: 50, boxShadow: "var(--card-shadow-hover)" }}>
           {user ? (
             <>
               <Link onClick={() => setOpen(false)} href="/ugc/cockpit" style={{ display: "block", padding: "10px 12px", textDecoration: "none", color: "var(--text-1)", borderBottom: "1px solid var(--border)" }}>Cockpit</Link>

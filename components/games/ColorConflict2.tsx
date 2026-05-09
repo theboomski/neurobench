@@ -13,7 +13,7 @@ const TRIATHLON_SESSION_MS = 60_000;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
-const TRIATHLON_UI_ACCENT = "#1B4D3E";
+const TRIATHLON_UI_ACCENT = "#4A7C59";
 
 type ColorName = "RED" | "BLUE" | "GREEN" | "YELLOW" | "PURPLE" | "WHITE";
 type Phase = "idle" | "playing" | "done";
@@ -487,9 +487,9 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
               style={{
                 minHeight: 54,
                 borderRadius: "var(--radius-md)",
-                border: "1px solid var(--border-md)",
-                background: "var(--bg-elevated)",
-                color: "var(--text-1)",
+                border: "2px solid #4A7C59",
+                background: "#2a3f34",
+                color: "#d9f0e2",
                 fontSize: 18,
                 fontWeight: 900,
                 fontFamily: "var(--font-mono)",
@@ -504,9 +504,9 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
               style={{
                 minHeight: 54,
                 borderRadius: "var(--radius-md)",
-                border: "none",
-                background: game.accent,
-                color: "#000",
+                border: "2px solid #8B6F47",
+                background: "#D4823A",
+                color: "#2f1c0c",
                 fontSize: 18,
                 fontWeight: 900,
                 fontFamily: "var(--font-mono)",

@@ -13,7 +13,7 @@ import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUti
 const GRID_SIZE = 9;
 const TRIATHLON_TRIALS = 15;
 const TRIATHLON_START_LEN = 5;
-const TRIATHLON_UI_ACCENT = "#1B4D3E";
+const TRIATHLON_UI_ACCENT = "#4A7C59";
 
 // Higher score = better (same as number memory)
 function getSeqRank(score: number, game: GameData) {

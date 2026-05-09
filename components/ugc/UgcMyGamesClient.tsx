@@ -71,7 +71,7 @@ export default function UgcMyGamesClient() {
                 <div style={{ fontSize: 12, color: "var(--text-2)" }}>{game.visibility} · plays {game.play_count}</div>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
-                <Link href={toUgcPath({ type: game.type, slug: game.slug })} style={{ fontSize: 12, color: "#1B4D3E", textDecoration: "none", fontWeight: 800 }}>
+                <Link href={toUgcPath({ type: game.type, slug: game.slug })} style={{ fontSize: 12, color: "#D4823A", textDecoration: "none", fontWeight: 800 }}>
                   Open
                 </Link>
                 <select

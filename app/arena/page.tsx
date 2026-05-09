@@ -241,7 +241,7 @@ export default async function ArenaPage() {
       <section style={{ marginBottom: 20 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
           <div>
-            <div style={{ fontSize: 10, color: "#1B4D3E", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Arena</div>
+            <div style={{ fontSize: 10, color: "#4A7C59", fontFamily: "var(--font-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>Arena</div>
             <h1 style={{ fontSize: 24, fontWeight: 900, letterSpacing: "-0.03em" }}>Global Arena</h1>
             <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-2)", lineHeight: 1.6 }}>
               Country Rankings and Weekly Leaders reset every Monday. Hall of Fame updates only when an all-time record is broken.

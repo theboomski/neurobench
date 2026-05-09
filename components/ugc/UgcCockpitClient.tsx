@@ -7,7 +7,7 @@ import AuthModal from "@/components/ugc/AuthModal";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
 const MUSTARD = "#b8860b";
-const TRIATHLON_ACCENT = "#1B4D3E";
+const TRIATHLON_ACCENT = "#D4823A";
 
 /** Cockpit quick links (see `app/ugc/cockpit/page.tsx` → this client). Brain Triathlon is first so it stays visible on narrow grids. */
 const COCKPIT_TILES: { href: string; title: string; description: string; accent: string }[] = [
@@ -19,7 +19,7 @@ const COCKPIT_TILES: { href: string; title: string; description: string; accent:
   },
   { href: "/ugc/profile", title: "Profile", description: "Update display name and avatar.", accent: MUSTARD },
   { href: "/ugc/create", title: "Create Game", description: "Make a new brackets or balance game.", accent: MUSTARD },
-  { href: "/ugc/history", title: "Play History", description: "Review what you played.", accent: "#f59e0b" },
+  { href: "/ugc/history", title: "Play History", description: "Review what you played.", accent: "#c9a24d" },
   { href: "/ugc/my-games", title: "My Games", description: "Manage visibility and delete.", accent: MUSTARD },
   { href: "/bracket", title: "Bracket", description: "Browse community creations.", accent: "#b8860b" },
 ];

@@ -128,7 +128,7 @@ export default async function BlogPostPage({ params }: Props) {
         <section style={{ borderTop: "1px solid var(--border)", paddingTop: 40, paddingBottom: 80 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 800 }}>More Articles</h3>
-            <Link href="/blog" style={{ fontSize: 11, color: "#1B4D3E", fontFamily: "var(--font-mono)", textDecoration: "none", fontWeight: 700 }}>SEE ALL →</Link>
+            <Link href="/blog" style={{ fontSize: 11, color: "#D4823A", fontFamily: "var(--font-mono)", textDecoration: "none", fontWeight: 700 }}>SEE ALL →</Link>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 12 }}>
             {otherPosts.map(op => (

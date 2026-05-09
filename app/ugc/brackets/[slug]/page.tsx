@@ -70,8 +70,8 @@ export default async function UgcBracketsPlayPage({ params }: { params: Promise<
               textDecoration: "none",
               borderRadius: 10,
               padding: "10px 12px",
-              background: "#1B4D3E",
-              color: "#06311d",
+              background: "#D4823A",
+              color: "#0F0D0B",
               fontWeight: 800,
             }}
           >

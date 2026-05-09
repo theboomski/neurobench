@@ -13,7 +13,7 @@ import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import { TRIATHLON_STORAGE_KEY, normalizeTriathlonRawScore, parseTriathlonSession } from "@/lib/triathlonSession";
 import type { GameData } from "@/lib/types";
 
-const TRIATHLON_ACCENT = "#1B4D3E";
+const TRIATHLON_ACCENT = "#D4823A";
 
 type AnalysisTone = "brain" | "office" | "focus" | "vocab";
 
@@ -92,10 +92,16 @@ function getKillerLine(tone: AnalysisTone, normalized: number): string {
 }
 
 function getNeonByScore(normalized: number): string {
-  if (normalized >= 90) return "radial-gradient(120% 90% at 25% 10%, rgba(250,204,21,0.45) 0%, rgba(59,130,246,0.28) 45%, rgba(2,6,23,0.95) 100%)";
-  if (normalized >= 70) return "radial-gradient(120% 90% at 25% 10%, rgba(56,189,248,0.42) 0%, rgba(139,92,246,0.30) 45%, rgba(2,6,23,0.95) 100%)";
-  if (normalized >= 50) return "radial-gradient(120% 90% at 25% 10%, rgba(168,85,247,0.35) 0%, rgba(37,99,235,0.25) 50%, rgba(2,6,23,0.96) 100%)";
-  return "radial-gradient(120% 90% at 25% 10%, rgba(71,85,105,0.35) 0%, rgba(30,41,59,0.25) 50%, rgba(2,6,23,0.98) 100%)";
+  if (normalized >= 90) {
+    return "radial-gradient(120% 90% at 25% 10%, rgba(212,130,58,0.38) 0%, rgba(139,111,71,0.22) 45%, rgba(15,13,11,0.98) 100%)";
+  }
+  if (normalized >= 70) {
+    return "radial-gradient(120% 90% at 25% 10%, rgba(212,130,58,0.22) 0%, rgba(74,124,89,0.16) 48%, rgba(15,13,11,0.97) 100%)";
+  }
+  if (normalized >= 50) {
+    return "radial-gradient(120% 90% at 25% 10%, rgba(139,111,71,0.22) 0%, rgba(35,31,27,0.92) 55%, rgba(15,13,11,0.98) 100%)";
+  }
+  return "radial-gradient(120% 90% at 25% 10%, rgba(62,40,37,0.28) 0%, rgba(26,23,20,0.88) 50%, rgba(15,13,11,0.99) 100%)";
 }
 
 function getTriathlonTierLabel(normalized: number): string {
@@ -388,7 +394,7 @@ export default function CommonResult({
                 justifyContent: "space-between",
                 gap: 14,
                 boxSizing: "border-box",
-                fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+                fontFamily: "var(--font-body), system-ui, sans-serif",
               }}
             >
               <div>
@@ -396,7 +402,7 @@ export default function CommonResult({
                   style={{
                     fontSize: "clamp(17px, 4.2vw, 22px)",
                     fontWeight: 800,
-                    color: "#fff",
+                    color: "var(--text-1)",
                     lineHeight: 1.25,
                     marginBottom: 6,
                     textWrap: "balance" as never,
@@ -456,7 +462,7 @@ export default function CommonResult({
                       style={{
                         fontSize: "clamp(15px, 3.8vw, 19px)",
                         fontWeight: 800,
-                        color: "#fff",
+                        color: "var(--text-1)",
                         fontFamily: "var(--font-mono)",
                         whiteSpace: "nowrap",
                       }}
@@ -503,7 +509,7 @@ export default function CommonResult({
                         style={{
                           fontSize: "clamp(22px, 6vw, 28px)",
                           fontWeight: 900,
-                          color: "#fff",
+                          color: "var(--text-1)",
                           fontFamily: "var(--font-mono)",
                           whiteSpace: "nowrap",
                         }}
@@ -610,8 +616,8 @@ export default function CommonResult({
                     onClick={() => void handleShare()}
                     className="pressable"
                     style={{
-                      background: game.accent,
-                      color: "#000",
+                      background: "var(--accent)",
+                      color: "#0F0D0B",
                       border: "none",
                       borderRadius: "var(--radius-md)",
                       padding: "14px 12px",
@@ -647,7 +653,7 @@ export default function CommonResult({
               width: "min(92vw, 420px)",
               minHeight: "min(88vh, 760px)",
               background: getNeonByScore(normalizedScore),
-              border: "1px solid rgba(255,255,255,0.22)",
+              border: "1px solid var(--border-md)",
               borderTop: `2px solid ${rank.color}`,
               borderRadius: 24,
               padding: "20px 16px",
@@ -658,9 +664,9 @@ export default function CommonResult({
               gap: 8,
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
-              boxShadow: `0 20px 60px rgba(0,0,0,0.45), 0 0 50px ${rank.color}33`,
+              boxShadow: "0 20px 56px rgba(0,0,0,0.55), 0 0 0 1px rgba(212,130,58,0.08)",
               overflow: "visible",
-              fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+              fontFamily: "var(--font-body), system-ui, sans-serif",
             }}
           >
             <div style={{ fontSize: 106, lineHeight: 1, marginTop: 2, marginBottom: 2 }}>{scoreEmoji}</div>
@@ -683,9 +689,9 @@ export default function CommonResult({
                 width: "100%",
                 borderRadius: 18,
                 padding: "16px 10px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.2)",
-                boxShadow: `0 0 36px ${rank.color}66 inset`,
+                background: "var(--bg-elevated)",
+                border: "1px solid var(--border)",
+                boxShadow: "inset 0 1px 0 rgba(212,130,58,0.06)",
               }}
             >
               <div
@@ -694,8 +700,8 @@ export default function CommonResult({
                   fontWeight: 900,
                   letterSpacing: "-0.04em",
                   lineHeight: 1,
-                  color: "#fff",
-                  textShadow: `0 0 22px ${rank.color}, 0 10px 28px rgba(0,0,0,0.45)`,
+                  color: "var(--text-1)",
+                  textShadow: "0 2px 18px rgba(0,0,0,0.35)",
                 }}
               >
                 {normalizedScore}
@@ -703,7 +709,7 @@ export default function CommonResult({
                   style={{
                     fontSize: "clamp(18px,3vw,24px)",
                     fontWeight: 700,
-                    color: "rgba(255,255,255,0.95)",
+                    color: "var(--text-2)",
                     marginLeft: 10,
                     letterSpacing: "0.04em",
                   }}
@@ -716,34 +722,33 @@ export default function CommonResult({
             <div
               style={{
                 fontSize: 38,
-                color: "#fff",
+                color: "var(--text-1)",
                 fontWeight: 900,
                 marginBottom: 8,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.03,
                 textWrap: "balance" as never,
-                textShadow: `2px 0 rgba(255,0,128,0.28), -2px 0 rgba(0,255,255,0.28), 0 0 18px ${rank.color}`,
+                fontFamily: "var(--font-display), Georgia, serif",
               }}
             >
               {level.label}
             </div>
-            <div style={{ fontSize: 16, color: "rgba(255,255,255,0.96)", fontWeight: 700, marginBottom: 6, lineHeight: 1.3, textWrap: "balance" as never }}>
+            <div style={{ fontSize: 16, color: "var(--text-2)", fontWeight: 700, marginBottom: 6, lineHeight: 1.3, textWrap: "balance" as never }}>
               You scored {normalizedScore} in {game.title}.
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: "rgba(255,255,255,0.95)", marginBottom: 6, lineHeight: 1.3 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "var(--text-2)", marginBottom: 6, lineHeight: 1.3 }}>
               Your score is higher than {higherThanPct.toFixed(1)}% of the world - about {peopleBillions} billion people.
             </div>
             <div
               style={{
                 fontSize: 20,
                 fontWeight: 900,
-                color: "rgba(209,250,229,0.98)",
+                color: "var(--accent)",
                 marginBottom: 10,
                 lineHeight: 1.25,
                 textWrap: "balance" as never,
-                textShadow: `0 0 18px ${rank.color}66`,
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.14)",
+                background: "var(--accent-muted)",
+                border: "1px solid var(--border)",
                 borderRadius: 12,
                 padding: "10px 12px",
               }}
@@ -752,7 +757,7 @@ export default function CommonResult({
             </div>
 
             {benchmarkNote && (
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.62)", lineHeight: 1.4, marginBottom: 8, fontFamily: "var(--font-mono)" }}>
+              <div style={{ fontSize: 10, color: "var(--text-3)", lineHeight: 1.4, marginBottom: 8, fontFamily: "var(--font-mono)" }}>
                 {benchmarkNote}
               </div>
             )}
@@ -792,8 +797,8 @@ export default function CommonResult({
                 onClick={() => void handleShare()}
                 className="pressable"
                 style={{
-                  background: game.accent,
-                  color: "#000",
+                  background: "var(--accent)",
+                  color: "#0F0D0B",
                   border: "none",
                   borderRadius: "var(--radius-md)",
                   padding: "14px 12px",

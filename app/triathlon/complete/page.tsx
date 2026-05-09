@@ -10,9 +10,9 @@ import { calculateZCI, readTriathlonSessionForCompletePage, type TriathlonSessio
 import { shareZazazaChallenge } from "@/lib/shareResultChallenge";
 import type { User } from "@supabase/supabase-js";
 
-const ACCENT = "#1B4D3E";
-const MEMORY_COLOR = "#38bdf8";
-const SPEED_COLOR = "#f59e0b";
+const ACCENT = "#D4823A";
+const MEMORY_COLOR = "#8B6F47";
+const SPEED_COLOR = "#c9a24d";
 const SITE = "https://zazaza.app";
 const CLIENT_LOG = "[triathlon/complete]";
 

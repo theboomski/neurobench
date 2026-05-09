@@ -10,7 +10,7 @@ import {
   type TriathlonSession,
 } from "@/lib/triathlonSession";
 
-const ACCENT = "#1B4D3E";
+const ACCENT = "#D4823A";
 
 type UiState =
   | null
@@ -112,7 +112,7 @@ export default function TriathlonResultContinuation({ gameId, normalizedScore, r
     padding: "14px 18px",
     borderRadius: "var(--radius-md)",
     background: ACCENT,
-    color: "#0a0a0f",
+    color: "#0F0D0B",
     border: `1px solid ${ACCENT}`,
     fontSize: 14,
     fontWeight: 800,

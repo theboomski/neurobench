@@ -37,16 +37,16 @@ export function GameCard({ game, rank }: { game: GameData; rank?: number }) {
     <Link href={`/${game.category}/${game.id}`} style={{ textDecoration: "none", display: "block" }} onClick={() => recordClick(game.id)}>
       <div
         className="pressable"
-        style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: "24px 22px", height: "100%", position: "relative", transition: "transform 0.18s ease, box-shadow 0.18s ease", boxShadow: "var(--card-shadow)" }}
-        onMouseEnter={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(-2px)"; d.style.boxShadow = "var(--card-shadow-hover)"; }}
-        onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(0)"; d.style.boxShadow = "var(--card-shadow)"; }}
+        style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: "24px 22px", height: "100%", position: "relative", transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease", boxShadow: "var(--card-shadow)" }}
+        onMouseEnter={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(-2px)"; d.style.boxShadow = "var(--card-shadow-hover)"; d.style.borderColor = "rgba(212, 130, 58, 0.42)"; }}
+        onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(0)"; d.style.boxShadow = "var(--card-shadow)"; d.style.borderColor = ""; }}
       >
         {rank === 0 && clicks > 0 && (
-          <div style={{ position: "absolute", top: 14, right: 14, background: "#ffffff", border: "1px solid var(--border)", color: "var(--text-3)", fontSize: 9, fontWeight: 700, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: 999, letterSpacing: "0.1em", textTransform: "uppercase" }}>MOST PLAYED</div>
+          <div style={{ position: "absolute", top: 14, right: 14, background: "var(--bg-elevated)", border: "1px solid var(--border)", color: "var(--text-3)", fontSize: 9, fontWeight: 700, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: 999, letterSpacing: "0.1em", textTransform: "uppercase" }}>MOST PLAYED</div>
         )}
 
         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginBottom: 14 }}>
-          <span style={{ fontSize: 9, color: "var(--text-2)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" }}>{game.categoryLabel}</span>
+          <span style={{ fontSize: 9, color: "var(--text-3)", fontFamily: "var(--font-body)", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" }}>{game.categoryLabel}</span>
         </div>
 
         <div style={{ fontSize: 36, marginBottom: 12 }}>{game.emoji}</div>
@@ -59,7 +59,7 @@ export function GameCard({ game, rank }: { game: GameData; rank?: number }) {
         <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.65 }}>{game.shortDescription}</p>
 
         <div style={{ marginTop: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: game.accent, fontFamily: "var(--font-body)", letterSpacing: "0.04em" }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)", fontFamily: "var(--font-body)", letterSpacing: "0.04em" }}>
             PLAY NOW →
           </span>
           {clicks > 0 && (

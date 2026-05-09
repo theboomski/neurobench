@@ -120,7 +120,7 @@ export default async function UgcBalanceResultsPage({ params }: { params: Promis
           marginTop: 14,
           padding: "10px 12px",
           borderRadius: 10,
-          background: "#1B4D3E",
+          background: "#D4823A",
           color: "#05291a",
           fontWeight: 800,
           textDecoration: "none",

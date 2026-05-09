@@ -36,10 +36,10 @@ export default function BrainAgePage() {
       <div style={{ padding: "16px 0 0" }}><div className="ad-slot ad-banner">Advertisement</div></div>
       <section style={{ padding: "40px 0 32px", textAlign: "center" }}>
         <div style={{ display: "inline-flex", background: "rgba(27,77,62,0.08)", border: "1px solid rgba(27,77,62,0.2)", borderRadius: 999, padding: "4px 14px", marginBottom: 16 }}>
-          <span style={{ fontSize: 10, color: "#1B4D3E", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>BRAIN AGE TEST</span>
+          <span style={{ fontSize: 10, color: "#4A7C59", fontFamily: "var(--font-mono)", letterSpacing: "0.08em" }}>BRAIN AGE TEST</span>
         </div>
         <h1 style={{ fontSize: "clamp(28px,5.5vw,56px)", fontWeight: 900, letterSpacing: "-0.04em", lineHeight: 1.06, marginBottom: 14 }}>
-          How Old Is<br /><span style={{ background: "linear-gradient(135deg, #1B4D3E 0%, #C8410A 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Your Brain?</span>
+          How Old Is<br /><span style={{ background: "linear-gradient(135deg, #4A7C59 0%, #D4823A 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Your Brain?</span>
         </h1>
         <p style={{ fontSize: "clamp(13px,1.8vw,16px)", color: "var(--text-2)", maxWidth: 480, margin: "0 auto 12px", lineHeight: 1.65 }}>Take a clinically-inspired cognitive test and find your brain age in under 60 seconds. Free. No signup. Results you can share.</p>
         <p style={{ fontSize: 13, color: "var(--text-3)", fontFamily: "var(--font-mono)" }}>{games.length} free tests · S–D global ranking · Instant results</p>
@@ -50,7 +50,7 @@ export default function BrainAgePage() {
         </div>
       </section>
       <section style={{ paddingBottom: 72 }}>
-        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #1B4D3E", borderRadius: "var(--radius-lg)", padding: "36px 32px" }}>
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderLeft: "3px solid #4A7C59", borderRadius: "var(--radius-lg)", padding: "36px 32px" }}>
           <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 16 }}>What Is a Brain Age Test?</h2>
           <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 14 }}>A brain age test measures how efficiently your cognitive functions perform compared to population norms. ZAZAZA's Brain Age Test suite covers processing speed, working memory, visual attention, inhibitory control, and temporal precision — all in under 60 seconds each. Percentile rankings are derived from peer-reviewed normative data including Wechsler Adult Intelligence Scale norms and reaction time population studies.</p>
           <p style={{ color: "var(--text-2)", lineHeight: 1.9, fontSize: 14, marginBottom: 24 }}>Unlike paid platforms such as Lumosity or BrainHQ, ZAZAZA provides free, instant access to clinically-inspired cognitive benchmarks with no account required. A 35-year-old scoring in the top 5% has a brain age of approximately 18–22 for that cognitive domain.</p>

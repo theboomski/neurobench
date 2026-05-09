@@ -17,7 +17,7 @@ const TRIATHLON_SESSION_MS = 60_000;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
-const TRIATHLON_UI_ACCENT = "#1B4D3E";
+const TRIATHLON_UI_ACCENT = "#4A7C59";
 
 function getRoundTimeMs(scoreAtRoundStart: number): number {
   return Math.max(MIN_ROUND_MS, Math.round(BASE_ROUND_MS - scoreAtRoundStart * MS_DECAY_PER_SCORE));
@@ -60,26 +60,14 @@ const COLORS = [
 ];
 
 type ColorDef = (typeof COLORS)[number];
-type AnswerButton = ColorDef & { chromeHex: string; labelTextHex: string };
+type AnswerButton = ColorDef & { bgHex: string; borderHex: string; textHex: string };
 
-function randomChromeHex(avoidSemanticHex: string): string {
-  const pool = COLORS.map((c) => c.hex);
-  let h = pool[Math.floor(Math.random() * pool.length)];
-  let guard = 0;
-  while (h === avoidSemanticHex && pool.length > 1 && guard++ < 24) {
-    h = pool[Math.floor(Math.random() * pool.length)];
-  }
-  return h;
-}
+const OPTION_BG_PALETTE = ["#264653", "#3d405b", "#6d597a", "#2a9d8f", "#4f772d", "#5f0f40", "#8f250c", "#3a506b"];
+const OPTION_BORDER_PALETTE = ["#f4a261", "#f2cc8f", "#e76f51", "#84a98c", "#cdb4db", "#f7b267", "#a3b18a", "#e9c46a"];
+const OPTION_TEXT_PALETTE = ["#f7f3e8", "#f4f1de", "#f1ece6", "#ffe8d6", "#fff1e6", "#e9f5db", "#fde2e4", "#edf6f9"];
 
-function randomLabelTextHex(avoidSemanticHex: string, avoidChromeHex: string): string {
-  const pool = COLORS.map((c) => c.hex);
-  let h = pool[Math.floor(Math.random() * pool.length)];
-  let guard = 0;
-  while ((h === avoidSemanticHex || h === avoidChromeHex) && pool.length > 1 && guard++ < 32) {
-    h = pool[Math.floor(Math.random() * pool.length)];
-  }
-  return h;
+function shuffleList<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5);
 }
 
 function randomPair(choiceCount: 4 | 5 | 6): { word: ColorDef; ink: ColorDef; buttons: AnswerButton[] } {
@@ -90,12 +78,28 @@ function randomPair(choiceCount: 4 | 5 | 6): { word: ColorDef; ink: ColorDef; bu
   const wrongCount = choiceCount - 1;
   const others = rest.slice(0, wrongCount);
   const shuffled = [...others, ink].sort(() => Math.random() - 0.5);
-  const buttons: AnswerButton[] = shuffled.map((c) => {
-    const chromeHex = randomChromeHex(c.hex);
+  const bgPool = shuffleList(OPTION_BG_PALETTE);
+  const borderPool = shuffleList(OPTION_BORDER_PALETTE);
+  const textPool = shuffleList(OPTION_TEXT_PALETTE);
+
+  const buttons: AnswerButton[] = shuffled.map((c, i) => {
+    const bgHex = bgPool[i % bgPool.length] as string;
+
+    let borderHex = borderPool[i % borderPool.length] as string;
+    if (borderHex === bgHex) {
+      borderHex = borderPool[(i + 1) % borderPool.length] as string;
+    }
+
+    let textHex = textPool[i % textPool.length] as string;
+    if (textHex === bgHex || textHex === borderHex) {
+      textHex = textPool[(i + 1) % textPool.length] as string;
+    }
+
     return {
       ...c,
-      chromeHex,
-      labelTextHex: randomLabelTextHex(c.hex, chromeHex),
+      bgHex,
+      borderHex,
+      textHex,
     };
   });
   return { word, ink, buttons };
@@ -546,9 +550,9 @@ function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; tri
                 onClick={() => handleAnswer(btn.name)}
                 className="pressable"
                 style={{
-                  background: `${btn.chromeHex}18`,
-                  border: `2px solid ${btn.chromeHex}55`,
-                  color: btn.labelTextHex,
+                  background: btn.bgHex,
+                  border: `2px solid ${btn.borderHex}`,
+                  color: btn.textHex,
                   borderRadius: "var(--radius-md)",
                   padding: "16px 0",
                   fontSize: 15,

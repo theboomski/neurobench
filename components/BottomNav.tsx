@@ -31,7 +31,7 @@ export default function BottomNav() {
           {/* Backdrop */}
           <div
             onClick={() => setShowMore(false)}
-            style={{ position: "fixed", inset: 0, zIndex: 190, background: "rgba(26,26,26,0.18)", backdropFilter: "blur(2px)" }}
+            style={{ position: "fixed", inset: 0, zIndex: 190, background: "rgba(15,13,11,0.55)", backdropFilter: "blur(2px)" }}
           />
           {/* Panel */}
           <div style={{
@@ -59,7 +59,7 @@ export default function BottomNav() {
       {/* Bottom bar */}
       <nav style={{
         position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 200,
-        background: "rgba(245,240,232,0.98)",
+        background: "rgba(15, 13, 11, 0.96)",
         backdropFilter: "blur(12px)",
         borderTop: "1px solid var(--border)",
         height: 64,

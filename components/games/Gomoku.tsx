@@ -634,7 +634,7 @@ export default function Omok({ game }: { game: GameData }) {
             border: "none",
             borderRadius: 10,
             padding: "12px 22px",
-            background: "#1B4D3E",
+            background: "#4A7C59",
             color: "#042012",
             fontWeight: 900,
             fontFamily: "var(--font-mono)",
@@ -656,7 +656,7 @@ export default function Omok({ game }: { game: GameData }) {
         padding: "16px 14px 18px",
       }}
     >
-      <h2 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "#fff" }}>Omok (13x13)</h2>
+      <h2 style={{ margin: 0, fontSize: 22, fontWeight: 900, color: "var(--text-1)" }}>Omok (13x13)</h2>
       <p style={{ margin: "8px 0 0", color: "#9ca3af", fontSize: 13 }}>
         {endingMessage ?? status}
       </p>
@@ -726,7 +726,7 @@ export default function Omok({ game }: { game: GameData }) {
                         borderRadius: 999,
                         background: v === PLAYER ? "#111" : "#f5f5f5",
                         border: isLast ? `2px solid ${lastHighlight}` : v === PLAYER ? "1px solid #2b2b2b" : "1px solid #9ca3af",
-                        boxShadow: isWin ? "0 0 0 2px #1B4D3E, 0 0 12px rgba(27,77,62,0.45)" : "0 1px 4px rgba(0,0,0,0.45)",
+                        boxShadow: isWin ? "0 0 0 2px #4A7C59, 0 2px 8px rgba(0,0,0,0.35)" : "0 1px 4px rgba(0,0,0,0.45)",
                       }}
                     />
                   )}

@@ -9,9 +9,7 @@ import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
-const ACCENT = "#C8410A";
-/** Bracket hub play-count pill border (matches `BracketHubClient`). */
-const PLAY_PILL_MUSTARD = "#b8860b";
+const ACCENT = "#D4823A";
 const INITIAL_PAGE_SIZE = 12;
 
 const TRIATHLON_CARD_BLURB: Record<string, string> = {
@@ -28,12 +26,6 @@ const TRIATHLON_CARD_BLURB: Record<string, string> = {
 
 type HomeTypeFilter = "all" | "brain" | "game" | "personality";
 type HomeSort = "popular" | "latest";
-
-const BORDER_COLOR: Record<Exclude<HomeTypeFilter, "all">, string> = {
-  brain: "#1B4D3E",
-  game: "#C8410A",
-  personality: "#6c4f3d",
-};
 
 const CATEGORY_PILL_LABEL: Record<Exclude<HomeTypeFilter, "all">, string> = {
   brain: "Brain Test",
@@ -366,7 +358,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   >
                     <span
                       style={{
-                        color: "#ffffff",
+                        color: "#0F0D0B",
                         fontWeight: 700,
                         fontSize: 15,
                         letterSpacing: "-0.02em",
@@ -471,14 +463,14 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
               alignItems: "center",
               justifyContent: "center",
               padding: "16px 28px",
-              borderRadius: 8,
+              borderRadius: 6,
               background: ACCENT,
-              color: "#ffffff",
+              color: "#0F0D0B",
               fontSize: 15,
               fontWeight: 800,
               letterSpacing: "-0.02em",
               textDecoration: "none",
-              boxShadow: "0 8px 20px rgba(200,65,10,0.24)",
+              boxShadow: "0 8px 22px rgba(212, 130, 58, 0.18)",
             }}
           >
             Start Today&apos;s Triathlon →
@@ -537,7 +529,6 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
           {visibleGames.map((game) => {
             const plays = playCounts[game.id] ?? 0;
-            const border = BORDER_COLOR[game.type];
             const catLabel = CATEGORY_PILL_LABEL[game.type];
             return (
               <Link key={game.id} href={canonicalGamePath(game)} style={{ textDecoration: "none", display: "block", minWidth: 0 }}>
@@ -553,15 +544,17 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                     flexDirection: "column",
                     height: "100%",
                     boxShadow: "var(--card-shadow)",
-                    transition: "transform 0.18s ease, box-shadow 0.18s ease",
+                    transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateY(-2px)";
                     e.currentTarget.style.boxShadow = "var(--card-shadow-hover)";
+                    e.currentTarget.style.borderColor = "rgba(212, 130, 58, 0.42)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
                     e.currentTarget.style.boxShadow = "var(--card-shadow)";
+                    e.currentTarget.style.borderColor = "";
                   }}
                 >
                   <div
@@ -584,7 +577,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                         fontWeight: 700,
                         fontFamily: "var(--font-body)",
                         textTransform: "uppercase",
-                        color: "var(--text-2)",
+                        color: "var(--text-3)",
                         letterSpacing: "0.14em",
                       }}
                     >
@@ -600,7 +593,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                   </div>
                   <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 12, paddingTop: 4 }}>
                     <span
-                      style={{ fontSize: 11, color: border, fontWeight: 700, fontFamily: "var(--font-body)", textTransform: "uppercase" }}
+                      style={{ fontSize: 11, color: "var(--accent)", fontWeight: 700, fontFamily: "var(--font-body)", textTransform: "uppercase" }}
                     >
                       PLAY →
                     </span>
