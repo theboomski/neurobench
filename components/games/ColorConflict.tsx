@@ -86,15 +86,15 @@ function randomPair(choiceCount: 4 | 5 | 6): { word: ColorDef; ink: ColorDef; bu
   const buttons: AnswerButton[] = shuffled.map((c, i) => {
     const bgHex = bgPool[i % bgPool.length] as string;
 
-    let borderHex = borderPool[i % borderPool.length] as string;
-    if (borderHex === bgHex) {
-      borderHex = borderPool[(i + 1) % borderPool.length] as string;
-    }
+    const borderCandidates = borderPool.filter((hex) => hex !== bgHex);
+    const borderHex =
+      (borderCandidates[(i + 1) % Math.max(1, borderCandidates.length)] as string | undefined) ??
+      (borderPool[(i + 1) % borderPool.length] as string);
 
-    let textHex = textPool[i % textPool.length] as string;
-    if (textHex === bgHex || textHex === borderHex) {
-      textHex = textPool[(i + 1) % textPool.length] as string;
-    }
+    const textCandidates = textPool.filter((hex) => hex !== bgHex && hex !== borderHex);
+    const textHex =
+      (textCandidates[(i + 2) % Math.max(1, textCandidates.length)] as string | undefined) ??
+      (textPool[(i + 2) % textPool.length] as string);
 
     return {
       ...c,
