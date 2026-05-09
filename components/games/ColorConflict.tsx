@@ -56,15 +56,16 @@ const COLORS = [
   { name: "BLUE", hex: "#3B82F6" },
   { name: "YELLOW", hex: "#EAB308" },
   { name: "PURPLE", hex: "#A855F7" },
-  { name: "PINK", hex: "#F472B6" },
+  { name: "WHITE", hex: "#FFFFFF" },
 ];
 
 type ColorDef = (typeof COLORS)[number];
 type AnswerButton = ColorDef & { bgHex: string; borderHex: string; textHex: string };
 
-const OPTION_BG_PALETTE = ["#264653", "#3d405b", "#6d597a", "#2a9d8f", "#4f772d", "#5f0f40", "#8f250c", "#3a506b"];
-const OPTION_BORDER_PALETTE = ["#f4a261", "#f2cc8f", "#e76f51", "#84a98c", "#cdb4db", "#f7b267", "#a3b18a", "#e9c46a"];
-const OPTION_TEXT_PALETTE = ["#ef4444", "#3b82f6", "#22c55e", "#eab308", "#a855f7", "#f97316", "#06b6d4", "#f43f5e"];
+const ROTATING_COLOR_HEXES = ["#EAB308", "#22C55E", "#3B82F6", "#EF4444", "#A855F7", "#FFFFFF"];
+const OPTION_BG_PALETTE = ROTATING_COLOR_HEXES;
+const OPTION_BORDER_PALETTE = ROTATING_COLOR_HEXES;
+const OPTION_TEXT_PALETTE = ROTATING_COLOR_HEXES;
 
 function shuffleList<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);

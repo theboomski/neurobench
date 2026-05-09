@@ -34,6 +34,18 @@ const INK_HEX_BY_NAME: Record<ColorName, string> = {
   PURPLE: "#a855f7",
   WHITE: "#ffffff",
 };
+const BUTTON_ROTATION_COLORS: ColorName[] = ["YELLOW", "GREEN", "BLUE", "RED", "PURPLE", "WHITE"];
+
+function contrastTextForHex(hex: string): string {
+  const s = hex.replace("#", "");
+  const n = Number.parseInt(s, 16);
+  if (!Number.isFinite(n)) return "#0F0D0B";
+  const r = (n >> 16) & 255;
+  const g = (n >> 8) & 255;
+  const b = n & 255;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.62 ? "#1F1A16" : "#F7EFE6";
+}
 
 function getRoundTimeMs(roundNumber: number): number {
   if (roundNumber <= 10) return 3000;
@@ -121,6 +133,11 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
   const triathlonCountdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const triathlonIntroTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phaseRef = useRef<Phase>("idle");
+  const rotationIdx = (roundNumber - 1 + BUTTON_ROTATION_COLORS.length) % BUTTON_ROTATION_COLORS.length;
+  const noBgHex = INK_HEX_BY_NAME[BUTTON_ROTATION_COLORS[rotationIdx] as ColorName];
+  const yesBgHex = INK_HEX_BY_NAME[BUTTON_ROTATION_COLORS[(rotationIdx + 1) % BUTTON_ROTATION_COLORS.length] as ColorName];
+  const noBorderHex = INK_HEX_BY_NAME[BUTTON_ROTATION_COLORS[(rotationIdx + 2) % BUTTON_ROTATION_COLORS.length] as ColorName];
+  const yesBorderHex = INK_HEX_BY_NAME[BUTTON_ROTATION_COLORS[(rotationIdx + 3) % BUTTON_ROTATION_COLORS.length] as ColorName];
 
   useEffect(() => {
     setHighScore(getHighScore(game.id));
@@ -487,9 +504,9 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
               style={{
                 minHeight: 54,
                 borderRadius: "var(--radius-md)",
-                border: "2px solid #4A7C59",
-                background: "#2a3f34",
-                color: "#d9f0e2",
+                border: `2px solid ${noBorderHex}`,
+                background: noBgHex,
+                color: contrastTextForHex(noBgHex),
                 fontSize: 18,
                 fontWeight: 900,
                 fontFamily: "var(--font-mono)",
@@ -504,9 +521,9 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
               style={{
                 minHeight: 54,
                 borderRadius: "var(--radius-md)",
-                border: "2px solid #8B6F47",
-                background: "#D4823A",
-                color: "#2f1c0c",
+                border: `2px solid ${yesBorderHex}`,
+                background: yesBgHex,
+                color: contrastTextForHex(yesBgHex),
                 fontSize: 18,
                 fontWeight: 900,
                 fontFamily: "var(--font-mono)",
