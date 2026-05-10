@@ -9,7 +9,7 @@ import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
-const ACCENT = "#D4823A";
+const ACCENT = "#00F0FF";
 const INITIAL_PAGE_SIZE = 12;
 
 const TRIATHLON_CARD_BLURB: Record<string, string> = {
@@ -294,6 +294,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
               margin: 0,
               marginTop: 8,
             }}
+            suppressHydrationWarning
           >
             Next challenge in {formatHms(midnightCountdownMs)}
           </p>
@@ -465,12 +466,12 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
               padding: "16px 28px",
               borderRadius: 6,
               background: ACCENT,
-              color: "#0F0D0B",
+              color: "#051318",
               fontSize: 15,
               fontWeight: 800,
               letterSpacing: "-0.02em",
               textDecoration: "none",
-              boxShadow: "0 8px 22px rgba(212, 130, 58, 0.18)",
+              boxShadow: "var(--card-shadow)",
             }}
           >
             Start Today&apos;s Triathlon →
@@ -547,14 +548,16 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
                     transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-2px)";
+                    e.currentTarget.style.transform = "translateY(-4px)";
                     e.currentTarget.style.boxShadow = "var(--card-shadow-hover)";
-                    e.currentTarget.style.borderColor = "rgba(212, 130, 58, 0.42)";
+                    e.currentTarget.style.borderColor = "var(--border-md)";
+                    e.currentTarget.style.filter = "brightness(1.06)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = "translateY(0)";
                     e.currentTarget.style.boxShadow = "var(--card-shadow)";
-                    e.currentTarget.style.borderColor = "";
+                    e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.filter = "";
                   }}
                 >
                   <div

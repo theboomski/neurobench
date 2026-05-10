@@ -68,7 +68,7 @@ export default async function UgcBalancePlayPage({ params }: { params: Promise<{
               textDecoration: "none",
               borderRadius: 10,
               padding: "10px 12px",
-              background: "#D4823A",
+              background: "var(--accent)",
               color: "#0F0D0B",
               fontWeight: 800,
             }}

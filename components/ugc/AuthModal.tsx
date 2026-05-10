@@ -131,7 +131,7 @@ export default function AuthModal({ open, onClose, title, description, footer }:
         <button
           onClick={forgotMode ? onForgotPassword : onEmailSubmit}
           disabled={busy}
-          style={{ width: "100%", marginTop: 10, borderRadius: 10, padding: "10px 12px", fontWeight: 800, background: "#D4823A", color: "#0F0D0B", border: "none", cursor: "pointer" }}
+          style={{ width: "100%", marginTop: 10, borderRadius: 10, padding: "10px 12px", fontWeight: 800, background: "var(--accent)", color: "#0F0D0B", border: "none", cursor: "pointer" }}
         >
           {forgotMode ? "Send reset link" : mode === "signup" ? "Create account" : "Login"}
         </button>

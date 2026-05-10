@@ -59,7 +59,7 @@ export default function UgcHistoryClient() {
             <div style={{ fontSize: 12, color: "var(--text-2)", marginTop: 4 }}>{new Date(row.played_at).toLocaleString()}</div>
             <div style={{ marginTop: 6 }}>
               {row.ugc_games && (
-                <Link href={toUgcPath({ type: row.ugc_games.type, slug: row.ugc_games.slug })} style={{ fontSize: 12, color: "#D4823A", textDecoration: "none", fontWeight: 800 }}>
+                <Link href={toUgcPath({ type: row.ugc_games.type, slug: row.ugc_games.slug })} style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 800 }}>
                   Play again →
                 </Link>
               )}

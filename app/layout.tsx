@@ -3,21 +3,15 @@ import { Suspense } from "react";
 import "./globals.css";
 import Link from "next/link";
 import Script from "next/script";
-import { DM_Mono, DM_Sans, Fraunces } from "next/font/google";
+import { DM_Mono, Inter } from "next/font/google";
 import { dict } from "@/lib/i18n";
 import HomeHeaderControls from "@/components/HomeHeaderControls";
 import UserMenu from "@/components/UserMenu";
 
 const t = dict.en;
 
-const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans", weight: ["400", "500", "700", "800"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", weight: ["400", "500", "700"] });
 const dmMono = DM_Mono({ subsets: ["latin"], variable: "--font-dm-mono", weight: ["400", "500"] });
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  weight: "variable",
-  axes: ["SOFT", "WONK", "opsz"],
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -47,11 +41,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5822666577768735" crossOrigin="anonymous" />
       </head>
-      <body className={`${dmSans.variable} ${dmMono.variable} ${fraunces.variable}`}>
+      <body className={`${inter.variable} ${dmMono.variable}`}>
         {/* TOP NAV */}
         <nav
           id="zazaza-site-nav"
-          style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(15, 13, 11, 0.96)", backdropFilter: "blur(14px)", borderBottom: "1px solid var(--border)" }}
+          style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10, 10, 10, 0.88)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" }}
         >
           <div style={{ borderBottom: "1px solid var(--border)", height: 22, overflow: "hidden", position: "relative", background: "var(--bg-base)" }}>
             <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 40s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
@@ -60,19 +54,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               ))}
             </div>
           </div>
-          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "10px 24px", minHeight: 76, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 10 }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", padding: "8px 24px", minHeight: 80, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
-              <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+              <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ fontSize: 48, fontWeight: 800, fontFamily: "var(--font-display)", letterSpacing: "-0.02em", color: "var(--text-1)", lineHeight: 1, flexShrink: 0 }}>
                   ZA<span style={{ color: "var(--accent)" }}>ZA</span>ZA
                 </div>
               </Link>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <Suspense fallback={null}>
                 <HomeHeaderControls />
               </Suspense>
-              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
                 <a
                   href="https://discord.gg/D3x4VbtNn5"
                   target="_blank"
@@ -116,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* FOOTER */}
         <footer style={{ borderTop: "1px solid var(--border)", padding: "16px 24px 80px", background: "rgba(15, 13, 11, 0.92)" }}>
-          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 10, flexWrap: "nowrap", alignItems: "center", whiteSpace: "nowrap", overflowX: "auto", scrollbarWidth: "none" }}>
+          <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", justifyContent: "center", gap: 8, flexWrap: "nowrap", alignItems: "center", whiteSpace: "nowrap", overflowX: "auto", scrollbarWidth: "none" }}>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", fontWeight: 700 }}>ZAZAZA</span>
             <span style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginLeft: -4 }}>© {new Date().getFullYear()}</span>
             <Link href="/about" style={{ fontSize: 12, color: "var(--text-3)", textDecoration: "none" }}>About</Link>

@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Guidelines | ZAZAZA" };
 const S = ({ n, title, children }: { n: string; title: string; children: React.ReactNode }) => (
   <div style={{ marginBottom: 32 }}>
     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-      <span style={{ fontSize: 10, color: "#D4823A", fontFamily: "monospace", letterSpacing: "0.1em" }}>{n} /</span>
+      <span style={{ fontSize: 10, color: "var(--accent)", fontFamily: "monospace", letterSpacing: "0.1em" }}>{n} /</span>
       <h2 style={{ fontSize: 17, fontWeight: 700 }}>{title}</h2>
     </div>
     <div style={{ color: "rgba(160,160,160,1)", lineHeight: 1.85, fontSize: 14 }}>{children}</div>
@@ -15,7 +15,7 @@ const S = ({ n, title, children }: { n: string; title: string; children: React.R
 export default function Page() {
   return (
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "48px 24px 80px" }}>
-      <div style={{ fontSize: 10, color: "#D4823A", fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
+      <div style={{ fontSize: 10, color: "var(--accent)", fontFamily: "monospace", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>
         Legal Documentation
       </div>
       <h1 style={{ fontSize: 32, fontWeight: 900, marginBottom: 6, letterSpacing: "-0.03em" }}>Guidelines</h1>

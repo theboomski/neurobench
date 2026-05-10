@@ -116,7 +116,7 @@ export default function UgcProfileClient() {
             </label>
           </div>
         </div>
-        <button onClick={save} style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: "#D4823A", color: "#0F0D0B", fontWeight: 800, cursor: "pointer" }}>
+        <button onClick={save} style={{ borderRadius: 10, border: "none", padding: "10px 12px", background: "var(--accent)", color: "#0F0D0B", fontWeight: 800, cursor: "pointer" }}>
           Save
         </button>
         {msg && <p style={{ fontSize: 12, color: "var(--text-2)" }}>{msg}</p>}

@@ -7,7 +7,7 @@ import AuthModal from "@/components/ugc/AuthModal";
 import { getSupabaseBrowser } from "@/lib/supabase";
 
 const MUSTARD = "#b8860b";
-const TRIATHLON_ACCENT = "#D4823A";
+const TRIATHLON_ACCENT = "var(--accent)";
 
 /** Cockpit quick links (see `app/ugc/cockpit/page.tsx` → this client). Brain Triathlon is first so it stays visible on narrow grids. */
 const COCKPIT_TILES: { href: string; title: string; description: string; accent: string }[] = [

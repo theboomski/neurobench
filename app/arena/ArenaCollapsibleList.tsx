@@ -6,9 +6,9 @@ const TOP = 5;
 
 const toggleBtnStyle: CSSProperties = {
   marginTop: 8,
-  border: "1px solid #4A7C59",
+  border: "1px solid var(--accent)",
   background: "rgba(27,77,62,0.1)",
-  color: "#4A7C59",
+  color: "var(--accent)",
   borderRadius: 999,
   padding: "8px 14px",
   fontSize: 11,

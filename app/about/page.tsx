@@ -31,7 +31,7 @@ export function generateMetadata(): Metadata {
 
 const monoEyebrow: React.CSSProperties = {
   fontSize: 10,
-  color: "#D4823A",
+  color: "var(--accent)",
   fontFamily: "monospace",
   letterSpacing: "0.12em",
 };
@@ -83,7 +83,7 @@ const OfferRow = ({ title, href, children }: { title: string; href: string; chil
   <div style={{ marginBottom: 18 }}>
     <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-1)", marginBottom: 6 }}>{title}</div>
     <div style={{ ...bodyMuted, marginBottom: 8 }}>{children}</div>
-    <Link href={href} style={{ fontSize: 13, color: "#D4823A", textDecoration: "none", fontFamily: "monospace" }}>
+    <Link href={href} style={{ fontSize: 13, color: "var(--accent)", textDecoration: "none", fontFamily: "monospace" }}>
       &rarr; {href}
     </Link>
   </div>
@@ -419,13 +419,13 @@ export default function AboutPage() {
         <S n="06" title="Contact">
           <p>
             Questions, feedback, or partnership enquiries:{" "}
-            <a href="mailto:theboomski@gmail.com" style={{ color: "#D4823A", textDecoration: "none" }}>
+            <a href="mailto:theboomski@gmail.com" style={{ color: "var(--accent)", textDecoration: "none" }}>
               theboomski@gmail.com
             </a>
           </p>
           <p style={{ marginTop: 10 }}>
             For privacy-related requests:{" "}
-            <a href="mailto:theboomski@gmail.com" style={{ color: "#D4823A", textDecoration: "none" }}>
+            <a href="mailto:theboomski@gmail.com" style={{ color: "var(--accent)", textDecoration: "none" }}>
               theboomski@gmail.com
             </a>
           </p>
@@ -438,7 +438,7 @@ export default function AboutPage() {
           <Link href="/terms-of-service" style={{ fontSize: 12, color: "rgba(100,100,100,1)", textDecoration: "none" }}>
             Terms of Service
           </Link>
-          <Link href="/" style={{ fontSize: 12, color: "#D4823A", textDecoration: "none" }}>
+          <Link href="/" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none" }}>
             ← Back to Tests
           </Link>
         </div>

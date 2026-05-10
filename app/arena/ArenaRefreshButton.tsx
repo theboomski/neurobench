@@ -13,9 +13,9 @@ export default function ArenaRefreshButton() {
       className="pressable"
       onClick={() => startRefresh(() => router.refresh())}
       style={{
-        border: "1px solid #4A7C59",
+        border: "1px solid var(--accent)",
         background: "rgba(27,77,62,0.1)",
-        color: "#4A7C59",
+        color: "var(--accent)",
         borderRadius: 999,
         padding: "8px 12px",
         fontSize: 11,

@@ -9,12 +9,11 @@ type HomeSort = "popular" | "latest";
 
 const TAB_COLOR: Record<HomeTypeFilter, string> = {
   all: "var(--text-1)",
-  brain: "var(--accent-secondary)",
+  brain: "var(--accent)",
   game: "var(--accent)",
-  personality: "#8B6F47",
+  personality: "var(--accent)",
 };
-const BRACKET_AMBER = "#d4823a";
-const ARENA_GREEN = "#4A7C59";
+const SECTION_ACCENT = "var(--accent)";
 
 const CATEGORY_TABS: Array<{ id: HomeTypeFilter; label: string }> = [
   { id: "all", label: "All" },
@@ -93,9 +92,9 @@ export default function HomeHeaderControls() {
 
   return (
     <>
-      <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, width: "100%" }}>
+      <div className="home-header-controls" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, width: "100%" }}>
       {!isCompactHeader ? (
-        <div className="home-header-tabs home-header-tabs-desktop" style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+        <div className="home-header-tabs home-header-tabs-desktop" style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
           {CATEGORY_TABS.map((tab) => {
             const active = category === tab.id;
             const accent = TAB_COLOR[tab.id];
@@ -111,7 +110,7 @@ export default function HomeHeaderControls() {
                   background: "transparent",
                   color: active ? accent : "var(--text-2)",
                   borderRadius: 0,
-                  padding: "7px 10px",
+                  padding: "8px 8px",
                   fontSize: 11,
                   fontWeight: 700,
                   whiteSpace: "nowrap",
@@ -129,11 +128,11 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: `1px solid ${BRACKET_AMBER}`,
-              background: "rgba(212, 130, 58, 0.12)",
-              color: BRACKET_AMBER,
+              border: `1px solid ${SECTION_ACCENT}`,
+              background: "var(--accent-muted)",
+              color: SECTION_ACCENT,
               borderRadius: 999,
-              padding: "7px 10px",
+              padding: "8px 8px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
@@ -150,11 +149,11 @@ export default function HomeHeaderControls() {
             style={{
               display: "inline-flex",
               alignItems: "center",
-              border: `1px solid ${ARENA_GREEN}`,
-              background: "rgba(74, 124, 89, 0.14)",
-              color: ARENA_GREEN,
+              border: `1px solid ${SECTION_ACCENT}`,
+              background: "var(--accent-muted)",
+              color: SECTION_ACCENT,
               borderRadius: 999,
-              padding: "7px 10px",
+              padding: "8px 8px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
@@ -175,7 +174,7 @@ export default function HomeHeaderControls() {
               background: "var(--bg-elevated)",
               color: "var(--text-2)",
               borderRadius: 999,
-              padding: "7px 10px",
+              padding: "8px 8px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
@@ -196,7 +195,7 @@ export default function HomeHeaderControls() {
               background: "var(--bg-elevated)",
               color: "var(--text-2)",
               borderRadius: 999,
-              padding: "7px 10px",
+              padding: "8px 8px",
               fontSize: 11,
               fontWeight: 700,
               whiteSpace: "nowrap",
@@ -300,9 +299,9 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileBracketOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: `1px solid ${BRACKET_AMBER}`,
-                background: "rgba(212, 130, 58, 0.12)",
-                color: BRACKET_AMBER,
+                border: `1px solid ${SECTION_ACCENT}`,
+                background: "var(--accent-muted)",
+                color: SECTION_ACCENT,
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
@@ -341,9 +340,9 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: `1px solid ${BRACKET_AMBER}`,
-                    background: "rgba(212, 130, 58, 0.12)",
-                    color: BRACKET_AMBER,
+                    border: `1px solid ${SECTION_ACCENT}`,
+                    background: "var(--accent-muted)",
+                    color: SECTION_ACCENT,
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,
@@ -383,9 +382,9 @@ export default function HomeHeaderControls() {
               onClick={() => setMobileArenaOpen((v) => !v)}
               className="pressable home-tab-pill"
               style={{
-                border: `1px solid ${ARENA_GREEN}`,
-                background: "rgba(74, 124, 89, 0.14)",
-                color: ARENA_GREEN,
+                border: `1px solid ${SECTION_ACCENT}`,
+                background: "var(--accent-muted)",
+                color: SECTION_ACCENT,
                 borderRadius: 999,
                 padding: "6px 8px",
                 fontSize: 10,
@@ -424,9 +423,9 @@ export default function HomeHeaderControls() {
                   className="pressable"
                   style={{
                     textAlign: "left",
-                    border: `1px solid ${ARENA_GREEN}`,
-                    background: "rgba(74, 124, 89, 0.14)",
-                    color: ARENA_GREEN,
+                    border: `1px solid ${SECTION_ACCENT}`,
+                    background: "var(--accent-muted)",
+                    color: SECTION_ACCENT,
                     borderRadius: 9,
                     padding: "7px 10px",
                     fontSize: 11,

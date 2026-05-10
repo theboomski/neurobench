@@ -38,8 +38,8 @@ export function GameCard({ game, rank }: { game: GameData; rank?: number }) {
       <div
         className="pressable"
         style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: "24px 22px", height: "100%", position: "relative", transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease", boxShadow: "var(--card-shadow)" }}
-        onMouseEnter={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(-2px)"; d.style.boxShadow = "var(--card-shadow-hover)"; d.style.borderColor = "rgba(212, 130, 58, 0.42)"; }}
-        onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(0)"; d.style.boxShadow = "var(--card-shadow)"; d.style.borderColor = ""; }}
+        onMouseEnter={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(-4px)"; d.style.boxShadow = "var(--card-shadow-hover)"; d.style.borderColor = "var(--border-md)"; d.style.filter = "brightness(1.06)"; }}
+        onMouseLeave={e => { const d = e.currentTarget as HTMLDivElement; d.style.transform = "translateY(0)"; d.style.boxShadow = "var(--card-shadow)"; d.style.borderColor = "var(--border)"; d.style.filter = ""; }}
       >
         {rank === 0 && clicks > 0 && (
           <div style={{ position: "absolute", top: 14, right: 14, background: "var(--bg-elevated)", border: "1px solid var(--border)", color: "var(--text-3)", fontSize: 9, fontWeight: 700, fontFamily: "var(--font-mono)", padding: "2px 8px", borderRadius: 999, letterSpacing: "0.1em", textTransform: "uppercase" }}>MOST PLAYED</div>
