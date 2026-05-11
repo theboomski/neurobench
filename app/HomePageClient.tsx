@@ -290,37 +290,23 @@ export default function HomePageClient({ initialPlayCounts, arenaPreview }: Home
         </h1>
       </section>
 
-      {/* Left: Today&apos;s Test + Today&apos;s triathlon · Right: Arena preview — equal-height columns */}
+      {/* Mobile: Test → Triathlon → rankings stacked. md+: two columns (rankings span full height). */}
       <section style={{ paddingTop: 4, paddingBottom: 12 }}>
         <div
+          className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 md:items-stretch"
           style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
             gap: "clamp(10px, 2.5vw, 22px)",
-            alignItems: "stretch",
           }}
         >
           <div
+            className="min-h-0 md:col-start-1 md:row-start-1"
             style={{
               ...TRIATHLON_LEFT_CARD,
               display: "flex",
               flexDirection: "column",
-              gap: 0,
-              height: "100%",
-              minHeight: 0,
+              gap: 12,
             }}
           >
-            <div
-              style={{
-                flex: "1 1 50%",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                minHeight: 0,
-                paddingBottom: 18,
-                borderBottom: "1px solid var(--border)",
-              }}
-            >
               <div style={HOME_SECTION_LABEL}>Today&apos;s Test</div>
               <Link
                 href={spotlightHref}
@@ -375,18 +361,17 @@ export default function HomePageClient({ initialPlayCounts, arenaPreview }: Home
                 </p>
                 <span className="home-spotlight-play-cta">Play now</span>
               </Link>
-            </div>
+          </div>
 
-            <div
-              style={{
-                flex: "1 1 50%",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                minHeight: 0,
-                paddingTop: 18,
-              }}
-            >
+          <div
+            className="min-h-0 md:col-start-1 md:row-start-2"
+            style={{
+              ...TRIATHLON_LEFT_CARD,
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
               <div
                 style={{
                   display: "flex",
@@ -454,18 +439,14 @@ export default function HomePageClient({ initialPlayCounts, arenaPreview }: Home
               >
                 No signup required · Track progress free with account
               </p>
-            </div>
           </div>
 
           <div
+            className="flex min-h-0 flex-col md:col-start-2 md:row-start-1 md:row-span-2"
             style={{
               ...TRIATHLON_LEFT_CARD,
-              display: "flex",
-              flexDirection: "column",
               gap: "clamp(8px, 2vw, 12px)",
               minWidth: 0,
-              height: "100%",
-              minHeight: 0,
             }}
           >
             <div
