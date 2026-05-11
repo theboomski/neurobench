@@ -13,7 +13,7 @@ type Phase = "idle" | "playing" | "done";
 type Dir = "up" | "down" | "left" | "right";
 
 const ROUND_TIME_MS = 30_000;
-const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_SESSION_MS = 30_000;
 const TRIATHLON_UI_ACCENT = "#4A7C59";
 const FISH_COUNT = 10;
 const SWIPE_THRESHOLD = 28;
@@ -318,7 +318,7 @@ function FishFrenzyInner({ game, triathlonFromServer }: { game: GameData; triath
           <h2 style={{ fontSize: "clamp(20px,5vw,30px)", fontWeight: 900, marginBottom: 8 }}>Fish Frenzy</h2>
           <p style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.7, maxWidth: 460, margin: "0 auto 10px" }}>
             {isTriathlon
-              ? "Blue fish: swipe where they move. Purple fish: swipe where their heads point. 60 seconds in triathlon — go as fast as you can."
+              ? "Blue fish: swipe where they move. Purple fish: swipe where their heads point. 30 seconds in triathlon — go as fast as you can."
               : "Blue fish: swipe where they move. Purple fish: swipe where their heads point. 30 seconds. Go as fast as you can."}
           </p>
           <p style={{ color: "var(--text-3)", fontSize: 12, fontFamily: "var(--font-mono)", marginBottom: 22 }}>
@@ -375,7 +375,7 @@ function FishFrenzyInner({ game, triathlonFromServer }: { game: GameData; triath
                 overflow: "hidden",
               }}
             >
-              60 seconds. Swipe the right direction.
+              30 seconds. Swipe the right direction.
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "2px 4px", flexWrap: "wrap", gap: 8 }}>

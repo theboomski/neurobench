@@ -10,7 +10,8 @@ import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
 const TIME_LIMIT = 3000;
-const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_SESSION_MS = 30_000;
+const TRIATHLON_ROUND_MS_ADJUST_MS = 200;
 const TRIATHLON_ROUND_MS_START = 3000;
 const TRIATHLON_ROUND_MS_FLOOR = 1700;
 const TRIATHLON_ROUND_MS_CEILING = 4300;
@@ -188,7 +189,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
           clearRoundTimers();
           playBeep("fail");
           setFeedback("timeout");
-          triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+          triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + TRIATHLON_ROUND_MS_ADJUST_MS);
           triathlonDifficultyRef.current = Math.max(1, triathlonDifficultyRef.current - 1);
           setTimeout(() => {
             if (phaseRef.current !== "playing") return;
@@ -269,7 +270,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
         if (isTriathlon) {
           triathlonScoreRef.current += triathlonDifficultyRef.current;
           setScore(triathlonScoreRef.current);
-          triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - 100);
+          triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - TRIATHLON_ROUND_MS_ADJUST_MS);
           triathlonDifficultyRef.current = Math.min(TRIATHLON_DIFFICULTY_MAX, triathlonDifficultyRef.current + 1);
           setTimeout(() => {
             if (phaseRef.current !== "playing") return;
@@ -285,7 +286,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
         playBeep("fail");
         setFeedback("wrong");
         if (isTriathlon) {
-          triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+          triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + TRIATHLON_ROUND_MS_ADJUST_MS);
           triathlonDifficultyRef.current = Math.max(1, triathlonDifficultyRef.current - 1);
           setTimeout(() => {
             if (phaseRef.current !== "playing") return;
@@ -360,7 +361,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
           <div style={{ fontSize: "clamp(40px,10vw,56px)", marginBottom: 20 }}>⚖️</div>
           <p style={{ fontSize: "clamp(16px,3.5vw,19px)", fontWeight: 800, marginBottom: 8 }}>Numerical Magnitude Processing</p>
           <p style={{ fontSize: 13, color: "var(--text-2)", fontFamily: "var(--font-mono)", marginBottom: 4 }}>
-            Click the LARGER value · {isTriathlon ? "Triathlon: 60s total, adaptive round time" : "3 seconds per round"}
+            Click the LARGER value · {isTriathlon ? "Triathlon: 30s total, adaptive round time" : "3 seconds per round"}
           </p>
           <p style={{ fontSize: 12, color: "var(--text-3)", fontFamily: "var(--font-mono)", marginBottom: 28 }}>
             {isTriathlon ? "Wrong or slow round adjusts difficulty — keep scoring until time runs out." : "Gets harder as you score · wrong or timeout = game over"}
@@ -417,7 +418,7 @@ function InstantComparisonInner({ game, triathlonFromServer }: { game: GameData;
                 overflow: "hidden",
               }}
             >
-              60 seconds. Harder questions score more.
+              30 seconds. Harder questions score more.
             </div>
           )}
           <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>

@@ -11,7 +11,7 @@ import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
 const GRID_SIZE = 9;
-const TRIATHLON_TRIALS = 15;
+const TRIATHLON_TRIALS = 10;
 const TRIATHLON_START_LEN = 5;
 const TRIATHLON_UI_ACCENT = "#4A7C59";
 

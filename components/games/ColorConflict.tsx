@@ -13,7 +13,7 @@ const BASE_ROUND_MS = 2500;
 const MIN_ROUND_MS = 700;
 const MS_DECAY_PER_SCORE = 8;
 
-const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_SESSION_MS = 30_000;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
@@ -303,7 +303,7 @@ function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; tri
           setScore(triathlonScoreRef.current);
           triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - 100);
           triathlonCorrectStreakRef.current += 1;
-          if (triathlonCorrectStreakRef.current % 5 === 0) {
+          if (triathlonCorrectStreakRef.current > 0 && triathlonCorrectStreakRef.current % 2 === 0) {
             triathlonChoicesRef.current = Math.min(6, triathlonChoicesRef.current + 1) as 4 | 5 | 6;
           }
           setTimeout(() => {
@@ -438,7 +438,7 @@ function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; tri
             }}
           >
             {isTriathlon
-              ? "Triathlon: 60 seconds. More choices score more per correct answer — wrong answers slow you down but do not end the run."
+              ? "Triathlon: 30 seconds. More choices score more per correct answer — wrong answers slow you down but do not end the run."
               : `Time per round shrinks as you score (down to ${(MIN_ROUND_MS / 1000).toFixed(1)}s). After 25 / 75 correct, you get 5 then 6 choices. Wrong answer or timeout = game over.`}
           </p>
           <button
@@ -490,7 +490,7 @@ function ColorConflictInner({ game, triathlonFromServer }: { game: GameData; tri
                 overflow: "hidden",
               }}
             >
-              60 seconds. Score more with harder rounds.
+              30 seconds. Score more with harder rounds.
             </div>
           )}
           <div style={{ height: 4, background: "var(--bg-elevated)", borderRadius: 2, marginBottom: 16, overflow: "hidden" }}>

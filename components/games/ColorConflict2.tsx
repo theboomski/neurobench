@@ -9,7 +9,8 @@ import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import CommonResult from "@/components/CommonResult";
 import { resolveResultTone } from "@/lib/resultUtils";
 
-const TRIATHLON_SESSION_MS = 60_000;
+const TRIATHLON_SESSION_MS = 30_000;
+const TRIATHLON_ROUND_MS_ADJUST_MS = 200;
 const TRIATHLON_ROUND_MS_START = 2500;
 const TRIATHLON_ROUND_MS_FLOOR = 1500;
 const TRIATHLON_ROUND_MS_CEILING = 3500;
@@ -221,7 +222,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
       playBeep("fail");
       if (isTriathlon) {
         clearRoundTimers();
-        triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+        triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + TRIATHLON_ROUND_MS_ADJUST_MS);
         if (phaseRef.current === "playing") {
           scheduleRound(nextRound + 1);
         }
@@ -274,7 +275,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
         const pts = triathlonPointsForRoundMs(triathlonRoundLimitSnapshotRef.current);
         triathlonScoreRef.current += pts;
         setScore(triathlonScoreRef.current);
-        triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - 100);
+        triathlonRoundMsRef.current = Math.max(TRIATHLON_ROUND_MS_FLOOR, triathlonRoundMsRef.current - TRIATHLON_ROUND_MS_ADJUST_MS);
         scheduleRound(roundNumber + 1);
       } else {
         scoreRef.current += 1;
@@ -286,7 +287,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
 
     playBeep("fail");
     if (isTriathlon) {
-      triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + 100);
+      triathlonRoundMsRef.current = Math.min(TRIATHLON_ROUND_MS_CEILING, triathlonRoundMsRef.current + TRIATHLON_ROUND_MS_ADJUST_MS);
       scheduleRound(roundNumber + 1);
     } else {
       endGame(scoreRef.current);
@@ -352,7 +353,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
           <h2 style={{ fontSize: "clamp(20px,5vw,28px)", fontWeight: 900, marginBottom: 10 }}>Color Conflict 2</h2>
           <p style={{ color: "var(--text-2)", fontSize: 14, lineHeight: 1.7, maxWidth: 420, margin: "0 auto 10px" }}>
             {isTriathlon
-              ? "Top word gives the meaning. Bottom word gives the ink color. Triathlon: 60 seconds — faster rounds score more."
+              ? "Top word gives the meaning. Bottom word gives the ink color. Triathlon: 30 seconds — faster rounds score more."
               : "Top word gives the meaning. Bottom word gives the ink color. Decide if they match. One mistake or timeout ends the run."}
           </p>
           <div style={{ marginBottom: 24 }} />
@@ -404,7 +405,7 @@ function ColorConflict2Inner({ game, triathlonFromServer }: { game: GameData; tr
                 overflow: "hidden",
               }}
             >
-              60 seconds. Score more with faster rounds.
+              30 seconds. Score more with faster rounds.
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>

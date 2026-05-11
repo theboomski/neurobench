@@ -10,7 +10,7 @@ import InterstitialAd, { shouldShowAd } from "@/components/InterstitialAd";
 import CommonResult from "@/components/CommonResult";
 import { normalizeTo100FromPercentile, resolveResultTone } from "@/lib/resultUtils";
 
-const TRIATHLON_TRIALS = 15;
+const TRIATHLON_TRIALS = 10;
 const TRIATHLON_START_LEVEL = 5;
 const TRIATHLON_UI_ACCENT = "#4A7C59";
 
