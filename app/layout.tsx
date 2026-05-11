@@ -6,6 +6,7 @@ import Script from "next/script";
 import { DM_Mono, Inter } from "next/font/google";
 import { dict } from "@/lib/i18n";
 import HomeHeaderControls from "@/components/HomeHeaderControls";
+import SiteNavWeeklyTicker from "@/components/SiteNavWeeklyTicker";
 import UserMenu from "@/components/UserMenu";
 
 const t = dict.en;
@@ -47,13 +48,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           id="zazaza-site-nav"
           style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(10, 10, 10, 0.88)", backdropFilter: "blur(10px)", borderBottom: "1px solid var(--border)" }}
         >
-          <div style={{ borderBottom: "1px solid var(--border)", height: 22, overflow: "hidden", position: "relative", background: "var(--bg-base)" }}>
-            <div style={{ display: "flex", alignItems: "center", height: "100%", animation: "ticker 40s linear infinite", whiteSpace: "nowrap", gap: 48, paddingLeft: "100%" }}>
-              {["NO SIGN UP", "FREE BRAIN TESTS", "GAMES", "PERSONALITY TESTS", "INSTANT RESULTS", "GLOBAL LEADERBOARDS", "SHARE YOUR RESULTS"].map(s => (
-                <span key={s} style={{ fontSize: 8, color: "rgba(212, 130, 58, 0.72)", fontFamily: "var(--font-mono)", letterSpacing: "0.12em" }}>{s}</span>
-              ))}
-            </div>
-          </div>
+          <Suspense
+            fallback={
+              <div style={{ borderBottom: "1px solid var(--border)", height: 22, background: "var(--bg-base)" }} aria-hidden />
+            }
+          >
+            <SiteNavWeeklyTicker />
+          </Suspense>
           <div style={{ maxWidth: 1280, margin: "0 auto", padding: "8px 24px", minHeight: 80, display: "flex", flexDirection: "column", alignItems: "stretch", gap: 8 }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
               <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
