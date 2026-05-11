@@ -3,26 +3,16 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { CountryRankRow, HallOfFameRow, WeeklyLeaderRow } from "@/lib/arenaLeaderboardData";
 import { canonicalGamePath } from "@/lib/canonicalGamePaths";
+import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import { ALL_GAMES } from "@/lib/games";
 import { getPlayCounts } from "@/lib/tracking";
 import type { GameData } from "@/lib/types";
+import { resolveHomeDailySpotlight, spotlightPlayPath } from "@/lib/homeDailySpotlight";
 import { getDailyGames, type DailyTriathlonPick } from "@/lib/triathlonDailyGames";
 
-const ACCENT = "#00F0FF";
 const INITIAL_PAGE_SIZE = 12;
-
-const TRIATHLON_CARD_BLURB: Record<string, string> = {
-  "color-conflict": "Tests inhibitory control · Trains your cognitive flexibility",
-  "color-conflict-2": "Tests cognitive interference · Trains your mental clarity",
-  "sequence-memory": "Tests working memory · Trains your recall capacity",
-  "number-memory": "Tests digit span · Trains your short-term memory",
-  "visual-memory": "Tests spatial memory · Trains your pattern recognition",
-  "chimp-test": "Tests visuospatial memory · Trains your visual processing",
-  "verbal-memory": "Tests recognition memory · Trains your word retention",
-  "instant-comparison": "Tests processing speed · Trains your rapid decision making",
-  "fish-frenzy": "Tests response inhibition · Trains your reaction control",
-};
 
 type HomeTypeFilter = "all" | "brain" | "game" | "personality";
 type HomeSort = "popular" | "latest";
@@ -47,16 +37,17 @@ const PLAY_COUNT_PILL_STYLE: CSSProperties = {
 
 const PLAY_FORMATTER = new Intl.NumberFormat("en-US");
 
-const TRIATHLON_CARD_SHELL: CSSProperties = {
+const TRIATHLON_LEFT_CARD: CSSProperties = {
   background: "var(--bg-card)",
   border: "1px solid var(--border)",
   boxShadow: "var(--card-shadow)",
   borderRadius: "var(--radius-lg)",
-  padding: "24px 20px",
+  padding: "clamp(16px, 3.5vw, 24px)",
   display: "flex",
   flexDirection: "column",
   alignItems: "stretch",
-  gap: 10,
+  gap: 12,
+  minWidth: 0,
   minHeight: 0,
 };
 
@@ -77,14 +68,7 @@ function readInitialQuery(): { category: HomeTypeFilter; sort: HomeSort } {
   return { category, sort };
 }
 
-function formatUtcYmdDots(d: Date): string {
-  const y = d.getUTCFullYear();
-  const m = String(d.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(d.getUTCDate()).padStart(2, "0");
-  return `${y}.${m}.${day}`;
-}
-
-/** Ms from `now` until next UTC 00:00:00 (exclusive upper bound of “today” UTC). */
+/** Ms until next UTC midnight (when daily triathlon lineup rotates). */
 function msUntilNextUtcMidnight(now: Date): number {
   const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0));
   return Math.max(0, next.getTime() - now.getTime());
@@ -98,17 +82,51 @@ function formatHms(ms: number): string {
   return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
-function triathlonEmojiForPick(pick: DailyTriathlonPick): string {
-  const g = ALL_GAMES.find((x) => x.id === pick.id);
-  return g?.emoji ?? "🧠";
-}
+const HOME_SECTION_LABEL: CSSProperties = {
+  fontSize: 10,
+  color: "var(--accent)",
+  fontFamily: "var(--font-mono)",
+  letterSpacing: "0.12em",
+  textTransform: "uppercase",
+  fontWeight: 800,
+};
 
 export type HomePageClientProps = {
   /** Server-fetched so Popular sort matches before client hydration (avoids list flash). */
   initialPlayCounts: Record<string, number>;
+  /** Top rows for home triathlon column (same source as /arena). */
+  arenaPreview: {
+    countryRankings: CountryRankRow[];
+    weeklyLeaders: WeeklyLeaderRow[];
+    hallOfFame: HallOfFameRow[];
+  };
 };
 
-export default function HomePageClient({ initialPlayCounts }: HomePageClientProps) {
+function ArenaSeeAllLink({ label }: { label: string }) {
+  return (
+    <Link
+      href="/arena"
+      className="pressable"
+      aria-label={label}
+      style={{
+        flexShrink: 0,
+        fontSize: 10,
+        fontFamily: "var(--font-mono)",
+        fontWeight: 800,
+        color: "var(--accent)",
+        textDecoration: "none",
+        letterSpacing: "0.04em",
+        padding: "4px 8px",
+        borderRadius: 6,
+        border: "1px solid var(--border)",
+      }}
+    >
+      See all
+    </Link>
+  );
+}
+
+export default function HomePageClient({ initialPlayCounts, arenaPreview }: HomePageClientProps) {
   const [utcNow, setUtcNow] = useState(() => new Date());
   const [dailyGames, setDailyGames] = useState<DailyTriathlonPick[] | null>(null);
   const [midnightCountdownMs, setMidnightCountdownMs] = useState(() => msUntilNextUtcMidnight(new Date()));
@@ -134,7 +152,8 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
 
   useEffect(() => {
     const tick = () => {
-      setUtcNow(new Date());
+      const now = new Date();
+      setUtcNow(now);
       setDailyGames(getDailyGames());
     };
     tick();
@@ -149,8 +168,7 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
       if (ms <= 0) {
         setDailyGames(getDailyGames());
         setUtcNow(new Date());
-        const now2 = new Date();
-        ms = msUntilNextUtcMidnight(now2);
+        ms = msUntilNextUtcMidnight(new Date());
       }
       setMidnightCountdownMs(ms);
     };
@@ -246,7 +264,9 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
   const visibleGames = filteredSortedGames.slice(0, visibleCount);
   const filterLabel = category === "all" ? "All" : category === "brain" ? "Brain Tests" : category === "game" ? "Games" : "Personality";
   const sortLabel = sort === "popular" ? "Popular" : "Latest";
-  const utcLabel = formatUtcYmdDots(utcNow);
+
+  const spotlightGame = useMemo(() => resolveHomeDailySpotlight(utcNow, playCounts), [utcNow, playCounts]);
+  const spotlightHref = useMemo(() => spotlightPlayPath(spotlightGame), [spotlightGame]);
 
   return (
     <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 16px 56px" }}>
@@ -254,260 +274,411 @@ export default function HomePageClient({ initialPlayCounts }: HomePageClientProp
         <div className="ad-slot ad-banner">Advertisement</div>
       </div>
 
-      <section style={{ paddingTop: 8, paddingBottom: 10, textAlign: "center" }}>
+      <section style={{ paddingTop: 4, paddingBottom: 14, textAlign: "center" }}>
         <h1
           style={{
-            fontSize: "clamp(1.35rem, 3.5vw + 0.35rem, 2.25rem)",
-            fontWeight: 700,
+            fontSize: "clamp(1.5rem, 4vw + 0.35rem, 2.5rem)",
+            fontWeight: 900,
             fontFamily: "var(--font-display)",
-            letterSpacing: "-0.035em",
-            lineHeight: 1.15,
+            letterSpacing: "-0.04em",
+            lineHeight: 1.1,
             color: "var(--text-1)",
-            marginBottom: 12,
+            margin: 0,
           }}
         >
-          Today&apos;s Brain Triathlon: {utcLabel}
+          Global Brain War
         </h1>
+      </section>
+
+      {/* Left: Today&apos;s Test + Today&apos;s triathlon · Right: Arena preview — equal-height columns */}
+      <section style={{ paddingTop: 4, paddingBottom: 12 }}>
         <div
           style={{
-            maxWidth: 520,
-            marginLeft: "auto",
-            marginRight: "auto",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: "clamp(10px, 2.5vw, 22px)",
+            alignItems: "stretch",
           }}
         >
-          <p
+          <div
             style={{
-              fontSize: "clamp(14px, 2.2vw, 16px)",
-              color: "var(--text-2)",
-              lineHeight: 1.55,
-              margin: 0,
+              ...TRIATHLON_LEFT_CARD,
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+              height: "100%",
+              minHeight: 0,
             }}
           >
-            2-minute daily brain exercise. Different challenge every day.
-          </p>
-          <p
-            style={{
-              fontSize: 12,
-              color: "var(--text-3)",
-              fontFamily: "var(--font-mono)",
-              lineHeight: 1.5,
-              margin: 0,
-              marginTop: 8,
-            }}
-            suppressHydrationWarning
-          >
-            Next challenge in {formatHms(midnightCountdownMs)}
-          </p>
-        </div>
-      </section>
-
-      {/* Mobile: 2×2 grid — 3 daily games + Start card (md = 768px) */}
-      <section className="block md:hidden" style={{ paddingTop: 10, paddingBottom: 8 }}>
-        <div className="grid grid-cols-2 gap-4">
-          {dailyGames
-            ? (
-                <>
-                  {dailyGames.map((pick) => (
-                    <article key={pick.id} style={TRIATHLON_CARD_SHELL}>
-                      <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 4 }} aria-hidden>
-                        {triathlonEmojiForPick(pick)}
-                      </div>
-                      <h2
-                        style={{
-                          fontSize: 22,
-                          fontWeight: 800,
-                          fontFamily: "var(--font-display)",
-                          letterSpacing: "-0.02em",
-                          color: "var(--text-1)",
-                          lineHeight: 1.2,
-                          margin: 0,
-                        }}
-                      >
-                        {pick.name}
-                      </h2>
-                      <p
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          fontFamily: "var(--font-mono)",
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                          color: "var(--text-3)",
-                          margin: 0,
-                        }}
-                      >
-                        {pick.category}
-                      </p>
-                      <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55, margin: 0 }}>
-                        {TRIATHLON_CARD_BLURB[pick.id] ?? pick.cognitiveCategory}
-                      </p>
-                    </article>
-                  ))}
-                  <Link
-                    href="/triathlon"
-                    className="pressable home-mobile-triathlon-cta"
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      textAlign: "center",
-                      textDecoration: "none",
-                      height: "100%",
-                      minHeight: 0,
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: "#0F0D0B",
-                        fontWeight: 700,
-                        fontSize: 15,
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      Start Today&apos;s Triathlon →
-                    </span>
-                  </Link>
-                </>
-              )
-            : [0, 1, 2, 3].map((i) => (
-                <article
-                  key={`triathlon-skel-m-${i}`}
+            <div
+              style={{
+                flex: "1 1 50%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                minHeight: 0,
+                paddingBottom: 18,
+                borderBottom: "1px solid var(--border)",
+              }}
+            >
+              <div style={HOME_SECTION_LABEL}>Today&apos;s Test</div>
+              <Link
+                href={spotlightHref}
+                className="pressable home-spotlight-card"
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "stretch",
+                  textDecoration: "none",
+                  color: "inherit",
+                  minHeight: 0,
+                  boxSizing: "border-box",
+                  borderRadius: "var(--radius-lg)",
+                  border: "1px solid var(--border)",
+                  background: "var(--bg-elevated)",
+                  padding: "clamp(14px, 3vw, 20px)",
+                  gap: 10,
+                  boxShadow: "var(--card-shadow)",
+                  transition: "transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease",
+                }}
+              >
+                <div
                   style={{
-                    ...TRIATHLON_CARD_SHELL,
-                    gap: 8,
-                    opacity: 0.5,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "clamp(8px, 2vw, 12px)",
+                    minWidth: 0,
                   }}
                 >
-                  {i < 3 ? (
-                    <>
-                      <div style={{ height: 40, borderRadius: 8, background: "var(--bg-overlay)", maxWidth: 48 }} />
-                      <div style={{ height: 26, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "85%" }} />
-                      <div style={{ height: 14, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "40%" }} />
-                      <div style={{ height: 52, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "100%" }} />
-                    </>
-                  ) : (
-                    <div style={{ height: 24, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "80%", margin: "auto" }} />
-                  )}
-                </article>
-              ))}
-        </div>
-      </section>
-
-      {/* Desktop: 3 cards in a row (unchanged) */}
-      <section className="hidden md:block" style={{ paddingTop: 10, paddingBottom: 8 }}>
-        <div className="grid grid-cols-3 gap-5">
-          {dailyGames
-            ? dailyGames.map((pick) => (
-                <article key={pick.id} style={TRIATHLON_CARD_SHELL}>
-                  <div style={{ fontSize: 40, lineHeight: 1, marginBottom: 4 }} aria-hidden>
-                    {triathlonEmojiForPick(pick)}
-                  </div>
+                  <span style={{ fontSize: "clamp(28px, 7vw, 40px)", lineHeight: 1, flexShrink: 0 }} aria-hidden>
+                    {spotlightGame.emoji}
+                  </span>
                   <h2
                     style={{
-                      fontSize: 22,
-                      fontWeight: 800,
+                      fontSize: "clamp(17px, 4vw, 22px)",
+                      fontWeight: 900,
                       fontFamily: "var(--font-display)",
                       letterSpacing: "-0.02em",
                       color: "var(--text-1)",
                       lineHeight: 1.2,
                       margin: 0,
+                      minWidth: 0,
+                      flex: 1,
                     }}
                   >
-                    {pick.name}
+                    {spotlightGame.title}
                   </h2>
-                  <p
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      fontFamily: "var(--font-mono)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      color: "var(--text-3)",
-                      margin: 0,
-                    }}
-                  >
-                    {pick.category}
-                  </p>
-                  <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.55, margin: 0 }}>
-                    {TRIATHLON_CARD_BLURB[pick.id] ?? pick.cognitiveCategory}
-                  </p>
-                </article>
-              ))
-            : [0, 1, 2].map((i) => (
-                <article
-                  key={`triathlon-skel-${i}`}
+                </div>
+                <p style={{ fontSize: 13, color: "var(--text-2)", lineHeight: 1.5, margin: 0, flex: 1 }}>
+                  {spotlightGame.shortDescription}
+                </p>
+                <span className="home-spotlight-play-cta">Play now</span>
+              </Link>
+            </div>
+
+            <div
+              style={{
+                flex: "1 1 50%",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                minHeight: 0,
+                paddingTop: 18,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 10,
+                  flexWrap: "wrap",
+                  rowGap: 4,
+                }}
+              >
+                <span style={HOME_SECTION_LABEL}>Today&apos;s triathlon</span>
+                <span style={HOME_SECTION_LABEL} suppressHydrationWarning>
+                  {formatHms(midnightCountdownMs)}
+                </span>
+              </div>
+              {dailyGames ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: "clamp(8px, 2vw, 14px)" }}>
+                  {dailyGames.map((pick) => (
+                    <div
+                      key={pick.id}
+                      style={{
+                        fontSize: "clamp(15px, 3.6vw, 22px)",
+                        fontWeight: 800,
+                        fontFamily: "var(--font-display)",
+                        letterSpacing: "-0.02em",
+                        color: "var(--text-1)",
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {pick.name}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10, opacity: 0.45 }}>
+                  <div style={{ height: 22, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "92%" }} />
+                  <div style={{ height: 22, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "88%" }} />
+                  <div style={{ height: 22, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "78%" }} />
+                </div>
+              )}
+              <Link
+                href="/triathlon"
+                className="pressable home-triathlon-start-cta"
+                style={{
+                  marginTop: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  width: "100%",
+                  boxSizing: "border-box",
+                }}
+              >
+                Start Triathlon
+              </Link>
+              <p
+                style={{
+                  fontSize: "clamp(10px, 2.4vw, 12px)",
+                  color: "var(--text-3)",
+                  fontFamily: "var(--font-mono)",
+                  lineHeight: 1.55,
+                  margin: 0,
+                }}
+              >
+                No signup required · Track progress free with account
+              </p>
+            </div>
+          </div>
+
+          <div
+            style={{
+              ...TRIATHLON_LEFT_CARD,
+              display: "flex",
+              flexDirection: "column",
+              gap: "clamp(8px, 2vw, 12px)",
+              minWidth: 0,
+              height: "100%",
+              minHeight: 0,
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderLeft: "3px solid var(--accent)",
+                borderRadius: "var(--radius-md)",
+                padding: "clamp(8px, 2vw, 12px)",
+                minWidth: 0,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <h3 style={{ fontSize: "clamp(10px, 2.4vw, 12px)", fontWeight: 800, margin: 0, lineHeight: 1.25, color: "var(--text-1)" }}>
+                  Weekly country rankings
+                </h3>
+                <ArenaSeeAllLink label="See all weekly country rankings on Arena" />
+              </div>
+              <div style={{ display: "grid", gap: 4 }}>
+                <div
                   style={{
-                    ...TRIATHLON_CARD_SHELL,
-                    gap: 8,
-                    minHeight: 0,
-                    opacity: 0.5,
+                    display: "grid",
+                    gridTemplateColumns: "22px 1fr 36px",
+                    gap: 4,
+                    fontSize: 9,
+                    color: "var(--text-3)",
+                    fontFamily: "var(--font-mono)",
+                    textTransform: "uppercase",
                   }}
                 >
-                  <div style={{ height: 40, borderRadius: 8, background: "var(--bg-overlay)", maxWidth: 48 }} />
-                  <div style={{ height: 26, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "85%" }} />
-                  <div style={{ height: 14, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "40%" }} />
-                  <div style={{ height: 52, borderRadius: 6, background: "var(--bg-overlay)", maxWidth: "100%" }} />
-                </article>
-              ))}
-        </div>
-      </section>
+                  <span>#</span>
+                  <span>Country</span>
+                  <span style={{ textAlign: "right" }}>Pts</span>
+                </div>
+                {[0, 1, 2].map((slot) => {
+                  const row = arenaPreview.countryRankings[slot];
+                  return (
+                    <div
+                      key={row?.countryCode ?? `country-rank-slot-${slot}`}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "22px 1fr 36px",
+                        gap: 4,
+                        alignItems: "center",
+                        padding: "4px 0",
+                        borderTop: "1px solid var(--border)",
+                        fontSize: "clamp(10px, 2.3vw, 12px)",
+                        minHeight: "1.35em",
+                      }}
+                    >
+                      <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-2)" }}>{slot + 1}</span>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: row ? "var(--text-1)" : "var(--text-3)",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          minWidth: 0,
+                        }}
+                      >
+                        {row ? (
+                          <>
+                            <span aria-hidden>{countryCodeToFlag(row.countryCode)}</span>
+                            <span style={{ marginLeft: 2 }}>{countryCodeToRegionName(row.countryCode)}</span>
+                          </>
+                        ) : (
+                          "\u00a0"
+                        )}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-mono)",
+                          fontWeight: 800,
+                          color: row ? "var(--accent)" : "var(--text-3)",
+                          textAlign: "right",
+                        }}
+                      >
+                        {row ? row.points : "\u00a0"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-      <section className="hidden md:block" style={{ paddingTop: 28, paddingBottom: 8 }}>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <Link
-            href="/triathlon"
-            className="pressable"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "16px 28px",
-              borderRadius: 6,
-              background: ACCENT,
-              color: "#051318",
-              fontSize: 15,
-              fontWeight: 800,
-              letterSpacing: "-0.02em",
-              textDecoration: "none",
-              boxShadow: "var(--card-shadow)",
-            }}
-          >
-            Start Today&apos;s Triathlon →
-          </Link>
-          <p
-            style={{
-              fontSize: 12,
-              color: "var(--text-3)",
-              fontFamily: "var(--font-mono)",
-              textAlign: "center",
-              lineHeight: 1.6,
-              margin: 0,
-              maxWidth: 420,
-            }}
-          >
-            No signup required · Track progress free with account
-          </p>
-        </div>
-      </section>
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderLeft: "3px solid #22d3ee",
+                borderRadius: "var(--radius-md)",
+                padding: "clamp(8px, 2vw, 12px)",
+                minWidth: 0,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <h3 style={{ fontSize: "clamp(10px, 2.4vw, 12px)", fontWeight: 800, margin: 0, lineHeight: 1.25, color: "var(--text-1)" }}>
+                  Weekly leaders
+                </h3>
+                <ArenaSeeAllLink label="See all weekly leaders on Arena" />
+              </div>
+              <div style={{ display: "grid", gap: 4 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.75fr) 20px 40px",
+                    gap: 4,
+                    fontSize: 9,
+                    color: "var(--text-3)",
+                    fontFamily: "var(--font-mono)",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  <span>Game</span>
+                  <span>Player</span>
+                  <span />
+                  <span style={{ textAlign: "right" }}>Scr</span>
+                </div>
+                {arenaPreview.weeklyLeaders.map((row) => (
+                  <div
+                    key={row.gameId}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.75fr) 20px 40px",
+                      gap: 4,
+                      alignItems: "center",
+                      padding: "4px 0",
+                      borderTop: "1px solid var(--border)",
+                      fontSize: "clamp(10px, 2.3vw, 12px)",
+                    }}
+                  >
+                    <span style={{ fontWeight: 700, color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{row.gameTitle}</span>
+                    <span style={{ color: "var(--text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{row.nickname ?? "—"}</span>
+                    <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                      {row.countryCode ? countryCodeToFlag(row.countryCode) : "—"}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, color: "#22d3ee", textAlign: "right", whiteSpace: "nowrap" }}>{row.score ?? "—"}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-      <section className="block md:hidden" style={{ paddingTop: 8, paddingBottom: 8 }}>
-        <p
-          style={{
-            fontSize: 12,
-            color: "var(--text-3)",
-            fontFamily: "var(--font-body)",
-            textAlign: "center",
-            lineHeight: 1.6,
-            margin: 0,
-            maxWidth: 420,
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          No signup required · Track progress free with account
-        </p>
+            <div
+              style={{
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderLeft: "3px solid #38bdf8",
+                borderRadius: "var(--radius-md)",
+                padding: "clamp(8px, 2vw, 12px)",
+                minWidth: 0,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                <h3 style={{ fontSize: "clamp(10px, 2.4vw, 12px)", fontWeight: 800, margin: 0, lineHeight: 1.25, color: "var(--text-1)" }}>
+                  Hall of fame
+                </h3>
+                <ArenaSeeAllLink label="See all Hall of Fame on Arena" />
+              </div>
+              <div style={{ display: "grid", gap: 4 }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.75fr) 20px 40px",
+                    gap: 4,
+                    fontSize: 9,
+                    color: "var(--text-3)",
+                    fontFamily: "var(--font-mono)",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  <span>Game</span>
+                  <span>Player</span>
+                  <span />
+                  <span style={{ textAlign: "right" }}>Scr</span>
+                </div>
+                {arenaPreview.hallOfFame.map((row) => (
+                  <div
+                    key={row.gameId}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) minmax(0, 0.75fr) 20px 40px",
+                      gap: 4,
+                      alignItems: "center",
+                      padding: "4px 0",
+                      borderTop: "1px solid var(--border)",
+                      fontSize: "clamp(10px, 2.3vw, 12px)",
+                    }}
+                  >
+                    <span style={{ fontWeight: 700, color: "var(--text-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{row.gameTitle}</span>
+                    <span style={{ color: "var(--text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>{row.nickname ?? "—"}</span>
+                    <span style={{ fontSize: 14, lineHeight: 1 }} aria-hidden>
+                      {row.countryCode ? countryCodeToFlag(row.countryCode) : "—"}
+                    </span>
+                    <span style={{ fontFamily: "var(--font-mono)", fontWeight: 800, color: "#38bdf8", textAlign: "right", whiteSpace: "nowrap" }}>{row.score ?? "—"}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section style={{ marginTop: 28, marginBottom: 48 }}>

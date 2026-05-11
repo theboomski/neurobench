@@ -1,36 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import type { CountryRankRow, HallOfFameRow, WeeklyLeaderRow } from "@/lib/arenaLeaderboardData";
 import { countryCodeToFlag, countryCodeToRegionName } from "@/lib/countryFlag";
 import ArenaCollapsibleList from "./ArenaCollapsibleList";
 
-export type CountryRankRow = {
-  countryCode: string;
-  points: number;
-};
-
-export type WeeklyLeaderRow = {
-  gameId: string;
-  gameTitle: string;
-  gamePath: string;
-  nickname: string | null;
-  score: number | null;
-  countryCode: string | null;
-  playCount: number;
-  hasWeeklyScore: boolean;
-};
-
-export type HallOfFameRow = {
-  gameId: string;
-  gameTitle: string;
-  gamePath: string;
-  nickname: string | null;
-  score: number | null;
-  countryCode: string | null;
-  playCount: number;
-  hasAllTimeScore: boolean;
-  streakDays: number | null;
-};
+export type { CountryRankRow, HallOfFameRow, WeeklyLeaderRow };
 
 type ArenaLeaderboardsClientProps = {
   countryRankings: CountryRankRow[];

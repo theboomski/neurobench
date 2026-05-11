@@ -145,6 +145,62 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 1;
 }
 
+/* Home triathlon primary CTA — full-width, large type */
+.home-triathlon-start-cta {
+  background: var(--accent) !important;
+  color: #051318 !important;
+  border: 1px solid var(--accent) !important;
+  border-radius: 12px;
+  padding: clamp(16px, 4vw, 22px) clamp(14px, 3vw, 20px);
+  box-sizing: border-box;
+  font-weight: 900;
+  font-size: clamp(1rem, 4.2vw, 1.35rem);
+  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+.home-triathlon-start-cta:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.06);
+  box-shadow: var(--card-shadow-hover);
+}
+.home-triathlon-start-cta.pressable:active {
+  transform: scale(0.98);
+}
+
+.home-spotlight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow-hover);
+  border-color: var(--border-md);
+}
+
+.home-spotlight-play-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4px;
+  padding: clamp(14px, 3.5vw, 18px) clamp(16px, 4vw, 22px);
+  border-radius: 10px;
+  background: var(--accent);
+  color: #051318;
+  font-weight: 900;
+  font-size: clamp(1rem, 3.8vw, 1.15rem);
+  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  border: 1px solid var(--accent);
+  box-shadow: var(--card-shadow);
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+.home-spotlight-card:hover .home-spotlight-play-cta {
+  filter: brightness(1.06);
+}
+.home-spotlight-card.pressable:active .home-spotlight-play-cta {
+  transform: scale(0.99);
+}
+
 .anim-fade-up  { animation: fadeUp  0.35s ease both; }
 .anim-scale-in { animation: scaleIn 0.28s ease both; }
 .anim-shake    { animation: shake   0.35s ease; }
