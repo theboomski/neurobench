@@ -151,15 +151,35 @@ function utcDateSeed(date: Date): number {
   return date.getUTCFullYear() * 10000 + (date.getUTCMonth() + 1) * 100 + date.getUTCDate();
 }
 
-function previousUtcDay(date: Date): Date {
-  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() - 1, 0, 0, 0, 0));
+/** UTC midnight (ms) for the calendar day of `date`. */
+function utcMidnightMs(date: Date): number {
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 }
 
-function pickIndexNoBackToBack(todaySeed: number, yesterdaySeed: number, slot: number, len: number): number {
-  if (len <= 1) return pickIndex(todaySeed, slot, len);
-  const todayIdx = pickIndex(todaySeed, slot, len);
-  const yesterdayIdx = pickIndex(yesterdaySeed, slot, len);
-  return todayIdx === yesterdayIdx ? (todayIdx + 1) % len : todayIdx;
+/**
+ * Stable anchor so every client/server agrees on index history without storing state.
+ * For any slot, we walk forward day-by-day: if the seeded roll matches *yesterday's resolved*
+ * index, we bump (no two consecutive UTC days share the same game in that pillar).
+ *
+ * IMPORTANT: Previous bug compared today's roll to yesterday's *raw* roll, not yesterday's
+ * resolved pick after its own adjustment — so the chain broke and Focus (2 pools) could repeat.
+ */
+const TRIATHLON_INDEX_EPOCH_UTC_MS = Date.UTC(2024, 0, 1);
+
+function resolvedPoolIndex(date: Date, slot: number, poolLength: number): number {
+  if (poolLength <= 1) return 0;
+  const targetMs = utcMidnightMs(date);
+  let dayMs = TRIATHLON_INDEX_EPOCH_UTC_MS;
+  if (targetMs < dayMs) {
+    return pickIndex(utcDateSeed(new Date(targetMs)), slot, poolLength);
+  }
+  let resolved = pickIndex(utcDateSeed(new Date(dayMs)), slot, poolLength);
+  while (dayMs < targetMs) {
+    dayMs += 86_400_000;
+    const todayRaw = pickIndex(utcDateSeed(new Date(dayMs)), slot, poolLength);
+    resolved = todayRaw === resolved ? (todayRaw + 1) % poolLength : todayRaw;
+  }
+  return resolved;
 }
 
 function isValidPick(p: unknown): p is DailyTriathlonPick {
@@ -180,11 +200,10 @@ function isValidPick(p: unknown): p is DailyTriathlonPick {
 /** Same UTC calendar day yields the same three picks; category play order is also seeded. */
 export function getDailyGames(date = new Date()): DailyTriathlonPick[] {
   const todaySeed = utcDateSeed(date);
-  const yesterdaySeed = utcDateSeed(previousUtcDay(date));
 
-  const focusPick = TRIATHLON_GAMES.focus[pickIndexNoBackToBack(todaySeed, yesterdaySeed, 0, TRIATHLON_GAMES.focus.length)];
-  const memoryPick = TRIATHLON_GAMES.memory[pickIndexNoBackToBack(todaySeed, yesterdaySeed, 1, TRIATHLON_GAMES.memory.length)];
-  const speedPick = TRIATHLON_GAMES.speed[pickIndexNoBackToBack(todaySeed, yesterdaySeed, 2, TRIATHLON_GAMES.speed.length)];
+  const focusPick = TRIATHLON_GAMES.focus[resolvedPoolIndex(date, 0, TRIATHLON_GAMES.focus.length)];
+  const memoryPick = TRIATHLON_GAMES.memory[resolvedPoolIndex(date, 1, TRIATHLON_GAMES.memory.length)];
+  const speedPick = TRIATHLON_GAMES.speed[resolvedPoolIndex(date, 2, TRIATHLON_GAMES.speed.length)];
 
   const picks = [focusPick, memoryPick, speedPick];
   const orderSeed = pickIndex(todaySeed, 3, 6);
